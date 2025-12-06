@@ -384,6 +384,9 @@ jobs:
   build:
     needs: [format, lint, test]
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
 
     steps:
       - name: Check out formatted code
