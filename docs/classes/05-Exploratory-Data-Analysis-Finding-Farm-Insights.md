@@ -7,19 +7,19 @@
 
 ## Slide 1 – Title Slide
 
-- **Course**: Agricultural Data Analytics Course  
-- **Class**: 05 – Exploratory Data Analysis: Finding Farm Insights + Demo  
+- **Course**: Agricultural Data Analytics Course
+- **Class**: 05 – Exploratory Data Analysis: Finding Farm Insights + Demo
 - **Instructor**: Clayton Young
 
 ---
 
 ## Slide 2 – Housekeeping
 
-- **Use the "Q&A" feature** in Zoom if you want to ask a question.  
-- Ensure Zoom is updated to the latest version to use all features.  
-- Keep your **camera on** during class if possible.  
-- Please **mute yourself** so you don't accidentally interrupt the instructor.  
-- Use the **"Raise hand"** feature in Zoom when you want to ask a question.  
+- **Use the "Q&A" feature** in Zoom if you want to ask a question.
+- Ensure Zoom is updated to the latest version to use all features.
+- Keep your **camera on** during class if possible.
+- Please **mute yourself** so you don't accidentally interrupt the instructor.
+- Use the **"Raise hand"** feature in Zoom when you want to ask a question.
 - Don't forget to **lower your hand** once finished.
 
 ---
@@ -28,22 +28,22 @@
 
 > High-level view of where this class fits in the overall course.
 
-| Class | Title                                                                                          |
-|-------|------------------------------------------------------------------------------------------------|
-| 01    | The New Farm Frontier: Inside the Agricultural Data Revolution                                |
-| 02    | Gearing Up: Building Your Smart Farm Workspace + Demo                                         |
-| 03    | Navigating the US Agricultural Data Landscape + Workshop                                      |
-| 04    | Clean Fields, Clean Data + Demo                                                               |
-| 05    | Exploratory Data Analysis: Finding Farm Insights + Demo                                       |
-| 06    | Geospatial Analysis with Python + Workshop & Demo                                             |
-| 07    | Watching from Above: Satellite & Drone Intelligence + Workshop & Demo                         |
-| 08    | Weather Patterns & Climate Data Analysis                                                      |
-| 09    | Advanced Spatial Integration & Transformations + Workshop                                     |
-| 10    | US Precision Agriculture Systems & Real Farm Data                                             |
-| 11    | Soil Health & Sustainability Metrics + Workshop                                               |
-| 12    | From Data to Decisions: Building Dashboards that Tell a Story + Workshop & Demo               |
-| 13    | Ethics, Ownership & the Politics of US Farm Data + Guest Speaker                              |
-| 14    | The Future Farm: Trends, Careers & Final Reflections                                          |
+| Class | Title                                                                           |
+| ----- | ------------------------------------------------------------------------------- |
+| 01    | The New Farm Frontier: Inside the Agricultural Data Revolution                  |
+| 02    | Gearing Up: Building Your Smart Farm Workspace + Demo                           |
+| 03    | Navigating the US Agricultural Data Landscape + Workshop                        |
+| 04    | Clean Fields, Clean Data + Demo                                                 |
+| 05    | Exploratory Data Analysis: Finding Farm Insights + Demo                         |
+| 06    | Geospatial Analysis with Python + Workshop & Demo                               |
+| 07    | Watching from Above: Satellite & Drone Intelligence + Workshop & Demo           |
+| 08    | Weather Patterns & Climate Data Analysis                                        |
+| 09    | Advanced Spatial Integration & Transformations + Workshop                       |
+| 10    | US Precision Agriculture Systems & Real Farm Data                               |
+| 11    | Soil Health & Sustainability Metrics + Workshop                                 |
+| 12    | From Data to Decisions: Building Dashboards that Tell a Story + Workshop & Demo |
+| 13    | Ethics, Ownership & the Politics of US Farm Data + Guest Speaker                |
+| 14    | The Future Farm: Trends, Careers & Final Reflections                            |
 
 ---
 
@@ -121,10 +121,11 @@
 **Due Date**: _TBD_  
 **Points**: _xx_
 
-**Description**:  
-- Conduct a comprehensive EDA on row crop yield or soil health data.  
-- Generate at least 5 visualizations.  
-- Document statistical findings and correlations.  
+**Description**:
+
+- Conduct a comprehensive EDA on row crop yield or soil health data.
+- Generate at least 5 visualizations.
+- Document statistical findings and correlations.
 - Submit as Jupyter notebook with markdown commentary.
 
 **Dashboard Element**: _TBD_
