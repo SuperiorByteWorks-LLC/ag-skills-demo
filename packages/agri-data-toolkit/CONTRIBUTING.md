@@ -9,6 +9,7 @@ Thank you for your interest in contributing! This guide will help you set up you
 ```bash
 git clone https://github.com/borealBytes/agri-data-toolkit.git
 cd agri-data-toolkit
+cd packages/agri-data-toolkit
 poetry install --with dev
 ```
 

@@ -46,6 +46,7 @@ The result is a **realistic representation of agricultural field boundaries** us
 # Clone repository
 git clone https://github.com/borealBytes/agri-data-toolkit.git
 cd agri-data-toolkit
+cd packages/agri-data-toolkit
 
 # Install dependencies
 poetry install
