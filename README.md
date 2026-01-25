@@ -249,7 +249,7 @@ See [packages/agri-data-toolkit/docs/ROADMAP.md](packages/agri-data-toolkit/docs
 7. **Ubuntu Compatibility**: Designed for command-line use on Ubuntu LTS
 8. **Educational Focus**: Code is readable and well-commented for learning
 
-## 🤝 Contributing (Startup Blueprint)
+## Contributing
 
 This project is part of an educational course, but contributions are welcome!
 
