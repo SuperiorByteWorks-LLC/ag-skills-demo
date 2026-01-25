@@ -3,17 +3,20 @@
 ## System Requirements
 
 ### Operating System
+
 - **Primary**: Ubuntu LTS 20.04, 22.04, or 24.04
 - **Compatible**: Debian 10+, other Linux distributions
 - **Not Supported**: Windows (use WSL2), macOS (may work with modifications)
 
 ### Hardware Requirements
+
 - **CPU**: 2+ cores (4+ recommended)
 - **RAM**: 8GB minimum (16GB recommended for large datasets)
 - **Storage**: 50GB free disk space (100GB+ recommended)
 - **Network**: Broadband internet connection for data downloads
 
 ### Software Prerequisites
+
 - **Python**: 3.9, 3.10, 3.11, or 3.12
 - **Git**: 2.25+
 - **GDAL**: 3.0+ (for geospatial operations)
@@ -177,12 +180,12 @@ year_range:
   end: 2024
 
 # Output directory
-output_dir: "data/raw"
+output_dir: 'data/raw'
 
 # Coordinate reference systems
 crs:
-  wgs84: "EPSG:4326"
-  albers: "EPSG:5070"
+  wgs84: 'EPSG:4326'
+  albers: 'EPSG:5070'
 ```
 
 ### 3. Set Up API Keys (If Required)

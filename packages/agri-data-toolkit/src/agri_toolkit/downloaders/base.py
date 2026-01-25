@@ -2,7 +2,7 @@
 
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 from agri_toolkit.core.config import Config
 from agri_toolkit.core.logger import get_logger
@@ -17,7 +17,7 @@ class BaseDownloader(ABC):
     implement the download() method.
     """
 
-    def __init__(self, config: Optional[Config] = None) -> None:
+    def __init__(self, config: Config | None = None) -> None:
         """Initialize the downloader.
 
         Args:
@@ -61,7 +61,7 @@ class BaseDownloader(ABC):
         # Default implementation - can be overridden
         return data is not None
 
-    def get_output_path(self, filename: str, subdirectory: Optional[str] = None) -> Path:
+    def get_output_path(self, filename: str, subdirectory: str | None = None) -> Path:
         """Get output path for downloaded data.
 
         Args:

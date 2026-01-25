@@ -1,7 +1,7 @@
 """Configuration management for agri-data-toolkit."""
 
 from pathlib import Path
-from typing import Any, Dict, Optional, cast
+from typing import Any, cast
 
 import yaml
 
@@ -12,7 +12,7 @@ class Config:
     Loads configuration from YAML files and provides access to settings.
     """
 
-    def __init__(self, config_path: Optional[str] = None):
+    def __init__(self, config_path: str | None = None):
         """Initialize configuration.
 
         Args:
@@ -24,7 +24,7 @@ class Config:
             config_path = self._get_default_config_path()
 
         self.config_path = Path(config_path)
-        self._config: Dict[str, Any] = {}
+        self._config: dict[str, Any] = {}
         self.load()
 
     def _get_default_config_path(self) -> str:
@@ -46,7 +46,7 @@ class Config:
         if not self.config_path.exists():
             raise FileNotFoundError(f"Configuration file not found: {self.config_path}")
 
-        with open(self.config_path, "r") as f:
+        with open(self.config_path) as f:
             loaded_config = yaml.safe_load(f)
             # Ensure loaded config is a dict
             if isinstance(loaded_config, dict):
@@ -77,20 +77,20 @@ class Config:
 
         return value
 
-    def get_field_config(self) -> Dict[str, Any]:
+    def get_field_config(self) -> dict[str, Any]:
         """Get field boundaries configuration."""
         result = self.get("fields", {})
-        return cast(Dict[str, Any], result)
+        return cast(dict[str, Any], result)
 
-    def get_download_config(self) -> Dict[str, Any]:
+    def get_download_config(self) -> dict[str, Any]:
         """Get download settings."""
         result = self.get("download", {})
-        return cast(Dict[str, Any], result)
+        return cast(dict[str, Any], result)
 
-    def get_paths(self) -> Dict[str, str]:
+    def get_paths(self) -> dict[str, str]:
         """Get configured paths."""
         result = self.get("paths", {})
-        return cast(Dict[str, str], result)
+        return cast(dict[str, str], result)
 
     @property
     def data_root(self) -> Path:

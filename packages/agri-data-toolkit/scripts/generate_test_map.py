@@ -38,7 +38,7 @@ def generate_map_html(geojson_path: Path, output_path: Path) -> None:
     field_options = []
     for i, feature in enumerate(features):
         props = feature.get("properties", {})
-        field_id = props.get("field_id", f"Field {i+1}")
+        field_id = props.get("field_id", f"Field {i + 1}")
         state = props.get("state", "")
         crop = props.get("crop_2023", "")
         acres = props.get("area_acres", 0)

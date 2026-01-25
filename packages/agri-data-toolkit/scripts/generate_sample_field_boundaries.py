@@ -9,7 +9,6 @@ import argparse
 from pathlib import Path
 
 import geopandas as gpd
-
 from agri_toolkit.core.config import Config
 from agri_toolkit.downloaders.field_boundaries import FieldBoundaryDownloader
 

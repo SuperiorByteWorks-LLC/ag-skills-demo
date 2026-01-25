@@ -7,11 +7,13 @@ The GitHub Actions workflow was failing to generate test data visualization maps
 ## Root Cause Analysis
 
 ### Original Test Behavior
+
 - **Tests used temporary directories**: Both `test_field_boundaries.py` and `test_field_boundaries_unit.py` configured the downloader to use `tmp_path`
 - **Files were cleaned up**: Pytest automatically cleans up temporary directories after each test
 - **No persistent output**: The workflow expected files in `data/raw/field_boundaries/` but tests wrote to temporary locations
 
 ### Workflow Expectations vs Reality
+
 - **Workflow expected**: GeoJSON files in `data/raw/field_boundaries/`
 - **Tests produced**: Files in `tmp_path/raw/field_boundaries/` (cleaned up after test)
 - **Result**: Workflow step `find data/raw/field_boundaries -name "*.geojson"` found nothing
@@ -19,6 +21,7 @@ The GitHub Actions workflow was failing to generate test data visualization maps
 ## Solution Implemented
 
 ### 1. Created Persistent Integration Test
+
 **File**: `tests/test_downloaders/test_field_boundaries_persistent.py`
 
 - **Purpose**: Generate test data that persists in workspace for CI/CD visualization
@@ -27,12 +30,14 @@ The GitHub Actions workflow was failing to generate test data visualization maps
 - **Markers**: `@pytest.mark.persistent` and `@pytest.mark.integration`
 
 ### 2. Updated Pytest Configuration
+
 **File**: `pyproject.toml`
 
 - **Added marker**: `"persistent: Tests that generate persistent data for CI/CD artifacts"`
 - **Purpose**: Register the new `persistent` marker to avoid pytest warnings
 
 ### 3. Modified GitHub Actions Workflow
+
 **File**: `.github/workflows/ci.yml`
 
 - **Added explicit test run**: Run persistent test after standard tests
@@ -43,6 +48,7 @@ The GitHub Actions workflow was failing to generate test data visualization maps
   - More robust file detection logic
 
 ### 4. Test Execution Flow
+
 ```bash
 # Standard tests (using tmp_path, files cleaned up)
 poetry run pytest tests/ -v --cov=src/agri_toolkit --cov-report=xml --cov-report=term
@@ -68,6 +74,7 @@ poetry run pytest tests/test_downloaders/test_field_boundaries_persistent.py -v
 ## Verification
 
 ### Local Testing
+
 ```bash
 # Run the new persistent test
 poetry run pytest tests/test_downloaders/test_field_boundaries_persistent.py -v
@@ -78,6 +85,7 @@ ls -la data/raw/field_boundaries/
 ```
 
 ### Expected Workflow Behavior
+
 1. **Tests run**: Standard tests + persistent test
 2. **Data generated**: `data/raw/field_boundaries/fields.geojson` exists
 3. **Map generation**: Finds the GeoJSON file successfully
@@ -87,43 +95,51 @@ ls -la data/raw/field_boundaries/
 ## Recommendations for Future Maintenance
 
 ### 1. Test Data Management
+
 - **Keep persistent tests minimal**: Only generate enough data for visualization (5-10 fields)
 - **Monitor file size**: Ensure generated files don't bloat the repository
 - **Consider cleanup**: Add workflow step to clean up old test data files
 
 ### 2. Test Organization
+
 - **Marker usage**: Use `@pytest.mark.persistent` only for tests that must generate persistent data
 - **Isolation**: Keep persistent tests separate from unit/integration tests
 - **Documentation**: Document why each test needs to be persistent
 
 ### 3. Workflow Optimization
+
 - **Conditional execution**: Consider running persistent tests only on specific triggers
 - **Parallel execution**: Run persistent tests in parallel with other CI tasks if possible
 - **Error handling**: The workflow now gracefully handles missing test data
 
 ### 4. Monitoring and Debugging
+
 - **Check logs**: Monitor CI logs for persistent test output
 - **File verification**: Periodically verify that test data files are being created
 - **Map generation**: Ensure the visualization map is being generated and uploaded
 
 ### 5. Future Enhancements
+
 - **Multiple data sources**: Consider generating test data from different regions/crops
 - **Dynamic data**: Use different sample data for different PRs to show variety
 - **Performance testing**: Add performance benchmarks using the persistent test data
 
 ## Troubleshooting Guide
 
-### If persistent test fails:
+### If persistent test fails
+
 1. Check if sample data exists: `tests/data/sample_field_boundaries.parquet`
 2. Verify workspace permissions for writing to `data/raw/field_boundaries/`
 3. Check pytest marker registration in `pyproject.toml`
 
-### If workflow still can't find files:
+### If workflow still can't find files
+
 1. Verify the persistent test actually ran in the workflow logs
 2. Check that `data/raw/field_boundaries/` directory exists
 3. Look for any file permission issues in the workflow
 
-### If map generation fails:
+### If map generation fails
+
 1. Verify the GeoJSON file is valid: `python -c "import geopandas as gpd; gpd.read_file('data/raw/field_boundaries/fields.geojson')"`
 2. Check that `scripts/generate_test_map.py` exists and is executable
 3. Review the map generation script for any dependencies

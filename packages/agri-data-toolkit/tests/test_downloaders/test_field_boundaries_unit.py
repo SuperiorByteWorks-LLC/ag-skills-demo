@@ -6,7 +6,6 @@ without hitting the live Source Cooperative endpoint.
 
 import geopandas as gpd
 import pytest
-
 from agri_toolkit.core.config import Config
 from agri_toolkit.downloaders.field_boundaries import FieldBoundaryDownloader
 
@@ -46,9 +45,9 @@ class TestFieldBoundaryDownloaderUnit:
         assert fields.geometry.is_valid.all(), "Found invalid geometries"
 
         # All geometries should be Polygons (or MultiPolygons)
-        assert all(
-            geom.geom_type in ["Polygon", "MultiPolygon"] for geom in fields.geometry
-        ), "Geometries must be Polygon or MultiPolygon types"
+        assert all(geom.geom_type in ["Polygon", "MultiPolygon"] for geom in fields.geometry), (
+            "Geometries must be Polygon or MultiPolygon types"
+        )
 
     @pytest.mark.unit
     def test_download_has_required_attributes_sample(self, downloader_with_sample_data):

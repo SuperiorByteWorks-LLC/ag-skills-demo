@@ -90,6 +90,7 @@ git checkout -b docs/api-reference-update
 ```
 
 **Branch Naming Conventions**:
+
 - `feature/` - New features
 - `fix/` - Bug fixes
 - `docs/` - Documentation updates
@@ -133,6 +134,7 @@ git commit -m "feat: implement field boundary downloader for CLU data"
 ```
 
 **Types**:
+
 - `feat`: New feature
 - `fix`: Bug fix
 - `docs`: Documentation changes
@@ -358,27 +360,33 @@ When creating a PR, include:
 
 ```markdown
 ## Description
+
 Brief description of changes.
 
 ## Type of Change
+
 - [ ] Bug fix
 - [ ] New feature
 - [ ] Documentation update
 - [ ] Refactoring
 
 ## Testing
+
 Describe testing performed:
+
 - Unit tests added/updated
 - Manual testing steps
 - Test coverage: X%
 
 ## Checklist
+
 - [ ] Code follows style guidelines
 - [ ] Tests pass locally
 - [ ] Documentation updated
 - [ ] No breaking changes (or documented)
 
 ## Related Issues
+
 Closes #<issue_number>
 ```
 

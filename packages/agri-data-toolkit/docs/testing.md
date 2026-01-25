@@ -5,12 +5,14 @@ This project uses `pytest` for testing. The test suite is divided into unit test
 ## Test Categories
 
 ### Unit Tests
+
 - **Marker**: `@pytest.mark.unit`
 - **Description**: Fast tests that use local sample data and do not require network access.
 - **Location**: `tests/test_downloaders/test_field_boundaries_unit.py`
 - **Execution**: `pytest -m unit`
 
 ### Integration Tests
+
 - **Marker**: `@pytest.mark.integration`
 - **Description**: Slower tests that hit live external endpoints (e.g., Source Cooperative). These ensure end-to-end functionality with real data.
 - **Location**: `tests/test_downloaders/test_field_boundaries.py`
@@ -19,16 +21,19 @@ This project uses `pytest` for testing. The test suite is divided into unit test
 ## Running Tests
 
 To run all tests:
+
 ```bash
 pytest
 ```
 
 To run only unit tests (recommended for development):
+
 ```bash
 pytest -m unit
 ```
 
 To run only integration tests (recommended for CI/CD or pre-release):
+
 ```bash
 pytest -m integration
 ```

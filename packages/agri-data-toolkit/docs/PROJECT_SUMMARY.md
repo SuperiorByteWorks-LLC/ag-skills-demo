@@ -12,6 +12,7 @@ The Agricultural Data Toolkit is a comprehensive Python package designed to stre
 **Problem**: Agricultural data analysis requires integrating multiple heterogeneous data sources (field boundaries, soil surveys, weather stations, satellite imagery, crop classifications) with different formats, coordinate systems, and temporal resolutions. Manual data acquisition and preprocessing is time-consuming, error-prone, and requires specialized domain knowledge.
 
 **Solution**: A single command-line toolkit that automates the complete data pipeline:
+
 - Download ~200 row crop field boundaries across diverse US regions
 - Integrate NRCS SSURGO soil data (organic matter, pH, texture, drainage)
 - Acquire weather/climate time series from NASA POWER and NOAA (2020-2024)
@@ -116,6 +117,7 @@ src/agri_toolkit/
 ## Development Roadmap
 
 ### Phase 1: Foundation (Dec 2025)
+
 - [x] Repository setup and project structure
 - [x] Documentation framework
 - [ ] Configuration system
@@ -123,30 +125,35 @@ src/agri_toolkit/
 - [ ] Logging framework
 
 ### Phase 2: Core Downloads (Jan 2026)
+
 - [ ] Field boundary downloader
 - [ ] SSURGO soil integration
 - [ ] NASA POWER weather API
 - [ ] NOAA climate data (optional)
 
 ### Phase 3: Imagery (Late Jan 2026)
+
 - [ ] Sentinel-2 downloader
 - [ ] Landsat downloader
 - [ ] NDVI/EVI calculation
 - [ ] Cropland Data Layer
 
 ### Phase 4: Integration (Early Feb 2026)
+
 - [ ] Spatial join pipeline
 - [ ] Temporal alignment
 - [ ] Master dataset generation
 - [ ] Export pipeline
 
 ### Phase 5: Validation (Feb 1-10, 2026)
+
 - [ ] Comprehensive validation suite
 - [ ] Automated quality reports
 - [ ] Final testing and bug fixes
 - [ ] **Target: Production ready Feb 10, 2026**
 
 ### Phase 6: Optional (Post-course)
+
 - [ ] NASS/ERS statistics
 - [ ] Equipment data parsers
 - [ ] Performance optimizations
@@ -158,13 +165,13 @@ src/agri_toolkit/
 
 **Course Dates**: February 12 - March 31, 2026
 
-| Week | Course Content | Toolkit Requirements |
-|------|----------------|----------------------|
-| 1 (Feb 12-16) | Class 02: Setup, Class 03: Data Landscape | Fields + Soil + Weather ✅ |
-| 2-3 (Feb 19-27) | Data Cleaning, EDA | All core data available ✅ |
-| 4-5 (Mar 4-13) | Geospatial, Satellite Analysis | Imagery + NDVI ✅ |
-| 6-7 (Mar 18-27) | Weather Analysis, Integration | Complete integration ✅ |
-| 8 (Mar 31) | Final Project | Complete toolkit ✅ |
+| Week            | Course Content                            | Toolkit Requirements       |
+| --------------- | ----------------------------------------- | -------------------------- |
+| 1 (Feb 12-16)   | Class 02: Setup, Class 03: Data Landscape | Fields + Soil + Weather ✅ |
+| 2-3 (Feb 19-27) | Data Cleaning, EDA                        | All core data available ✅ |
+| 4-5 (Mar 4-13)  | Geospatial, Satellite Analysis            | Imagery + NDVI ✅          |
+| 6-7 (Mar 18-27) | Weather Analysis, Integration             | Complete integration ✅    |
+| 8 (Mar 31)      | Final Project                             | Complete toolkit ✅        |
 
 ### Assignment Support
 
@@ -203,24 +210,24 @@ src/agri_toolkit/
 ### Technical Risks
 
 1. **API Rate Limits**: Some data sources limit request rates
-   - *Mitigation*: Implement rate limiting, batch processing, caching
+   - _Mitigation_: Implement rate limiting, batch processing, caching
 
 2. **Cloud Cover**: Satellite imagery may be limited by clouds
-   - *Mitigation*: Download multiple dates, use cloud masks, temporal composites
+   - _Mitigation_: Download multiple dates, use cloud masks, temporal composites
 
 3. **Data Complexity**: SSURGO has complex multi-level structure
-   - *Mitigation*: Pre-process and simplify, provide clear documentation
+   - _Mitigation_: Pre-process and simplify, provide clear documentation
 
 4. **Storage Requirements**: Satellite imagery can be very large
-   - *Mitigation*: Field-level clipping, cloud-optimized formats, compression
+   - _Mitigation_: Field-level clipping, cloud-optimized formats, compression
 
 ### Schedule Risks
 
 1. **Tight Deadline**: Course starts Feb 12, development starts Dec 2025
-   - *Mitigation*: Prioritize core features, defer optional datasets
+   - _Mitigation_: Prioritize core features, defer optional datasets
 
 2. **API Changes**: External data sources may change
-   - *Mitigation*: Use stable APIs, implement version pinning, error handling
+   - _Mitigation_: Use stable APIs, implement version pinning, error handling
 
 ### Contingency Plans
 
@@ -238,11 +245,13 @@ src/agri_toolkit/
 ## Resources
 
 ### Repository
-- **GitHub**: https://github.com/borealBytes/agri-data-toolkit
-- **Issues**: https://github.com/borealBytes/agri-data-toolkit/issues
-- **Discussions**: https://github.com/borealBytes/agri-data-toolkit/discussions
+
+- **GitHub**: <https://github.com/borealBytes/agri-data-toolkit>
+- **Issues**: <https://github.com/borealBytes/agri-data-toolkit/issues>
+- **Discussions**: <https://github.com/borealBytes/agri-data-toolkit/discussions>
 
 ### Documentation
+
 - **README**: Project overview and quick start
 - **Installation Guide**: [docs/installation.md](installation.md)
 - **Quick Start**: [docs/quickstart.md](quickstart.md)
@@ -252,10 +261,11 @@ src/agri_toolkit/
 - **Roadmap**: [docs/ROADMAP.md](ROADMAP.md)
 
 ### External Resources
-- **NRCS SSURGO**: https://www.nrcs.usda.gov/resources/data-and-reports/ssurgo
-- **NASA POWER**: https://power.larc.nasa.gov/
-- **Sentinel-2**: https://sentinels.copernicus.eu/
-- **USDA CDL**: https://www.nass.usda.gov/Research_and_Science/Cropland/
+
+- **NRCS SSURGO**: <https://www.nrcs.usda.gov/resources/data-and-reports/ssurgo>
+- **NASA POWER**: <https://power.larc.nasa.gov/>
+- **Sentinel-2**: <https://sentinels.copernicus.eu/>
+- **USDA CDL**: <https://www.nass.usda.gov/Research_and_Science/Cropland/>
 
 ## License
 
