@@ -74,6 +74,7 @@ packages/agri-data-toolkit/data/metadata/**
 # Credentials and secrets
 .env
 .env.local
+.env.*.local
 *.key
 *.pem
 credentials.json
@@ -88,6 +89,27 @@ logs/
 tmp/
 temp/
 *.tmp
+
+# Node
+node_modules/
+*.tsbuildinfo
+
+# JS build outputs
+.next/
+out/
+
+# CrewAI workspace (generated at runtime)
+.crewai/workspace/*.txt
+.crewai/workspace/*.json
+.crewai/workspace/*.md
+.crewai/workspace/trace/*.log
+.crewai/workspace/trace/*.txt
+.crewai/workspace/trace/*.json
+.crewai/*.log
+
+# Keep workspace directory structure
+!.crewai/workspace/.gitkeep
+!.crewai/workspace/trace/.gitkeep
 
 # OS specific
 Thumbs.db
