@@ -9,20 +9,20 @@
 
 ## 📋 Table of Contents
 
-- [Overview](#-overview)
-- [Course Context](#-course-context)
-- [Features](#-features)
-- [Core Data Sources](#-core-data-sources)
-- [Project Structure](#-project-structure)
-- [Monorepo Layout](#-monorepo-layout)
-- [Installation](#-installation)
-- [Quick Start](#-quick-start)
-- [Usage Examples](#-usage-examples)
-- [Development Roadmap](#-development-roadmap)
-- [Contributing](#-contributing)
-- [License](#-license)
-- [Support](#-support)
-- [Startup Blueprint](#-startup-blueprint)
+- [Overview](#overview)
+- [Course Context](#course-context)
+- [Features](#features)
+- [Core Data Sources](#core-data-sources)
+- [Project Structure](#project-structure)
+- [Monorepo Layout](#monorepo-layout)
+- [Installation](#installation)
+- [Quick Start](#quick-start)
+- [Usage Examples](#usage-examples)
+- [Development Roadmap](#development-roadmap)
+- [Contributing](#contributing)
+- [License](#license)
+- [Support](#support)
+- [Startup Blueprint](#startup-blueprint)
 
 ## 🎯 Overview
 
@@ -249,7 +249,7 @@ See [packages/agri-data-toolkit/docs/ROADMAP.md](packages/agri-data-toolkit/docs
 7. **Ubuntu Compatibility**: Designed for command-line use on Ubuntu LTS
 8. **Educational Focus**: Code is readable and well-commented for learning
 
-## 🤝 Contributing
+## 🤝 Contributing (Startup Blueprint)
 
 This project is part of an educational course, but contributions are welcome!
 
@@ -283,7 +283,7 @@ flake8 src/
 isort src/
 ```
 
-## 📄 License
+## 📄 License (Startup Blueprint)
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 

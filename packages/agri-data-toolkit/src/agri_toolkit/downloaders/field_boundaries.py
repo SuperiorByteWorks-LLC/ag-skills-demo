@@ -258,7 +258,7 @@ class FieldBoundaryDownloader(BaseDownloader):
                 state_fips.extend(self.REGION_STATE_FIPS[region])
 
             # Build state filter for SQL
-            state_filter = ", ".join(["'%s'" % fips for fips in state_fips])
+            state_filter = ", ".join([f"'{fips}'" for fips in state_fips])
 
             # Build crop codes list for filtering
             crop_codes = []
@@ -266,7 +266,7 @@ class FieldBoundaryDownloader(BaseDownloader):
                 crop_codes.extend(self.CROP_TYPES[crop])
 
             # Ensure crop codes are strings for SQL query
-            crop_filter = ", ".join(["'%s'" % code for code in crop_codes])
+            crop_filter = ", ".join([f"'{code}'" for code in crop_codes])
             self.logger.debug("Requested crop codes (CDL): %s", crop_codes)
 
             # Use actual parquet filename from Source Cooperative
@@ -395,7 +395,7 @@ class FieldBoundaryDownloader(BaseDownloader):
 
         except Exception as e:
             self.logger.error("Failed to query Source Cooperative: %s", e)
-            raise RuntimeError("Data download failed: %s" % e) from e
+            raise RuntimeError(f"Data download failed: {e}") from e
 
     def _save_fields(self, gdf: gpd.GeoDataFrame, output_format: str) -> Path:
         """Save field boundaries to file.
@@ -418,7 +418,7 @@ class FieldBoundaryDownloader(BaseDownloader):
             gdf.to_file(output_path, driver="ESRI Shapefile")
         else:
             raise ValueError(
-                "Unsupported output format: %s. Use 'geojson' or 'shapefile'." % output_format
+                f"Unsupported output format: {output_format}. Use 'geojson' or 'shapefile'."
             )
 
         self.logger.info("Saved %d fields to %s", len(gdf), output_path)
