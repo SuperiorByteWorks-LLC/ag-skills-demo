@@ -109,7 +109,6 @@ export PATH="$HOME/.local/bin:$PATH"
 git clone https://github.com/borealBytes/agri-data-toolkit.git
 cd agri-data-toolkit
 cd packages/agri-data-toolkit
-cd packages/agri-data-toolkit
 
 # Install dependencies
 poetry install
@@ -326,7 +325,7 @@ After successful installation:
 
 1. Read the [Quick Start Guide](quickstart.md)
 2. Review [Data Sources Documentation](data_sources.md)
-3. Try [Basic Usage Examples](examples/basic_usage.md)
+3. Try the [Basic Usage Examples](../examples/)
 4. Download your first dataset: `python scripts/download_core.py --fields 200`
 
 ## Support

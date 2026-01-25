@@ -188,8 +188,7 @@ class FieldBoundaryDownloader(BaseDownloader):
         invalid_regions = [r for r in regions if r not in self.REGION_STATE_FIPS]
         if invalid_regions:
             raise ValueError(
-                "Invalid regions: %s. Valid options: %s"
-                % (invalid_regions, list(self.REGION_STATE_FIPS.keys()))
+                f"Invalid regions: {invalid_regions}. Valid options: {list(self.REGION_STATE_FIPS.keys())}"
             )
 
         # Default crops
@@ -200,8 +199,7 @@ class FieldBoundaryDownloader(BaseDownloader):
         invalid_crops = [c for c in crops if c not in self.CROP_TYPES]
         if invalid_crops:
             raise ValueError(
-                "Invalid crops: %s. Valid options: %s"
-                % (invalid_crops, list(self.CROP_TYPES.keys()))
+                f"Invalid crops: {invalid_crops}. Valid options: {list(self.CROP_TYPES.keys())}"
             )
 
         self.logger.info("Regions: %s", regions)

@@ -156,7 +156,7 @@ Prediction Of Worldwide Energy Resources (POWER) project provides meteorological
 
 #### Data Source
 
-- **API**: <https://power.larc.nasa.gov/api/>
+- **API Docs**: <https://power.larc.nasa.gov/docs/services/api/>
 - **Documentation**: <https://power.larc.nasa.gov/docs/>
 
 #### API/Access
@@ -218,7 +218,7 @@ National Oceanic and Atmospheric Administration provides weather station observa
 
 #### Data Source
 
-- **API**: <https://www.ncei.noaa.gov/cdo-web/api/v2/>
+- **API Docs**: <https://www.ncei.noaa.gov/support/access-data-service-api-user-documentation>
 - **Bulk Download**: <https://www.ncei.noaa.gov/data/>
 - **Climate Normals**: <https://www.ncei.noaa.gov/products/land-based-station/us-climate-normals>
 
@@ -282,7 +282,7 @@ Public domain (US Government work)
 
 **Data Source**:
 
-- **Copernicus Open Access Hub**: <https://scihub.copernicus.eu/>
+- **Copernicus Data Space**: <https://dataspace.copernicus.eu/>
 - **Google Earth Engine**: `COPERNICUS/S2_SR`
 - **AWS Open Data**: `s3://sentinel-s2-l2a/`
 
@@ -566,10 +566,10 @@ print(report.summary())
 
 ## References
 
-1. NRCS SSURGO: <https://www.nrcs.usda.gov/resources/data-and-reports/soil-survey-geographic-database-ssurgo>
+1. NRCS SSURGO: <https://websoilsurvey.sc.egov.usda.gov/>
 2. NASA POWER: <https://power.larc.nasa.gov/>
 3. NOAA NCEI: <https://www.ncei.noaa.gov/>
-4. Sentinel-2: <https://sentinels.copernicus.eu/web/sentinel/missions/sentinel-2>
+4. Sentinel-2: <https://sentinel.esa.int/web/sentinel/missions/sentinel-2>
 5. Landsat: <https://www.usgs.gov/landsat-missions>
 6. USDA CDL: <https://www.nass.usda.gov/Research_and_Science/Cropland/SARS1a.php>
 7. USDA NASS: <https://www.nass.usda.gov/>

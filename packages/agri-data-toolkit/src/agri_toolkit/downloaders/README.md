@@ -458,7 +458,7 @@ print(df)
 - [Source Cooperative Platform](https://source.coop)
 - [GeoParquet Specification](https://geoparquet.org)
 - [DuckDB Spatial Extension](https://duckdb.org/docs/extensions/spatial)
-- [FIBOA Standard](https://fiboa.github.io/specification/)
+- [FIBOA Standard](https://fiboa.github.io/specification/current/)
 
 ## Support
 

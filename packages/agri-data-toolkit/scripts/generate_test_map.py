@@ -45,6 +45,10 @@ def generate_map_html(geojson_path: Path, output_path: Path) -> None:
         label = f"{field_id} - {state} - {crop} ({acres:.1f} ac)"
         field_options.append({"index": i, "label": label})
 
+    field_options_html = "\n                ".join(
+        [f'<option value="{opt["index"]}">{opt["label"]}</option>' for opt in field_options]
+    )
+
     # Create HTML with embedded GeoJSON
     html_content = f"""<!DOCTYPE html>
 <html>
@@ -173,7 +177,7 @@ def generate_map_html(geojson_path: Path, output_path: Path) -> None:
             <label for="field-select">Select Field:</label>
             <select id="field-select">
                 <option value="all">All Fields (Fit Bounds)</option>
-                {"\n                ".join([f'<option value="{opt["index"]}">{opt["label"]}</option>' for opt in field_options])}
+                {field_options_html}
             </select>
         </div>
 

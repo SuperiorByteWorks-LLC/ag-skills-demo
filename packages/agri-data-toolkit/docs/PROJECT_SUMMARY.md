@@ -262,14 +262,14 @@ src/agri_toolkit/
 
 ### External Resources
 
-- **NRCS SSURGO**: <https://www.nrcs.usda.gov/resources/data-and-reports/ssurgo>
-- **NASA POWER**: <https://power.larc.nasa.gov/>
-- **Sentinel-2**: <https://sentinels.copernicus.eu/>
+- **NRCS SSURGO**: <https://websoilsurvey.sc.egov.usda.gov/>
+- **NASA POWER**: <https://power.larc.nasa.gov/docs/services/api/>
+- **Sentinel-2**: <https://sentinel.esa.int/web/sentinel/missions/sentinel-2>
 - **USDA CDL**: <https://www.nass.usda.gov/Research_and_Science/Cropland/>
 
 ## License
 
-MIT License - See [LICENSE](../LICENSE) for details.
+MIT License - See [LICENSE](../../LICENSE) for details.
 
 ---
 

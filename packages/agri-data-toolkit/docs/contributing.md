@@ -443,7 +443,7 @@ git push origin --delete feature/field-boundary-downloader
 ### Resources
 
 - **Documentation**: [docs/](../)
-- **Examples**: [examples/](../../examples/)
+- **Examples**: [examples/](../examples/)
 - **Issue Tracker**: [GitHub Issues](https://github.com/borealBytes/agri-data-toolkit/issues)
 - **Discussions**: [GitHub Discussions](https://github.com/borealBytes/agri-data-toolkit/discussions)
 

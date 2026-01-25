@@ -9,19 +9,19 @@
 
 ## 📋 Table of Contents
 
-- [Overview](#overview)
-- [Course Context](#course-context)
-- [Features](#features)
-- [Core Data Sources](#core-data-sources)
-- [Project Structure](#project-structure)
-- [Monorepo Layout](#monorepo-layout)
-- [Installation](#installation)
-- [Quick Start](#quick-start)
-- [Usage Examples](#usage-examples)
-- [Development Roadmap](#development-roadmap)
-- [Contributing](#contributing)
-- [License](#license)
-- [Support](#support)
+- [Overview](#-overview)
+- [Course Context](#-course-context)
+- [Features](#-features)
+- [Core Data Sources](#-core-data-sources)
+- [Project Structure](#-project-structure)
+- [Monorepo Layout](#-monorepo-layout)
+- [Installation](#-installation)
+- [Quick Start](#-quick-start)
+- [Usage Examples](#-usage-examples)
+- [Development Roadmap](#-development-roadmap)
+- [Contributing](#-contributing)
+- [License](#-license)
+- [Support](#-support)
 - [Startup Blueprint](#-startup-blueprint)
 
 ## 🎯 Overview
