@@ -23,7 +23,7 @@
 **Path structure**:
 
 ```
-holoscan/
+agri-data-toolkit/
 └── docs/
     └── agentic/
         ├── instructions.md
