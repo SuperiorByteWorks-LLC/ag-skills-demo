@@ -264,7 +264,7 @@ src/agri_toolkit/
 
 - **NRCS SSURGO**: <https://websoilsurvey.sc.egov.usda.gov/>
 - **NASA POWER**: <https://power.larc.nasa.gov/docs/services/api/>
-- **Sentinel-2**: <https://sentinel.esa.int/web/sentinel/missions/sentinel-2>
+- **Sentinel-2**: <https://www.esa.int/Applications/Observing_the_Earth/Copernicus/Sentinel-2>
 - **USDA CDL**: <https://www.nass.usda.gov/Research_and_Science/Cropland/>
 
 ## License

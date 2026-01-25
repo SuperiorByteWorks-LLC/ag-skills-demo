@@ -24,7 +24,7 @@
 - [Support](#support)
 - [Startup Blueprint](#startup-blueprint)
 
-## 🎯 Overview
+## Overview
 
 The **Agricultural Data Toolkit** is designed to streamline the acquisition and integration of diverse US agricultural data sources for row crop analysis. This toolkit automates the download, preprocessing, and integration of:
 
@@ -44,7 +44,7 @@ Agricultural data analysis requires integrating multiple heterogeneous data sour
 ✅ **Validates** data quality and completeness
 ✅ **Exports** analysis-ready datasets for visualization and modeling
 
-## 🎓 Course Context
+## Course Context
 
 **Course**: Agricultural Data Analytics
 **Instructor**: Clayton Young (ex-Bayer, ex-Monsanto, ex-Climate Corporation)
@@ -63,7 +63,7 @@ By using this toolkit, students will:
 4. ✅ Evaluate precision agriculture technologies' impact on efficiency and sustainability
 5. ✅ Apply ethical practices in farm data management and ownership
 
-## ✨ Features
+## Features
 
 ### Core Capabilities
 
@@ -83,7 +83,7 @@ By using this toolkit, students will:
 - **📈 Metadata Catalogs**: Automatic dataset documentation
 - **🧪 Unit Testing**: Comprehensive test coverage for reliability
 
-## 🗃️ Core Data Sources
+## Core Data Sources
 
 See [packages/agri-data-toolkit/docs/data_sources.md](packages/agri-data-toolkit/docs/data_sources.md) for comprehensive documentation.
 
@@ -101,11 +101,11 @@ See [packages/agri-data-toolkit/docs/data_sources.md](packages/agri-data-toolkit
 7. **USDA NASS/ERS Statistics** - County-level aggregated data
 8. **Precision Ag Equipment Data** - Planter/combine data (instructor demos)
 
-## 📁 Project Structure
+## Project Structure
 
 The toolkit now lives in `packages/agri-data-toolkit` within the monorepo.
 
-## 🧭 Monorepo Layout
+## Monorepo Layout
 
 ```
 .
@@ -116,7 +116,7 @@ The toolkit now lives in `packages/agri-data-toolkit` within the monorepo.
 └── .github/workflows/               # CI workflows
 ```
 
-## 🚀 Installation
+## Installation
 
 ### Prerequisites
 
@@ -162,7 +162,7 @@ python scripts/setup_workspace.py
 
 Detailed installation instructions: [packages/agri-data-toolkit/docs/installation.md](packages/agri-data-toolkit/docs/installation.md)
 
-## 🏃 Quick Start
+## Quick Start
 
 ### 1. Download Core Dataset Package
 
@@ -214,7 +214,7 @@ processor.export(fields_with_soil, format="geojson", output="data/processed/fiel
 
 Detailed usage guide: [packages/agri-data-toolkit/docs/quickstart.md](packages/agri-data-toolkit/docs/quickstart.md)
 
-## 📚 Usage Examples
+## Usage Examples
 
 See the [packages/agri-data-toolkit/examples/](packages/agri-data-toolkit/examples/) directory for complete workflows:
 
@@ -224,7 +224,7 @@ See the [packages/agri-data-toolkit/examples/](packages/agri-data-toolkit/exampl
 - **NDVI Time Series**: Vegetation index calculation and analysis
 - **Dashboard Data Prep**: Prepare integrated datasets for visualization
 
-## 🗺️ Development Roadmap
+## Development Roadmap
 
 See [packages/agri-data-toolkit/docs/ROADMAP.md](packages/agri-data-toolkit/docs/ROADMAP.md) for complete development timeline.
 
@@ -283,11 +283,11 @@ flake8 src/
 isort src/
 ```
 
-## 📄 License (Startup Blueprint)
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🆘 Support
+## Support
 
 ### Course Students
 
@@ -332,7 +332,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-## 🚀 Startup Blueprint
+## Startup Blueprint
 
 ## Kill Monthly Fees. Start Your Business for $150
 
@@ -802,7 +802,7 @@ _Payment fees assume: Stripe 2.9% + 30¢ vs Helcim 2.7% avg (mix of in-person, o
 
 ---
 
-## 🤝 Contributing
+## Contributing (Startup Blueprint)
 
 Found a way to eliminate more monthly fees? Have a better free alternative? **We want to know!**
 
@@ -824,7 +824,7 @@ Found a way to eliminate more monthly fees? Have a better free alternative? **We
 
 ---
 
-## 📄 License
+## License (Startup Blueprint)
 
 MIT License - Use this however you want. Build your business. Kill monthly fees.
 

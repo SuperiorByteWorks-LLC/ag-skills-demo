@@ -569,7 +569,7 @@ print(report.summary())
 1. NRCS SSURGO: <https://websoilsurvey.sc.egov.usda.gov/>
 2. NASA POWER: <https://power.larc.nasa.gov/>
 3. NOAA NCEI: <https://www.ncei.noaa.gov/>
-4. Sentinel-2: <https://sentinel.esa.int/web/sentinel/missions/sentinel-2>
+4. Sentinel-2: <https://www.esa.int/Applications/Observing_the_Earth/Copernicus/Sentinel-2>
 5. Landsat: <https://www.usgs.gov/landsat-missions>
 6. USDA CDL: <https://www.nass.usda.gov/Research_and_Science/Cropland/SARS1a.php>
 7. USDA NASS: <https://www.nass.usda.gov/>
