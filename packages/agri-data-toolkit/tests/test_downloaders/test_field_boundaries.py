@@ -12,10 +12,9 @@ Test Philosophy:
 
 import geopandas as gpd
 import pytest
-from shapely.geometry import Polygon
-
 from agri_toolkit.core.config import Config
 from agri_toolkit.downloaders.field_boundaries import FieldBoundaryDownloader
+from shapely.geometry import Polygon
 
 
 class TestFieldBoundaryDownloaderIntegration:
@@ -62,9 +61,9 @@ class TestFieldBoundaryDownloaderIntegration:
         assert fields.geometry.is_valid.all(), "Found invalid geometries"
 
         # All geometries should be Polygons (or MultiPolygons)
-        assert all(
-            geom.geom_type in ["Polygon", "MultiPolygon"] for geom in fields.geometry
-        ), "Geometries must be Polygon or MultiPolygon types"
+        assert all(geom.geom_type in ["Polygon", "MultiPolygon"] for geom in fields.geometry), (
+            "Geometries must be Polygon or MultiPolygon types"
+        )
 
     def test_download_has_required_attributes(self, downloader):
         """Test that fields have all required attributes from Source Cooperative."""
@@ -116,9 +115,9 @@ class TestFieldBoundaryDownloaderIntegration:
         # All fields should have crop_code matching requested types
         # CDL codes: 1=corn, 5=soybeans
         valid_crop_codes = ["1", "5"]
-        assert all(
-            code in valid_crop_codes for code in fields["crop_code"]
-        ), "All crop_code values should be '1' (corn) or '5' (soybeans)"
+        assert all(code in valid_crop_codes for code in fields["crop_code"]), (
+            "All crop_code values should be '1' (corn) or '5' (soybeans)"
+        )
 
     def test_download_saves_to_file(self, downloader, tmp_path):
         """Test that download saves fields to file."""
@@ -248,19 +247,19 @@ class TestFieldBoundaryDownloaderIntegration:
 
         # Verify fields are within corn belt states (FIPS codes)
         corn_belt_fips = ["17", "19", "18", "39", "27"]  # IL, IA, IN, OH, MN
-        assert all(
-            fips in corn_belt_fips for fips in fields["state_fips"]
-        ), "All fields should be in corn belt states"
+        assert all(fips in corn_belt_fips for fips in fields["state_fips"]), (
+            "All fields should be in corn belt states"
+        )
 
         valid_crop_codes = ["1", "5"]
-        assert all(
-            code in valid_crop_codes for code in fields["crop_code"]
-        ), "All crop_code values should be '1' (corn) or '5' (soybeans)"
+        assert all(code in valid_crop_codes for code in fields["crop_code"]), (
+            "All crop_code values should be '1' (corn) or '5' (soybeans)"
+        )
 
         # Note: crop_code_list in the current dataset version contains a URL to the crop mapping
         # rather than the historical codes themselves, so we cannot validate history here.
 
         # Verify area_acres are positive and reasonable
-        assert all(
-            acres > 0 for acres in fields["area_acres"]
-        ), "All field sizes should be positive"
+        assert all(acres > 0 for acres in fields["area_acres"]), (
+            "All field sizes should be positive"
+        )

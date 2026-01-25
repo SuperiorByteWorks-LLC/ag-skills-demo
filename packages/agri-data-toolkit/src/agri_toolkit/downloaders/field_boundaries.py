@@ -28,7 +28,7 @@ Citation:
 """
 
 from pathlib import Path
-from typing import Any, List, Optional
+from typing import Any
 
 import duckdb
 import geopandas as gpd
@@ -84,9 +84,7 @@ class FieldBoundaryDownloader(BaseDownloader):
         "cotton": ["2"],  # Cotton
     }
 
-    def __init__(
-        self, config: Optional[Config] = None, data_source_url: Optional[str] = None
-    ) -> None:
+    def __init__(self, config: Config | None = None, data_source_url: str | None = None) -> None:
         """Initialize field boundary downloader.
 
         Args:
@@ -96,7 +94,7 @@ class FieldBoundaryDownloader(BaseDownloader):
         """
         super().__init__(config)
         self.output_subdir = "field_boundaries"
-        self._duckdb_conn: Optional[duckdb.DuckDBPyConnection] = None
+        self._duckdb_conn: duckdb.DuckDBPyConnection | None = None
         # Allow URL override for testing
         self.data_source_url = data_source_url or self.SOURCE_COOP_BASE_URL
 
@@ -167,8 +165,8 @@ class FieldBoundaryDownloader(BaseDownloader):
         """
         # Parse arguments with defaults
         count: int = kwargs.get("count", 200)
-        regions: Optional[List[str]] = kwargs.get("regions", None)
-        crops: Optional[List[str]] = kwargs.get("crops", None)
+        regions: list[str] | None = kwargs.get("regions", None)
+        crops: list[str] | None = kwargs.get("crops", None)
         output_format: str = kwargs.get("output_format", "geojson")
 
         self.logger.info(
@@ -229,8 +227,8 @@ class FieldBoundaryDownloader(BaseDownloader):
     def _query_source_cooperative(
         self,
         count: int,
-        regions: List[str],
-        crops: List[str],  # noqa: ARG002
+        regions: list[str],
+        crops: list[str],  # noqa: ARG002
     ) -> gpd.GeoDataFrame:
         """Query USDA CSB data from Source Cooperative using DuckDB.
 

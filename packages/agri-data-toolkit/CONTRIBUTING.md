@@ -23,6 +23,7 @@ poetry run pre-commit install
 ```
 
 That's it! Now every time you `git commit`, your code will be automatically:
+
 - ✅ Formatted with Black
 - ✅ Imports sorted with isort
 - ✅ Linted with flake8
@@ -44,6 +45,7 @@ poetry run pre-commit run --all-files
 ## Code Quality Standards
 
 This project uses:
+
 - **Black** (line-length=100) for code formatting
 - **isort** (black profile) for import sorting
 - **flake8** for linting
@@ -134,6 +136,7 @@ We follow [Conventional Commits](https://www.conventionalcommits.org/):
 - `chore:` - Maintenance tasks
 
 Examples:
+
 ```
 feat: add sentinel-2 image downloader
 fix: correct CRS transformation in field boundaries
@@ -152,6 +155,7 @@ test: add tests for weather data validation
 ## Getting Help
 
 If you have questions:
+
 - Open an issue on GitHub
 - Check existing issues and discussions
 - Review the documentation in `/docs`

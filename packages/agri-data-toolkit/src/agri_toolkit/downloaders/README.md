@@ -15,11 +15,12 @@ The Field Boundary Downloader provides access to **USDA NASS Crop Sequence Bound
 - **Update Frequency**: Annual
 - **Latest Version**: 2023
 
-**Source Cooperative URL**: https://source.coop/fiboa/us-usda-cropland
+**Source Cooperative URL**: <https://source.coop/fiboa/us-usda-cropland>
 
 ### What is CSB?
 
 Crop Sequence Boundaries are algorithmically-delineated field polygons created by:
+
 1. Stacking 8 years of Cropland Data Layer (CDL) raster data
 2. Identifying contiguous areas with similar crop rotation patterns
 3. Using road/rail networks to prevent field overlaps
@@ -75,15 +76,15 @@ print(fields.head())
 
 The returned `GeoDataFrame` includes:
 
-| Column | Type | Description |
-|--------|------|-------------|
-| `field_id` | str | Unique CSB identifier |
-| `region` | str | Agricultural region (corn_belt, great_plains, southeast) |
-| `state` | str | State abbreviation (IA, IL, KS, etc.) |
-| `county` | str | County name |
-| `area_acres` | float | Field size in acres |
-| `crop_2023` | str | Crop type in 2023 |
-| `geometry` | Polygon | Field boundary (EPSG:4326) |
+| Column       | Type    | Description                                              |
+| ------------ | ------- | -------------------------------------------------------- |
+| `field_id`   | str     | Unique CSB identifier                                    |
+| `region`     | str     | Agricultural region (corn_belt, great_plains, southeast) |
+| `state`      | str     | State abbreviation (IA, IL, KS, etc.)                    |
+| `county`     | str     | County name                                              |
+| `area_acres` | float   | Field size in acres                                      |
+| `crop_2023`  | str     | Crop type in 2023                                        |
+| `geometry`   | Polygon | Field boundary (EPSG:4326)                               |
 
 ## Advanced Usage
 
@@ -262,6 +263,7 @@ poetry run pytest tests/test_downloaders/test_field_boundaries.py::TestFieldBoun
 ```
 
 **Test Philosophy**:
+
 - Download only 2-5 fields per test
 - Validates real data integration
 - Keeps CI/CD execution under 2 minutes
@@ -331,6 +333,7 @@ Alternative (pure geopandas) would require downloading entire datasets.
 **Problem**: Query returns 0 fields
 
 **Solutions**:
+
 ```python
 # 1. Relax size filters
 fields = downloader.download(
@@ -359,6 +362,7 @@ fields = downloader.download(
 **Problem**: Downloads taking >5 minutes
 
 **Solutions**:
+
 1. Reduce count (fewer fields)
 2. Add stricter filters (limit data scanned)
 3. Check network connection
@@ -369,6 +373,7 @@ fields = downloader.download(
 **Problem**: `duckdb.Error: HTTP Error`
 
 **Solutions**:
+
 1. Check internet connection
 2. Verify Source Cooperative is accessible
 3. Retry after a few minutes (transient network issues)
@@ -459,6 +464,6 @@ print(df)
 
 For issues or questions:
 
-- **GitHub Issues**: https://github.com/borealBytes/agri-data-toolkit/issues
-- **Discussions**: https://github.com/borealBytes/agri-data-toolkit/discussions
-- **Email**: claytoneyoung+github@gmail.com
+- **GitHub Issues**: <https://github.com/borealBytes/agri-data-toolkit/issues>
+- **Discussions**: <https://github.com/borealBytes/agri-data-toolkit/discussions>
+- **Email**: <claytoneyoung+github@gmail.com>

@@ -12,7 +12,6 @@ from pathlib import Path
 
 import geopandas as gpd
 import pytest
-
 from agri_toolkit.core.config import Config
 from agri_toolkit.downloaders.field_boundaries import FieldBoundaryDownloader
 

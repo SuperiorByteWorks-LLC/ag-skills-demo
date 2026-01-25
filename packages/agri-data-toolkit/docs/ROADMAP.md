@@ -9,6 +9,7 @@ Detailed implementation plan for the Agricultural Data Toolkit, aligned with the
 **Production Ready**: February 10, 2026 (before Welcome Class)
 
 ## Phase 1: Foundation & Core Downloads
+
 **Timeline**: Weeks 1-2 (December 2025)
 **Status**: 🚧 In Progress
 
@@ -29,6 +30,7 @@ Detailed implementation plan for the Agricultural Data Toolkit, aligned with the
 **Priority: HIGH** (Required for Class 02, Assignment 1)
 
 #### Field Boundary Downloader
+
 - [ ] Data source identification (sample dataset vs CLU)
 - [ ] Region-based sampling (Corn Belt, Great Plains, Southeast)
 - [ ] Crop type filtering (corn, soy, wheat, cotton)
@@ -40,6 +42,7 @@ Detailed implementation plan for the Agricultural Data Toolkit, aligned with the
 **Deliverable**: `python scripts/download_core.py --fields 200` works
 
 #### SSURGO Soil Data Integration
+
 - [ ] SSURGO API wrapper (Web Soil Survey)
 - [ ] Spatial join with field boundaries
 - [ ] Attribute selection (OM, pH, texture, drainage, AWC)
@@ -55,6 +58,7 @@ Detailed implementation plan for the Agricultural Data Toolkit, aligned with the
 ---
 
 ## Phase 2: Weather & Climate Data
+
 **Timeline**: Weeks 3-4 (January 2026)
 **Status**: 📋 Planned
 
@@ -91,6 +95,7 @@ Detailed implementation plan for the Agricultural Data Toolkit, aligned with the
 ---
 
 ## Phase 3: Satellite Imagery
+
 **Timeline**: Weeks 5-6 (January-February 2026)
 **Status**: 📋 Planned
 
@@ -114,6 +119,7 @@ Detailed implementation plan for the Agricultural Data Toolkit, aligned with the
 **Priority: MEDIUM** (Alternative to Sentinel-2)
 
 #### Landsat Downloader
+
 - [ ] USGS EarthExplorer API or Google Earth Engine
 - [ ] Field boundary clipping
 - [ ] Band selection (B4-Red, B5-NIR)
@@ -122,6 +128,7 @@ Detailed implementation plan for the Agricultural Data Toolkit, aligned with the
 - [ ] Unit tests for Landsat data
 
 #### Vegetation Indices Processor
+
 - [ ] NDVI calculation: (NIR - Red) / (NIR + Red)
 - [ ] EVI calculation (Enhanced Vegetation Index)
 - [ ] NDWI calculation (water stress)
@@ -136,6 +143,7 @@ Detailed implementation plan for the Agricultural Data Toolkit, aligned with the
 ---
 
 ## Phase 4: Cropland Data & Integration
+
 **Timeline**: Week 7 (February 2026)
 **Status**: 📋 Planned
 
@@ -171,6 +179,7 @@ Detailed implementation plan for the Agricultural Data Toolkit, aligned with the
 ---
 
 ## Phase 5: Validation & Documentation
+
 **Timeline**: Week 8 (February 1-10, 2026)
 **Status**: 📋 Planned
 
@@ -206,6 +215,7 @@ Detailed implementation plan for the Agricultural Data Toolkit, aligned with the
 ---
 
 ## Phase 6: Optional Datasets & Extensions
+
 **Timeline**: Weeks 9-10 (Mid-course, March 2026)
 **Status**: 💡 Future
 
@@ -239,6 +249,7 @@ Detailed implementation plan for the Agricultural Data Toolkit, aligned with the
 ---
 
 ## Phase 7: Advanced Features
+
 **Timeline**: Post-course (April 2026+)
 **Status**: 💡 Future
 
@@ -281,22 +292,23 @@ Detailed implementation plan for the Agricultural Data Toolkit, aligned with the
 
 ## Key Milestones
 
-| Date | Milestone | Status |
-|------|-----------|--------|
-| Dec 31, 2025 | Phase 1 Complete (Fields + Soil) | 🚧 In Progress |
-| Jan 15, 2026 | Phase 2 Complete (Weather) | 📋 Planned |
-| Jan 31, 2026 | Phase 3 Complete (Imagery) | 📋 Planned |
-| Feb 7, 2026 | Phase 4 Complete (Integration) | 📋 Planned |
-| **Feb 10, 2026** | **Production Ready** | 📋 Planned |
-| Feb 12, 2026 | Course Starts (Welcome Class) | 📅 Scheduled |
-| Mar 31, 2026 | Course Ends | 📅 Scheduled |
-| Apr 15, 2026 | Phase 6 Complete (Optional) | 💡 Future |
+| Date             | Milestone                        | Status         |
+| ---------------- | -------------------------------- | -------------- |
+| Dec 31, 2025     | Phase 1 Complete (Fields + Soil) | 🚧 In Progress |
+| Jan 15, 2026     | Phase 2 Complete (Weather)       | 📋 Planned     |
+| Jan 31, 2026     | Phase 3 Complete (Imagery)       | 📋 Planned     |
+| Feb 7, 2026      | Phase 4 Complete (Integration)   | 📋 Planned     |
+| **Feb 10, 2026** | **Production Ready**             | 📋 Planned     |
+| Feb 12, 2026     | Course Starts (Welcome Class)    | 📅 Scheduled   |
+| Mar 31, 2026     | Course Ends                      | 📅 Scheduled   |
+| Apr 15, 2026     | Phase 6 Complete (Optional)      | 💡 Future      |
 
 ---
 
 ## Course Timeline Alignment
 
 ### Week 1 (Feb 12-16)
+
 - **Class 02**: Requires fields + soil + basic download
 - **Class 03**: Requires full core package
 - **Assignment 1**: Field data acquisition
@@ -304,6 +316,7 @@ Detailed implementation plan for the Agricultural Data Toolkit, aligned with the
 ✅ **Phase 1 & 2 must be complete**
 
 ### Weeks 2-3 (Feb 19-27)
+
 - **Class 04-05**: Data cleaning and EDA
 - **Assignment 2**: Data integration
 - **Assignment 3**: EDA
@@ -311,6 +324,7 @@ Detailed implementation plan for the Agricultural Data Toolkit, aligned with the
 ✅ **All core data available**
 
 ### Weeks 4-5 (Mar 4-13)
+
 - **Class 06-07**: Geospatial analysis and satellite
 - **Assignment 4**: Geospatial mapping
 - **Assignment 5**: NDVI calculation
@@ -318,6 +332,7 @@ Detailed implementation plan for the Agricultural Data Toolkit, aligned with the
 ✅ **Phase 3 (imagery) must be complete**
 
 ### Weeks 6-7 (Mar 18-27)
+
 - **Class 08-09**: Weather analysis, advanced spatial
 - **Assignment 6**: Weather trends
 - **Assignment 7**: Integrated spatial analysis
@@ -325,6 +340,7 @@ Detailed implementation plan for the Agricultural Data Toolkit, aligned with the
 ✅ **Phase 4 (integration) must be complete**
 
 ### Week 8 (Mar 31)
+
 - **Class 13-14**: Ethics, future trends
 - **Final Project**: Row Crop Intelligence Dashboard
 
@@ -391,17 +407,20 @@ By February 10, 2026:
 ## Resources Required
 
 ### Development Resources
+
 - **Developer Time**: ~150 hours (Dec-Feb)
 - **Testing Time**: ~40 hours
 - **Documentation**: ~30 hours
 - **Total**: ~220 hours (~28 days FTE)
 
 ### Compute Resources
+
 - **Storage**: 100GB for full dataset
 - **Bandwidth**: ~50GB downloads
 - **API Credits**: $0 (all free/public data sources)
 
 ### Third-Party Services
+
 - **GitHub**: Free (public repo)
 - **NASA POWER**: Free API
 - **NOAA**: Free API (registration required)
@@ -413,12 +432,14 @@ By February 10, 2026:
 ## Maintenance Plan
 
 ### During Course (Feb-Mar 2026)
+
 - **Bug Fixes**: Priority response within 24 hours
 - **Student Support**: Office hours and issue tracker
 - **Data Updates**: As needed (re-run downloads)
 - **Documentation Updates**: Based on student feedback
 
 ### Post-Course (Apr 2026+)
+
 - **Quarterly Updates**: Data refresh
 - **Annual Updates**: Dependency upgrades
 - **Long-term**: Community-driven enhancements
@@ -438,8 +459,8 @@ By February 10, 2026:
 ## Contact & Updates
 
 **Project Lead**: Clayton Young (@borealBytes)
-**Repository**: https://github.com/borealBytes/agri-data-toolkit
-**Issues**: https://github.com/borealBytes/agri-data-toolkit/issues
-**Discussions**: https://github.com/borealBytes/agri-data-toolkit/discussions
+**Repository**: <https://github.com/borealBytes/agri-data-toolkit>
+**Issues**: <https://github.com/borealBytes/agri-data-toolkit/issues>
+**Discussions**: <https://github.com/borealBytes/agri-data-toolkit/discussions>
 
 Updates will be posted weekly in the course portal during development.

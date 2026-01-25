@@ -43,6 +43,7 @@ Job 4: Build (after test passes)
 **Location**: `.github/workflows/ci.yml`
 
 **Triggers**:
+
 - `push` - Any push to any branch
 - `pull_request` - PRs targeting main branch
 
@@ -53,6 +54,7 @@ Job 4: Build (after test passes)
 **Purpose**: Auto-format code using autopep8, Black, and isort
 
 **Steps**:
+
 1. Checkout code
 2. Install Poetry and dependencies
 3. Run autopep8 (whitespace cleanup)
@@ -63,6 +65,7 @@ Job 4: Build (after test passes)
 8. Export SHA for next jobs
 
 **Key behavior**:
+
 - Commits formatting changes back to the branch
 - Uses `github-actions[bot]` as committer
 - NO `[skip ci]` tag - we want CI to run on formatted code
@@ -79,6 +82,7 @@ Job 4: Build (after test passes)
 **Checks out**: The SHA from format job (formatted code)
 
 **Steps**:
+
 1. Black --check (formatting validation)
 2. isort --check (import order validation)
 3. flake8 (style linting)
@@ -95,6 +99,7 @@ Job 4: Build (after test passes)
 **Checks out**: The SHA from format job (formatted code)
 
 **Steps**:
+
 1. Install GDAL system dependencies
 2. Run pytest with coverage
 3. Upload coverage to Codecov
@@ -110,6 +115,7 @@ Job 4: Build (after test passes)
 **Checks out**: The SHA from format job (formatted code)
 
 **Steps**:
+
 1. Build package with Poetry
 2. Check if PR and has `generate-build-artifact` label
 3. Upload artifacts if labeled
@@ -174,15 +180,18 @@ Result: ❌ Pipeline fails at test stage
 **Purpose**: Control whether to upload build artifacts
 
 **Usage**:
+
 ```bash
 gh pr edit <PR_NUMBER> --add-label "generate-build-artifact"
 ```
 
 **Behavior**:
+
 - ✅ With label: Artifacts uploaded for 7 days
 - ❌ Without label: Build runs but artifacts not stored
 
 **When to use**:
+
 - Testing pip installation
 - Preparing for release
 - Sharing with collaborators
@@ -195,12 +204,14 @@ gh pr edit <PR_NUMBER> --add-label "generate-build-artifact"
 ### Local Development
 
 **Option 1: Pre-commit hooks (Recommended)**
+
 ```bash
 poetry run pre-commit install
 git commit -m "feat: new feature"  # Auto-formats locally
 ```
 
 **Option 2: Manual formatting**
+
 ```bash
 poetry run autopep8 --in-place --recursive --select=W src/ tests/
 poetry run black src/ tests/
@@ -209,6 +220,7 @@ git commit -m "feat: new feature"
 ```
 
 **Option 3: Let CI do it**
+
 ```bash
 git commit -m "feat: new feature"
 git push  # Pipeline formats automatically
@@ -217,12 +229,14 @@ git push  # Pipeline formats automatically
 ### Understanding Pipeline Status
 
 **Green checkmark (✅)**: All jobs passed
+
 - Code is formatted
 - Linting passed
 - Tests passed
 - Build succeeded
 
 **Red X (❌)**: Pipeline failed
+
 - Check which job failed
 - Format job rarely fails (only on syntax errors)
 - Lint job fails on style issues
@@ -230,6 +244,7 @@ git push  # Pipeline formats automatically
 - Build job fails on package issues
 
 **Yellow dot (🟡)**: Pipeline running
+
 - Wait for completion
 - Typically 5-8 minutes total
 
@@ -263,6 +278,7 @@ git push  # Pipeline formats automatically
 **Cause**: Usually syntax errors preventing parsing
 
 **Solution**:
+
 ```python
 # Fix syntax errors first
 # Pipeline will format after syntax is valid
@@ -273,6 +289,7 @@ git push  # Pipeline formats automatically
 **Cause**: Style issues not auto-fixable
 
 **Common issues**:
+
 - Unused imports (not removed by isort)
 - Line too long (>100 chars) in comments/strings
 - Type hints missing
@@ -284,6 +301,7 @@ git push  # Pipeline formats automatically
 **Cause**: Test failures or missing dependencies
 
 **Solution**:
+
 ```bash
 # Run tests locally
 poetry run pytest tests/ -v
@@ -297,6 +315,7 @@ poetry run pytest tests/ -v
 **Cause**: Package configuration issues
 
 **Solution**:
+
 ```bash
 # Test build locally
 poetry build
@@ -309,12 +328,12 @@ poetry build
 
 ### Typical Times
 
-| Job | Time | Cumulative |
-|-----|------|------------|
-| Format | 30-60s | 1 min |
-| Lint | 1-2 min | 3 min |
-| Test | 3-5 min | 8 min |
-| Build | 1 min | 9 min |
+| Job    | Time    | Cumulative |
+| ------ | ------- | ---------- |
+| Format | 30-60s  | 1 min      |
+| Lint   | 1-2 min | 3 min      |
+| Test   | 3-5 min | 8 min      |
+| Build  | 1 min   | 9 min      |
 
 **Total**: ~5-9 minutes for full pipeline
 
@@ -350,13 +369,16 @@ poetry build
 ### What Changed (Dec 2025)
 
 **Before**: Two separate workflows
+
 - `auto-format.yml` - Formatted code
 - `ci.yml` - Ran checks (via workflow_run)
 
 **After**: Single unified workflow
+
 - `.github/workflows/ci.yml` - Does everything
 
 **Benefits**:
+
 - Simpler architecture
 - No workflow_run complexity
 - Clearer execution order
@@ -366,6 +388,7 @@ poetry build
 ### Breaking Changes
 
 None! The pipeline still:
+
 - Formats code automatically
 - Runs all CI checks
 - Works with PRs and pushes
@@ -374,9 +397,11 @@ None! The pipeline still:
 ## Configuration Files
 
 **Workflow**:
+
 - `.github/workflows/ci.yml` - Main pipeline
 
 **Code Quality**:
+
 - `pyproject.toml` - Black, isort, pytest config
 - `.flake8` - Flake8 rules
 - `.pre-commit-config.yaml` - Local hooks
