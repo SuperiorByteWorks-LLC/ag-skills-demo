@@ -320,43 +320,42 @@ This builds trust and helps humans review faster.
 ```markdown
 ## 📋 Summary
 
-Implement JWT token refresh strategy for API authentication. This allows clients to obtain short-lived access tokens and refresh them without re-entering credentials.
+Add a new USDA data downloader helper to reduce duplication across field boundary and soil downloaders.
 
 **Key additions:**
 
-- JWT token generation and validation in `packages/auth`
-- Token refresh endpoint in `api` that accepts refresh tokens
-- Secure cookie storage for refresh tokens (HttpOnly, SameSite)
-- Tests covering token expiry and refresh flow
+- New helper in `packages/agri-data-toolkit/src/agri_toolkit/downloaders/`
+- Shared validation logic for downloaded datasets
+- Updated tests for downloader behavior
+- Documentation updates in `packages/agri-data-toolkit/docs/`
 
 ---
 
 ## 🎉 Success Criteria
 
-- [ ] Access tokens expire in 15 minutes
-- [ ] Refresh tokens expire in 7 days
-- [ ] /api/auth/refresh endpoint works for valid tokens
-- [ ] Invalid tokens rejected with 401 Unauthorized
-- [ ] Tests pass and coverage >85%
+- [ ] Helper used by at least two downloaders
+- [ ] Existing downloader tests updated or extended
+- [ ] New helper covered by unit tests
+- [ ] Tests pass in CI
 
 ---
 
 ## 🛠️ Design Decisions
 
-**Approach**: JWT + refresh token pattern (industry standard)
+**Approach**: Extract common downloader steps into a shared helper
 
 **Alternatives considered:**
 
-1. Session-based auth (requires server storage; less suitable for microservices)
-2. OAuth 2.0 with external provider (adds dependency; overkill for internal API)
-3. Long-lived tokens (security risk; no forced re-auth)
+1. Keep duplicated logic across downloaders (slower iteration)
+2. Inherit from a shared base class (heavier refactor)
+3. Add a new dependency for downloads (more overhead)
 
-**Why JWT + refresh tokens?**
+**Why a helper function?**
 
-- Stateless (scales horizontally)
-- Compatible with mobile clients (no cookies)
-- Short-lived access tokens reduce breach window
-- Standard industry pattern (familiar to other developers)
+- Keeps changes localized with minimal churn
+- Easier to test in isolation
+- Encourages reuse without forcing inheritance
+- Reduces maintenance burden across data sources
 
 ---
 

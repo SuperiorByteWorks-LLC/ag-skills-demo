@@ -53,17 +53,17 @@ For this monorepo, use scope prefixes matching the workspace:
 ### Examples
 
 ```
-feat(website): add dark mode toggle
-fix(app-dashboard): handle missing data edge case
-feat(pkg-utils): export new validation helper
+feat(website): add landing page updates
+fix(app-startup-blueprint): handle missing config edge case
+feat(pkg-agri-data-toolkit): add downloader helper
 docs: add deployment guide
 chore(deps): bump typescript to 5.3
-test(app-dashboard): add integration test for user flow
+test(pkg-agri-data-toolkit): add downloader unit tests
 ```
 
 ### Scope Rules
 
-- **For workspace changes**: Use `<workspace-name>` (e.g., `website`, `app-dashboard`, `pkg-utils`)
+- **For workspace changes**: Use `<workspace-name>` (e.g., `website`, `app-startup-blueprint`, `pkg-agri-data-toolkit`)
 - **For root/config changes**: Omit scope (e.g., `chore(deps)`, `docs`)
 - **For changes affecting multiple workspaces**: List primary workspace or use descriptive scope (e.g., `feat(auth): implement JWT refresh across all apps`)
 - **For CI/infrastructure**: Use scope like `ci`, `chore` (e.g., `ci: add path-aware linting workflow`)
@@ -92,23 +92,22 @@ git commit -m "feat(website): add dark mode toggle"
 git push origin feat/website-dark-mode
 ```
 
-#### Add shared code to `packages/utils`
+#### Update the agri toolkit package
 
 ```bash
-git checkout -b feat/pkg-utils-validation-helpers
+git checkout -b feat/pkg-agri-data-toolkit-downloaders
 
-# Add new functions to packages/utils/src
+# Make changes in packages/agri-data-toolkit/
 
 # Run tests
-pnpm --filter pkg-utils test
+cd packages/agri-data-toolkit
+poetry install --with dev
+poetry run pytest tests/
 
 # Commit
-git commit -m "feat(pkg-utils): add email and phone validators"
+git commit -m "feat(pkg-agri-data-toolkit): add downloader helper"
 
-# Update consuming packages to use new exports
-git commit -m "feat(website): use new validators from pkg-utils"
-
-git push origin feat/pkg-utils-validation-helpers
+git push origin feat/pkg-agri-data-toolkit-downloaders
 ```
 
 #### Update root configuration
@@ -147,26 +146,22 @@ If you find **conflicting guidance**, stop and ask for confirmation.
 ```
 website/
     ↓
-packages/utils
-packages/design-system
+(no shared JS packages yet)
 
-app-dashboard/
+apps/startup-blueprint/
     ↓
-packages/utils
-packages/api-client
-packages/design-system
+(no shared JS packages yet)
 
-app-admin/
+packages/agri-data-toolkit/
     ↓
-packages/utils
-packages/api-client
+(Python package; tested via Poetry)
 ```
 
 ### CI/CD Impact
 
-- If `packages/utils` changes → rebuild & test `website`, `app-dashboard`, `app-admin`
-- If `packages/design-system` changes → rebuild & test `website`, `app-dashboard`
-- If `website` changes → test `website` only (no other apps affected)
+- If `packages/agri-data-toolkit` changes → run the agri toolkit test job
+- If `website` changes → run the website test/build job
+- If `apps/startup-blueprint` changes → run its test/build steps
 
 GitHub Actions workflows use Turbo's dependency graph to run only affected tests (see `docs/guides/06-deployment-cicd.md`).
 
@@ -176,20 +171,7 @@ GitHub Actions workflows use Turbo's dependency graph to run only affected tests
 
 ### `.env.example`
 
-The `.env.example` file documents all environment variables needed across the monorepo:
-
-```bash
-# Website configuration
-NEXT_PUBLIC_API_URL=http://localhost:3001
-NEXT_PUBLIC_AUTH_DOMAIN=auth.example.com
-
-# API Keys (store actual values in GitHub Secrets or .env.local)
-STRIPE_SECRET_KEY=sk_test_...
-SENDGRID_API_KEY=SG_...
-
-# Database
-DATABASE_URL=postgresql://user:pass@localhost:5432/business_name
-```
+If `.env.example` exists in the repo, it documents environment variables needed across the monorepo. Use it as the canonical reference for local setup.
 
 ### Local Development
 
@@ -216,8 +198,9 @@ See `docs/guides/` for detailed configuration management patterns.
 Use Conventional Commits format in PR title:
 
 ```
-feat(website): add dark mode toggle
-fix(app-dashboard): handle missing user data
+feat(website): add landing page updates
+fix(app-startup-blueprint): handle missing config edge case
+feat(pkg-agri-data-toolkit): add new downloader helper
 chore: update dependencies
 ```
 
@@ -230,7 +213,7 @@ Use the universal template from `contribute_standards.md` with these additions:
 
 Brief description of changes.
 
-**Affected workspace(s)**: `website`, `packages/utils`
+**Affected workspace(s)**: `website`, `apps/startup-blueprint`, `packages/agri-data-toolkit`
 **Breaking changes**: None (or describe)
 
 ---
@@ -251,9 +234,10 @@ Brief description of changes.
 
 ## 🧭 Validation
 
-- [ ] Tests pass: `pnpm test` and `pnpm --filter <workspace> test`
-- [ ] Build passes: `pnpm build`
-- [ ] Lint passes: `pnpm lint`
+- [ ] JS tests pass: `pnpm test` and `pnpm --filter <workspace> test`
+- [ ] JS build passes: `pnpm build`
+- [ ] JS lint passes: `pnpm lint`
+- [ ] Python tests pass: `cd packages/agri-data-toolkit && poetry run pytest tests/`
 - [ ] Manual testing in `website` (or applicable workspace)
 
 ---
