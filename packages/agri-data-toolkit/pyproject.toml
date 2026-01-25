@@ -1,0 +1,112 @@
+[tool.poetry]
+name = "agri-data-toolkit"
+version = "0.1.0"
+description = "Agricultural Data Analytics Course - Python toolkit for US row crop data"
+authors = ["Clayton Young <claytoneyoung+github@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/borealBytes/agri-data-toolkit"
+repository = "https://github.com/borealBytes/agri-data-toolkit"
+keywords = ["agriculture", "geospatial", "precision-agriculture", "satellite-imagery", "crop-analytics"]
+packages = [{include = "agri_toolkit", from = "src"}]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Education",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: GIS",
+    "Topic :: Scientific/Engineering :: Atmospheric Science",
+]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+pandas = "^2.2.0"
+geopandas = "^1.0.0"
+rasterio = "^1.4.0"
+shapely = "^2.0.0"
+fiona = "^1.10.0"
+pyproj = "^3.7.0"
+requests = "^2.32.0"
+aiohttp = "^3.10.0"
+numpy = "^2.1.0"
+scipy = "^1.14.0"
+PyYAML = "^6.0.0"
+python-dotenv = "^1.0.0"
+tqdm = "^4.67.0"
+click = "^8.1.0"
+colorama = "^0.4.6"
+loguru = "^0.7.0"
+sentinelsat = "^1.2.0"
+duckdb = "^1.1.0"
+pyarrow = "^22.0.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.0"
+pytest-cov = "^6.0.0"
+pytest-mock = "^3.14.0"
+pytest-asyncio = "^0.24.0"
+black = "^24.10.0"
+flake8 = "^7.1.0"
+isort = "^5.13.0"
+mypy = "^1.13.0"
+pylint = "^3.3.0"
+pre-commit = "^4.0.0"
+autopep8 = "^2.3.2"
+sphinx = "^8.1.0"
+sphinx-rtd-theme = "^3.0.0"
+sphinx-autodoc-typehints = "^2.5.0"
+jupyter = "^1.1.0"
+ipykernel = "^6.29.0"
+jupyterlab = "^4.3.0"
+types-PyYAML = "^6.0.0"
+
+[tool.poetry.group.viz]
+optional = true
+
+[tool.poetry.group.viz.dependencies]
+matplotlib = "^3.9.0"
+seaborn = "^0.13.0"
+plotly = "^5.24.0"
+
+[tool.black]
+line-length = 100
+target-version = ['py312']
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.venv
+  | build
+  | dist
+)/
+'''
+
+[tool.isort]
+profile = "black"
+line_length = 100
+multi_line_output = 3
+include_trailing_comma = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+python_classes = "Test*"
+python_functions = "test_*"
+addopts = "-v --cov=src/agri_toolkit --cov-report=html --cov-report=term"
+markers = [
+    "unit: Unit tests using local fixtures",
+    "integration: Integration tests hitting live endpoints",
+    "slow: Tests that take longer than 5 seconds",
+    "persistent: Tests that generate persistent data for CI/CD artifacts",
+]
+
+[tool.mypy]
+python_version = "3.12"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

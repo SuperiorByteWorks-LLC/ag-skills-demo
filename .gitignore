@@ -62,6 +62,14 @@ data/metadata/**
 !data/raw/.gitkeep
 !data/processed/.gitkeep
 !data/metadata/.gitkeep
+packages/agri-data-toolkit/data/
+!packages/agri-data-toolkit/data/.gitkeep
+packages/agri-data-toolkit/data/raw/**
+packages/agri-data-toolkit/data/processed/**
+packages/agri-data-toolkit/data/metadata/**
+!packages/agri-data-toolkit/data/raw/.gitkeep
+!packages/agri-data-toolkit/data/processed/.gitkeep
+!packages/agri-data-toolkit/data/metadata/.gitkeep
 
 # Credentials and secrets
 .env
