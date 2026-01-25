@@ -67,7 +67,7 @@ AI-assisted development needs:
 
 4. **Clear hierarchy**
    - Universal patterns (reusable for any Git repo)
-   - Holoscan-specific rules (separate file)
+   - Agri Data Toolkit-specific rules (separate file)
    - Operational procedures (modular, on-demand loading)
 
 5. **Transparent checkpoints**
@@ -243,7 +243,7 @@ AI-assisted development needs:
 
 ## Related ADRs
 
-- **ADR-002**: Monorepo structure (Holoscan-specific)
+- **ADR-002**: Monorepo structure (Agri Data Toolkit-specific)
 - **ADR-003**: Idempotent scripts (operational reliability)
 - **ADR-004**: Error recovery procedures (handling failures)
 

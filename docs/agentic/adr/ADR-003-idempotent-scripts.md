@@ -2,13 +2,13 @@
 
 **Status**: Accepted  
 **Date**: 2026-01-12  
-**Decision Maker**: Holoscan Development Team
+**Decision Maker**: Agri Data Toolkit Maintainers
 
 ---
 
 ## Problem Statement
 
-Holoscan operates across multiple workspaces and environments (development, staging, production). Operational tasks require:
+Agri Data Toolkit operates across multiple workspaces and environments (development, staging, production). Operational tasks require:
 
 1. **Reliability** - Scripts must work repeatedly without side effects
 2. **Safety** - Operations should never corrupt data or create duplicate entries
@@ -28,7 +28,7 @@ Holoscan operates across multiple workspaces and environments (development, stag
 
 ## Constraints
 
-1. **Holoscan Architecture**
+1. **Agri Data Toolkit Architecture**
    - Multiple workspaces and business lines
    - Different database environments (dev, staging, prod)
    - CI/CD pipeline runs scripts automatically
@@ -50,7 +50,7 @@ Holoscan operates across multiple workspaces and environments (development, stag
 
 ## Decision
 
-**All Holoscan operational scripts must be idempotent**:
+**All Agri Data Toolkit operational scripts must be idempotent**:
 
 ### **1. Idempotent Principle**
 
@@ -122,7 +122,7 @@ EOF
 
 ### **3. Required Elements**
 
-Every Holoscan operational script must have:
+Every Agri Data Toolkit operational script must have:
 
 **Header**:
 
@@ -235,7 +235,7 @@ All scripts must follow:
 
 - Checking existence adds slight overhead
 - Multiple runs slower than one-shot scripts
-- Mitigation: Negligible for typical Holoscan workflows
+- Mitigation: Negligible for typical Agri Data Toolkit workflows
 
 ⚠️ **Requires discipline**
 
@@ -269,7 +269,7 @@ All scripts must follow:
 
 **Why rejected**:
 
-- Overkill for Holoscan scale
+- Overkill for Agri Data Toolkit scale
 - Complex to implement
 - High operational overhead
 - Not suitable for frequent data updates
@@ -295,7 +295,7 @@ All scripts must follow:
 
 ### **Phase 2: Existing Scripts Migration** (In Progress)
 
-- [ ] Audit existing scripts in Holoscan
+- [ ] Audit existing scripts in Agri Data Toolkit
 - [ ] Identify non-idempotent scripts
 - [ ] Refactor to idempotent patterns
 - [ ] Add logging and error handling
@@ -342,7 +342,7 @@ All scripts must follow:
 ## Related ADRs
 
 - **ADR-001**: Using Perplexity Spaces for Agentic Development
-- **ADR-002**: Monorepo structure (Holoscan-specific)
+- **ADR-002**: Monorepo structure (Agri Data Toolkit-specific)
 - **ADR-004**: Error recovery procedures (handling failures)
 
 ---
@@ -365,7 +365,7 @@ All scripts must follow:
 
 ## Approval
 
-- **Proposed by**: Holoscan Development Team
+- **Proposed by**: Agri Data Toolkit Maintainers
 - **Date**: 2026-01-12
 - **Status**: Ready for implementation
 - **Next step**: Phase 1 template creation and Phase 2 script migration

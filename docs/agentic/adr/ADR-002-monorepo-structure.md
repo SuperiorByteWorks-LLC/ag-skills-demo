@@ -2,13 +2,13 @@
 
 **Status**: Accepted  
 **Date**: 2026-01-12  
-**Decision Maker**: Holoscan Development Team
+**Decision Maker**: Agri Data Toolkit Maintainers
 
 ---
 
 ## Problem Statement
 
-Holoscan is expanding from a single product (primary app) to multiple products and services:
+Agri Data Toolkit is expanding from a single product (primary app) to multiple products and services:
 
 - Primary app (current)
 - Marketing website (future)
@@ -16,7 +16,7 @@ Holoscan is expanding from a single product (primary app) to multiple products a
 - Internal tools (future)
 - Shared authentication and business logic
 
-Without a monorepo structure, Holoscan would face:
+Without a monorepo structure, Agri Data Toolkit would face:
 
 **Challenge 1: Code Duplication**
 
@@ -50,7 +50,7 @@ Without a monorepo structure, Holoscan would face:
 
 ## Constraints
 
-1. **Holoscan Technology Stack**
+1. **Agri Data Toolkit Technology Stack**
    - Cloudflare Workers (serverless backends)
    - Cloudflare Pages (static/frontend hosting)
    - Cloudflare KV, R2, D1 (data storage)
@@ -80,141 +80,44 @@ Without a monorepo structure, Holoscan would face:
 
 ## Decision
 
-**Holoscan will adopt a product-based monorepo structure using:**
+**Agri Data Toolkit will use a monorepo structure that supports both the Python package and the startup blueprint app:**
 
-1. **Product-Based Organization** (not domain-based)
-   - `apps/primary-app/` ← Product name
-   - `apps/marketing-site/` ← Not `apps/business_name.com/`
-   - `apps/customer-portal/` ← Resilient to domain changes
+1. **Product-Based Organization**
+   - `apps/startup-blueprint/` for the deployable blueprint app
+   - `website/` for the public site
 
-2. **Shared Code via Packages**
-   - `packages/auth/` ← Authentication logic
-   - `packages/database/` ← Database types & schemas
-   - `packages/ui/` ← Shared components
-   - `packages/utils/` ← Utility functions
+2. **Package-Based Distribution**
+   - `packages/agri-data-toolkit/` for the installable Python package
+   - Poetry remains the package manager inside the Python package
 
-3. **Build Orchestration with Turborepo**
-   - Smart caching (only rebuild what changed)
-   - Parallel execution (build multiple apps simultaneously)
-   - Dependency graph awareness
-   - Monorepo-wide commands from root
+3. **Build Orchestration with Turborepo + pnpm (JS workspaces)**
+   - JS workspaces use `pnpm-workspace.yaml` and `turbo.json`
+   - Python workflows run inside `packages/agri-data-toolkit`
 
-4. **Workspace Management with pnpm**
-   - Efficient disk usage
-   - Workspace hoisting
-   - Automatic linking of local packages
-   - Shared `node_modules` structure
-
-5. **Independent Deployments**
-   - Each app has own `wrangler.toml`
-   - Own Cloudflare KV/R2/D1 resources
-   - Own deployment pipeline
-   - Can be deployed to own subdomain or domain
-   - Can later be extracted to separate repository
+4. **Independent Deployments**
+   - The startup blueprint app and website deploy independently
+   - The Python package is versioned and released separately
 
 ---
 
 ## Directory Structure
 
 ```
-Holoscan/
-├── apps/                                    # 🚀 Deployable applications
-│   ├── primary-app/                         # Primary product (current)
-│   │   ├── src/                            # Worker source code
-│   │   │   ├── index.ts                    # Entry point
-│   │   │   ├── routes/                     # API endpoints
-│   │   │   ├── middleware/                 # Auth, CORS, etc.
-│   │   │   ├── services/                   # Business logic
-│   │   │   └── types/                      # TypeScript types
-│   │   ├── wrangler.toml                   # Cloudflare config
-│   │   ├── package.json                    # Dependencies
-│   │   ├── tsconfig.json                   # TypeScript config
-│   │   └── README.md                       # App documentation
-│   │
-│   ├── marketing-site/                     # Marketing site (future)
-│   │   ├── src/
-│   │   ├── wrangler.toml
-│   │   └── package.json
-│   │
-│   └── customer-portal/                    # Customer portal (future)
-│       ├── src/
-│       ├── wrangler.toml
-│       └── package.json
-│
-├── packages/                                # 📦 Shared code libraries
-│   ├── auth/                               # Authentication logic
-│   │   ├── src/
-│   │   │   ├── index.ts                    # Public exports
-│   │   │   ├── validate.ts                 # JWT validation
-│   │   │   ├── session.ts                  # Session management
-│   │   │   └── types.ts                    # Shared types
-│   │   ├── package.json
-│   │   └── README.md
-│   │
-│   ├── database/                           # Database schemas & types
-│   │   ├── src/
-│   │   │   ├── index.ts                    # Schema definitions
-│   │   │   ├── migrations/                 # Database migrations
-│   │   │   └── types.ts                    # TypeScript types
-│   │   ├── package.json
-│   │   └── README.md
-│   │
-│   ├── ui/                                 # Shared UI components (future)
-│   │   ├── src/
-│   │   └── package.json
-│   │
-│   ├── config/                             # Shared configuration
-│   │   ├── src/
-│   │   └── package.json
-│   │
-│   └── utils/                              # Utility functions
-│       ├── src/
-│       └── package.json
-│
-├── docs/                                   # 📝 Documentation
-│   ├── SPEC_MONOREPO.md                    # Technical specification
-│   ├── products/
-│   │   └── primary-app/
-│   │       ├── CLOUDFLARE_SETUP.md         # Infrastructure setup
-│   │       ├── GMAIL_SMTP_SETUP.md         # Email configuration
-│   │       ├── PRD.md                      # Product requirements
-│   │       ├── TDD.md                      # Technical design
-│   │       └── PROJECT_STATUS.md           # Implementation status
-│   │
-│   └── company/
-│       ├── README.md
-│       └── policies/
-│
-├── .github/                                # ⚙️ GitHub configuration
-│   ├── workflows/
-│   │   ├── deploy.yml                      # CI/CD deployment
-│   │   ├── test.yml                        # Testing workflow
-│   │   └── lint.yml                        # Code quality
-│   │
-│   └── ISSUE_TEMPLATE/
-│
-├── scripts/                                # 🔧 Automation scripts
-│   ├── setup.sh                            # Initial setup
-│   ├── deploy.sh                           # Manual deployment
-│   └── migrate.sh                          # Database migrations
-│
-├── docs/agentic/                           # 🤖 AI agent configuration
-│   ├── adr/                                # Architecture decision records
-│   │   ├── ADR-001-perplexity-spaces.md
-│   │   ├── ADR-002-monorepo-structure.md
-│   │   ├── ADR-003-idempotent-scripts.md
-│   │   └── ADR-004-error-recovery.md
-│   │
-│   └── instructions.md
-│
-├── .env.example                            # Environment variables template
-├── turbo.json                              # Turborepo orchestration
-├── pnpm-workspace.yaml                     # Workspace definition
-├── package.json                            # Root dependencies & scripts
-├── MONOREPO_STRUCTURE.md                   # User-friendly monorepo guide
-├── .gitignore                              # Git ignore rules
-├── CONTRIBUTING.md                         # Contribution guidelines
-└── README.md                               # Project overview
+agri-data-toolkit/
+├── apps/                          # 🚀 Deployable applications
+│   └── startup-blueprint/         # Startup blueprint app
+├── packages/                      # 📦 Packages and libraries
+│   └── agri-data-toolkit/          # Python package
+├── website/                       # 🌐 Public site
+├── docs/                          # 📝 Startup blueprint docs
+├── scripts/                       # 🔧 Root-level automation
+├── docs/agentic/                  # 🤖 Agentic workflow docs
+├── .github/                       # ⚙️ GitHub configuration
+├── turbo.json                     # Turborepo orchestration
+├── pnpm-workspace.yaml            # Workspace definition
+├── package.json                   # Root dependencies & scripts
+├── .gitignore                     # Git ignore rules
+└── README.md                      # Project overview
 ```
 
 ---
@@ -239,7 +142,7 @@ Holoscan/
 ✅ **Extraction friendly**
 
 - If Primary App becomes separate company later, folder is already isolated
-- Can move `apps/primary-app/` to `Holoscan/primary-app` repo
+- Can move `apps/primary-app/` to `agri-data-toolkit/primary-app` repo
 - No refactoring needed
 
 ### **2. Independent Deployments**
@@ -327,7 +230,7 @@ git subtree split --prefix apps/primary-app -b primary-app-repo
 {
   "name": "@business_name/monorepo",
   "private": true,
-  "description": "Holoscan business monorepo",
+  "description": "Agri Data Toolkit business monorepo",
   "scripts": {
     "dev": "turbo run dev",
     "build": "turbo run build",
@@ -621,7 +524,7 @@ If Primary App becomes huge and needs separate governance:
 # Extract from monorepo to separate repository
 git subtree split --prefix apps/primary-app -b primary-app-split
 cd ../primary-app-repo
-git pull ../Holoscan primary-app-split
+git pull ../Agri Data Toolkit primary-app-split
 
 # Install shared packages from npm/registry
 npm install @business_name/auth@1.0.0
@@ -693,7 +596,7 @@ npm install @business_name/auth@1.0.0
 
 ## Approval
 
-- **Proposed by**: Holoscan Development Team
+- **Proposed by**: Agri Data Toolkit Maintainers
 - **Date**: 2026-01-12
 - **Status**: Accepted and implemented
 - **Next step**: Maintain structure as new products added
