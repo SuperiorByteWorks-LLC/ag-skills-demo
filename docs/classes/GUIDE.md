@@ -17,6 +17,7 @@ This guide shows you how to create consistent, professional class documents. Fol
 Every class has exactly these 8 sections in this order:
 
 ### 1. Title & Metadata
+
 ```
 # 03 - Class Title Here
 
@@ -24,11 +25,13 @@ Every class has exactly these 8 sections in this order:
 
 ---
 ```
+
 - One H1 with class number
 - Course and semester
 - Separator line (---)
 
 ### 2. 🏠 Housekeeping
+
 ```
 ## 🏠 Housekeeping
 
@@ -37,12 +40,14 @@ Every class has exactly these 8 sections in this order:
 
 ---
 ```
+
 - H2 with exactly ONE emoji (🏠)
 - Bullet points only
 - Separator line
 - 3-4 items max
 
 ### 3. 📋 Syllabus Review
+
 ```
 ## 📋 Syllabus Review
 
@@ -52,12 +57,14 @@ This connects to [Z] next week.
 
 ---
 ```
+
 - H2 with emoji (📋)
 - 2-3 sentences max
 - Connect previous → today → future
 - Separator line
 
 ### 4. 📍 Agenda
+
 ```
 ## 📍 Agenda
 
@@ -69,6 +76,7 @@ This connects to [Z] next week.
 
 ---
 ```
+
 - H2 with emoji (📍)
 - Checkbox list
 - First item checked
@@ -76,6 +84,7 @@ This connects to [Z] next week.
 - Separator line
 
 ### 5. 🎯 Learning Outcomes
+
 ```
 ## 🎯 Learning Outcomes
 
@@ -87,6 +96,7 @@ After this class, you'll be able to:
 
 ---
 ```
+
 - H2 with emoji (🎯)
 - Intro line: "After this class, you'll be able to:"
 - 3-5 items
@@ -95,6 +105,7 @@ After this class, you'll be able to:
 - Separator line
 
 ### 6. 📚 Content with Collapsible Speaker Notes
+
 ```
 ## 📚 Content
 
@@ -138,6 +149,7 @@ Additional information:
 
 ---
 ```
+
 - H2 with emoji (📚)
 - H3 for each main topic (3-5 topics)
 - H4 for subtopics only
@@ -156,6 +168,7 @@ Additional information:
 - Separator line at end
 
 ### 7. ✍️ Assignment
+
 ```
 ## ✍️ Assignment
 
@@ -165,7 +178,7 @@ Additional information:
 
 **Instructions:**
 1. Step 1 - specific action
-2. Step 2 - specific action  
+2. Step 2 - specific action
 3. Step 3 - specific action
 
 **What to submit:** Format and details
@@ -174,6 +187,7 @@ Additional information:
 
 ---
 ```
+
 - H2 with emoji (✍️)
 - H3 for task name
 - Clear objective (one sentence)
@@ -183,6 +197,7 @@ Additional information:
 - Separator line
 
 ### 8. 🔗 Resources
+
 ```
 ## 🔗 Resources
 
@@ -199,6 +214,7 @@ Additional information:
 
 ---
 ```
+
 - H2 with emoji (🔗)
 - Organize into subsections (Official, Reading, Tools, etc.)
 - 5-10 links/resources total
@@ -212,84 +228,91 @@ Additional information:
 ## Approved Emoji List
 
 ### Core Section Emoji (Required - One Per H2)
-| Emoji | Use | Section |
-|-------|-----|----------|
-| 🏠 | Housekeeping & announcements | Section 2 |
-| 📋 | Syllabus review & connections | Section 3 |
-| 📍 | Agenda & roadmap | Section 4 |
-| 🎯 | Learning outcomes & goals | Section 5 |
-| 📚 | Main content & concepts | Section 6 |
-| ✍️ | Assignments & tasks | Section 7 |
-| 🔗 | Resources & references | Section 8 |
+
+| Emoji | Use                           | Section   |
+| ----- | ----------------------------- | --------- |
+| 🏠    | Housekeeping & announcements  | Section 2 |
+| 📋    | Syllabus review & connections | Section 3 |
+| 📍    | Agenda & roadmap              | Section 4 |
+| 🎯    | Learning outcomes & goals     | Section 5 |
+| 📚    | Main content & concepts       | Section 6 |
+| ✍️    | Assignments & tasks           | Section 7 |
+| 🔗    | Resources & references        | Section 8 |
 
 ### Agricultural & Data Emoji (For Content/Notes)
-| Emoji | Use |
-|-------|-----|
-| 🌾 | Crops, agriculture, farming |
-| 🚜 | Equipment, machinery, farming |
-| 🌱 | Growth, seedlings, new concepts |
-| 🌍 | Global, geospatial, location |
-| 📊 | Data, charts, analytics, graphs |
-| 📈 | Trends, growth, increase, optimization |
-| 📉 | Decline, decrease, patterns |
-| 💾 | Data storage, databases, files |
-| 🗂️ | Organization, structure, systems |
-| 🔍 | Analysis, investigation, discovery |
-| 🔄 | Cycles, processes, workflows, repetition |
-| ⚙️ | Systems, mechanics, configuration |
-| 🎨 | Design, visualization, UI/UX |
+
+| Emoji | Use                                      |
+| ----- | ---------------------------------------- |
+| 🌾    | Crops, agriculture, farming              |
+| 🚜    | Equipment, machinery, farming            |
+| 🌱    | Growth, seedlings, new concepts          |
+| 🌍    | Global, geospatial, location             |
+| 📊    | Data, charts, analytics, graphs          |
+| 📈    | Trends, growth, increase, optimization   |
+| 📉    | Decline, decrease, patterns              |
+| 💾    | Data storage, databases, files           |
+| 🗂️    | Organization, structure, systems         |
+| 🔍    | Analysis, investigation, discovery       |
+| 🔄    | Cycles, processes, workflows, repetition |
+| ⚙️    | Systems, mechanics, configuration        |
+| 🎨    | Design, visualization, UI/UX             |
 
 ### Code & Technical Emoji
-| Emoji | Use |
-|-------|-----|
-| 💻 | Code, programming, development |
-| 🐍 | Python code, scripts |
-| 📝 | Scripts, code files |
-| 🔧 | Tools, utilities, configuration |
-| 🔨 | Setup, tools, implementation |
-| ⚡ | Performance, optimization, speed |
-| 🔐 | Security, authentication, privacy |
-| 🌐 | Web, internet, APIs |
+
+| Emoji | Use                               |
+| ----- | --------------------------------- |
+| 💻    | Code, programming, development    |
+| 🐍    | Python code, scripts              |
+| 📝    | Scripts, code files               |
+| 🔧    | Tools, utilities, configuration   |
+| 🔨    | Setup, tools, implementation      |
+| ⚡    | Performance, optimization, speed  |
+| 🔐    | Security, authentication, privacy |
+| 🌐    | Web, internet, APIs               |
 
 ### Positive & Constructive Emoji
-| Emoji | Use |
-|-------|-----|
-| ✅ | Correct, success, verification, complete |
-| ✔️ | Approved, confirmed |
-| 👍 | Good practice, recommended approach |
-| 💡 | Tips, insights, ideas, best practices |
-| 🎓 | Learning, education, knowledge |
-| 📌 | Important, pin, key point |
-| ⭐ | Excellent, standout, special |
-| 🎁 | Bonus, extra, gift, special resource |
-| ➕ | Additional, extra, add more |
+
+| Emoji | Use                                      |
+| ----- | ---------------------------------------- |
+| ✅    | Correct, success, verification, complete |
+| ✔️    | Approved, confirmed                      |
+| 👍    | Good practice, recommended approach      |
+| 💡    | Tips, insights, ideas, best practices    |
+| 🎓    | Learning, education, knowledge           |
+| 📌    | Important, pin, key point                |
+| ⭐    | Excellent, standout, special             |
+| 🎁    | Bonus, extra, gift, special resource     |
+| ➕    | Additional, extra, add more              |
 
 ### Cautionary & Negative Emoji
-| Emoji | Use |
-|-------|-----|
-| ⚠️ | Warning, caution, important notice |
-| ❌ | Wrong, incorrect, avoid, don't do this |
-| 🚫 | Prohibited, blocked, no |
-| ❓ | Questions, uncertain, check your understanding |
-| 🔴 | Critical, stop, alert |
-| ⛔ | Do not, prohibited, blocked |
-| ➖ | Decrease, subtract, remove |
+
+| Emoji | Use                                            |
+| ----- | ---------------------------------------------- |
+| ⚠️    | Warning, caution, important notice             |
+| ❌    | Wrong, incorrect, avoid, don't do this         |
+| 🚫    | Prohibited, blocked, no                        |
+| ❓    | Questions, uncertain, check your understanding |
+| 🔴    | Critical, stop, alert                          |
+| ⛔    | Do not, prohibited, blocked                    |
+| ➖    | Decrease, subtract, remove                     |
 
 ### Context & Meta Emoji
-| Emoji | Use |
-|-------|-----|
-| 💬 | Speaker notes, comments, thoughts |
-| 📌 | Remember, important, bookmark |
-| 🎬 | Demo, example, walkthrough |
-| 📹 | Video reference, screen recording |
-| 📖 | Reading, literature, reference |
-| 🔎 | Explore, discover, research |
-| 💭 | Think about, reflection, deeper thought |
-| 🤔 | Questions to consider, critical thinking |
-| 👥 | Group work, collaboration |
-| 🗣️ | Discussion, speaking points |
+
+| Emoji | Use                                      |
+| ----- | ---------------------------------------- |
+| 💬    | Speaker notes, comments, thoughts        |
+| 📌    | Remember, important, bookmark            |
+| 🎬    | Demo, example, walkthrough               |
+| 📹    | Video reference, screen recording        |
+| 📖    | Reading, literature, reference           |
+| 🔎    | Explore, discover, research              |
+| 💭    | Think about, reflection, deeper thought  |
+| 🤔    | Questions to consider, critical thinking |
+| 👥    | Group work, collaboration                |
+| 🗣️    | Discussion, speaking points              |
 
 ### Usage Notes
+
 - Use section emoji **only in H2 headings** (once per section)
 - Use content emoji **sparingly in body text** - emphasize key points only
 - Use in speaker notes naturally without overdoing it
@@ -301,11 +324,13 @@ Additional information:
 ## Formatting Rules
 
 ### Emoji
+
 - **One per section** in H2 headings only
 - **Sparingly in content** for emphasis
 - **Nowhere else** - no emoji in title, metadata, code, or links
 
 ### Headings
+
 - `# Title` - H1 (ONE ONLY)
 - `## 🏠 Section` - H2 (EIGHT TOTAL)
 - `### Topic` - H3 (CONTENT ONLY)
@@ -313,46 +338,49 @@ Additional information:
 - Never use H5 or deeper
 
 ### Text
+
 - **Bold** for emphasis and important terms: `**term**`
-- *Italic* for definitions: `*term*`
+- _Italic_ for definitions: `*term*`
 - `Code` for technical: `` `command` ``
 - > Blockquotes for definitions: `> Quote`
 
 ### Lists
+
 - Bullets for non-sequential: `- item`
 - Numbers for steps: `1. step`
 - Checkboxes for agenda: `- [ ] item`
 - Consistent indentation (2 spaces)
 
 ### Images
+
 - **Inline with content text** where relevant
 - `![alt text](images/class03_slide05_img01.png)`
 - Italic caption below: `*Figure 1: Description*`
 - Numbered figures if multiple
 
 ### Speaker Notes (Collapsible)
+
 ```html
 <details>
-<summary><strong>💬 Speaker Notes</strong></summary>
+  <summary><strong>💬 Speaker Notes</strong></summary>
 
-- Bullet point 1
-- Bullet point 2
-- **Bold text** for emphasis
-- [Links](https://example.com) work fine
-- Even code blocks work
-
+  - Bullet point 1 - Bullet point 2 - **Bold text** for emphasis - [Links](https://example.com) work fine - Even code
+  blocks work
 </details>
 ```
+
 - Collapsed by default
 - Can contain any markdown
 - Include timing, stories, transitions, clarifications
 
 ### Links
+
 - `[Meaningful text](https://full-url.com)`
 - Test before publishing
 - Use meaningful text (not "click here")
 
 ### Spacing
+
 - Blank line between sections
 - Blank line between paragraphs
 - No blank lines within lists
@@ -363,55 +391,70 @@ Additional information:
 ## Common Mistakes to Avoid
 
 ### ❌ Multiple emoji per section
+
 ```
 ## 📚📊📈 Content Topics  ← WRONG
 ```
+
 ✅ Fix: Use one emoji
+
 ```
 ## 📚 Content  ← RIGHT
 ```
 
 ### ❌ Missing separator lines
+
 ```
 ## 🏠 Housekeeping
 - Item
 ## 📋 Syllabus Review  ← No --- between
 ```
+
 ✅ Fix: Add `---` after each section
 
 ### ❌ Vague learning outcomes
+
 ```
 - We'll look at some data
 - Maybe discuss analysis
 ```
+
 ✅ Fix: Be specific and measurable
+
 ```
 - **Analyze** field data using Python
 - **Create** visualizations of patterns
 ```
 
 ### ❌ Generic assignment
+
 ```
 **Due:** Next week
 **Deliverable:** Something about the topic
 ```
+
 ✅ Fix: Be specific
+
 ```
 **Due:** Friday, March 7, 2026 at 5:00 PM EST
 **Deliverable:** PDF with analysis and written responses
 ```
 
 ### ❌ Broken or untested links
+
 ✅ Fix: Click every link before publishing
 
 ### ❌ Images in separate section
+
 ```
 ## 📚 Content
 [content here]
 ## 📊 Key Images  ← Separate section
 [images here]
 ```
+
 ✅ Fix: Place images inline where relevant
+
 ```
 ## 📚 Content
 
@@ -422,12 +465,15 @@ Explanation...
 ```
 
 ### ❌ Missing collapsible speaker notes
+
 ```
 ### Topic
 Content here
 [no speaker notes]
 ```
+
 ✅ Fix: Add speaker notes section
+
 ```
 ### Topic
 Content here
@@ -446,12 +492,14 @@ Content here
 ## Before Publishing - Checklist
 
 ### Structure
+
 - [ ] All 8 sections present in order
 - [ ] Each H2 has exactly ONE emoji
 - [ ] Separator lines (---) after each section
 - [ ] No missing required sections
 
 ### Content
+
 - [ ] Learning outcomes are specific and measurable
 - [ ] Assignment has exact due date/time
 - [ ] All links tested and working
@@ -460,12 +508,14 @@ Content here
 - [ ] No spelling or grammar errors
 
 ### Formatting
+
 - [ ] Heading hierarchy correct (H1 → H2 → H3 → H4)
 - [ ] Emoji count correct (7 in H2s)
 - [ ] Spacing consistent throughout
 - [ ] Bold, italic, code used correctly
 
 ### Images
+
 - [ ] Image paths correct (relative paths)
 - [ ] Alt text descriptive
 - [ ] Captions present and numbered
@@ -473,12 +523,14 @@ Content here
 - [ ] Images are positioned inline with related content
 
 ### Speaker Notes
+
 - [ ] Collapsible sections under major topics
 - [ ] Using proper `<details>` and `<summary>` tags
 - [ ] Notes are collapsed by default
 - [ ] Notes are well-formatted markdown
 
 ### Metadata
+
 - [ ] Class number in title
 - [ ] Course and semester listed
 
@@ -486,14 +538,14 @@ Content here
 
 ## Statistics to Aim For
 
-| Metric | Target |
-|--------|--------|
-| Total length | 2000-3500 words |
-| Content topics (H3) | 3-5 |
-| Images | 2-5 (inline) |
-| Learning outcomes | 3-5 |
-| Resources | 5-10 |
-| Section emoji | 7 (one per H2) |
+| Metric              | Target          |
+| ------------------- | --------------- |
+| Total length        | 2000-3500 words |
+| Content topics (H3) | 3-5             |
+| Images              | 2-5 (inline)    |
+| Learning outcomes   | 3-5             |
+| Resources           | 5-10            |
+| Section emoji       | 7 (one per H2)  |
 
 ---
 
@@ -516,11 +568,13 @@ Content here
 **Classes:** `classXX.md` where XX is the class number (01, 02, 03, etc.)
 
 **Images:** `classXX_slideYY_imgZZ.png`
+
 - `XX` = class number
 - `YY` = source slide number
 - `ZZ` = image number on that slide
 
 **Examples:**
+
 - `class03_slide05_img01.png`
 - `class05_slide12_img02.png`
 
@@ -529,6 +583,7 @@ Content here
 ## Quick Reference
 
 ### The 8 H2 Sections
+
 1. 🏠 Housekeeping
 2. 📋 Syllabus Review
 3. 📍 Agenda
@@ -539,22 +594,24 @@ Content here
 8. (Metadata - no H2, just text)
 
 ### Heading Levels
+
 - `# Title` - H1 (ONE ONLY)
 - `## 🏠 Section` - H2 (EIGHT TOTAL)
 - `### Topic` - H3 (CONTENT ONLY)
 - `#### Subtopic` - H4 (CONTENT ONLY)
 
 ### Speaker Notes HTML
+
 ```html
 <details>
-<summary><strong>💬 Speaker Notes</strong></summary>
+  <summary><strong>💬 Speaker Notes</strong></summary>
 
-[Your formatted markdown content here]
-
+  [Your formatted markdown content here]
 </details>
 ```
 
 ### Action Verbs for Outcomes
+
 Identify, Analyze, Create, Evaluate, Design, Interpret, Describe, Compare, Explain, Apply, Develop, Build, Implement, Test, Deploy
 
 ---
@@ -566,14 +623,12 @@ Create `images/` folder, export images from PowerPoint as PNG, rename using conv
 
 **How do I add speaker notes?**
 After any major content section, add a collapsible details block:
+
 ```html
 <details>
-<summary><strong>💬 Speaker Notes</strong></summary>
+  <summary><strong>💬 Speaker Notes</strong></summary>
 
-- Your notes here
-- Timing guidance
-- Stories or examples
-
+  - Your notes here - Timing guidance - Stories or examples
 </details>
 ```
 
@@ -590,4 +645,4 @@ If over 3500 words, split into multiple classes. If under 2000 words, add more d
 
 **Remember:** Consistency makes it easier for students to learn. Follow this structure for every class.
 
-*Last Updated: January 26, 2026*
+_Last Updated: January 26, 2026_
