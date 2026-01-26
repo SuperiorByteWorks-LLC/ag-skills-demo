@@ -38,12 +38,21 @@ Every class has exactly these 8 sections in this order:
 - Announcement 1
 - Announcement 2
 
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Note 1
+- Note 2
+
+</details>
+
 ---
 ```
 
 - H2 with exactly ONE emoji (🏠)
 - Bullet points only
-- Separator line
+- Collapsible speaker notes (optional)
+- Horizontal rule (---) after </details> for visual separation
 - 3-4 items max
 
 ### 3. 📋 Syllabus Review
@@ -55,13 +64,21 @@ Last class we covered [X]. Today we explore [Y].
 
 This connects to [Z] next week.
 
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Connection to previous
+- Bridge to today
+
+</details>
+
 ---
 ```
 
 - H2 with emoji (📋)
 - 2-3 sentences max
 - Connect previous → today → future
-- Separator line
+- Horizontal rule (---) after </details>
 
 ### 4. 📍 Agenda
 
@@ -74,6 +91,14 @@ This connects to [Z] next week.
 - [ ] Topic 3
 - [ ] Assignment preview
 
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Pacing notes
+- Timing flexibility
+
+</details>
+
 ---
 ```
 
@@ -81,7 +106,7 @@ This connects to [Z] next week.
 - Checkbox list
 - First item checked
 - 4-6 items total
-- Separator line
+- Horizontal rule (---) after </details>
 
 ### 5. 🎯 Learning Outcomes
 
@@ -94,6 +119,14 @@ After this class, you'll be able to:
 - **Analyze** [specific thing]
 - **Create** [specific output]
 
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Assessment approach
+- Success criteria
+
+</details>
+
 ---
 ```
 
@@ -102,7 +135,7 @@ After this class, you'll be able to:
 - 3-5 items
 - Bold action verbs (Identify, Analyze, Create, Evaluate, Design)
 - Specific, measurable outcomes
-- Separator line
+- Horizontal rule (---) after </details>
 
 ### 6. 📚 Content with Collapsible Speaker Notes
 
@@ -123,11 +156,17 @@ Explanation and context here...
 
 </details>
 
+---
+
 #### Subtopic 1.1
 Details here
 
+---
+
 #### Subtopic 1.2
 Details here
+
+---
 
 ### Topic 2
 
@@ -160,12 +199,13 @@ Additional information:
   - Summary text: `<strong>💬 Speaker Notes</strong>`
   - Can contain any formatted markdown (bullets, lists, links, code, etc.)
   - For any supplemental info: detailed notes, timing, stories, transitions, talking points
+- **Horizontal rule (---) after EVERY </details> block for visual separation**
+- **Horizontal rule (---) after subtopics** to clearly separate from next section
 - 2000-3000 words total for content section
 - Use **bold** for important terms
 - Use `code` for technical terms
 - Use tables for data
 - Use blockquotes for definitions
-- Separator line at end
 
 ### 7. ✍️ Assignment
 
@@ -185,6 +225,14 @@ Additional information:
 
 **Due:** Monday, March 3, 2026 at 11:59 PM EST
 
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Grading rubric
+- Common student issues
+
+</details>
+
 ---
 ```
 
@@ -194,7 +242,7 @@ Additional information:
 - Numbered steps (not bullets)
 - Explicit deliverable format
 - Specific date and time
-- Separator line
+- Horizontal rule (---) after </details>
 
 ### 8. 🔗 Resources
 
@@ -212,6 +260,14 @@ Additional information:
 ### Tools
 - [Tool Name](https://example.com) - Purpose
 
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- How to use these resources
+- Which are required vs optional
+
+</details>
+
 ---
 ```
 
@@ -221,7 +277,66 @@ Additional information:
 - Meaningful link text (not "click here")
 - Brief description for each
 - Test all links before publishing
-- Separator line
+- Horizontal rule (---) after </details>
+
+---
+
+## Critical Formatting Rule: Horizontal Rules
+
+**IMPORTANT:** Always add a horizontal rule (`---`) after EVERY `</details>` block to create clear visual separation between content sections.
+
+### Why This Matters:
+
+- **Visual clarity** in both raw markdown and rendered view
+- **Easier scanning** when editing or teaching from notes
+- **Professional appearance** in documentation
+- **Consistent separation** between major content sections
+
+### Examples:
+
+#### ✅ CORRECT - With horizontal rule:
+
+```markdown
+### Topic 1
+
+Content about topic 1...
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+Teaching notes for topic 1...
+
+</details>
+
+---
+
+### Topic 2
+
+Content about topic 2...
+```
+
+**Result:** Clear visual break between Topic 1 and Topic 2
+
+#### ❌ INCORRECT - Without horizontal rule:
+
+```markdown
+### Topic 1
+
+Content about topic 1...
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+Teaching notes for topic 1...
+
+</details>
+
+### Topic 2  ← Hard to see this is a new section!
+
+Content about topic 2...
+```
+
+**Result:** Topics visually run together, hard to distinguish sections
 
 ---
 
@@ -364,14 +479,28 @@ Additional information:
 <details>
   <summary><strong>💬 Speaker Notes</strong></summary>
 
-  - Bullet point 1 - Bullet point 2 - **Bold text** for emphasis - [Links](https://example.com) work fine - Even code
-  blocks work
+  - Bullet point 1
+  - Bullet point 2
+  - **Bold text** for emphasis
+  - [Links](https://example.com) work fine
+  - Even code blocks work
 </details>
+
+---
 ```
 
 - Collapsed by default
 - Can contain any markdown
 - Include timing, stories, transitions, clarifications
+- **ALWAYS follow with horizontal rule (---)**
+
+### Horizontal Rules
+
+- Use `---` (three hyphens)
+- After EVERY `</details>` block
+- After each H2 section
+- After subtopics to separate from next content
+- Creates clear visual breaks
 
 ### Links
 
@@ -384,7 +513,7 @@ Additional information:
 - Blank line between sections
 - Blank line between paragraphs
 - No blank lines within lists
-- `---` separator after each H2 section
+- `---` separator after each H2 section and after `</details>` blocks
 
 ---
 
@@ -402,15 +531,28 @@ Additional information:
 ## 📚 Content  ← RIGHT
 ```
 
-### ❌ Missing separator lines
+### ❌ Missing separator lines after speaker notes
 
 ```
-## 🏠 Housekeeping
-- Item
-## 📋 Syllabus Review  ← No --- between
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+Notes here
+</details>
+### Next Topic  ← No --- between
 ```
 
-✅ Fix: Add `---` after each section
+✅ Fix: Add `---` after `</details>`
+
+```
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+Notes here
+</details>
+
+---
+
+### Next Topic  ← Clear separation
+```
 
 ### ❌ Vague learning outcomes
 
@@ -485,6 +627,8 @@ Content here
 - Timing guidance
 
 </details>
+
+---
 ```
 
 ---
@@ -496,6 +640,7 @@ Content here
 - [ ] All 8 sections present in order
 - [ ] Each H2 has exactly ONE emoji
 - [ ] Separator lines (---) after each section
+- [ ] Horizontal rules (---) after EVERY </details> block
 - [ ] No missing required sections
 
 ### Content
@@ -513,6 +658,7 @@ Content here
 - [ ] Emoji count correct (7 in H2s)
 - [ ] Spacing consistent throughout
 - [ ] Bold, italic, code used correctly
+- [ ] Horizontal rules after all </details> blocks
 
 ### Images
 
@@ -528,6 +674,7 @@ Content here
 - [ ] Using proper `<details>` and `<summary>` tags
 - [ ] Notes are collapsed by default
 - [ ] Notes are well-formatted markdown
+- [ ] Horizontal rule (---) after each </details> block
 
 ### Metadata
 
@@ -559,7 +706,8 @@ Content here
 6. **Keep learning outcomes focused** - 3-5 is perfect
 7. **Add speaker notes** - Helps with live teaching preparation
 8. **Place images inline** - They should relate to nearby content
-9. **Get feedback** - Have someone else review before publishing
+9. **Always add horizontal rules after </details>** - Visual clarity matters
+10. **Get feedback** - Have someone else review before publishing
 
 ---
 
@@ -608,7 +756,11 @@ Content here
 
   [Your formatted markdown content here]
 </details>
+
+---
 ```
+
+**Always follow with horizontal rule!**
 
 ### Action Verbs for Outcomes
 
@@ -628,9 +780,15 @@ After any major content section, add a collapsible details block:
 <details>
   <summary><strong>💬 Speaker Notes</strong></summary>
 
-  - Your notes here - Timing guidance - Stories or examples
+  - Your notes here
+  - Timing guidance
+  - Stories or examples
 </details>
+
+---
 ```
+
+**Don't forget the horizontal rule after!**
 
 **How long should this take?**
 Small class: 2-3 hours | Large class: 5-7 hours | Updating: 30 min - 1 hour
