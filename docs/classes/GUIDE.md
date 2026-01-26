@@ -17,6 +17,7 @@ This guide shows you how to create consistent, professional class documents. Fol
 Every class has exactly these 9 sections in this order:
 
 ### 1. Title & Metadata
+
 ```
 # 03 - Class Title Here
 
@@ -24,11 +25,13 @@ Every class has exactly these 9 sections in this order:
 
 ---
 ```
+
 - One H1 with class number
 - Course and semester
 - Separator line (---)
 
 ### 2. 🏠 Housekeeping
+
 ```
 ## 🏠 Housekeeping
 
@@ -37,12 +40,14 @@ Every class has exactly these 9 sections in this order:
 
 ---
 ```
+
 - H2 with exactly ONE emoji (🏠)
 - Bullet points only
 - Separator line
 - 3-4 items max
 
 ### 3. 📋 Syllabus Review
+
 ```
 ## 📋 Syllabus Review
 
@@ -52,12 +57,14 @@ This connects to [Z] next week.
 
 ---
 ```
+
 - H2 with emoji (📋)
 - 2-3 sentences max
 - Connect previous → today → future
 - Separator line
 
 ### 4. 📍 Agenda
+
 ```
 ## 📍 Agenda
 
@@ -69,6 +76,7 @@ This connects to [Z] next week.
 
 ---
 ```
+
 - H2 with emoji (📍)
 - Checkbox list
 - First item checked
@@ -76,6 +84,7 @@ This connects to [Z] next week.
 - Separator line
 
 ### 5. 🎯 Learning Outcomes
+
 ```
 ## 🎯 Learning Outcomes
 
@@ -87,6 +96,7 @@ After this class, you'll be able to:
 
 ---
 ```
+
 - H2 with emoji (🎯)
 - Intro line: "After this class, you'll be able to:"
 - 3-5 items
@@ -95,6 +105,7 @@ After this class, you'll be able to:
 - Separator line
 
 ### 6. 📊 Key Images (optional)
+
 ```
 ## 📊 Key Images
 
@@ -106,6 +117,7 @@ After this class, you'll be able to:
 
 ---
 ```
+
 - H2 with emoji (📊)
 - Markdown image syntax with alt text
 - Relative paths: `images/classXX_slideYY_imgZZ.png`
@@ -114,6 +126,7 @@ After this class, you'll be able to:
 - **Skip this section if no images**
 
 ### 7. 📚 Content
+
 ```
 ## 📚 Content
 
@@ -133,6 +146,7 @@ More explanation...
 
 ---
 ```
+
 - H2 with emoji (📚)
 - H3 for each main topic (3-5 topics)
 - H4 for subtopics only
@@ -144,6 +158,7 @@ More explanation...
 - Separator line at end
 
 ### 8. ✍️ Assignment
+
 ```
 ## ✍️ Assignment
 
@@ -153,7 +168,7 @@ More explanation...
 
 **Instructions:**
 1. Step 1 - specific action
-2. Step 2 - specific action  
+2. Step 2 - specific action
 3. Step 3 - specific action
 
 **What to submit:** Format and details
@@ -162,6 +177,7 @@ More explanation...
 
 ---
 ```
+
 - H2 with emoji (✍️)
 - H3 for task name
 - Clear objective (one sentence)
@@ -171,6 +187,7 @@ More explanation...
 - Separator line
 
 ### 9. 🔗 Resources
+
 ```
 ## 🔗 Resources
 
@@ -187,6 +204,7 @@ More explanation...
 
 ---
 ```
+
 - H2 with emoji (🔗)
 - Organize into subsections (Official, Reading, Tools, etc.)
 - 5-10 links/resources total
@@ -196,13 +214,15 @@ More explanation...
 - Separator line
 
 ### 10. Footer
+
 ```
-**Class Duration:** 75 minutes  
-**Prep Time:** 10 minutes  
+**Class Duration:** 75 minutes
+**Prep Time:** 10 minutes
 **Materials:** Laptop, [specific software]
 
 *Last Updated: January 26, 2026*
 ```
+
 - Class duration
 - Prep/setup time
 - What students need
@@ -213,11 +233,13 @@ More explanation...
 ## Formatting Rules
 
 ### Emoji
+
 - **One per section** (one 🏠, one 📋, etc.)
 - **Nowhere else** - no emoji in body text, lists, or content
 - Approved emojis: 🏠 📋 📍 🎯 📊 📚 ✍️ 🔗
 
 ### Headings
+
 - **H1:** Exactly one (title only)
 - **H2:** Nine sections (housekeeping through resources)
 - **H3:** Content topics only
@@ -225,23 +247,27 @@ More explanation...
 - Never use H5 or deeper
 
 ### Text
+
 - **Bold** for emphasis and important terms: `**term**`
-- *Italic* for definitions: `*term*`
+- _Italic_ for definitions: `*term*`
 - `Code` for technical: `` `command` ``
 - > Blockquotes for definitions: `> Quote`
 
 ### Lists
+
 - Bullets for non-sequential: `- item`
 - Numbers for steps: `1. step`
 - Checkboxes for agenda: `- [ ] item`
 - Consistent indentation (2 spaces)
 
 ### Links
+
 - `[Meaningful text](https://full-url.com)`
 - Test before publishing
 - Use meaningful text (not "click here")
 
 ### Spacing
+
 - Blank line between sections
 - Blank line between paragraphs
 - No blank lines within lists
@@ -252,48 +278,61 @@ More explanation...
 ## Common Mistakes to Avoid
 
 ### ❌ Multiple emoji per section
+
 ```
 ## 📚📊📈 Content Topics  ← WRONG
 ```
+
 ✅ Fix: Use one emoji
+
 ```
 ## 📚 Content  ← RIGHT
 ```
 
 ### ❌ Missing separator lines
+
 ```
 ## 🏠 Housekeeping
 - Item
 ## 📋 Syllabus Review  ← No --- between
 ```
+
 ✅ Fix: Add `---` after each section
 
 ### ❌ Vague learning outcomes
+
 ```
 - We'll look at some data
 - Maybe discuss analysis
 ```
+
 ✅ Fix: Be specific and measurable
+
 ```
 - **Analyze** field data using Python
 - **Create** visualizations of patterns
 ```
 
 ### ❌ Generic assignment
+
 ```
 **Due:** Next week
 **Deliverable:** Something about the topic
 ```
+
 ✅ Fix: Be specific
+
 ```
 **Due:** Friday, March 7, 2026 at 5:00 PM EST
 **Deliverable:** PDF with analysis and written responses
 ```
 
 ### ❌ Broken or untested links
+
 ✅ Fix: Click every link before publishing
 
 ### ❌ Inconsistent heading hierarchy
+
 ```
 ## 📚 Content
 ### Topic
@@ -301,6 +340,7 @@ More explanation...
 ### Topic 2
 ##### Wrong level ← Too deep
 ```
+
 ✅ Fix: H3 for topics, H4 for details max
 
 ---
@@ -308,18 +348,21 @@ More explanation...
 ## Before Publishing - Checklist
 
 ### Structure
+
 - [ ] All 9 sections present in order
 - [ ] Each H2 has exactly ONE emoji
 - [ ] Separator lines (---) after each section
 - [ ] No missing required sections
 
 ### Formatting
+
 - [ ] Heading hierarchy correct (H1 → H2 → H3 → H4)
 - [ ] Emoji count correct (9 total, one per section)
 - [ ] Spacing consistent throughout
 - [ ] Bold, italic, code used correctly
 
 ### Content Quality
+
 - [ ] Learning outcomes are specific and measurable
 - [ ] Assignment is clear with exact due date/time
 - [ ] All links are tested and working
@@ -327,12 +370,14 @@ More explanation...
 - [ ] Resources are current
 
 ### Images (if included)
+
 - [ ] Image paths correct
 - [ ] Alt text descriptive
 - [ ] Captions present and numbered
 - [ ] Images load correctly
 
 ### Metadata
+
 - [ ] Class number in title
 - [ ] Course and semester listed
 - [ ] Duration noted (typically 75 min)
@@ -342,14 +387,14 @@ More explanation...
 
 ## Statistics to Aim For
 
-| Metric | Target |
-|--------|--------|
-| Total length | 2000-3500 words |
-| Content topics | 3-5 |
-| Images | 2-5 (optional) |
-| Learning outcomes | 3-5 |
-| Resources | 5-10 |
-| Emoji count | 9 (one per section) |
+| Metric            | Target              |
+| ----------------- | ------------------- |
+| Total length      | 2000-3500 words     |
+| Content topics    | 3-5                 |
+| Images            | 2-5 (optional)      |
+| Learning outcomes | 3-5                 |
+| Resources         | 5-10                |
+| Emoji count       | 9 (one per section) |
 
 ---
 
@@ -371,11 +416,13 @@ More explanation...
 **Classes:** `classXX.md` where XX is the class number (01, 02, 03, etc.)
 
 **Images:** `classXX_slideYY_imgZZ.png`
+
 - `XX` = class number
 - `YY` = source slide number
 - `ZZ` = image number on that slide
 
 **Examples:**
+
 - `class03_slide05_img01.png`
 - `class05_slide12_img02.png`
 
@@ -384,6 +431,7 @@ More explanation...
 ## Quick Reference
 
 ### The 9 Emoji
+
 1. 🏠 Housekeeping
 2. 📋 Syllabus Review
 3. 📍 Agenda
@@ -395,12 +443,14 @@ More explanation...
 9. (Footer - no emoji)
 
 ### Heading Levels
+
 - `# Title` - H1 (ONE ONLY)
 - `## 🏠 Section` - H2 (NINE TOTAL)
 - `### Topic` - H3 (CONTENT ONLY)
 - `#### Subtopic` - H4 (CONTENT ONLY)
 
 ### Action Verbs for Outcomes
+
 Identify, Analyze, Create, Evaluate, Design, Interpret, Describe, Compare, Explain, Apply, Develop, Build, Implement, Test, Deploy
 
 ---
@@ -426,4 +476,4 @@ Optionally in HTML comments: `<!-- NOTES section here -->`
 
 **Remember:** Consistency makes it easier for students to learn. Follow this structure for every class.
 
-*Last Updated: January 26, 2026*
+_Last Updated: January 26, 2026_
