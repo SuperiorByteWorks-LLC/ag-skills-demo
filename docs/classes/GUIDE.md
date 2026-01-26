@@ -285,16 +285,16 @@ Additional information:
 
 **IMPORTANT:** Always add a horizontal rule (`---`) after EVERY `</details>` block to create clear visual separation between content sections.
 
-### Why This Matters:
+### Why This Matters
 
 - **Visual clarity** in both raw markdown and rendered view
 - **Easier scanning** when editing or teaching from notes
 - **Professional appearance** in documentation
 - **Consistent separation** between major content sections
 
-### Examples:
+### Examples
 
-#### ✅ CORRECT - With horizontal rule:
+#### ✅ CORRECT - With horizontal rule
 
 ```markdown
 ### Topic 1
@@ -317,7 +317,7 @@ Content about topic 2...
 
 **Result:** Clear visual break between Topic 1 and Topic 2
 
-#### ❌ INCORRECT - Without horizontal rule:
+#### ❌ INCORRECT - Without horizontal rule
 
 ```markdown
 ### Topic 1
@@ -331,7 +331,7 @@ Teaching notes for topic 1...
 
 </details>
 
-### Topic 2  ← Hard to see this is a new section!
+### Topic 2 ← Hard to see this is a new section!
 
 Content about topic 2...
 ```
@@ -479,11 +479,8 @@ Content about topic 2...
 <details>
   <summary><strong>💬 Speaker Notes</strong></summary>
 
-  - Bullet point 1
-  - Bullet point 2
-  - **Bold text** for emphasis
-  - [Links](https://example.com) work fine
-  - Even code blocks work
+  - Bullet point 1 - Bullet point 2 - **Bold text** for emphasis - [Links](https://example.com) work fine - Even code
+  blocks work
 </details>
 
 ---
@@ -780,9 +777,7 @@ After any major content section, add a collapsible details block:
 <details>
   <summary><strong>💬 Speaker Notes</strong></summary>
 
-  - Your notes here
-  - Timing guidance
-  - Stories or examples
+  - Your notes here - Timing guidance - Stories or examples
 </details>
 
 ---
