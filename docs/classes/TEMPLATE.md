@@ -204,13 +204,19 @@ _Figure 1: What this image demonstrates_
 
 </details>
 
+---
+
 #### Subtopic 1.1
 
 [Additional details about this subtopic]
 
+---
+
 #### Subtopic 1.2
 
 [Additional details about this subtopic]
+
+---
 
 ### Topic 2: [Topic Title]
 
@@ -274,6 +280,8 @@ Step-by-step:
 - Cost impact: "This is worth [X dollars] annually"
 
 </details>
+
+---
 
 ### Topic 3: [Topic Title]
 
