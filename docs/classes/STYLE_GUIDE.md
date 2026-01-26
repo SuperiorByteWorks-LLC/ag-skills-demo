@@ -10,6 +10,7 @@
 ## 🎯 Overview
 
 Your markdown files serve **dual purpose:**
+
 1. **Student-facing content** - Full class notes they can study
 2. **Slide template** - Auto-convertible to presentations (HTML, PowerPoint, PDF)
 
@@ -50,13 +51,13 @@ This is your starting point for every class:
 ```markdown
 ---
 marp: true
-title: "03 - Class Title Here"
+title: '03 - Class Title Here'
 theme: default
 ---
 
 # 03 - Class Title Here
 
-*Agricultural Data Systems | Spring 2026*
+_Agricultural Data Systems | Spring 2026_
 
 <!-- NOTES
 ## Title Slide Notes
@@ -84,7 +85,7 @@ theme: default
 ## 🏠 Housekeeping
 
 - Announcement or logistics item
-- Reminder about upcoming deadline  
+- Reminder about upcoming deadline
 - Office hours or resource update
 
 <!-- NOTES
@@ -111,7 +112,7 @@ theme: default
 
 Last class we covered **[Previous Concept]**. Today we'll explore **[Today's Topic]**, building on that foundation.
 
-*This connects to [Future Topic] next week.*
+_This connects to [Future Topic] next week._
 
 <!-- NOTES
 ## Syllabus Review Talking Points
@@ -206,7 +207,7 @@ After this class, you'll be able to:
 ## 📊 Key Images
 
 ![NDVI map showing vegetation health variation across field](images/class03_slide05_img01.png)
-*Figure 1: NDVI classification with color scale (red=poor vegetation, green=healthy)*
+_Figure 1: NDVI classification with color scale (red=poor vegetation, green=healthy)_
 
 <!-- NOTES
 ## Key Images Teaching Notes
@@ -316,11 +317,11 @@ Soils can be classified by **physical properties**, **chemical composition**, or
 
 Different crops have different soil requirements:
 
-| Crop | Soil pH | Texture Preference | Drainage Need |
-|------|---------|-------------------|---------------|
-| Corn | 6.0-7.5 | Loam | Moderate |
-| Soybeans | 6.0-7.0 | Loam-clay | Moderate |
-| Alfalfa | 6.5-7.5 | Well-drained | High |
+| Crop     | Soil pH | Texture Preference | Drainage Need |
+| -------- | ------- | ------------------ | ------------- |
+| Corn     | 6.0-7.5 | Loam               | Moderate      |
+| Soybeans | 6.0-7.0 | Loam-clay          | Moderate      |
+| Alfalfa  | 6.5-7.5 | Well-drained       | High          |
 
 **Key Point:** Selecting appropriate crops for existing soil = sustainable farming
 
@@ -426,7 +427,7 @@ Different crops have different soil requirements:
 - "Examples: Compost, cover crops, manure"
 - "Why it matters: Improves water retention, aids microbes"
 - "Long-term approach: Requires 5-10 years to see major changes"
-- Options: 
+- Options:
   - Cover crops: Plant after harvest, plow in spring
   - Compost: Available from many sources
   - Manure: If available from livestock farming
@@ -508,6 +509,7 @@ You've been hired as an agricultural consultant. A Michigan farmer has a field w
 **Deliverable:**
 
 Submit to Canvas by [specific date]:
+
 - File name: `LastName_SoilAnalysis_Assignment.pdf`
 - Format: 2 pages maximum (analysis + recommendation)
 - Include: Data analysis, table comparing crops, written recommendation, management practices
@@ -607,18 +609,22 @@ Submit to Canvas by [specific date]:
 ## 🔗 Resources & References
 
 ### Official Sources
+
 - [Michigan State Extension Soil Testing](https://www.canr.msu.edu/services/soil-plant-pest-mgmt) - Soil test ordering and interpretation
 - [NRCS Web Soil Survey](https://websoilsurvey.nrcs.usda.gov/) - Local soil data by location
 - [USDA Soil Taxonomy](https://www.nrcs.usda.gov/wps/portal/nrcs/detail/soils/survey/?cid=nrcs142p2_053587) - Official classification system
 
 ### Reading Materials
-- Brady, N. C., & Weil, R. R. (2016). *The Nature and Properties of Soils* (15th ed.). Pearson. *(Textbook reference)*
+
+- Brady, N. C., & Weil, R. R. (2016). _The Nature and Properties of Soils_ (15th ed.). Pearson. _(Textbook reference)_
 - "Soil Organic Matter: Importance and Measures for Improvement." Extension publication, MSU.
 
 ### External Tools
+
 - [Soil Texture Triangle Calculator](http://www.nrcs.usda.gov/wps/portal/nrcs/detail/soils/edu/?cid=nrcs142p2_054286) - Interactive tool to determine soil classification from sand/silt/clay percentages
 
 ### Optional Deep Dives
+
 - [Precision Agriculture in Michigan](https://precision.agbiomech.msu.edu/) - For interested students
 - [Cover Crop Case Studies](https://www.mda.state.mi.us/farmland-mgmt) - Real examples from Michigan farms
 
@@ -648,25 +654,28 @@ Submit to Canvas by [specific date]:
 ## 📌 Class Metadata
 
 **Duration:** 75 minutes  
-**Preparation:** 10 minutes (tech check, datasets ready)  
+**Preparation:** 10 minutes (tech check, datasets ready)
 
 **Materials Needed:**
+
 - Laptop with internet (to access soil survey website)
 - Projector connected
 - `sample_soil_data.csv` downloaded and ready
 
 **Accessibility:**
+
 - Large font size on slides (24pt minimum)
 - High contrast: dark background, light text
 - Speaker talks through all images and tables
 - Closed captions available if video shown
 
 **Tech Setup:**
+
 - Have backup internet connection (hotspot)
 - Pre-load web pages in tabs
 - Test soil survey website before class
 
-*Last Updated: January 26, 2026*
+_Last Updated: January 26, 2026_
 
 <!-- NOTES
 ## Class Closing Notes
@@ -706,23 +715,27 @@ Submit to Canvas by [specific date]:
 ## 🎯 Key Formatting Rules for Slide Conversion
 
 ### Slide Separators
+
 - **`---`** = Slide boundary (MUST be on own line)
 - Creates new slide in HTML, PowerPoint, and PDF
 - Marp recognizes this as page break
 
 ### Speaker Notes Structure
+
 - **Location:** After slide content, before next `---`
 - **Format:** `<!-- NOTES [content] -->`
 - **Visibility:** Only visible in presenter mode (Alt+P)
 - **Content:** Teaching strategy, timing, common questions, tips
 
 ### Content Density (CRITICAL FOR SLIDES)
+
 - **Visible content:** 3-6 lines maximum per slide
 - **Bullet points:** 3-5 per slide maximum
 - **Tables:** Only if essential, max 3×3
 - **Images:** One per slide (large) or two small
 
 ### Typography
+
 - **H1 (`#`):** Title only (first slide)
 - **H2 (`##`):** Slide heading (one per slide)
 - **H3 (`###`):** Subsections only (rarely used)
@@ -771,24 +784,28 @@ marp class03.md -w
 ## ✅ Pre-Publication Checklist
 
 ### Frontmatter (Line 1-3)
+
 - [ ] `---` starts file
 - [ ] `marp: true` included
 - [ ] `title:` matches class number and name
 - [ ] `---` closes frontmatter
 
 ### Slide Structure
+
 - [ ] Title slide is first
 - [ ] Each slide separated by `---`
 - [ ] Each slide has exactly ONE H2 heading
 - [ ] No stacked content on single slide
 
 ### Speaker Notes
+
 - [ ] Each slide has `<!-- NOTES ... -->` block
 - [ ] Notes follow format: `<!-- NOTES [content] -->`
 - [ ] Notes include: strategy, timing, common questions
 - [ ] Notes are 150-300 words (concise but complete)
 
 ### Content Verification
+
 - [ ] All learning outcomes are specific and measurable
 - [ ] Assignment is clear and achievable in stated time
 - [ ] All resources/links are current and tested
@@ -796,6 +813,7 @@ marp class03.md -w
 - [ ] Spelling and grammar checked
 
 ### Formatting
+
 - [ ] Bold used for key concepts, action verbs
 - [ ] Code blocks have language specified: ` ```python `
 - [ ] Tables have headers
@@ -804,6 +822,7 @@ marp class03.md -w
 - [ ] No emoji outside of notes
 
 ### Metadata
+
 - [ ] Class number in title
 - [ ] Course name listed
 - [ ] Semester/year included
@@ -817,14 +836,14 @@ marp class03.md -w
 
 When following this structure, expect:
 
-| Metric | Expected Range | Reasoning |
-|--------|-----------------|-----------|
-| **Total Slides** | 9-12 slides | 75-min class ÷ 6-8 min/slide |
-| **Visible Content per Slide** | 80-150 words | Forces conciseness for presentations |
-| **Speaker Notes per Slide** | 200-400 words | Detailed guidance without overwhelming slides |
-| **Content Slides** | 4-6 slides | Usually 3+ topics × 1-2 slides each |
-| **Images** | 2-4 total | Mix of concepts, data, real-world |
-| **Learning Outcomes** | 3-5 outcomes | Specific, measurable objectives |
+| Metric                        | Expected Range | Reasoning                                     |
+| ----------------------------- | -------------- | --------------------------------------------- |
+| **Total Slides**              | 9-12 slides    | 75-min class ÷ 6-8 min/slide                  |
+| **Visible Content per Slide** | 80-150 words   | Forces conciseness for presentations          |
+| **Speaker Notes per Slide**   | 200-400 words  | Detailed guidance without overwhelming slides |
+| **Content Slides**            | 4-6 slides     | Usually 3+ topics × 1-2 slides each           |
+| **Images**                    | 2-4 total      | Mix of concepts, data, real-world             |
+| **Learning Outcomes**         | 3-5 outcomes   | Specific, measurable objectives               |
 
 ---
 
@@ -846,11 +865,13 @@ When following this structure, expect:
 ## 🚀 Implementation Timeline
 
 ### Phase 1: Template Creation (NOW)
+
 - [ ] Finalize this style guide ✅
 - [ ] Create template class file
 - [ ] Test Marp conversion
 
 ### Phase 2: Pilot One Class (Week 1-2)
+
 - [ ] Choose Class 03 as pilot
 - [ ] Write markdown with speaker notes
 - [ ] Extract images from original PowerPoint
@@ -859,16 +880,19 @@ When following this structure, expect:
 - [ ] Document what worked, what needs adjustment
 
 ### Phase 3: Update Guide (Week 3)
+
 - [ ] Incorporate learnings from pilot
 - [ ] Update style guide based on real classroom experience
 - [ ] Create improved template
 
 ### Phase 4: Scale to All Classes (Week 4-12)
+
 - [ ] Convert remaining 14 classes
 - [ ] Maintain consistency across all
 - [ ] Build conversion scripts to automate
 
 ### Phase 5: Automation (Ongoing)
+
 - [ ] Script for image extraction from PowerPoint
 - [ ] Script for template generation
 - [ ] Automated conversion pipeline
@@ -897,16 +921,19 @@ A: HTML/PDF = excellent. PowerPoint = very good (some formatting may shift). Tes
 ## 📚 Resources
 
 ### Marp Documentation
+
 - [Marp Official Site](https://marp.app) - Getting started
 - [Marp Markdown Syntax](https://marpit.marp.app/markdown) - Detailed reference
 - [Marp CLI](https://github.com/marp-team/marp-cli) - Command-line tool
 
 ### Markdown Editors
+
 - [VS Code](https://code.visualstudio.com) with [Marp extension](https://marketplace.visualstudio.com/items?itemName=marp-team.marp-vscode)
 - [Marp Desktop](https://github.com/marp-team/marp/releases) - Standalone app
 - [HackMD](https://hackmd.io) - Collaborative online editor
 
 ### Conversion Tools
+
 - [Pandoc](https://pandoc.org) - Universal document converter
 - [reveal.js](https://revealjs.com) - Interactive HTML presentations
 - [Slidev](https://sli.dev) - Modern slide framework for developers
@@ -916,4 +943,4 @@ A: HTML/PDF = excellent. PowerPoint = very good (some formatting may shift). Tes
 **Remember:** Writing once in markdown with speaker notes = unlimited presentation formats. Maximum efficiency. 🌾
 
 **Version 2.0 - Slide-Generation Ready**  
-*Last Updated: January 26, 2026*
+_Last Updated: January 26, 2026_
