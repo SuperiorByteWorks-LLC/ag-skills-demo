@@ -1,33 +1,6 @@
----
-marp: true
-title: 'XX - Class Title Here'
-theme: default
----
-
 # XX - Class Title Here
 
-_Agricultural Data Systems | Spring 2026_
-
-<!-- NOTES
-## Title Slide Notes
-
-### Before Class (5 min before start)
-- Check laptop/projector connection
-- Test internet connectivity
-- Have attendance sheet ready
-
-### First 3 Minutes
-- Welcome students as they arrive
-- Take attendance
-- Brief overview: "Today we're covering [topic], which connects to [previous] and leads to [future]"
-- Set expectations: "By end of class, you'll be able to [outcome 1], [outcome 2], [outcome 3]"
-- Announce: "We'll have a break around 40-minute mark"
-
-### Key Themes to Establish
-- Topic is relevant to real agricultural work
-- Builds on what they've learned
-- Sets up for future applications
--->
+*Agricultural Data Systems | Spring 2026*
 
 ---
 
@@ -37,8 +10,8 @@ _Agricultural Data Systems | Spring 2026_
 - Reminder about upcoming deadline
 - Office hours or resource update
 
-<!-- NOTES
-## Housekeeping Talking Points
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
 
 - **Item 1:** Context is... This matters because...
 - **Item 2:** Due date is... Submit to... Any questions?
@@ -53,7 +26,8 @@ _Agricultural Data Systems | Spring 2026_
 - Make eye contact
 - Ask if anyone didn't understand
 - Clarify immediately if confused
--->
+
+</details>
 
 ---
 
@@ -63,8 +37,8 @@ Last class we covered **[Previous Concept]**. Today we'll explore **[Today's Top
 
 _This connects to [Future Topic] next week._
 
-<!-- NOTES
-## Syllabus Review Talking Points
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
 
 ### Connection to Previous Class (1 minute)
 - "Two weeks ago we learned about [concept]"
@@ -85,7 +59,8 @@ _This connects to [Future Topic] next week._
 - Total time: 2-3 minutes
 - Don't rush - let students think
 - Pause for questions
--->
+
+</details>
 
 ---
 
@@ -101,8 +76,8 @@ _This connects to [Future Topic] next week._
 
 **Total:** 75 minutes
 
-<!-- NOTES
-## Agenda Talking Points
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
 
 - "Here's how we'll structure our 75 minutes together"
 - "We have a natural break around 40 minutes in"
@@ -118,7 +93,8 @@ _This connects to [Future Topic] next week._
 - If spending extra time on Q&A? Fine - cut from wrap-up
 - If moving faster? Don't skip content - compress later sections
 - Always prioritize student questions
--->
+
+</details>
 
 ---
 
@@ -130,13 +106,12 @@ After this class, you'll be able to:
 - **Analyze** [specific data/pattern/relationship relevant to field work]
 - **Create** [specific output/visualization/solution students will produce]
 
-<!-- NOTES
-## Learning Outcomes Talking Points
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
 
-### Present These Goals (2-3 minutes)
 "These are our three main goals for today. By the end of the 75 minutes, I want you to feel confident doing each of these. If you don't, please let me know - we'll follow up."
 
-### Reference These Throughout Class
+### Reference Throughout Class
 - "This connects back to our first learning outcome..."
 - "By doing this exercise, you're working on outcome 2..."
 - "Your assignment today tests whether you've achieved outcome 3..."
@@ -149,46 +124,14 @@ After this class, you'll be able to:
 ### Differentiation
 - If student struggles with outcome 1, guide them with examples
 - If student excels, challenge them with "What if...?" questions
--->
+
+</details>
 
 ---
 
-## 📊 Key Images
+## 📚 Content
 
-![Description of image content](images/classXX_slide##_img01.png)
-_Figure 1: What this image demonstrates_
-
-<!-- NOTES
-## Key Images Teaching Notes
-
-### Image 1 (2-3 minutes)
-
-#### What to Point Out
-- "Look at [specific element]"
-- "Notice [important feature]"
-- "This shows [what students should see]"
-
-#### Why It Matters
-- "This is important because [relevance]"
-- "In real agriculture, this means [practical application]"
-- "When you're working in [scenario], you'll see [this pattern]"
-
-#### Interactive Element
-- Ask: "What do you notice?"
-- Ask: "Why might this be?"
-- Wait for student responses
-
-#### Real-World Connection
-- "[Specific farm/company/situation] experienced this"
-- "They noticed [observation] and decided to [action]"
-- "The result was [outcome]"
--->
-
----
-
-## 📚 Content - Topic 1
-
-### [Major Topic Title]
+### Topic 1: [Topic Title]
 
 **Definition:** [What this concept means]
 
@@ -198,8 +141,11 @@ Key points:
 - [Point 2 with explanation]
 - [Point 3 with explanation]
 
-<!-- NOTES
-## Topic 1 Teaching Notes
+![Description of image showing this concept](images/classXX_slide##_img01.png)
+*Figure 1: What this image demonstrates*
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
 
 ### Teaching Strategy (4-5 minutes)
 
@@ -229,10 +175,6 @@ Key points:
 - **Reality:** [What's actually true]
 - **How to address:** [Teaching strategy to correct it]
 
-**Misconception:** [Another common mistake]
-- **Reality:** [Correct understanding]
-- **How to address:** [Explanation or example]
-
 ### Real-World Application
 - **Field example:** [Specific farm scenario]
 - **Why it matters:** [Relevance to agriculture]
@@ -241,13 +183,18 @@ Key points:
 ### Transition
 - "Now that we understand [concept]..."
 - "Let's apply this to [next topic]..."
--->
 
----
+</details>
 
-## 📚 Content - Topic 2
+#### Subtopic 1.1
 
-### [Major Topic Title]
+[Additional details about this subtopic]
+
+#### Subtopic 1.2
+
+[Additional details about this subtopic]
+
+### Topic 2: [Topic Title]
 
 **Process:**
 
@@ -261,8 +208,8 @@ Step-by-step:
 2. [Second step explanation]
 3. [Third step explanation]
 
-<!-- NOTES
-## Topic 2 Teaching Notes
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
 
 ### Teaching Strategy (5-6 minutes)
 
@@ -300,24 +247,21 @@ Step-by-step:
 - Company example: "[Company] uses this to [application]"
 - Results: "They achieved [improvement/outcome]"
 - Cost impact: "This is worth [X dollars] annually"
--->
 
----
+</details>
 
-## 📚 Content - Topic 3
-
-### [Major Topic Title]
+### Topic 3: [Topic Title]
 
 **Comparison of Approaches:**
 
-| Approach   | Best For     | Trade-offs |
-| ---------- | ------------ | ---------- |
-| [Option 1] | [Scenario 1] | [Pro/Con]  |
-| [Option 2] | [Scenario 2] | [Pro/Con]  |
-| [Option 3] | [Scenario 3] | [Pro/Con]  |
+| Approach | Best For | Trade-offs |
+| -------- | -------- | ---------- |
+| [Option 1] | [Scenario 1] | [Pro/Con] |
+| [Option 2] | [Scenario 2] | [Pro/Con] |
+| [Option 3] | [Scenario 3] | [Pro/Con] |
 
-<!-- NOTES
-## Topic 3 Teaching Notes
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
 
 ### Teaching Strategy (6-7 minutes)
 
@@ -370,7 +314,8 @@ Step-by-step:
 ### Transition
 - "Different situations call for different approaches"
 - "Your assignment will give you practice making these choices"
--->
+
+</details>
 
 ---
 
@@ -414,8 +359,8 @@ Submit to Canvas:
 
 **Due:** [Specific date] at [Specific time] EST
 
-<!-- NOTES
-## Assignment Teaching Notes
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
 
 ### Before Assignment (1 minute)
 - "Let's look at your assignment for this topic"
@@ -479,7 +424,8 @@ Submit to Canvas:
 - Challenge: "What if [scenario changed]?"
 - Extension: "Find a real [dataset/field] and analyze"
 - Real-world: "Research how professionals do this"
--->
+
+</details>
 
 ---
 
@@ -506,8 +452,8 @@ Submit to Canvas:
 - [Advanced Topic](https://example.com) - For interested students
 - [Case Study](https://example.com) - Real-world application
 
-<!-- NOTES
-## Resources Teaching Notes
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
 
 ### In Class (2-3 minutes)
 - Mention 1-2 key resources during relevant lessons
@@ -524,63 +470,9 @@ Submit to Canvas:
 - Verify all links work
 - Update if resources move or change
 - Add new resources as you discover them
--->
+
+</details>
 
 ---
 
-## 📋 Class Metadata
-
-**Class Duration:** 75 minutes  
-**Prep Time:** 10 minutes (tech check, materials)  
-**Materials Needed:**
-
-- Laptop with [software/tools]
-- Internet access
-- [Any other specific materials]
-
-**Accessibility Notes:**
-
-- [Any specific considerations for your students]
-- Closed captions: Available if videos included
-- Alt text: Provided for all images
-- Font: Large, high-contrast for visual clarity
-
-**Tech Requirements:**
-
-- [Any software students need pre-installed]
-- [Any accounts to set up in advance]
-
-_Last Updated: [Date]_
-
-<!-- NOTES
-## Class Closing Notes
-
-### Final 5 Minutes
-
-**Summarize (1 minute):**
-- "We covered [main topics] today"
-- "Each builds on the last"
-- "You now have skills to [application]"
-
-**Preview Next Class (1 minute):**
-- "Next class we move from [current topic] to [next topic]"
-- "Bring [materials] if you have them"
-- "We'll build on what we learned today"
-
-**Assignment Reminder (1 minute):**
-- "Assignment due [date] by [time]"
-- "Submit to Canvas"
-- "Office hours [day] [time] if you have questions"
-
-**Open Floor (2 minutes):**
-- "Any final questions?"
-- Wait 30 seconds
-- "If you think of something later, email me"
-
-### After Class
-- Review attendance
-- Note any students who seemed confused
-- Collect questions for FAQ
-- Update next year's notes
-- Save good student examples
--->
+*Last Updated: [Date]*
