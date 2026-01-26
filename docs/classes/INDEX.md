@@ -6,18 +6,18 @@ Your complete reference guide to all documentation files for creating and managi
 
 ## 🎯 Quick Navigation
 
-### I Want To...
+### I Want To
 
-| Need | File | Time |
-|------|------|------|
-| **Get started ASAP** | [START_HERE.md](START_HERE.md) | 5 min |
-| **Understand the system** | [README.md](README.md) | 15 min |
-| **Learn formatting rules** | [STYLE_GUIDE.md](STYLE_GUIDE.md) | 15 min |
-| **See a perfect example** | [STYLE_REFERENCE_EXAMPLE.md](STYLE_REFERENCE_EXAMPLE.md) | 15 min |
-| **Work through a checklist** | [STYLE_IMPLEMENTATION_CHECKLIST.md](STYLE_IMPLEMENTATION_CHECKLIST.md) | As needed |
-| **Copy a template** | [TEMPLATE.md](TEMPLATE.md) | Copy |
-| **Convert PowerPoint slides** | [CONVERSION_GUIDE.md](CONVERSION_GUIDE.md) | 20 min |
-| **Browse all docs** | [INDEX.md](INDEX.md) | This file |
+| Need                          | File                                                                   | Time      |
+| ----------------------------- | ---------------------------------------------------------------------- | --------- |
+| **Get started ASAP**          | [START_HERE.md](START_HERE.md)                                         | 5 min     |
+| **Understand the system**     | [README.md](README.md)                                                 | 15 min    |
+| **Learn formatting rules**    | [STYLE_GUIDE.md](STYLE_GUIDE.md)                                       | 15 min    |
+| **See a perfect example**     | [STYLE_REFERENCE_EXAMPLE.md](STYLE_REFERENCE_EXAMPLE.md)               | 15 min    |
+| **Work through a checklist**  | [STYLE_IMPLEMENTATION_CHECKLIST.md](STYLE_IMPLEMENTATION_CHECKLIST.md) | As needed |
+| **Copy a template**           | [TEMPLATE.md](TEMPLATE.md)                                             | Copy      |
+| **Convert PowerPoint slides** | [CONVERSION_GUIDE.md](CONVERSION_GUIDE.md)                             | 20 min    |
+| **Browse all docs**           | [INDEX.md](INDEX.md)                                                   | This file |
 
 ---
 
@@ -26,6 +26,7 @@ Your complete reference guide to all documentation files for creating and managi
 ### Core Documentation Files
 
 #### 1. **START_HERE.md** ⭐ BEGIN HERE
+
 - **Purpose:** Quick-start guide for new users
 - **Length:** ~12 KB | ~12 min read
 - **Best for:** First time users, choosing a starting path
@@ -46,6 +47,7 @@ Your complete reference guide to all documentation files for creating and managi
 ---
 
 #### 2. **README.md** 📋 SYSTEM OVERVIEW
+
 - **Purpose:** Complete overview and workflows
 - **Length:** ~13 KB | ~15 min read
 - **Best for:** Understanding the complete system
@@ -68,6 +70,7 @@ Your complete reference guide to all documentation files for creating and managi
 ---
 
 #### 3. **STYLE_GUIDE.md** 📐 COMPLETE RULES
+
 - **Purpose:** Authoritative formatting and structure reference
 - **Length:** ~16 KB | ~20 min read
 - **Best for:** Understanding exact requirements
@@ -96,6 +99,7 @@ Your complete reference guide to all documentation files for creating and managi
 ---
 
 #### 4. **STYLE_REFERENCE_EXAMPLE.md** 💯 PERFECT EXAMPLE
+
 - **Purpose:** Real, complete, properly formatted class document
 - **Length:** ~18 KB | ~20 min read
 - **Best for:** Seeing how everything should look
@@ -121,6 +125,7 @@ Your complete reference guide to all documentation files for creating and managi
 ---
 
 #### 5. **STYLE_IMPLEMENTATION_CHECKLIST.md** ✅ VERIFICATION TOOL
+
 - **Purpose:** Step-by-step checklist for applying style guide
 - **Length:** ~20 KB | Variable use
 - **Best for:** Verifying completeness while creating/updating
@@ -146,6 +151,7 @@ Your complete reference guide to all documentation files for creating and managi
 ---
 
 #### 6. **TEMPLATE.md** 📝 READY-TO-COPY TEMPLATE
+
 - **Purpose:** Blank template with all sections pre-formatted
 - **Length:** ~15 KB | Copy and fill
 - **Best for:** Starting a new class document
@@ -167,6 +173,7 @@ Your complete reference guide to all documentation files for creating and managi
 ---
 
 #### 7. **CONVERSION_GUIDE.md** 🔄 POWERPOINT → MARKDOWN
+
 - **Purpose:** Workflow for converting PowerPoint to markdown
 - **Length:** ~17 KB | ~20 min read
 - **Best for:** Converting existing PowerPoint presentations
@@ -194,6 +201,7 @@ Your complete reference guide to all documentation files for creating and managi
 ---
 
 #### 8. **INDEX.md** 📚 THIS FILE
+
 - **Purpose:** Complete index and navigation
 - **You are here!**
 
@@ -201,17 +209,17 @@ Your complete reference guide to all documentation files for creating and managi
 
 ## 📊 File Statistics
 
-| File | Size | Read Time | Purpose | Use When |
-|------|------|-----------|---------|----------|
-| START_HERE.md | ~12 KB | 5-10 min | Quick start | First time |
-| README.md | ~13 KB | 15 min | System overview | Understanding |
-| STYLE_GUIDE.md | ~16 KB | 20 min | Complete rules | Reference |
-| STYLE_REFERENCE_EXAMPLE.md | ~18 KB | 20 min | Perfect example | Learning |
-| STYLE_IMPLEMENTATION_CHECKLIST.md | ~20 KB | Variable | Verification | Creating |
-| TEMPLATE.md | ~15 KB | Copy | Blank template | New class |
-| CONVERSION_GUIDE.md | ~17 KB | 20 min | PowerPoint workflow | Converting |
-| INDEX.md | ~9 KB | 10 min | Navigation | Browsing |
-| **Total Documentation** | **~120 KB** | **~100 min** | **Complete system** | **Reference** |
+| File                              | Size        | Read Time    | Purpose             | Use When      |
+| --------------------------------- | ----------- | ------------ | ------------------- | ------------- |
+| START_HERE.md                     | ~12 KB      | 5-10 min     | Quick start         | First time    |
+| README.md                         | ~13 KB      | 15 min       | System overview     | Understanding |
+| STYLE_GUIDE.md                    | ~16 KB      | 20 min       | Complete rules      | Reference     |
+| STYLE_REFERENCE_EXAMPLE.md        | ~18 KB      | 20 min       | Perfect example     | Learning      |
+| STYLE_IMPLEMENTATION_CHECKLIST.md | ~20 KB      | Variable     | Verification        | Creating      |
+| TEMPLATE.md                       | ~15 KB      | Copy         | Blank template      | New class     |
+| CONVERSION_GUIDE.md               | ~17 KB      | 20 min       | PowerPoint workflow | Converting    |
+| INDEX.md                          | ~9 KB       | 10 min       | Navigation          | Browsing      |
+| **Total Documentation**           | **~120 KB** | **~100 min** | **Complete system** | **Reference** |
 
 ---
 
@@ -297,6 +305,7 @@ docs/classes/
 ## ⏱️ Time Investment
 
 ### One-Time Setup
+
 - Read START_HERE.md: 5 min
 - Read README.md: 15 min
 - Study STYLE_GUIDE.md: 20 min
@@ -304,15 +313,18 @@ docs/classes/
 - **Total: ~55 minutes**
 
 ### Creating Each New Class
+
 - Small class (no PowerPoint): 2-3 hours
 - Medium class (with PowerPoint): 3-5 hours
 - Large class (complex content): 5-7 hours
 
 ### Updating Existing Class
+
 - Minor updates: 30-45 min
 - Major revisions: 1-2 hours
 
 ### PowerPoint Conversion
+
 - Small presentation: 2-3 hours
 - Medium presentation: 3-5 hours
 - Large presentation: 5-7 hours
@@ -322,27 +334,35 @@ docs/classes/
 ## 📞 Troubleshooting Guide
 
 ### Problem: "I don't know where to start"
+
 **Solution:** Open [START_HERE.md](START_HERE.md)
 
 ### Problem: "What's the right format for X?"
+
 **Solution:** Check [STYLE_GUIDE.md](STYLE_GUIDE.md)
 
 ### Problem: "How do I know if I'm doing it right?"
+
 **Solution:** Use [STYLE_IMPLEMENTATION_CHECKLIST.md](STYLE_IMPLEMENTATION_CHECKLIST.md)
 
 ### Problem: "I want to see a complete example"
+
 **Solution:** Review [STYLE_REFERENCE_EXAMPLE.md](STYLE_REFERENCE_EXAMPLE.md)
 
 ### Problem: "I need to convert PowerPoint"
+
 **Solution:** Follow [CONVERSION_GUIDE.md](CONVERSION_GUIDE.md)
 
 ### Problem: "I need a blank template"
+
 **Solution:** Copy [TEMPLATE.md](TEMPLATE.md)
 
 ### Problem: "I want to understand everything"
+
 **Solution:** Read [README.md](README.md)
 
 ### Problem: "I need the complete file list"
+
 **Solution:** You're reading it! [INDEX.md](INDEX.md)
 
 ---
@@ -421,6 +441,7 @@ START_HERE.md
 ## ✨ Summary
 
 **You have 8 comprehensive documents** that together form a complete system for:
+
 - Creating class documentation
 - Converting PowerPoint to markdown
 - Maintaining consistency
@@ -431,6 +452,6 @@ START_HERE.md
 
 ---
 
-*Last Updated: January 26, 2026*
+_Last Updated: January 26, 2026_
 
 **Happy documenting!** 📚✨

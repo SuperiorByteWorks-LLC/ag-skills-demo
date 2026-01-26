@@ -7,6 +7,7 @@ This guide explains how to transform existing PowerPoint presentations into stan
 **Goal:** Take a PowerPoint with slides and convert it into a full markdown class document.
 
 **Why:** Markdown documents are:
+
 - Version-controllable (GitHub)
 - Searchable and indexable
 - Easily updateable
@@ -50,12 +51,14 @@ Open your PowerPoint and go through each slide:
 #### Step 1.2: Extract Images from PowerPoint
 
 **Method A: Using PowerPoint Export**
+
 1. In PowerPoint: File → Export → Change File Type → PNG/JPG
 2. Select resolution (high quality preferred)
 3. Export to folder
 4. Rename: `class##_slide##_img##.png`
 
 **Method B: Manual Screenshot**
+
 1. View each slide full-screen
 2. Use Print Screen or Cmd+Shift+4 (Mac)
 3. Crop image to relevant area
@@ -63,6 +66,7 @@ Open your PowerPoint and go through each slide:
 5. Optimize file size if needed (images shouldn’t exceed 500 KB each)
 
 **Method C: Using Online Converter**
+
 1. Upload PowerPoint to [CloudConvert](https://cloudconvert.com) or similar
 2. Convert to PNG format
 3. Download all images
@@ -96,18 +100,18 @@ Slide 23: Q&A/Closing → Optional section
 
 Make a spreadsheet or text document with:
 
-| Element | Source Slide | Content | Format |
-|---------|-------------|---------|--------|
-| Title | 1 | "03 - Class Title" | H1 |
-| Course | 1 | "Agricultural Data Systems \| Spring 2026" | Metadata |
-| Housekeeping | 2-3 | "Reminder about deadlines..." | Bullet list |
-| Previous Concept | 4 | "Last class we covered X" | Paragraph |
-| Today's Topic | 4 | "Today we'll explore Y" | Paragraph |
-| Image 1 | 7 | Field data visualization | PNG file |
-| Learning Outcome 1 | 6 | "Identify field variables" | Action verb |
-| Content Topic 1 | 10-12 | Multiple slides | H3 with bullet points |
-| Assignment | 21 | Task description | Numbered steps |
-| Resources | 22 | Links and references | Organized list |
+| Element            | Source Slide | Content                                    | Format                |
+| ------------------ | ------------ | ------------------------------------------ | --------------------- |
+| Title              | 1            | "03 - Class Title"                         | H1                    |
+| Course             | 1            | "Agricultural Data Systems \| Spring 2026" | Metadata              |
+| Housekeeping       | 2-3          | "Reminder about deadlines..."              | Bullet list           |
+| Previous Concept   | 4            | "Last class we covered X"                  | Paragraph             |
+| Today's Topic      | 4            | "Today we'll explore Y"                    | Paragraph             |
+| Image 1            | 7            | Field data visualization                   | PNG file              |
+| Learning Outcome 1 | 6            | "Identify field variables"                 | Action verb           |
+| Content Topic 1    | 10-12        | Multiple slides                            | H3 with bullet points |
+| Assignment         | 21           | Task description                           | Numbered steps        |
+| Resources          | 22           | Links and references                       | Organized list        |
 
 Use this inventory as your roadmap.
 
@@ -128,6 +132,7 @@ Slide 12: "Testing Methods"              → H4
 ```
 
 Group related slides:
+
 - Slides belong to same topic? Same H3
 - Slides show subtopics? Use H4 for each
 - Long list across multiple slides? Combine into one section
@@ -152,44 +157,57 @@ These notes become HTML comments in your markdown.
 
 ```markdown
 # 03 - Class Title
+
 Metadata
 
 ## 🏠 Housekeeping
+
 - Item 1
 - Item 2
 
 ## 📋 Syllabus Review
+
 Previous concept + today's topic
 
 ## 📍 Agenda
+
 Checklist of 5-6 items
 
 ## 🎯 Learning Outcomes
+
 3-5 specific outcomes with action verbs
 
 ## 📊 Key Images
+
 Images from slides with captions
 
 ## 📚 Content
+
 ### Topic 1
+
 Content from slides 10-12
 
-### Topic 2  
+### Topic 2
+
 Content from slides 13-15
 
 ### Topic 3
+
 Content from slides 16-18
 
 ## ✍️ Assignment
+
 Task and deliverable from slide 21
 
 ## 🔗 Resources
+
 Links and references from slide 22
 ```
 
 #### Step 3.2: Identify Missing Pieces
 
 Your PowerPoint might not include:
+
 - Housekeeping items (create relevant ones)
 - Explicit learning outcomes (extract from content)
 - Speaker notes (write based on content)
@@ -201,6 +219,7 @@ Your PowerPoint might not include:
 #### Step 3.3: Set Your Content Budget
 
 Refer to style guide statistics:
+
 - Total: 2000-3500 words
 - Content section: 1500-2000 words (3-5 topics)
 - Each topic: 300-500 words
@@ -208,6 +227,7 @@ Refer to style guide statistics:
 - Resources: 5-10 links
 
 Do your PowerPoint slides fit? If not:
+
 - Too much? Condense or split into multiple classes
 - Too little? Research and add depth
 
@@ -224,16 +244,17 @@ Do your PowerPoint slides fit? If not:
 #### Step 4.2: Fill Metadata
 
 Replace:
+
 ```markdown
 ---
 marp: true
-title: "XX - Class Title Here"
+title: 'XX - Class Title Here'
 theme: default
 ---
 
 # XX - Class Title Here
 
-*Agricultural Data Systems | Spring 2026*
+_Agricultural Data Systems | Spring 2026_
 ```
 
 With your actual information.
@@ -241,18 +262,21 @@ With your actual information.
 #### Step 4.3: Write Each Section
 
 **🏠 Housekeeping** (5 min)
+
 - Current announcements
 - Reminders about dates
 - Administrative updates
 - 3-4 bullet points
 
 **📋 Syllabus Review** (5 min)
+
 - Sentence about previous class
 - Sentence about today
 - Sentence about future connection
 - Extract from PowerPoint slide if present
 
 **📍 Agenda** (5 min)
+
 - Copy template checklist
 - 5-6 items
 - First is always "Housekeeping"
@@ -260,12 +284,14 @@ With your actual information.
 - Include time estimates
 
 **🎯 Learning Outcomes** (10 min)
+
 - 3-5 specific outcomes
 - Start with action verb: Identify, Analyze, Create, Evaluate, etc.
 - Include specific object: "field variables," "data patterns," etc.
 - Reference what outcome accomplishes
 
 **📊 Key Images** (10 min)
+
 - Export images from PowerPoint
 - Place in `images/` folder
 - Name: `class##_slide##_img##.png`
@@ -273,6 +299,7 @@ With your actual information.
 - Add italic caption: `*Figure 1: What this shows*`
 
 **📚 Content** (45 min)
+
 - Extract content from slides
 - Organize into 3-5 H3 topics
 - Use H4 for subtopics
@@ -283,6 +310,7 @@ With your actual information.
 - Reference images in this section
 
 **✍️ Assignment** (15 min)
+
 - Clear objective (one sentence)
 - 2-3 steps numbered
 - Specific deliverable
@@ -291,6 +319,7 @@ With your actual information.
 - Submission instructions
 
 **🔗 Resources** (10 min)
+
 - Organize by type
 - Use meaningful link text
 - Add brief description
@@ -298,6 +327,7 @@ With your actual information.
 - 5-10 resources total
 
 **Metadata** (5 min)
+
 - Duration: 75 minutes
 - Prep time: 10 minutes
 - Materials needed: [your list]
@@ -432,7 +462,7 @@ Slide 11: Resources           → 🔗 Resources
 
 ## 📦 File Organization
 
-### After Conversion, You'll Have:
+### After Conversion, You'll Have
 
 ```
 classXX.md                           # Main markdown document
@@ -452,6 +482,7 @@ images/
 - `##` (third): Image number on that slide (01, 02, etc.)
 
 **Examples:**
+
 - `class03_slide05_img01.png` - First image from slide 5 of class 3
 - `class05_slide12_img02.png` - Second image from slide 12 of class 5
 
@@ -512,6 +543,7 @@ After implementing drainage: yield increased 20%.
 **Wrong approach:** Copy all 10 bullets into one markdown section
 
 **Right approach:**
+
 - Group related bullets into subtopics (H4)
 - Reduce to 4-5 key bullets per topic
 - Move others to supporting content
@@ -539,7 +571,8 @@ After implementing drainage: yield increased 20%.
 
 **Wrong:** "Do the exercise on page 10"
 
-**Right:** 
+**Right:**
+
 - Clear objective
 - Step-by-step instructions
 - What to submit
@@ -565,30 +598,35 @@ After implementing drainage: yield increased 20%.
 ### Quick Checklist
 
 **Phase 1: Analyze (15-30 min)**
+
 - [ ] Open PowerPoint
 - [ ] Extract slide content
 - [ ] Export images
 - [ ] Identify structure
 
 **Phase 2: Extract (30-60 min)**
+
 - [ ] Create content inventory
 - [ ] Extract hierarchy
 - [ ] Note speaker content
 - [ ] Flag missing pieces
 
 **Phase 3: Organize (15-30 min)**
+
 - [ ] Create outline
 - [ ] Identify missing sections
 - [ ] Set content budget
 - [ ] Organize images
 
 **Phase 4: Write (90-120 min)**
+
 - [ ] Copy template
 - [ ] Fill each section
 - [ ] Add speaker notes
 - [ ] Include images
 
 **Phase 5: Polish (30-45 min)**
+
 - [ ] Structure check
 - [ ] Content quality check
 - [ ] Formatting check
@@ -602,16 +640,19 @@ After implementing drainage: yield increased 20%.
 ## 🏗️ Tools That Help
 
 ### For Converting PowerPoint
+
 - **LibreOffice Impress** - Export slides as images
 - **CloudConvert** - Batch convert slides to images
 - **Pandoc** - Convert between document formats
 
 ### For Editing Markdown
+
 - **VS Code** - Markdown preview built-in
 - **Typora** - Dedicated markdown editor
 - **Obsidian** - Knowledge management with markdown
 
 ### For Quality Checking
+
 - **Grammarly** - Spelling and grammar
 - **Hemingway Editor** - Sentence clarity
 - **URL Checker** - Verify links are valid
@@ -621,6 +662,7 @@ After implementing drainage: yield increased 20%.
 ## 🏣 Examples
 
 See `STYLE_REFERENCE_EXAMPLE.md` for a complete converted class showing:
+
 - Proper structure from PowerPoint slides
 - Well-formatted content sections
 - Clear learning outcomes
@@ -640,4 +682,4 @@ See `STYLE_REFERENCE_EXAMPLE.md` for a complete converted class showing:
 
 **Remember:** The conversion takes time, but results in professional, version-controlled, student-friendly class documentation.
 
-*Last Updated: January 26, 2026*
+_Last Updated: January 26, 2026_

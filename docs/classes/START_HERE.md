@@ -32,6 +32,7 @@ You're here because you need to create or manage class documentation. Here's wha
 ### Scenario 1: "I Have a PowerPoint and Need Markdown"
 
 **Your path:**
+
 1. Read: **CONVERSION_GUIDE.md** (20 min) - Learn the process
 2. Use: **TEMPLATE.md** - Start with the template
 3. Follow: **STYLE_IMPLEMENTATION_CHECKLIST.md** - Verify as you go
@@ -44,6 +45,7 @@ You're here because you need to create or manage class documentation. Here's wha
 ### Scenario 2: "I Need to Create a Class from Scratch"
 
 **Your path:**
+
 1. Review: **STYLE_REFERENCE_EXAMPLE.md** (15 min) - See how it's done
 2. Copy: **TEMPLATE.md** - Start from the template
 3. Write: Each section according to **STYLE_GUIDE.md**
@@ -56,6 +58,7 @@ You're here because you need to create or manage class documentation. Here's wha
 ### Scenario 3: "I Have Markdown That Needs Updating"
 
 **Your path:**
+
 1. Open: Your existing class markdown file
 2. Check: **STYLE_IMPLEMENTATION_CHECKLIST.md** - What's missing?
 3. Add: Missing sections or fixes
@@ -69,6 +72,7 @@ You're here because you need to create or manage class documentation. Here's wha
 ### Scenario 4: "I Just Want to Understand the System"
 
 **Your path:**
+
 1. Read: **README.md** (15 min) - Full overview
 2. Skim: **STYLE_GUIDE.md** (10 min) - Get key principles
 3. Study: **STYLE_REFERENCE_EXAMPLE.md** (10 min) - See real example
@@ -82,15 +86,15 @@ You're here because you need to create or manage class documentation. Here's wha
 
 ### Quick Reference Table
 
-| File | Purpose | When to Use | Time |
-|------|---------|------------|------|
-| **README.md** | System overview & workflows | Getting oriented | 15 min |
-| **STYLE_GUIDE.md** | Complete formatting rules | Reference while creating | As needed |
-| **STYLE_REFERENCE_EXAMPLE.md** | Perfect example class | Learning structure | 15 min |
-| **STYLE_IMPLEMENTATION_CHECKLIST.md** | Step-by-step verification | Creating/updating classes | While working |
-| **TEMPLATE.md** | Blank template to copy | Starting new classes | Copy & fill |
-| **CONVERSION_GUIDE.md** | PowerPoint → Markdown workflow | Converting slides | 20 min to read |
-| **START_HERE.md** | This file! | Getting started | 5 min |
+| File                                  | Purpose                        | When to Use               | Time           |
+| ------------------------------------- | ------------------------------ | ------------------------- | -------------- |
+| **README.md**                         | System overview & workflows    | Getting oriented          | 15 min         |
+| **STYLE_GUIDE.md**                    | Complete formatting rules      | Reference while creating  | As needed      |
+| **STYLE_REFERENCE_EXAMPLE.md**        | Perfect example class          | Learning structure        | 15 min         |
+| **STYLE_IMPLEMENTATION_CHECKLIST.md** | Step-by-step verification      | Creating/updating classes | While working  |
+| **TEMPLATE.md**                       | Blank template to copy         | Starting new classes      | Copy & fill    |
+| **CONVERSION_GUIDE.md**               | PowerPoint → Markdown workflow | Converting slides         | 20 min to read |
+| **START_HERE.md**                     | This file!                     | Getting started           | 5 min          |
 
 ---
 
@@ -99,6 +103,7 @@ You're here because you need to create or manage class documentation. Here's wha
 ### If You Have Limited Time (< 30 minutes)
 
 **Just Want Templates:**
+
 1. Copy `TEMPLATE.md`
 2. Start filling in your content
 3. When stuck, reference `STYLE_GUIDE.md`
@@ -110,6 +115,7 @@ You're here because you need to create or manage class documentation. Here's wha
 ### If You Have 1 Hour
 
 **Want Quality Output:**
+
 1. Read `README.md` (15 min) - understand system
 2. Study `STYLE_REFERENCE_EXAMPLE.md` (15 min) - see example
 3. Copy `TEMPLATE.md` (5 min) - get template
@@ -122,6 +128,7 @@ You're here because you need to create or manage class documentation. Here's wha
 ### If You Have 2-3 Hours
 
 **Want Professional Result:**
+
 1. Read `README.md` (15 min)
 2. Study `STYLE_GUIDE.md` thoroughly (20 min)
 3. Review `STYLE_REFERENCE_EXAMPLE.md` (15 min)
@@ -136,6 +143,7 @@ You're here because you need to create or manage class documentation. Here's wha
 ### If You Have 5+ Hours
 
 **Converting PowerPoint:**
+
 1. Read `CONVERSION_GUIDE.md` (20 min) - understand process
 2. Extract content from PowerPoint (30-60 min)
 3. Organize materials (15-30 min)
@@ -151,20 +159,26 @@ You're here because you need to create or manage class documentation. Here's wha
 You really only need THREE files to get started:
 
 ### 1. **TEMPLATE.md** ← Copy This
+
 Your starting point. Pre-formatted with:
+
 - Correct structure
 - All 9 sections ready
 - Placeholder text
 - Speaker notes template
 
 ### 2. **STYLE_GUIDE.md** ← Reference This
+
 When you need to know:
+
 - "What's the right format?"
 - "Is this emoji correct?"
 - "How should I write learning outcomes?"
 
 ### 3. **STYLE_IMPLEMENTATION_CHECKLIST.md** ← Use This
+
 Before publishing, verify:
+
 - [ ] Structure correct?
 - [ ] Formatting consistent?
 - [ ] All sections present?
@@ -270,10 +284,13 @@ Before publishing, verify:
 ## 💡 Pro Tips
 
 ### Tip 1: Keep Template Open
+
 Have `TEMPLATE.md` in one window and `STYLE_GUIDE.md` in another while writing.
 
 ### Tip 2: Fill in Order
+
 Don't jump around. Fill sections in order:
+
 1. Metadata
 2. Housekeeping
 3. Syllabus Review
@@ -283,25 +300,30 @@ Don't jump around. Fill sections in order:
 7. Resources
 
 ### Tip 3: Images Improve Learning
+
 If your PowerPoint has visuals, extract and include them. 2-5 images per class is ideal.
 
 ### Tip 4: Use Speaker Notes
+
 Add HTML comment notes with teaching tips. Your future self will thank you.
 
 ### Tip 5: Test All Links
+
 Before publishing, click every resource link. Broken links are a trust-killer.
 
 ### Tip 6: Get Feedback
+
 Have a colleague review your first class. Notes help improve future ones.
 
 ### Tip 7: Update Metadata
+
 Keep "Last Updated" current. Students appreciate knowing content is current.
 
 ---
 
 ## 📞 Need Help?
 
-### Question About...
+### Question About
 
 **Formatting or structure?**
 → Check `STYLE_GUIDE.md`
@@ -328,26 +350,30 @@ Keep "Last Updated" current. Students appreciate knowing content is current.
 
 ## 🎯 Next Steps
 
-### Pick One:
+### Pick One
 
 **Option A: I'm Ready to Start**
+
 1. Copy `TEMPLATE.md` to new file: `classXX.md`
 2. Open `STYLE_GUIDE.md` for reference
 3. Start filling in your content
 
 **Option B: I Want to Learn First**
+
 1. Read `README.md` (15 min)
 2. Study `STYLE_REFERENCE_EXAMPLE.md` (15 min)
 3. Review `STYLE_GUIDE.md` sections (10 min)
 4. Then copy `TEMPLATE.md` and start
 
 **Option C: I Have PowerPoint Slides**
+
 1. Read `CONVERSION_GUIDE.md` (20 min)
 2. Extract slides and images (30-60 min)
 3. Copy `TEMPLATE.md`
 4. Follow conversion workflow
 
 **Option D: I Want to Understand Everything**
+
 1. Read all .md files in this directory
 2. Study `STYLE_REFERENCE_EXAMPLE.md` thoroughly
 3. Walk through `STYLE_IMPLEMENTATION_CHECKLIST.md`
@@ -356,7 +382,7 @@ Keep "Last Updated" current. Students appreciate knowing content is current.
 
 ---
 
-## ✨ You've Got This!
+## ✨ You've Got This
 
 The system looks complex at first, but it's actually quite simple:
 
@@ -377,6 +403,6 @@ Questions? Reference the guide files above. They have answers.
 
 ---
 
-*Last Updated: January 26, 2026*
+_Last Updated: January 26, 2026_
 
 **Happy documenting!** 📚✨

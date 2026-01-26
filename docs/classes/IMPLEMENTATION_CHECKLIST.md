@@ -59,7 +59,7 @@ from pathlib import Path
 def extract_images(pptx_path, output_dir):
     """
     Extract all images from PowerPoint file.
-    
+
     Args:
         pptx_path: Path to .pptx file
         output_dir: Directory to save images
@@ -67,46 +67,46 @@ def extract_images(pptx_path, output_dir):
     prs = Presentation(pptx_path)
     output_path = Path(output_dir)
     output_path.mkdir(parents=True, exist_ok=True)
-    
+
     # Extract class number from filename
     pptx_name = Path(pptx_path).stem
     class_num = pptx_name.split('. ')[0].zfill(2)
-    
+
     image_count = 0
     slide_num = 0
-    
+
     for slide_idx, slide in enumerate(prs.slides, 1):
         slide_num = slide_idx
         img_in_slide = 0
-        
+
         for shape_idx, shape in enumerate(slide.shapes):
             if shape.has_image:
                 image = shape.image
                 image_bytes = image.blob
                 extension = image.ext
-                
+
                 filename = f"class{class_num}_slide{slide_num:02d}_img{img_in_slide:02d}.{extension}"
                 filepath = output_path / filename
-                
+
                 with open(filepath, 'wb') as f:
                     f.write(image_bytes)
-                
+
                 print(f"Extracted: {filename}")
                 image_count += 1
                 img_in_slide += 1
-    
+
     print(f"\nTotal images extracted: {image_count}")
 
 if __name__ == "__main__":
     import sys
-    
+
     if len(sys.argv) < 2:
         print("Usage: python extract_pptx_images.py <pptx_file> [output_dir]")
         sys.exit(1)
-    
+
     pptx_file = sys.argv[1]
     output_dir = sys.argv[2] if len(sys.argv) > 2 else "docs/classes/images"
-    
+
     extract_images(pptx_file, output_dir)
 ```
 
@@ -173,7 +173,7 @@ For each extracted image:
 
 ```markdown
 ![Descriptive alt text about what the image shows](images/class03_slide05_img01.png)
-*Figure 1: What this visualization demonstrates*
+_Figure 1: What this visualization demonstrates_
 ```
 
 - [ ] Images are referenced with relative paths
@@ -344,25 +344,26 @@ git push origin slide-md-extraction
 
 Use this table to track progress across all 15 classes:
 
-| Class | Title | Images Extracted | Markdown Created | HTML Generated | PDF Generated | Status | Last Updated |
-|-------|-------|------------------|------------------|----------------|---------------|--------|---------------|
-| 00 | Welcome | ⬜ | ⬜ | ⬜ | ⬜ | Not Started | - |
-| 01 | Farm Frontier | ⬜ | ⬜ | ⬜ | ⬜ | Not Started | - |
-| 02 | Gearing Up | ⬜ | ⬜ | ⬜ | ⬜ | Not Started | - |
-| 03 | US Ag Data | ⬜ | ⬜ | ⬜ | ⬜ | Not Started | - |
-| 04 | Clean Data | ⬜ | ⬜ | ⬜ | ⬜ | Not Started | - |
-| 05 | EDA | ⬜ | ⬜ | ⬜ | ⬜ | Not Started | - |
-| 06 | Geospatial | ⬜ | ⬜ | ⬜ | ⬜ | Not Started | - |
-| 07 | Satellite | ⬜ | ⬜ | ⬜ | ⬜ | Not Started | - |
-| 08 | Weather | ⬜ | ⬜ | ⬜ | ⬜ | Not Started | - |
-| 09 | Advanced Spatial | ⬜ | ⬜ | ⬜ | ⬜ | Not Started | - |
-| 10 | Precision Ag | ⬜ | ⬜ | ⬜ | ⬜ | Not Started | - |
-| 11 | Soil Health | ⬜ | ⬜ | ⬜ | ⬜ | Not Started | - |
-| 12 | Dashboards | ⬜ | ⬜ | ⬜ | ⬜ | Not Started | - |
-| 13 | Ethics | ⬜ | ⬜ | ⬜ | ⬜ | Not Started | - |
-| 14 | Future Farm | ⬜ | ⬜ | ⬜ | ⬜ | Not Started | - |
+| Class | Title            | Images Extracted | Markdown Created | HTML Generated | PDF Generated | Status      | Last Updated |
+| ----- | ---------------- | ---------------- | ---------------- | -------------- | ------------- | ----------- | ------------ |
+| 00    | Welcome          | ⬜               | ⬜               | ⬜             | ⬜            | Not Started | -            |
+| 01    | Farm Frontier    | ⬜               | ⬜               | ⬜             | ⬜            | Not Started | -            |
+| 02    | Gearing Up       | ⬜               | ⬜               | ⬜             | ⬜            | Not Started | -            |
+| 03    | US Ag Data       | ⬜               | ⬜               | ⬜             | ⬜            | Not Started | -            |
+| 04    | Clean Data       | ⬜               | ⬜               | ⬜             | ⬜            | Not Started | -            |
+| 05    | EDA              | ⬜               | ⬜               | ⬜             | ⬜            | Not Started | -            |
+| 06    | Geospatial       | ⬜               | ⬜               | ⬜             | ⬜            | Not Started | -            |
+| 07    | Satellite        | ⬜               | ⬜               | ⬜             | ⬜            | Not Started | -            |
+| 08    | Weather          | ⬜               | ⬜               | ⬜             | ⬜            | Not Started | -            |
+| 09    | Advanced Spatial | ⬜               | ⬜               | ⬜             | ⬜            | Not Started | -            |
+| 10    | Precision Ag     | ⬜               | ⬜               | ⬜             | ⬜            | Not Started | -            |
+| 11    | Soil Health      | ⬜               | ⬜               | ⬜             | ⬜            | Not Started | -            |
+| 12    | Dashboards       | ⬜               | ⬜               | ⬜             | ⬜            | Not Started | -            |
+| 13    | Ethics           | ⬜               | ⬜               | ⬜             | ⬜            | Not Started | -            |
+| 14    | Future Farm      | ⬜               | ⬜               | ⬜             | ⬜            | Not Started | -            |
 
 **Legend:**
+
 - ⬜ = Not started
 - 🟡 = In progress
 - ✅ = Complete
@@ -375,10 +376,12 @@ Use this table to track progress across all 15 classes:
 ### 🏠 Housekeeping Slide
 
 **Extract from PPTX:**
+
 - Bullet points about announcements, dates, reminders
 - Usually 2-4 items
 
 **Markdown Structure:**
+
 ```markdown
 ## 🏠 Housekeeping
 
@@ -406,17 +409,19 @@ Use this table to track progress across all 15 classes:
 ### 📋 Syllabus Review Slide
 
 **Extract from PPTX:**
+
 - Connection to previous class
 - Preview of today's topic
 - Why it matters
 
 **Markdown Structure:**
+
 ```markdown
 ## 📋 Syllabus Review
 
 Last class we covered **[Previous Topic]**. Today we explore **[Today's Topic]**.
 
-*This connects to [Future Topic] next week.*
+_This connects to [Future Topic] next week._
 
 <!-- NOTES
 ## Syllabus Review Notes
@@ -440,10 +445,12 @@ Last class we covered **[Previous Topic]**. Today we explore **[Today's Topic]**
 ### 📍 Agenda Slide
 
 **Extract from PPTX:**
+
 - List of topics for the class
 - Usually 5-7 items
 
 **Markdown Structure:**
+
 ```markdown
 ## 📍 Agenda
 
@@ -473,10 +480,12 @@ Last class we covered **[Previous Topic]**. Today we explore **[Today's Topic]**
 ### 🎯 Learning Outcomes Slide
 
 **Extract from PPTX:**
+
 - 3-5 specific, measurable learning objectives
 - Action verbs (Identify, Analyze, Create, Evaluate, etc.)
 
 **Markdown Structure:**
+
 ```markdown
 ## 🎯 Learning Outcomes
 
@@ -501,15 +510,17 @@ After this class, you'll be able to:
 ### 📊 Key Images Slide
 
 **Extract from PPTX:**
+
 - Important diagrams, charts, photos
 - Usually 1-3 images per class
 
 **Markdown Structure:**
+
 ```markdown
 ## 📊 Key Images
 
 ![Description of what the image shows](images/class03_slide05_img01.png)
-*Figure 1: What this demonstrates*
+_Figure 1: What this demonstrates_
 
 <!-- NOTES
 ## Key Images Notes
@@ -529,11 +540,13 @@ After this class, you'll be able to:
 ### 📚 Content Slides (Multiple)
 
 **Extract from PPTX:**
+
 - Main teaching content
 - Usually 3-5 slides of content
 - Split into logical topics
 
 **Markdown Structure (per content slide):**
+
 ```markdown
 ## 📚 [Topic Name]
 
@@ -589,12 +602,14 @@ After this class, you'll be able to:
 ### ✍️ Assignment Slide
 
 **Extract from PPTX:**
+
 - Task name and objective
 - Instructions
 - Deliverable format
 - Due date
 
 **Markdown Structure:**
+
 ```markdown
 ## ✍️ Assignment
 
@@ -610,9 +625,10 @@ After this class, you'll be able to:
 2. [Second step] (X min)
 3. [Third step] (X min)
 
-**Deliverable:** 
+**Deliverable:**
 
 Submit to Canvas:
+
 - File: `LastName_Assignment.pdf`
 - Format: [Description]
 - Include: [What to include]
@@ -647,21 +663,26 @@ Submit to Canvas:
 ### 🔗 Resources Slide
 
 **Extract from PPTX:**
+
 - Links to tools, articles, datasets
 - Usually organized by category
 
 **Markdown Structure:**
+
 ```markdown
 ## 🔗 Resources & References
 
 ### Official Sources
+
 - [Resource Name](https://url) - Why this is useful
 - [Another Resource](https://url) - Specific application
 
 ### Reading Materials
-- Author, A. (Year). "Title." *Journal*, Vol.
+
+- Author, A. (Year). "Title." _Journal_, Vol.
 
 ### External Tools
+
 - [Tool Name](https://url) - What it provides
 
 <!-- NOTES
@@ -699,22 +720,26 @@ Submit to Canvas:
 ## 🚀 Recommended Sequence
 
 ### Week 1: Setup
+
 - [ ] Install Marp CLI and Pandoc
 - [ ] Create extraction script
 - [ ] Test on one class (Class 03 recommended)
 
 ### Week 2-4: Pilot Conversion
+
 - [ ] Convert Class 03 fully
 - [ ] Teach with new format
 - [ ] Document what works
 - [ ] Update style guide based on learnings
 
 ### Week 5-8: Scale
+
 - [ ] Convert remaining 14 classes
 - [ ] Maintain consistency
 - [ ] Build automation scripts
 
 ### Week 9+: Optimization
+
 - [ ] Create conversion pipeline
 - [ ] Automate image extraction
 - [ ] Automate markdown template generation
@@ -754,11 +779,13 @@ Submit to Canvas:
 ## 📚 Resources
 
 ### Tools
+
 - [Marp CLI](https://github.com/marp-team/marp-cli)
 - [Pandoc](https://pandoc.org)
 - [python-pptx](https://python-pptx.readthedocs.io/)
 
 ### Documentation
+
 - [Marp Markdown Syntax](https://marpit.marp.app/markdown)
 - [Markdown Guide](https://www.markdownguide.org/)
 - [Git Basics](https://git-scm.com/book/en/v2/Git-Basics-Recording-Changes-to-the-Repository)
@@ -767,4 +794,4 @@ Submit to Canvas:
 
 **Remember:** The goal is ONE source of truth (markdown) that generates unlimited formats. This checklist ensures consistency and efficiency across all 15 classes. 🌾
 
-*Last Updated: January 26, 2026*
+_Last Updated: January 26, 2026_

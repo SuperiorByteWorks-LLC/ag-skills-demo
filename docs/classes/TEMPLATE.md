@@ -1,12 +1,12 @@
 ---
 marp: true
-title: "XX - Class Title Here"
+title: 'XX - Class Title Here'
 theme: default
 ---
 
 # XX - Class Title Here
 
-*Agricultural Data Systems | Spring 2026*
+_Agricultural Data Systems | Spring 2026_
 
 <!-- NOTES
 ## Title Slide Notes
@@ -34,7 +34,7 @@ theme: default
 ## 🏠 Housekeeping
 
 - Announcement or logistics item
-- Reminder about upcoming deadline  
+- Reminder about upcoming deadline
 - Office hours or resource update
 
 <!-- NOTES
@@ -61,7 +61,7 @@ theme: default
 
 Last class we covered **[Previous Concept]**. Today we'll explore **[Today's Topic]**, building on that foundation.
 
-*This connects to [Future Topic] next week.*
+_This connects to [Future Topic] next week._
 
 <!-- NOTES
 ## Syllabus Review Talking Points
@@ -156,7 +156,7 @@ After this class, you'll be able to:
 ## 📊 Key Images
 
 ![Description of image content](images/classXX_slide##_img01.png)
-*Figure 1: What this image demonstrates*
+_Figure 1: What this image demonstrates_
 
 <!-- NOTES
 ## Key Images Teaching Notes
@@ -193,6 +193,7 @@ After this class, you'll be able to:
 **Definition:** [What this concept means]
 
 Key points:
+
 - [Point 1 with explanation]
 - [Point 2 with explanation]
 - [Point 3 with explanation]
@@ -249,11 +250,13 @@ Key points:
 ### [Major Topic Title]
 
 **Process:**
+
 ```
 Input → Processing → Output
 ```
 
 Step-by-step:
+
 1. [First step explanation]
 2. [Second step explanation]
 3. [Third step explanation]
@@ -307,11 +310,11 @@ Step-by-step:
 
 **Comparison of Approaches:**
 
-| Approach | Best For | Trade-offs |
-|----------|----------|----------|
-| [Option 1] | [Scenario 1] | [Pro/Con] |
-| [Option 2] | [Scenario 2] | [Pro/Con] |
-| [Option 3] | [Scenario 3] | [Pro/Con] |
+| Approach   | Best For     | Trade-offs |
+| ---------- | ------------ | ---------- |
+| [Option 1] | [Scenario 1] | [Pro/Con]  |
+| [Option 2] | [Scenario 2] | [Pro/Con]  |
+| [Option 3] | [Scenario 3] | [Pro/Con]  |
 
 <!-- NOTES
 ## Topic 3 Teaching Notes
@@ -396,6 +399,7 @@ Step-by-step:
    - [How to verify]
 
 **Reflection Questions:**
+
 - [Question 1 about observations]
 - [Question 2 connecting to real-world]
 - [Question 3 about application]
@@ -403,6 +407,7 @@ Step-by-step:
 **Deliverable:**
 
 Submit to Canvas:
+
 - File: `LastName_Class##_Assignment.pdf`
 - Format: 2-3 pages with analysis and written responses
 - Include: Screenshots/charts, interpretation, answers to reflection questions
@@ -481,19 +486,23 @@ Submit to Canvas:
 ## 🔗 Resources & References
 
 ### Official Sources
+
 - [Resource Name](https://example.com) - Why this is useful
 - [Another Resource](https://example.com) - Specific application
 - [Toolkit Documentation](https://example.com) - For reference
 
 ### Reading Materials
-- Author, A. (Year). "Article Title." *Journal*, Vol(Issue).
-- Author, B. (Year). *Book Title*. Publisher.
+
+- Author, A. (Year). "Article Title." _Journal_, Vol(Issue).
+- Author, B. (Year). _Book Title_. Publisher.
 
 ### External Tools & Datasets
+
 - [Tool Name](https://example.com) - What it provides
 - [Dataset Name](https://example.com) - How to access
 
 ### Optional Deep Dives
+
 - [Advanced Topic](https://example.com) - For interested students
 - [Case Study](https://example.com) - Real-world application
 
@@ -524,21 +533,24 @@ Submit to Canvas:
 **Class Duration:** 75 minutes  
 **Prep Time:** 10 minutes (tech check, materials)  
 **Materials Needed:**
+
 - Laptop with [software/tools]
 - Internet access
 - [Any other specific materials]
 
 **Accessibility Notes:**
+
 - [Any specific considerations for your students]
 - Closed captions: Available if videos included
 - Alt text: Provided for all images
 - Font: Large, high-contrast for visual clarity
 
 **Tech Requirements:**
+
 - [Any software students need pre-installed]
 - [Any accounts to set up in advance]
 
-*Last Updated: [Date]*
+_Last Updated: [Date]_
 
 <!-- NOTES
 ## Class Closing Notes
