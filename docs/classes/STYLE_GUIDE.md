@@ -40,21 +40,27 @@ This style guide ensures all class materials are:
 ## Design Principles
 
 ### 1. One Main Topic per Section
+
 Each class covers ONE coherent topic. If content exceeds 3000 words, split into multiple sections.
 
 ### 2. Scannable Structure
+
 Use clear headings, bullet points, and visual breaks. Readers should grasp content at a glance.
 
 ### 3. Progressive Disclosure
+
 Start with overview, move to details. Use hierarchy to show relationships.
 
 ### 4. Learning-Focused
+
 Every class clearly indicates:
+
 - What students will learn (Learning Outcomes)
 - How content connects (Syllabus Review)
 - What they'll do (Assignments)
 
 ### 5. Consistent Navigation
+
 Students should always know where to find agenda, assignments, and resources in every class.
 
 ---
@@ -65,33 +71,42 @@ Every class follows this 9-section template:
 
 ```markdown
 # Class Number - Title
-*Course Name | Semester*
+
+_Course Name | Semester_
 
 ## 🏠 Housekeeping
-## 📋 Syllabus Review  
+
+## 📋 Syllabus Review
+
 ## 📍 Agenda
+
 ## 🎯 Learning Outcomes
+
 ## 📊 Key Images & Resources
+
 ## 📚 Content
+
 ## ✍️ Assignment
+
 ## 🔗 Resources & References
+
 ## 📝 Instructor Notes (optional)
 ```
 
 ### Section Descriptions
 
-| Section | Purpose | Length | Required |
-|---------|---------|--------|----------|
-| **Title** | Class number and topic | 1 line | ✅ |
-| **🏠 Housekeeping** | Announcements, logistics | 2-4 bullets | ✅ |
-| **📋 Syllabus Review** | Connection to course arc | 2-3 sentences | ✅ |
-| **📍 Agenda** | Session outline | 4-6 checkboxes | ✅ |
-| **🎯 Learning Outcomes** | What students will learn | 3-5 bullets | ✅ |
-| **📊 Key Images** | Visual resources from slides | Variable | If images exist |
-| **📚 Content** | Main teaching material | Variable | ✅ |
-| **✍️ Assignment** | What to do, when due | Variable | ✅ |
-| **🔗 Resources** | Links and references | 5-10 links | ✅ |
-| **📝 Notes** | Instructor reminders | Variable | Optional |
+| Section                  | Purpose                      | Length         | Required        |
+| ------------------------ | ---------------------------- | -------------- | --------------- |
+| **Title**                | Class number and topic       | 1 line         | ✅              |
+| **🏠 Housekeeping**      | Announcements, logistics     | 2-4 bullets    | ✅              |
+| **📋 Syllabus Review**   | Connection to course arc     | 2-3 sentences  | ✅              |
+| **📍 Agenda**            | Session outline              | 4-6 checkboxes | ✅              |
+| **🎯 Learning Outcomes** | What students will learn     | 3-5 bullets    | ✅              |
+| **📊 Key Images**        | Visual resources from slides | Variable       | If images exist |
+| **📚 Content**           | Main teaching material       | Variable       | ✅              |
+| **✍️ Assignment**        | What to do, when due         | Variable       | ✅              |
+| **🔗 Resources**         | Links and references         | 5-10 links     | ✅              |
+| **📝 Notes**             | Instructor reminders         | Variable       | Optional        |
 
 ---
 
@@ -107,6 +122,7 @@ Every class follows this 9-section template:
 ```
 
 **Rules:**
+
 - Exactly ONE H1 per document (the class title)
 - H2 for the 9 standard sections only
 - H3 for major content topics
@@ -136,32 +152,36 @@ Content paragraph here.
 
 ### Text Styles
 
-| Style | Usage | Example |
-|-------|-------|--------|
-| **Bold** | Emphasis, key terms | `**precision agriculture**` |
-| *Italic* | Definitions, emphasis | `*per hectare*` |
-| `Code` | Technical terms, variables | `` `NDVI` ``, `` `Python` `` |
-| > Quote | Definitions, key concepts | `> **Definition:** ...` |
+| Style    | Usage                      | Example                      |
+| -------- | -------------------------- | ---------------------------- |
+| **Bold** | Emphasis, key terms        | `**precision agriculture**`  |
+| _Italic_ | Definitions, emphasis      | `*per hectare*`              |
+| `Code`   | Technical terms, variables | `` `NDVI` ``, `` `Python` `` |
+| > Quote  | Definitions, key concepts  | `> **Definition:** ...`      |
 
 ### When to Use Each
 
 **Bold:**
+
 - First mention of important terms
 - Action verbs in learning outcomes
 - Section labels ("Objective:", "Due:")
 
 **Italic:**
+
 - Foreign words or phrases
 - Book/article titles
 - Figure captions
 
 **Code formatting:**
+
 - Programming language names
 - File names and paths
 - Data formats (CSV, GeoTIFF)
 - Technical acronyms (NDVI, SQL)
 
 **Blockquotes:**
+
 - Definitions
 - Important warnings or tips
 - Key takeaways
@@ -174,33 +194,38 @@ Content paragraph here.
 
 Use **exactly one emoji per H2 section** for visual organization:
 
-| Emoji | Section | Purpose |
-|-------|---------|--------|
-| 🏠 | Housekeeping | Administrative items |
-| 📋 | Syllabus Review | Course connection |
-| 📍 | Agenda | Navigation/structure |
-| 🎯 | Learning Outcomes | Goals/objectives |
-| 📊 | Key Images | Data/visuals |
-| 📚 | Content | Main material |
-| ✍️ | Assignment | Tasks/activities |
-| 🔗 | Resources | Links/references |
-| 📝 | Notes | Instructor info |
+| Emoji | Section           | Purpose              |
+| ----- | ----------------- | -------------------- |
+| 🏠    | Housekeeping      | Administrative items |
+| 📋    | Syllabus Review   | Course connection    |
+| 📍    | Agenda            | Navigation/structure |
+| 🎯    | Learning Outcomes | Goals/objectives     |
+| 📊    | Key Images        | Data/visuals         |
+| 📚    | Content           | Main material        |
+| ✍️    | Assignment        | Tasks/activities     |
+| 🔗    | Resources         | Links/references     |
+| 📝    | Notes             | Instructor info      |
 
 ### ❌ DON'T: Excessive Emoji
 
 **Wrong:**
+
 ```markdown
 ## 📚📊📈 Content & Data Analysis 🎉
+
 This section 📊 covers data 🌾 visualization 📈
 ```
 
 **Right:**
+
 ```markdown
 ## 📚 Content
+
 This section covers data visualization for agricultural datasets.
 ```
 
 **Emoji Rules:**
+
 1. One emoji per H2 heading only
 2. No emoji in body text
 3. No emoji in links or code
@@ -214,15 +239,17 @@ This section covers data visualization for agricultural datasets.
 ### Lists
 
 #### Unordered (Bullet Points)
+
 Use for non-sequential items:
 
 ```markdown
 - First concept
-- Second concept  
+- Second concept
 - Third concept
 ```
 
 #### Ordered (Numbered)
+
 Use for sequential steps:
 
 ```markdown
@@ -232,6 +259,7 @@ Use for sequential steps:
 ```
 
 #### Checkbox (Tasks)
+
 Use for agenda and task lists:
 
 ```markdown
@@ -246,12 +274,13 @@ Use for structured comparisons:
 
 ```markdown
 | Data Source | Coverage | Access |
-|-------------|----------|--------|
-| USDA NASS | National | Free |
-| NRCS Soils | National | Free |
+| ----------- | -------- | ------ |
+| USDA NASS   | National | Free   |
+| NRCS Soils  | National | Free   |
 ```
 
 **Table Guidelines:**
+
 - Always include header row
 - Use pipes `|` for columns
 - Align with dashes `---`
@@ -269,6 +298,7 @@ df = pd.read_csv('harvest_data.csv')
 ````
 
 **Supported languages:**
+
 - `python`, `r`, `sql`, `bash`, `json`, `yaml`
 
 ### Blockquotes
@@ -289,10 +319,11 @@ Use descriptive alt text and figure captions:
 
 ```markdown
 ![NDVI map showing vegetation health variation](images/class03_slide05_img01.png)
-*Figure 1: NDVI classification with color scale (red=poor, green=healthy)*
+_Figure 1: NDVI classification with color scale (red=poor, green=healthy)_
 ```
 
 **Image Guidelines:**
+
 - Store in `docs/classes/images/` folder
 - Use semantic naming: `class##_slide##_img##.ext`
 - Always include alt text
@@ -305,10 +336,10 @@ Use descriptive alt text and figure captions:
 
 Copy this template for each new class:
 
-```markdown
+````markdown
 # 03 - Class Title Here
 
-*Agricultural Data Systems | Spring 2026*
+_Agricultural Data Systems | Spring 2026_
 
 ---
 
@@ -322,7 +353,7 @@ Copy this template for each new class:
 
 ## 📋 Syllabus Review
 
-Last class we covered [previous concept]. Today we'll explore [new concept], 
+Last class we covered [previous concept]. Today we'll explore [new concept],
 which builds on that foundation and prepares us for [future topic].
 
 ---
@@ -345,14 +376,14 @@ After this class, you'll be able to:
 - **Verb** another clear objective
 - **Verb** third learning goal
 
-*Use action verbs: Identify, Analyze, Create, Evaluate, Apply, Understand*
+_Use action verbs: Identify, Analyze, Create, Evaluate, Apply, Understand_
 
 ---
 
 ## 📊 Key Images & Resources
 
 ![Descriptive alt text](images/class03_slide02_img01.png)
-*Figure 1: What this image shows*
+_Figure 1: What this image shows_
 
 ---
 
@@ -376,15 +407,16 @@ Next major concept...
 
 > **Key Concept:** Important definition or principle here.
 
-| Item | Description | Example |
-|------|-------------|----------|
-| Data | What it is | Instance |
+| Item | Description | Example  |
+| ---- | ----------- | -------- |
+| Data | What it is  | Instance |
 
 ```python
 # Code example if relevant
 import library
 result = function()
 ```
+````
 
 ---
 
@@ -395,11 +427,13 @@ result = function()
 **Objective:** One sentence describing the goal
 
 **Instructions:**
+
 1. First step with clear action
 2. Second step
 3. Third step
 
-**Deliverable:** 
+**Deliverable:**
+
 - What to submit
 - Expected format
 - File naming convention
@@ -407,6 +441,7 @@ result = function()
 **Due:** Specific date and time
 
 **Grading Criteria:**
+
 - Completeness (40%)
 - Quality (40%)
 - Presentation (20%)
@@ -416,21 +451,24 @@ result = function()
 ## 🔗 Resources & References
 
 ### Official Sources
+
 - [USDA NASS QuickStats](https://quickstats.nass.usda.gov/) - Agricultural statistics
 - [NRCS Web Soil Survey](https://websoilsurvey.nrcs.usda.gov/) - Soil data
 
 ### Reading Materials
+
 - Author, Title (Year)
 - Another Reference (Year)
 
 ### Tools & Datasets
+
 - [Tool Name](URL) - Brief description
 
 ---
 
 ## 📝 Instructor Notes
 
-*Optional section for teaching tips, common student questions, or prep notes*
+_Optional section for teaching tips, common student questions, or prep notes_
 
 - Note about difficult concept
 - Suggestion for demonstration
@@ -441,7 +479,8 @@ result = function()
 **Class Duration:** 75 minutes  
 **Preparation:** 10 minutes  
 **Last Updated:** January 25, 2026
-```
+
+````
 
 ---
 
@@ -506,7 +545,7 @@ After this class, you'll be able to:
 
 ### Understanding Agricultural Data Sources
 
-The US agricultural data ecosystem includes government, commercial, 
+The US agricultural data ecosystem includes government, commercial,
 and research sources. Each serves different purposes.
 
 **Government sources** provide:
@@ -530,8 +569,9 @@ and research sources. Each serves different purposes.
 # Example: Load NASS data
 import pandas as pd
 data = pd.read_csv('nass_corn_yield.csv')
-```
-```
+````
+
+````
 
 ### ❌ Bad Example
 
@@ -551,9 +591,10 @@ Sources:
 USDA - click here
 NRCS - link
 data.gov - somewhere
-```
+````
 
 **Problems:**
+
 - Multiple emoji in heading
 - Emoji throughout body text
 - Vague learning outcomes
@@ -569,31 +610,42 @@ data.gov - somewhere
 ### 1. Inconsistent Heading Hierarchy
 
 ❌ Wrong:
+
 ```markdown
 ## Content
+
 ### Topic 1
+
 ##### Subtopic (skipped H4)
 ```
 
 ✅ Right:
+
 ```markdown
 ## 📚 Content
+
 ### Topic 1
+
 #### Subtopic
 ```
 
 ### 2. Missing Separators
 
 ❌ Wrong:
+
 ```markdown
 ## 🏠 Housekeeping
+
 Items here
+
 ## 📋 Syllabus Review
 ```
 
 ✅ Right:
+
 ```markdown
 ## 🏠 Housekeeping
+
 Items here
 
 ---
@@ -604,12 +656,14 @@ Items here
 ### 3. Vague Learning Outcomes
 
 ❌ Wrong:
+
 ```markdown
 - Understand some concepts
 - Learn about data
 ```
 
 ✅ Right:
+
 ```markdown
 - **Analyze** agricultural datasets using Python pandas
 - **Create** geospatial visualizations of field data
@@ -618,11 +672,13 @@ Items here
 ### 4. Poor Link Formatting
 
 ❌ Wrong:
+
 ```markdown
 Click here: https://longurl.com/path/to/resource
 ```
 
 ✅ Right:
+
 ```markdown
 [USDA NASS QuickStats](https://quickstats.nass.usda.gov/) - Agricultural statistics database
 ```
@@ -651,8 +707,9 @@ If you need to deviate from this guide:
 3. **Consider updating** this guide if it's a good pattern
 
 **Example note:**
+
 ```markdown
-_Note: This class uses additional H4 headings due to topic complexity. 
+_Note: This class uses additional H4 headings due to topic complexity.
 See STYLE_GUIDE.md for rationale._
 ```
 
@@ -660,9 +717,9 @@ See STYLE_GUIDE.md for rationale._
 
 ## Version History
 
-| Version | Date | Changes |
-|---------|------|----------|
-| 1.0 | Jan 25, 2026 | Initial style guide |
+| Version | Date         | Changes             |
+| ------- | ------------ | ------------------- |
+| 1.0     | Jan 25, 2026 | Initial style guide |
 
 ---
 
