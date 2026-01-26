@@ -1,6 +1,6 @@
 # 02 - Gearing Up: Building Your Smart Farm Workspace
 
-*Agricultural Data Analytics Course | Spring 2026*
+_Agricultural Data Analytics Course | Spring 2026_
 
 ---
 
@@ -17,17 +17,20 @@
 <summary><strong>💬 Speaker Notes</strong></summary>
 
 ### Before Class
+
 - Verify your own development environment is working
 - Have the agri-data-toolkit repository cloned and ready
 - Test screen sharing for live demo
 - Prepare backup plan if demo fails (recorded video)
 
 ### Quick Reminders (2 minutes)
+
 - "Welcome to Class 02! Today is all hands-on setup"
 - "This is a no-assignment class - focus is on getting your environment ready"
 - "Everyone will leave with a working workspace today"
 
 ### Common Technical Issues
+
 - Python version conflicts
 - PATH environment variables
 - Git authentication problems
@@ -47,16 +50,19 @@ This connects to Class 03 next week, where you'll use these tools to navigate an
 <summary><strong>💬 Speaker Notes</strong></summary>
 
 ### Connection to Previous (1 minute)
+
 - "Last week: the 'why' of agricultural data"
 - "This week: the 'how' - building your toolkit"
 - Ask: "Who completed the setup checklist from Class 00?"
 
 ### Today's Focus (1 minute)
+
 - "Today is 100% practical and hands-on"
 - "We're building the foundation for every future assignment"
 - "Think of this as setting up your digital farm equipment"
 
 ### Looking Ahead (30 seconds)
+
 - "Next week: using these tools to download USDA data"
 - "Class 04: your first Python data cleaning assignment"
 - "Everything builds on today's setup"
@@ -85,6 +91,7 @@ This connects to Class 03 next week, where you'll use these tools to navigate an
 - "Don't worry if you fall behind - we'll pause for questions"
 
 ### Pacing
+
 - Python setup: 15 min (most critical, don't rush)
 - Libraries: 10 min (quick overview)
 - Git: 15 min (important for assignments)
@@ -93,6 +100,7 @@ This connects to Class 03 next week, where you'll use these tools to navigate an
 - Keep Q&A flexible
 
 ### Backup Plan
+
 - If many students have issues, extend Q&A
 - Offer post-class office hours for setup help
 - Have troubleshooting documentation ready
@@ -114,18 +122,21 @@ After this class, you'll be able to:
 <summary><strong>💬 Speaker Notes</strong></summary>
 
 "By end of class, you should have:
+
 1. A working Python environment
 2. All required libraries installed
 3. The course repository cloned locally
 4. VS Code configured with AI tools"
 
 ### Assessment Approach
+
 - Outcome 1: Tested through Python version check and venv creation
 - Outcome 2: Tested through successful library imports
 - Outcome 3: Tested through repository clone and first commit
 - Outcome 4: Tested through VS Code AI assistant demonstration
 
 ### Success Criteria
+
 - Students can run `python --version` successfully
 - Students can import pandas and geopandas
 - Students have cloned agri-data-toolkit repository
@@ -142,6 +153,7 @@ After this class, you'll be able to:
 **Why Python for Agricultural Data?**
 
 Python is the industry standard for agricultural data analysis because:
+
 - Extensive geospatial libraries (GeoPandas, Rasterio, Shapely)
 - Data manipulation tools (Pandas, NumPy)
 - Machine learning frameworks (scikit-learn, TensorFlow)
@@ -166,29 +178,31 @@ Python is the industry standard for agricultural data analysis because:
    - **Linux:** `sudo apt install python3.11 python3.11-venv`
 
 2. **Verify Installation:**
+
    ```bash
    python --version
    # Should show: Python 3.11.x
-   
+
    pip --version
    # Should show: pip 23.x or higher
    ```
 
 3. **Create Virtual Environment:**
+
    ```bash
    # Navigate to your projects folder
    cd ~/projects/agri-data
-   
+
    # Create virtual environment
    python -m venv ag-env
-   
+
    # Activate it
    # Windows:
    ag-env\Scripts\activate
-   
+
    # Mac/Linux:
    source ag-env/bin/activate
-   
+
    # Verify activation (prompt should show (ag-env))
    ```
 
@@ -200,13 +214,14 @@ Python is the industry standard for agricultural data analysis because:
    - Install with default settings
 
 2. **Create Conda Environment:**
+
    ```bash
    # Create environment with Python 3.11
    conda create -n ag-env python=3.11
-   
+
    # Activate it
    conda activate ag-env
-   
+
    # Verify
    python --version
    ```
@@ -225,6 +240,7 @@ Python is the industry standard for agricultural data analysis because:
 ### Teaching Strategy (15 minutes)
 
 #### Set Context (2 minutes)
+
 - "Python powers almost every agricultural data platform"
 - "Climate Corp, John Deere Operations Center, Indigo Ag - all Python backends"
 - "The tools we're installing today are what industry uses"
@@ -232,6 +248,7 @@ Python is the industry standard for agricultural data analysis because:
 #### Walk Through Installation (8 minutes)
 
 **For Direct Python (5 min):**
+
 - Share screen, show python.org
 - Download installer (or show previously downloaded)
 - Walk through installation options
@@ -240,17 +257,20 @@ Python is the industry standard for agricultural data analysis because:
 - Create virtual environment live
 
 **For Anaconda (3 min):**
+
 - Quick overview: "Anaconda includes data science packages"
 - "Easier for some, heavier installation"
 - "Either approach works - pick what fits you"
 
 #### Demonstrate venv Creation (3 minutes)
+
 - Create project folder
 - Run `python -m venv ag-env`
 - Activate it (show prompt change)
 - Explain: "This is your isolated workspace"
 
 #### Interactive Check (2 minutes)
+
 - Pause: "Everyone successfully installed Python?"
 - Screen share issues
 - Quick troubleshoot or note for office hours
@@ -258,19 +278,23 @@ Python is the industry standard for agricultural data analysis because:
 ### Common Student Issues
 
 **Issue 1: Python not found in PATH**
+
 - **Windows:** Reinstall, check "Add to PATH"
 - **Mac/Linux:** Check `.bashrc` or `.zshrc`
 - **Quick fix:** Use full path to python.exe
 
 **Issue 2: Multiple Python versions**
+
 - **Solution:** Use `python3` or `python3.11` explicitly
 - Check: `which python` to see what's running
 
 **Issue 3: Permission errors**
+
 - **Mac/Linux:** May need `sudo` for global installs (avoid global)
 - **Better:** Use virtual environments (no sudo needed)
 
 ### Real-World Connection
+
 - "At Bayer, every data scientist has multiple virtual environments"
 - "One per project, sometimes one per client"
 - "Prevents 'it works on my machine' problems"
@@ -282,6 +306,7 @@ Python is the industry standard for agricultural data analysis because:
 **Core Libraries for Agricultural Data:**
 
 #### 1. Pandas 🐼
+
 **Purpose:** Data manipulation and analysis
 
 ```python
@@ -295,12 +320,14 @@ avg_yield = yields.groupby('field_id')['yield_bu_acre'].mean()
 ```
 
 **Use Cases:**
+
 - Loading CSV files from USDA NASS
 - Cleaning and filtering agricultural data
 - Calculating statistics (mean yield, total acres)
 - Merging datasets (yields + weather + soil)
 
 #### 2. GeoPandas 🌍
+
 **Purpose:** Geospatial data analysis
 
 ```python
@@ -317,12 +344,14 @@ fields_with_soil = gpd.sjoin(fields, soil_data, how='left')
 ```
 
 **Use Cases:**
+
 - Working with field boundary shapefiles
 - Calculating field areas and perimeters
 - Spatial joins (fields + soil types)
 - Creating maps of agricultural data
 
 #### 3. Rasterio 🛰️
+
 **Purpose:** Satellite imagery and raster analysis
 
 ```python
@@ -338,12 +367,14 @@ mean_reflectance = red_band.mean()
 ```
 
 **Use Cases:**
+
 - Reading satellite imagery (Sentinel-2, Landsat)
 - Calculating NDVI from multispectral bands
 - Extracting pixel values for field zones
 - Analyzing drone imagery
 
 #### 4. Matplotlib & Plotly 📊
+
 **Purpose:** Visualization
 
 ```python
@@ -362,12 +393,14 @@ fig.show()
 ```
 
 **Use Cases:**
+
 - Plotting yield trends over time
 - Creating NDVI heatmaps
 - Building interactive dashboards
 - Presenting analysis results
 
 #### 5. NumPy & SciPy 🔢
+
 **Purpose:** Numerical computation
 
 ```python
@@ -382,6 +415,7 @@ correlation = stats.pearsonr(ndvi_values, yield_values)
 ```
 
 **Use Cases:**
+
 - Growing degree day calculations
 - Statistical analysis of yields
 - Array operations on large datasets
@@ -414,6 +448,7 @@ python -c "import rasterio; print('Rasterio:', rasterio.__version__)"
 ### Teaching Strategy (10 minutes)
 
 #### Overview Libraries (2 minutes)
+
 - "These 5 library categories cover 90% of ag data work"
 - "You'll use all of them in this course"
 - "Same stack used at major ag companies"
@@ -421,31 +456,37 @@ python -c "import rasterio; print('Rasterio:', rasterio.__version__)"
 #### Walk Through Each Library (6 minutes total, ~1 min each)
 
 **Pandas:**
+
 - Show quick example: loading yield CSV
 - "Think Excel, but programmable and much faster"
 - "Industry standard for tabular data"
 
 **GeoPandas:**
+
 - Show field boundary visualization
 - "Pandas + geometry = GeoPandas"
 - "Critical for field-level analysis"
 
 **Rasterio:**
+
 - Show satellite image loaded
 - "How we work with imagery pixels"
 - "Used in Assignment 07 for NDVI"
 
 **Matplotlib/Plotly:**
+
 - Show quick plot example
 - "Matplotlib: static, publication-quality"
 - "Plotly: interactive dashboards"
 
 **NumPy/SciPy:**
+
 - Show GDD calculation
 - "Math backbone of everything else"
 - "Fast array operations"
 
 #### Live Installation (2 minutes)
+
 - Run pip install commands
 - Show progress bars
 - Address any errors immediately
@@ -454,17 +495,20 @@ python -c "import rasterio; print('Rasterio:', rasterio.__version__)"
 ### Common Student Issues
 
 **Issue: GeoPandas installation fails**
+
 - **Cause:** Missing GDAL/GEOS libraries
 - **Solution (Windows):** Use conda instead: `conda install geopandas`
 - **Solution (Mac):** `brew install gdal geos`
 - **Solution (Linux):** `sudo apt install libgdal-dev libgeos-dev`
 
 **Issue: ImportError despite installation**
+
 - **Cause:** Wrong Python environment active
 - **Solution:** Deactivate/reactivate venv
 - **Check:** `which python` should point to venv
 
 **Issue: Slow installation**
+
 - **Cause:** Large dependencies (especially geospatial)
 - **Solution:** Be patient, let it finish
 - **Alternative:** Use conda (pre-compiled binaries)
@@ -472,11 +516,13 @@ python -c "import rasterio; print('Rasterio:', rasterio.__version__)"
 ### Real-World Examples
 
 **Climate Corp Stack:**
+
 - "We used all these libraries"
 - "Plus custom internal tools built on them"
 - "Pandas for farmer data, GeoPandas for fields, Rasterio for satellites"
 
 **Typical Workflow:**
+
 - Load field boundaries (GeoPandas)
 - Load yield data (Pandas)
 - Load satellite imagery (Rasterio)
@@ -546,11 +592,13 @@ git log --oneline
 **GitHub Workflow for Assignments:**
 
 1. **Clone the course repository:**
+
    ```bash
    git clone https://github.com/SuperiorByteWorks-LLC/agri-data-toolkit.git
    ```
 
 2. **Create assignment folder:**
+
    ```bash
    cd agri-data-toolkit
    mkdir -p assignments/02-workspace-setup
@@ -560,12 +608,14 @@ git log --oneline
 3. **Work on your assignment** (write code, analyze data)
 
 4. **Stage and commit:**
+
    ```bash
    git add .
    git commit -m "Complete workspace setup assignment"
    ```
 
 5. **Push to your fork or branch:**
+
    ```bash
    git push origin main
    ```
@@ -600,6 +650,7 @@ GitHub now requires **Personal Access Tokens (PAT)** instead of passwords:
 ### Teaching Strategy (15 minutes)
 
 #### Why Git Matters (2 minutes)
+
 - "Version control is non-negotiable in data science"
 - "Every company uses Git - it's expected"
 - "Saves you from 'final_v2_FINAL_REALLY.py' situations"
@@ -607,33 +658,39 @@ GitHub now requires **Personal Access Tokens (PAT)** instead of passwords:
 #### Live Git Demo (8 minutes)
 
 **Setup Git (2 min):**
+
 - Show `git config` commands
 - Explain username/email purpose
 - Check: `git config --list`
 
 **Clone Repository (2 min):**
+
 - Clone agri-data-toolkit live
 - Show directory structure
 - Explain: "This is your starting point"
 
 **Make a Change (2 min):**
+
 - Create test file: `test_setup.py`
 - Add simple print statement
 - Run `git status` - show untracked file
 
 **Commit & Push (2 min):**
+
 - `git add test_setup.py`
 - `git commit -m "Test commit from Class 02"`
 - Explain commit message importance
 - `git push` (or show how to set upstream)
 
 #### GitHub Authentication (3 minutes)
+
 - Explain: "Passwords deprecated in 2021"
 - Show PAT generation process
 - Or demonstrate SSH key setup
 - Recommend: Use GitHub Desktop as alternative
 
 #### Best Practices (2 minutes)
+
 - Show good vs bad commit messages
 - Demonstrate `.gitignore` for data files
 - Explain: "Commit code, not data"
@@ -641,19 +698,23 @@ GitHub now requires **Personal Access Tokens (PAT)** instead of passwords:
 ### Common Student Issues
 
 **Issue: "fatal: not a git repository"**
+
 - **Cause:** Not in a Git-initialized folder
 - **Solution:** `git clone` or `git init`
 
 **Issue: Authentication failed**
+
 - **Cause:** Using password instead of PAT
 - **Solution:** Generate and use Personal Access Token
 
 **Issue: Merge conflicts**
+
 - **Cause:** Changes in same file from different sources
 - **Solution:** Carefully resolve conflicts in editor
 - **Prevention:** Pull before making changes
 
 **Issue: Accidentally committed API keys**
+
 - **Cause:** Didn't use .gitignore
 - **Solution:** Remove from history, rotate keys
 - **Prevention:** Use `.env` files and `.gitignore`
@@ -661,6 +722,7 @@ GitHub now requires **Personal Access Tokens (PAT)** instead of passwords:
 ### Real-World Git Workflow
 
 **At Bayer/Climate Corp:**
+
 - Feature branches for all work
 - Pull requests for code review
 - CI/CD pipelines run tests automatically
@@ -668,6 +730,7 @@ GitHub now requires **Personal Access Tokens (PAT)** instead of passwords:
 - "Your Git history tells the story of your project"
 
 ### Interactive Element
+
 - Ask: "Who's used Git before?"
 - Take questions about specific scenarios
 - "What would you do if...?" scenarios
@@ -694,20 +757,24 @@ GitHub now requires **Personal Access Tokens (PAT)** instead of passwords:
 **Essential Extensions:**
 
 **For Python Development:**
+
 - **Python** (Microsoft) - IntelliSense, linting, debugging
 - **Pylance** (Microsoft) - Fast language server
 - **Jupyter** (Microsoft) - Notebook support in VS Code
 
 **For Data Science:**
+
 - **Data Wrangler** - Visual data exploration
 - **Rainbow CSV** - Color-coded CSV viewing
 
 **For AI Assistance:**
+
 - **GitHub Copilot** - AI pair programmer (paid)
 - **Roo Code** - Alternative AI coding assistant
 - **IntelliCode** (Microsoft) - AI-assisted IntelliSense (free)
 
 **For Version Control:**
+
 - **GitLens** - Enhanced Git visualization
 - **GitHub Pull Requests** - Review PRs in VS Code
 
@@ -733,10 +800,11 @@ GitHub now requires **Personal Access Tokens (PAT)** instead of passwords:
    - Authorize with GitHub account
 
 4. **Test It:**
+
    ```python
    # Type this comment:
    # Function to calculate NDVI from red and NIR bands
-   
+
    # Copilot will suggest:
    def calculate_ndvi(red, nir):
        return (nir - red) / (nir + red)
@@ -745,6 +813,7 @@ GitHub now requires **Personal Access Tokens (PAT)** instead of passwords:
 **Using Copilot Effectively:**
 
 **Good Prompts:**
+
 ```python
 # Load field boundary shapefile and calculate area in acres
 # Copilot suggests full code block
@@ -754,6 +823,7 @@ GitHub now requires **Personal Access Tokens (PAT)** instead of passwords:
 ```
 
 **Copilot Chat:**
+
 - Open with `Ctrl+I`
 - Ask questions: "How do I read a GeoJSON file in Python?"
 - Get inline explanations and code suggestions
@@ -768,23 +838,27 @@ GitHub now requires **Personal Access Tokens (PAT)** instead of passwords:
 **VS Code Tips for Agricultural Data Work:**
 
 **Integrated Terminal:**
+
 - Open: `` Ctrl+` ``
 - Run Python scripts directly
 - Activate virtual environments
 - Execute Git commands
 
 **Jupyter Notebooks in VS Code:**
+
 - Create `.ipynb` file
 - Select Python interpreter (your venv)
 - Run cells interactively
 - View plots inline
 
 **Debugging:**
+
 - Set breakpoints (click left margin)
 - Press `F5` to start debugging
 - Inspect variables during execution
 
 **Multi-File Editing:**
+
 - Split editor: `Ctrl+\`
 - View data file + code side-by-side
 
@@ -794,6 +868,7 @@ GitHub now requires **Personal Access Tokens (PAT)** instead of passwords:
 ### Teaching Strategy (15 minutes)
 
 #### Why VS Code (2 minutes)
+
 - "Industry standard for data science"
 - "Used by developers at Climate Corp, John Deere, everywhere"
 - "Free, powerful, extensible"
@@ -801,17 +876,20 @@ GitHub now requires **Personal Access Tokens (PAT)** instead of passwords:
 #### Live VS Code Setup (8 minutes)
 
 **Installation & First Look (2 min):**
+
 - Show download page
 - Quick install walkthrough
 - Tour interface: explorer, search, git, extensions
 
 **Install Extensions (3 min):**
+
 - Open Extensions panel
 - Install Python extension (show IntelliSense)
 - Install Jupyter (show .ipynb support)
 - Install Copilot (if students have access)
 
 **Demonstrate Copilot (3 min):**
+
 - Create new Python file
 - Write comment: "Function to load yield CSV and calculate average"
 - Show Copilot suggestion
@@ -820,17 +898,21 @@ GitHub now requires **Personal Access Tokens (PAT)** instead of passwords:
 - Show Copilot Chat for questions
 
 #### Jupyter in VS Code (3 minutes)
+
 - Create new notebook: `test.ipynb`
 - Select Python interpreter (show venv)
 - Run simple cell:
+
   ```python
   import pandas as pd
   print(pd.__version__)
   ```
+
 - Show inline output
 - Explain: "No need to leave VS Code for notebooks"
 
 #### Best Practices (2 minutes)
+
 - Use virtual environment interpreter
 - Organize files in folders (data/, scripts/, notebooks/)
 - Commit `.vscode/settings.json` for team settings
@@ -839,31 +921,37 @@ GitHub now requires **Personal Access Tokens (PAT)** instead of passwords:
 ### Common Student Issues
 
 **Issue: Python extension not finding interpreter**
+
 - **Solution:** `Ctrl+Shift+P` → "Python: Select Interpreter"
 - Choose your virtual environment
 
 **Issue: Copilot not suggesting**
+
 - **Check:** Signed in to GitHub?
 - **Check:** Extension enabled?
 - **Solution:** Restart VS Code
 
 **Issue: Jupyter kernel won't start**
+
 - **Cause:** ipykernel not installed in venv
 - **Solution:** `pip install ipykernel`
 
 **Issue: Terminal shows wrong environment**
+
 - **Solution:** Close and reopen terminal after activating venv
 - Or manually activate: `source ag-env/bin/activate`
 
 ### Real-World VS Code Usage
 
 **At Climate Corp:**
+
 - Entire team used VS Code or similar IDE
 - Shared settings via Git for consistency
 - Extensions standardized across team
 - Remote development to cloud instances
 
 **Professional Workflow:**
+
 1. Open VS Code
 2. Activate virtual environment (integrated terminal)
 3. Open Jupyter notebook or .py file
@@ -875,6 +963,7 @@ GitHub now requires **Personal Access Tokens (PAT)** instead of passwords:
 ### Interactive Demo Ideas
 
 **Live Coding with Copilot:**
+
 - Ask students: "What should we build?"
 - Suggestion: "Load sample yield data and plot it"
 - Write comment, let Copilot generate code
@@ -882,6 +971,7 @@ GitHub now requires **Personal Access Tokens (PAT)** instead of passwords:
 - Emphasize: "Verify AI code before running"
 
 **Debugging Demo:**
+
 - Intentionally introduce bug
 - Set breakpoint
 - Step through code
@@ -897,12 +987,14 @@ GitHub now requires **Personal Access Tokens (PAT)** instead of passwords:
 This section brings together everything from today's class in one continuous workflow.
 
 **Step 1: Create Project Directory**
+
 ```bash
 mkdir ~/agri-data-projects
 cd ~/agri-data-projects
 ```
 
 **Step 2: Create and Activate Virtual Environment**
+
 ```bash
 python -m venv ag-env
 source ag-env/bin/activate  # Mac/Linux
@@ -911,50 +1003,59 @@ ag-env\Scripts\activate  # Windows
 ```
 
 **Step 3: Install Required Libraries**
+
 ```bash
 pip install pandas geopandas rasterio matplotlib plotly numpy scipy jupyter
 pip install shapely fiona pyproj requests python-dotenv
 ```
 
 **Step 4: Clone Course Repository**
+
 ```bash
 git clone https://github.com/SuperiorByteWorks-LLC/agri-data-toolkit.git
 cd agri-data-toolkit
 ```
 
 **Step 5: Open in VS Code**
+
 ```bash
 code .
 ```
 
 **Step 6: Select Python Interpreter in VS Code**
+
 - Press `Ctrl+Shift+P`
 - Type "Python: Select Interpreter"
 - Choose your `ag-env` virtual environment
 
 **Step 7: Create Test Notebook**
+
 - Create new file: `test_setup.ipynb`
 - Add cell:
+
   ```python
   import pandas as pd
   import geopandas as gpd
   import rasterio
   import matplotlib.pyplot as plt
-  
+
   print("✅ Pandas version:", pd.__version__)
   print("✅ GeoPandas version:", gpd.__version__)
   print("✅ Rasterio version:", rasterio.__version__)
   print("\n🎉 All libraries loaded successfully!")
   ```
+
 - Run cell, verify output
 
 **Step 8: Test Copilot (if available)**
+
 - Create new file: `test_copilot.py`
 - Write comment: `# Function to calculate growing degree days`
 - Let Copilot suggest code
 - Review and accept suggestion
 
 **Step 9: Commit Your Work**
+
 ```bash
 git add test_setup.ipynb test_copilot.py
 git commit -m "Class 02: Verify workspace setup"
@@ -962,6 +1063,7 @@ git push origin main
 ```
 
 **Step 10: Verify Everything Works**
+
 - ✅ Python 3.9+ installed
 - ✅ Virtual environment created and activated
 - ✅ Libraries import without errors
@@ -975,11 +1077,13 @@ git push origin main
 ### Teaching Strategy (15 minutes)
 
 #### Set Expectations (1 minute)
+
 - "I'm going to do the entire setup from scratch"
 - "Follow along on your computer"
 - "Pause and ask questions anytime"
 
 #### Execute Demo (10 minutes)
+
 - Go slowly through each step
 - Narrate what you're doing: "Now I'm creating the venv..."
 - Show each command in terminal
@@ -987,11 +1091,13 @@ git push origin main
 - Pause after major steps: "Everyone with me?"
 
 #### Troubleshoot Common Issues (2 minutes)
+
 - Intentionally show 1-2 common errors
 - Example: Import error → "Forgot to activate venv"
 - Fix it live: "See how I diagnosed that?"
 
 #### Verify Success (2 minutes)
+
 - Run test imports
 - Show green checkmarks
 - "If you see this, you're ready for Class 03"
@@ -999,11 +1105,13 @@ git push origin main
 ### Backup Plan
 
 **If Live Demo Fails:**
+
 - Have pre-recorded video ready
 - Or use screenshots in slides
 - Still walk through steps verbally
 
 **If Many Students Have Issues:**
+
 - "Let's pause and troubleshoot together"
 - Screen share student issue
 - Solve it collaboratively
@@ -1019,6 +1127,7 @@ git push origin main
 ### Real-World Connection
 
 "This exact workflow:
+
 - Is what I use every day
 - Is what you'd do at Climate Corp, John Deere, any ag data company
 - Is what employers expect you to know
@@ -1027,6 +1136,7 @@ git push origin main
 ### Interactive Element
 
 **Checkpoint Questions:**
+
 - "Show of hands: who has Python installed?"
 - "Who successfully created a virtual environment?"
 - "Who imported pandas without errors?"
@@ -1099,16 +1209,19 @@ Expected output: No errors, version numbers displayed
 <summary><strong>💬 Speaker Notes</strong></summary>
 
 ### Emphasize No Assignment (1 minute)
+
 - "No graded assignment this week"
 - "But setup is critical - don't skip it"
 - "Class 03 assumes everything is working"
 
 ### Offer Support (1 minute)
+
 - "Office hours this week: [times]"
 - "Post issues in forum - help each other"
 - "I'm available for troubleshooting"
 
 ### Set Expectations for Class 03 (1 minute)
+
 - "Next week: hands-on with USDA data"
 - "We'll download real agricultural datasets"
 - "Everyone needs working setup by then"
@@ -1162,11 +1275,13 @@ Expected output: No errors, version numbers displayed
 <summary><strong>💬 Speaker Notes</strong></summary>
 
 ### In Class (2 minutes)
+
 - "Bookmark these resources"
 - "Python and GeoPandas docs are essential references"
 - "Troubleshooting guides save hours of frustration"
 
 ### Post-Class
+
 - Verify all links work
 - Update if any resources have moved
 - Add new resources based on student questions
@@ -1175,4 +1290,4 @@ Expected output: No errors, version numbers displayed
 
 ---
 
-*Last Updated: January 26, 2026*
+_Last Updated: January 26, 2026_
