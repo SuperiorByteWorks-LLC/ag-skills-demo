@@ -78,8 +78,9 @@ These styling enhancements are permitted for educational contexts:
 Use sparingly to indicate node type, importance, or domain:
 
 **Approved emoji set:**
+
 - 🛰️ Satellites / remote sensing
-- 📊 Data / analytics  
+- 📊 Data / analytics
 - 🌍 Global scale / worldwide
 - 🏢 Commercial / business
 - 👨‍🌾 Farmer / local / individual
@@ -93,6 +94,7 @@ Use sparingly to indicate node type, importance, or domain:
 - ❌ Blocked / negative / prohibited
 
 **Usage guidelines:**
+
 - Place at start of node label: `[🌍 Global Operations]`
 - Maximum 1 emoji per node
 - Use consistently: same emoji = same concept across diagrams
@@ -104,7 +106,7 @@ Use sparingly to indicate node type, importance, or domain:
 flowchart LR
     accTitle: Agricultural Data Ecosystem
     accDescr: Flow from satellite data through commercial processing to farmer use showing three organizational levels
-    
+
     satellite[🛰️ Sentinel-2 Satellite] --> nasa[📊 NASA Processing]
     nasa --> commercial[🏢 Agribusiness APIs]
     commercial --> farmer[👨‍🌾 Farmer Decision]
@@ -115,12 +117,14 @@ flowchart LR
 Use bold to highlight key terms or metrics within node labels:
 
 **Allowed:**
+
 - Key metrics: `[Processes **50TB/day**]`
 - Critical nodes: `[**Decision Point**]`
 - Primary actors: `[**John Deere** Operations Center]`
 - Emphasis: `[**Free** Public Data]` vs `[**Paid** Subscription]`
 
 **Not allowed:**
+
 - Entire labels in bold
 - Multiple bold terms per node (max 1-2)
 - Bold for decoration only
@@ -131,7 +135,7 @@ Use bold to highlight key terms or metrics within node labels:
 flowchart TB
     accTitle: Data Access Models
     accDescr: Comparison of free versus paid data access showing volume and restrictions
-    
+
     source[Data Source] --> free[**Free** Tier<br/>10GB/month]
     source --> paid[**Premium** Tier<br/>Unlimited]
 ```
@@ -146,20 +150,21 @@ Use `classDef` for semantic color coding that works in light/dark mode:
 flowchart TB
     accTitle: Three-Level Analysis Framework
     accDescr: Framework showing global commercial and local levels with distinct visual styling
-    
+
     global[🌍 Global Level] --> commercial[🏢 Commercial Level]
     commercial --> local[👨‍🌾 Local Level]
-    
+
     classDef global_style fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
-    classDef commercial_style fill:#fff3e0,stroke:#f57c00,stroke-width:2px  
+    classDef commercial_style fill:#fff3e0,stroke:#f57c00,stroke-width:2px
     classDef local_style fill:#e8f5e9,stroke:#388e3c,stroke-width:2px
-    
+
     class global global_style
     class commercial commercial_style
     class local local_style
 ```
 
 **Color palette (test in both modes):**
+
 - **Blue tones** (global): `fill:#e3f2fd,stroke:#1976d2` (light blue)
 - **Orange tones** (commercial): `fill:#fff3e0,stroke:#f57c00` (light orange)
 - **Green tones** (positive/local): `fill:#e8f5e9,stroke:#388e3c` (light green)
@@ -176,17 +181,17 @@ Here's a complete example using all allowed styling:
 flowchart TB
     accTitle: NASA Harvest Data Pipeline with Educational Styling
     accDescr: Complete data flow from satellite through processing to farmer showing professional emoji bold text and color coding for clarity
-    
+
     satellite[🛰️ **Sentinel-2**<br/>10m Resolution] --> processing[📊 NASA EOSDIS<br/>Processing **50TB/day**]
     processing --> open[🔓 **Free** Public Data<br/>Open Access]
     processing --> commercial[🏢 Commercial APIs<br/>Value-Added Services]
-    
+
     open --> farmer[👨‍🌾 Smallholder Farmer<br/>Kenya]
     commercial --> agribusiness[🏢 Commodity Traders<br/>Global Markets]
-    
+
     classDef free_style fill:#e8f5e9,stroke:#388e3c,stroke-width:2px
     classDef paid_style fill:#fff3e0,stroke:#f57c00,stroke-width:2px
-    
+
     class open,farmer free_style
     class commercial,agribusiness paid_style
 ```
@@ -222,12 +227,14 @@ Before committing any diagram with educational styling:
 ### When to Use Educational Styling
 
 **Use styling for:**
+
 - Slide presentations (where visual impact matters)
 - Student-facing educational materials
 - Complex diagrams that benefit from visual hierarchy
 - Multi-stakeholder diagrams (colors differentiate actors)
 
 **Skip styling for:**
+
 - Simple 3-4 node diagrams (not worth the effort)
 - Technical documentation (plain is often clearer)
 - When in doubt (default to unstyled is always safe)
