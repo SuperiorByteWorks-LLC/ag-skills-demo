@@ -1577,6 +1577,612 @@ Each includes comprehensive analysis, technical appendices with code examples, a
 
 ---
 
+#### Case Study 01.05: Regional Agricultural Diversity - Why One Size Doesn't Fit All
+
+**Focus:** 🌽🌾🌱 **Regional diversity shapes agricultural data system requirements**  
+**Regions:** Corn Belt, Great Plains, Southeast row crop production  
+**Core Question:** Should data systems be universal platforms or regionally specialized tools?
+
+**The Regional Reality:**
+
+U.S. agriculture is not monolithic. A corn farmer in Iowa, a wheat producer in Kansas, and a cotton grower in Georgia face fundamentally different:
+- **Crops:** Corn-soybean rotation vs. wheat-fallow vs. cotton-peanut-corn
+- **Climates:** 30-40" rainfall (Corn Belt) vs. 10-35" gradient (Great Plains) vs. 45-65" + humidity (Southeast)
+- **Farm sizes:** 350-450 acres (Corn Belt) vs. 1,200-2,000+ acres (Great Plains) vs. 500-1,200 acres (Southeast)
+- **Technology adoption:** 60-75% (Corn Belt) vs. 40-60% (Great Plains) vs. 35-55% (Southeast)
+- **Primary challenges:** Tile drainage (Corn Belt) vs. water scarcity (Great Plains) vs. disease pressure (Southeast)
+
+```mermaid
+graph TB
+    subgraph "🌽 **Corn Belt**"
+        CB1[**Primary System**<br/>Corn-soybean rotation<br/>Yield maximization]
+        CB2[**Key Data Needs**<br/>Tile drainage mapping<br/>N management<br/>Multi-year rotation]
+        CB3[**Tech Adoption: HIGH**<br/>60-75% precision ag<br/>2-4 year ROI]
+    end
+    
+    subgraph "🌾 **Great Plains**"
+        GP1[**Primary System**<br/>Wheat, irrigated corn<br/>Water management]
+        GP2[**Key Data Needs**<br/>Irrigation tracking<br/>Aquifer monitoring<br/>Drought indices]
+        GP3[**Tech Adoption: SELECTIVE**<br/>GPS high (90%)<br/>VRT lower (30-50%)]
+    end
+    
+    subgraph "🌱 **Southeast**"
+        SE1[**Primary System**<br/>Cotton, diverse crops<br/>Disease management]
+        SE2[**Key Data Needs**<br/>Multi-crop integration<br/>Pest scouting<br/>Cotton quality tracking]
+        SE3[**Tech Adoption: MODERATE**<br/>35-55% precision ag<br/>10-25% below Corn Belt]
+    end
+    
+    CB1 --> CB2
+    CB2 --> CB3
+    GP1 --> GP2
+    GP2 --> GP3
+    SE1 --> SE2
+    SE2 --> SE3
+    
+    classDef cornbelt fill:#fff3e0,stroke:#f57c00,stroke-width:3px
+    classDef plains fill:#e3f2fd,stroke:#1976d2,stroke-width:3px
+    classDef southeast fill:#e8f5e9,stroke:#388e3c,stroke-width:3px
+    
+    class CB1,CB2,CB3 cornbelt
+    class GP1,GP2,GP3 plains
+    class SE1,SE2,SE3 southeast
+```
+
+**Why This Matters for Data Systems:**
+
+Agricultural data systems are often designed with the Corn Belt "typical" farmer in mind—but that's only 1/3 of U.S. agriculture. Systems that work brilliantly in Iowa may fail completely in Kansas or Georgia because:
+- Different crops generate different data (cotton yield monitors ≠ grain yield monitors)
+- Different climates create different priorities (irrigation management vs. disease tracking)
+- Different economics change technology ROI (wheat margins vs. cotton margins)
+- Different infrastructure affects feasibility (cellular coverage, farm sizes)
+
+**Speaker Note Detail:** This case study provides essential context for understanding that "agricultural data systems" is not a single problem with a single solution—regional diversity demands either universal platforms with regional customization or specialized regional tools.
+
+<details>
+<summary><strong>💬 Speaker Notes - Regional Diversity Overview</strong></summary>
+
+### Setup (2 minutes)
+
+- "So far we've looked at global satellite data, equipment data, but not regional differences"
+- "U.S. agriculture varies enormously by region"
+- "Corn Belt farmer and Southeast cotton farmer might as well be in different industries"
+
+### The Three Regions (2 minutes)
+
+**Corn Belt:**
+- "Most intensive agriculture globally - Henry Wallace called it 'most productive civilization ever'"
+- "Mollisol soils—world's most fertile"
+- "Corn-soybean rotation dominates"
+- "Highest tech adoption: 60-75% precision ag"
+
+**Great Plains:**
+- "Semi-arid, extensive agriculture"
+- "Wheat dominant, irrigated corn from Ogallala Aquifer"
+- "Farms 2-3x larger than Corn Belt"
+- "Water scarcity is THE challenge—aquifer depleting 1-3 feet/year"
+
+**Southeast:**
+- "Cotton, diverse crops, humidity"
+- "Longer growing season (200-280 days)"
+- "Disease pressure 2-3x higher than Corn Belt"
+- "Smaller farms, lower tech adoption"
+
+### Why Data Systems Must Differ (1 minute)
+
+- "Can't design for 'average' farmer when regions differ this much"
+- "Corn Belt farmer needs tile drainage tools"
+- "Great Plains farmer needs irrigation optimization"
+- "Southeast farmer needs multi-crop disease tracking"
+
+### Looking Ahead
+
+- "Next slides: deep dive each region's data system needs"
+- "Then: compare how commercial platforms handle regional differences"
+
+**Full case study:** See `docs/classes/01.05-case-study-regional-diversity.md` for comprehensive analysis
+
+</details>
+
+---
+
+#### Case Study 01.05 (cont.): Corn Belt - Intensive Agriculture & Tile Drainage
+
+**Region Profile:**
+- **Geography:** Iowa, Illinois, Indiana, eastern Nebraska, southern Minnesota
+- **Climate:** 30-40" precipitation, 140-180 frost-free days
+- **Soils:** Mollisols (4-6% organic matter)—world's most fertile
+- **Average Farm:** 350-450 acres
+- **Crops:** Corn-soybean rotation (95%+ of cropland)
+
+**Technology Adoption (Highest in U.S.):**
+- GPS guidance: 60-75%
+- Yield monitors: 65-80%
+- Variable rate technology: 35-50%
+- **ROI:** Typically 2-4 year payback (high crop values justify investment)
+
+**Unique Data Challenge: Tile Drainage**
+
+50-70% of Corn Belt cropland has subsurface tile drainage—but tile locations are often poorly documented. Tiles were installed decades ago, maps lost or never created.
+
+**Data opportunity:** Multi-year yield maps reveal tile patterns (higher yields over tile lines where drainage improves). Farmers can use yield data to:
+- Infer tile locations
+- Identify failed tiles (missing drainage effect)
+- Plan new tile installation
+- Estimate tile maintenance needs
+
+```mermaid
+graph LR
+    subgraph "**Corn Belt Data Flow**"
+        A[**Corn-Soybean Rotation**<br/>2-year cycle]
+        B[**Multi-Year Yield Data**<br/>5-10 years history]
+    end
+    
+    subgraph "**Analysis**"
+        C[**Zone Delineation**<br/>High/medium/low productivity]
+        D[**Tile Pattern Detection**<br/>Linear high-yield features]
+        E[**N Management Zones**<br/>Optimize fertilizer by zone]
+    end
+    
+    subgraph "**Outputs**"
+        F[**VRT Prescriptions**<br/>Variable rate seeding<br/>Variable rate N]
+        G[**Tile Maintenance Plan**<br/>Failed tile identification<br/>New tile planning]
+    end
+    
+    A --> B
+    B --> C
+    B --> D
+    C --> E
+    D --> G
+    E --> F
+    
+    classDef data fill:#e8f5e9,stroke:#388e3c,stroke-width:2px
+    classDef analysis fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    classDef output fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    
+    class A,B data
+    class C,D,E analysis
+    class F,G output
+```
+
+**Critical Data Integration:**
+- **Rotation tracking:** Corn vs. soybean affects N needs, pest populations, residue management
+- **Soil variability:** Organic matter, pH, nutrient levels vary within fields
+- **Drainage patterns:** Tile drainage creates complex spatial yield patterns
+- **Historical context:** 5-10 years data needed to separate management from weather effects
+
+**Economic Reality:**
+- Corn gross revenue: $700-1,000/acre
+- Soybeans gross revenue: $500-750/acre
+- High values justify $3,000-5,000/year in technology spending
+- Clear ROI demonstrable in 2-4 years
+
+<details>
+<summary><strong>💬 Speaker Notes - Corn Belt Details</strong></summary>
+
+### Mollisol Soils (1 minute)
+
+- "These are the soils farmers worldwide envy"
+- "4-6% organic matter (vs. 1-3% Great Plains, 0.5-2.5% Southeast)"
+- "Formed under prairie grasses over thousands of years"
+- "High nitrogen content, excellent water-holding capacity"
+- "But: naturally poorly drained in many areas"
+
+### Tile Drainage Challenge (2 minutes)
+
+- "Most people outside Corn Belt don't know about tile drainage"
+- "50-70% of cropland has perforated plastic pipes buried 3-4 feet deep"
+- "Pipes carry excess water to ditches and streams"
+- "Problem: tiles installed 30-50 years ago, maps lost"
+- "Solution: yield maps show tile patterns (linear high-yield features)"
+- "Farmer can infer tile locations from 5+ years of yield data"
+
+### Technology Leadership (1 minute)
+
+- "Corn Belt leads U.S. in tech adoption"
+- "Why? High crop values justify investment"
+- "Strong dealer support, good extension services"
+- "Peer networks—if neighbor adopts successfully, you follow"
+- "2-4 year payback typical (vs. 3-7 years Great Plains)"
+
+### Data System Implications (1 minute)
+
+- "Must handle 2-year corn-soybean rotation"
+- "Multi-year analysis critical (10+ years ideal)"
+- "Tile drainage layer important but often missing"
+- "Variable rate N most common precision ag application"
+
+</details>
+
+---
+
+#### Case Study 01.05 (cont.): Great Plains - Water Scarcity & Large-Scale Operations
+
+**Region Profile:**
+- **Geography:** Kansas, Nebraska, North Dakota, South Dakota, eastern Colorado, Oklahoma
+- **Climate:** 10-35" precipitation (west-to-east gradient), 120-180 frost-free days
+- **Soils:** Mollisols but less developed (1-3% organic matter)
+- **Average Farm:** 1,200-2,000+ acres (2-3x Corn Belt)
+- **Crops:** Wheat (winter/spring), irrigated corn, sorghum, sunflowers
+
+**Technology Adoption (Selective, ROI-Focused):**
+- GPS guidance: 80-90% (labor savings justifies investment)
+- Yield monitors: 50-70%
+- Variable rate technology: 30-50% (lower than Corn Belt due to margins)
+- **ROI:** 3-7 year payback (lower-margin crops require longer horizon)
+
+**Critical Challenge: Ogallala Aquifer Depletion**
+
+The Ogallala (High Plains) Aquifer supplies irrigation for 30-40% of U.S. irrigated agriculture. But:
+- **Recharge rate:** 0.5-1 inch/year
+- **Withdrawal rate:** Much higher (10-20 inches/year in heavily irrigated areas)
+- **Water table decline:** 1-3 feet/year in Kansas, Nebraska, Texas panhandle
+- **Depletion:** 30-70% already depleted in heavily irrigated areas (USGS estimates)
+- **Economic impact:** Rising pumping costs (lifting water from greater depths)
+
+**Data System Requirement: Integrated Water Management**
+
+```mermaid
+flowchart LR
+    subgraph Inputs["**Data Inputs**"]
+        A[**Soil Moisture**<br/>Multiple depths<br/>Real-time sensors]
+        B[**Weather/ET**<br/>State mesonet<br/>ET calculation]
+        C[**Crop Stage**<br/>Water demand<br/>by growth stage]
+        D[**Aquifer Level**<br/>Well depth<br/>Pump lift<br/>USGS monitoring]
+    end
+    
+    subgraph Analysis["**Decision Support**"]
+        E[**Irrigation Scheduler**<br/>When to irrigate?<br/>How much?]
+        F[**Economic Optimizer**<br/>Water cost vs.<br/>crop value]
+        G[**Long-Term Planner**<br/>Years until<br/>uneconomical?]
+    end
+    
+    subgraph Actions["**Management Decisions**"]
+        H[**Irrigation Timing**<br/>Apply 1.5 inches<br/>on Tuesday]
+        I[**Field Prioritization**<br/>Irrigate field A<br/>Abandon field B]
+        J[**Transition Planning**<br/>Convert field C<br/>to dryland]
+    end
+    
+    A --> E
+    B --> E
+    C --> E
+    D --> F
+    E --> H
+    F --> I
+    G --> J
+    
+    classDef input fill:#e8f5e9,stroke:#388e3c,stroke-width:2px
+    classDef analysis fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    classDef action fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    
+    class A,B,C,D input
+    class E,F,G analysis
+    class H,I,J action
+```
+
+**Technology Priorities Differ from Corn Belt:**
+1. **GPS guidance:** Nearly universal (manage large fields efficiently)
+2. **Irrigation management:** Critical (water = limiting factor)
+3. **Variable rate fertilizer:** Lower adoption (margins tighter, ROI less clear)
+4. **Drought monitoring:** Essential (U.S. Drought Monitor, vegetation indices)
+
+**Economic Reality:**
+- Wheat gross revenue: $300-500/acre (vs. $700-1,000 Corn Belt corn)
+- Irrigated corn: $700-900/acre BUT irrigation costs $40-80/acre
+- Lower per-acre returns require larger scale for viable income
+- Technology adoption more selective (focus on highest-return tools)
+
+<details>
+<summary><strong>💬 Speaker Notes - Great Plains Details</strong></summary>
+
+### Scale Difference (1 minute)
+
+- "Great Plains farms are HUGE compared to Corn Belt"
+- "Kansas: 1,200-2,000 acres typical (vs. 350-450 Iowa)"
+- "Why? Lower rainfall = more acres needed for economic viability"
+- "One wheat farmer might manage 5-10 miles of equipment width during harvest"
+
+### Ogallala Aquifer Crisis (2 minutes)
+
+- "This is the long-term sustainability challenge"
+- "Aquifer covers 174,000 square miles, 8 states"
+- "Recharge: 0.5-1 inch/year. Withdrawal: 10-20 inches/year"
+- "Math doesn't work long-term"
+- "Already 30-70% depleted in heavily irrigated areas"
+- "Pumping costs rising as water table drops"
+- "Some areas already transitioning back to dryland (pivot removal)"
+
+### Data System Implications (2 minutes)
+
+**What Great Plains farmers need:**
+- Irrigation scheduling tools (ET-based, soil moisture)
+- Pump hour tracking, energy cost integration
+- Long-term aquifer monitoring and projection
+- Economic optimization: water cost vs. crop value
+
+**What Corn Belt systems provide:**
+- Tile drainage tools (irrelevant in arid Great Plains)
+- Dense soil sampling (less economic at Great Plains margins)
+- Intensive N management (less critical for wheat)
+
+**Mismatch:** Systems designed for Corn Belt don't fit Great Plains needs
+
+### Technology Adoption Pattern (1 minute)
+
+- "GPS guidance: 90% adoption (vs. 60-75% Corn Belt)"
+- "Why higher? Huge fields, seasonal time pressure, labor savings"
+- "But VRT: 30-50% adoption (vs. 35-50% Corn Belt)"
+- "Why lower? Wheat margins tighter, longer payback periods"
+- "Selective adoption: focus on highest-return technologies"
+
+</details>
+
+---
+
+#### Case Study 01.05 (cont.): Southeast - Multi-Crop Systems & Disease Pressure
+
+**Region Profile:**
+- **Geography:** Georgia, Alabama, Mississippi, Arkansas, Louisiana, NC, SC, Tennessee, Virginia
+- **Climate:** 45-65" precipitation, 200-280 frost-free days, HIGH humidity (60-75%)
+- **Soils:** Ultisols—highly weathered (0.5-2.5% organic matter)
+- **Average Farm:** 500-1,200 acres (between Corn Belt and Great Plains)
+- **Crops:** Cotton, soybeans, corn, peanuts, rice (HIGH DIVERSITY)
+
+**Technology Adoption (Moderate, 10-25% Below Corn Belt):**
+- GPS guidance: 35-55% (vs. 60-75% Corn Belt)
+- Yield monitors: 30-50% grain, 40-60% cotton
+- Variable rate technology: 15-30% (vs. 35-50% Corn Belt)
+- **ROI:** 3-6 year payback (crop diversity increases complexity)
+
+**Unique Challenge 1: Multi-Crop Data Integration**
+
+Unlike Corn Belt (corn-soybeans) or Great Plains (wheat-corn), Southeast farmers manage 3-5 crops:
+- **Cotton:** Lint yield (lbs/acre), fiber quality (micronaire, staple), module tracking
+- **Peanuts:** Contract farming (80-95%), grade/size specifications, traceability
+- **Rice:** Flood irrigation data, different than upland crops
+- **Corn/Soybeans:** Standard grain crops (bushels/acre)
+
+**Data System Challenge:** Must handle completely different:
+- Yield units (bushels vs. pounds lint vs. pounds peanuts)
+- Quality parameters (grain moisture vs. cotton micronaire vs. peanut grade)
+- Equipment (grain combine vs. cotton picker vs. peanut digger)
+- Rotations (cotton-peanut-corn-soybean across 4+ years)
+
+**Unique Challenge 2: Disease Pressure (Critical Differentiator)**
+
+High humidity + warm temperatures = 2-3x higher disease pressure than Corn Belt:
+- **Fungicide applications:** 2-4 per season (vs. 0-1 Corn Belt)
+- **Fungicide cost:** $40-80/acre (vs. $10-30 Corn Belt)
+- **Scouting frequency:** Weekly (vs. biweekly Corn Belt)
+- **Tracked threats:** 15-25 significant pests/diseases simultaneously
+
+```mermaid
+graph TD
+    subgraph "**Southeast Data Complexity**"
+        A[**Cotton Field**<br/>Lint yield<br/>Fiber quality<br/>Module weights]
+        B[**Peanut Field**<br/>Contract specs<br/>Grade/size<br/>Traceability]
+        C[**Corn Field**<br/>Bushel yield<br/>Grain moisture<br/>Test weight]
+        D[**Soybean Field**<br/>Bushel yield<br/>Grain moisture]
+    end
+    
+    subgraph "**Unified System Needs**"
+        E[**Pest Scouting Module**<br/>Weekly scouting<br/>15-25 threats<br/>Treatment tracking]
+        F[**Multi-Crop Yield Integration**<br/>Different units<br/>Different equipment<br/>Different quality data]
+        G[**Contract Management**<br/>Peanut contracts<br/>Cotton marketing<br/>Quality premiums]
+    end
+    
+    subgraph "**Challenges**"
+        H[**No Single Platform<br/>Handles All This Well**<br/>Corn Belt systems:<br/>weak on cotton/peanuts<br/>Cotton systems:<br/>weak on grains]
+    end
+    
+    A --> F
+    B --> F
+    C --> F
+    D --> F
+    
+    A --> E
+    B --> E
+    C --> E
+    D --> E
+    
+    B --> G
+    A --> G
+    
+    F --> H
+    E --> H
+    G --> H
+    
+    classDef crop fill:#e8f5e9,stroke:#388e3c,stroke-width:2px
+    classDef system fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    classDef challenge fill:#ffebee,stroke:#c62828,stroke-width:3px
+    
+    class A,B,C,D crop
+    class E,F,G system
+    class H challenge
+```
+
+**Why Technology Adoption Lags:**
+1. **Smaller farm sizes:** 500-1,200 acres vs. 800-1,800 Corn Belt (economy of scale issue)
+2. **Crop diversity:** Multiple crops = multiple technologies = higher complexity
+3. **Cotton-specific gaps:** Mainstream platforms weak on cotton/peanut tools
+4. **Economic volatility:** Cotton prices swing $0.50-0.85/lb (creates investment uncertainty)
+5. **Delayed diffusion:** Southeast typically 3-7 years behind Corn Belt in adoption
+
+**Economic Reality:**
+- Cotton: $200-600/acre net (high risk, high return)
+- Peanuts: $300-700/acre net (highest value, but specialized equipment)
+- Corn: $150-400/acre net
+- Soybeans: $100-300/acre net
+- Mixed profitability makes technology investment decisions complex
+
+<details>
+<summary><strong>💬 Speaker Notes - Southeast Details</strong></summary>
+
+### Multi-Crop Complexity (2 minutes)
+
+- "Southeast farmer might grow 4 different crops"
+- "Cotton, peanuts, corn, soybeans in rotation"
+- "Each crop needs different equipment, data systems, expertise"
+- "Example: Cotton picker costs $500-800K (vs. combine $300-600K)"
+- "Peanut digger, peanut combine—specialized equipment"
+- "Data challenge: integrate lint pounds, peanut grades, bushels into one system"
+
+### Disease Pressure (2 minutes)
+
+- "This is THE differentiator vs. Corn Belt/Great Plains"
+- "High humidity (60-75%) + warm temps = disease paradise"
+- "2-4 fungicide applications per season (vs. 0-1 Corn Belt)"
+- "Costs $40-80/acre (vs. $10-30 Corn Belt)"
+- "Weekly scouting required (vs. biweekly Corn Belt)"
+- "Tracking 15-25 simultaneous threats"
+
+**Data system need:**
+- Mobile-friendly scouting data entry
+- Weather-based disease risk models
+- Treatment recommendation generation
+- Resistance monitoring (long season = multiple pest generations)
+
+### Technology Adoption Gap (1 minute)
+
+- "35-55% precision ag adoption (vs. 60-75% Corn Belt)"
+- "Why the gap?"
+  - Smaller average farm size (economy of scale)
+  - Crop diversity increases complexity
+  - Cotton-specific tools underdeveloped (smaller market)
+  - Typically 3-7 years behind Midwest in new tech adoption
+
+### The Platform Dilemma
+
+- "Corn Belt-focused platforms (Climate FieldView): great for corn/soybeans, weak on cotton"
+- "Cotton-specific platforms: good for cotton, weak on grains"
+- "No platform handles cotton + peanuts + grains equally well"
+- "Result: Southeast farmers cobble together multiple systems"
+
+</details>
+
+---
+
+#### Case Study 01.05 (cont.): Comparative Analysis & Design Implications
+
+**Side-by-Side Regional Comparison:**
+
+| Dimension | 🌽 Corn Belt | 🌾 Great Plains | 🌱 Southeast |
+|-----------|-------------|----------------|-------------|
+| **Farm Size** | 350-450 acres | 1,200-2,000+ acres | 500-1,200 acres |
+| **Primary Crops** | Corn-soybean | Wheat, irrigated corn | Cotton, diverse mix |
+| **Soil Organic Matter** | 4-6% (excellent) | 1-3% (moderate) | 0.5-2.5% (low) |
+| **Precipitation** | 30-40" | 10-35" gradient | 45-65" + humidity |
+| **Tech Adoption** | **HIGH: 60-75%** | **SELECTIVE: 40-60%** | **MODERATE: 35-55%** |
+| **ROI Payback** | 2-4 years | 3-7 years | 3-6 years |
+| **#1 Data Challenge** | Tile drainage patterns | Water management | Multi-crop integration |
+| **Critical Data Types** | Yield maps, N zones | Irrigation tracking, aquifer | Pest scouting, cotton quality |
+| **Equipment Data Volume** | HIGH (dense sampling) | VERY HIGH (large fields) | MODERATE (diverse equipment) |
+
+**Universal vs. Specialized: The Design Tension**
+
+**Option A: Universal Platform (One System for All Regions)**
+
+*Advantages:*
+- Development efficiency (build once)
+- Larger user base supports more development
+- Farmers who relocate keep same system
+- Industry standards and interoperability
+
+*Disadvantages:*
+- Interface cluttered with irrelevant features (irrigation tools in humid Southeast?)
+- Each region gets sub-optimal tools
+- Designed for largest market (Corn Belt) inevitably
+
+**Option B: Regional Specialization (Three Different Systems)**
+
+*Advantages:*
+- Optimized workflows for each region
+- No irrelevant features
+- Local expertise informs development
+- Better user experience
+
+*Disadvantages:*
+- 3x development cost
+- Smaller user bases limit resources
+- Data portability issues
+- Reinventing common functionality
+
+**Real-World Solution: Hybrid Approach**
+
+Most successful platforms use:
+- **Universal Core:** Field boundaries, equipment integration, basic mapping (works everywhere)
+- **Regional Modules:** Add-on features for specific needs
+  - Corn Belt: Tile drainage mapping, N optimization
+  - Great Plains: Irrigation management, drought monitoring
+  - Southeast: Cotton quality tracking, disease scouting
+- **User Configuration:** Enable/disable features based on operation
+
+**Example: Climate FieldView (Market Leader)**
+- **Strength:** Corn Belt corn-soybean systems (~40% market share)
+- **Weakness:** Great Plains irrigation tools limited, Southeast cotton tools minimal
+- **Result:** Dominates Corn Belt, weaker in other regions
+
+**What This Means for Data System Design:**
+
+1. **Know Your Primary Market:** Can't serve everyone equally—who's your core user?
+2. **Regional Customization Matters:** Generic "agriculture" systems fail in practice
+3. **Local Expertise Essential:** Corn Belt developers don't understand Southeast cotton
+4. **Economy of Scale Tensions:** Larger markets (Corn Belt) get better tools, perpetuating regional gaps
+5. **Data Standards Critical:** If regional specialization occurs, common data formats enable interoperability
+
+**Course Connections:**
+- **Module 03 (Standards):** Why data standards matter more with regional diversity
+- **Module 09 (Machine Learning):** Models trained in Corn Belt may not transfer to Southeast
+- **Module 10 (Decision Support):** Decision contexts differ dramatically by region
+- **Module 12 (Ethics):** Technology designed for largest market disadvantages other regions
+
+**Full case study:** `docs/classes/01.05-case-study-regional-diversity.md` (~15,000 words, comparative tables, code examples, 24 discussion questions)
+
+<details>
+<summary><strong>💬 Speaker Notes - Comparative Analysis & Takeaways</strong></summary>
+
+### The Design Dilemma (2 minutes)
+
+- "Every ag tech company faces this question:"
+- "Build universal platform or regional specialization?"
+- "Universal: efficient but sub-optimal for everyone"
+- "Specialized: great fit but 3x development cost"
+- "Most companies: hybrid approach"
+
+### Why This Matters to You (2 minutes)
+
+**As data system developers:**
+- "You'll design systems that serve specific users"
+- "Understanding regional diversity prevents building tools that work on paper but fail in practice"
+- "Example: Don't design irrigation optimization for humid Southeast—wrong problem"
+
+**As data scientists:**
+- "Models trained on Corn Belt data won't transfer well to Southeast"
+- "Regional context matters for model generalization"
+- "Need regional training datasets"
+
+**As agricultural professionals:**
+- "When you evaluate commercial systems, ask: 'Was this designed for MY region?'"
+- "System that's perfect in Iowa might be terrible in Georgia"
+
+### Key Takeaways (1 minute)
+
+1. **Regional diversity is fundamental** - not just "different but similar"
+2. **One size fits none** - generic "agriculture" systems serve no one well
+3. **Economics drive adoption** - ROI calculations differ dramatically by region
+4. **Local expertise essential** - can't design for regions you don't understand
+5. **Technology gaps have consequences** - regions with weaker tools fall further behind
+
+### Looking Forward
+
+- "Throughout this course, consider regional context"
+- "When we study data integration, think: integrating WHAT data FOR WHOM?"
+- "When we study machine learning, think: trained on WHICH region's data?"
+- "Regional diversity shapes everything in agricultural data systems"
+
+</details>
+
+---
+
 ## ✍️ Assignment
 
 ### Assignment 01: Field Data Acquisition and Documentation
