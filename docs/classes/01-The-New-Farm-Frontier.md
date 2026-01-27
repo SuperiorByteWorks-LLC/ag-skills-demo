@@ -403,317 +403,1023 @@ For each data type:
 
 ### Real-World Applications & Case Studies
 
-#### Case Study 01.01: Variable Rate Seeding in Corn (Climate FieldView Platform)
+#### Case Study 01.03: NASA Harvest - Satellite Data for Global Food Security
 
-**Location:** Iowa, Midwest US  
-**Research:** McNunn et al. (2019) - 6-year study  
-**Technology:** Climate FieldView Seeds Pro prescription tool
+**Focus:** 🛰️ **Global → Commercial → Local analysis of satellite agricultural data**  
+**Program:** NASA Harvest (2017-present), 40+ countries  
+**Core Question:** When data is technically free but practically inaccessible, who benefits?
 
-**The Opportunity:**
+**The Three-Scale Challenge:**
 
-Corn fields show yield variability of **50-100+ bu/acre** across management zones due to soil differences. Uniform seeding treats all areas the same - wasting seed in low-productivity zones while potentially under-seeding in high zones.
+Satellite data seems like the perfect public good - NASA provides petabytes of imagery free to everyone. But the reality is more complex:
 
 ```mermaid
-flowchart LR
-    accTitle: VRS Economic Optimization
-    accDescr: How variable rate seeding optimizes seed placement across different productivity zones
-
-    uniform[Uniform Seeding<br/>32000 seeds/acre] --> problem["Problem:<br/>Wastes seed in low zones<br/>Under-seeds in high zones"]
-
-    zones["High Prod Zone<br/>Can support<br/>36000 seeds/acre"] --> vrs[Variable Rate<br/>Seeding]
-    zones2["Medium Prod Zone<br/>32000 seeds/acre"] --> vrs
-    zones3["Low Prod Zone<br/>Only needs<br/>28000 seeds/acre"] --> vrs
-
-    vrs --> solution["Solution:<br/>+2 bu/acre yield<br/>-$2 seed cost<br/>+7.2% ROI vs uniform"]
-
-    style problem fill:#ffcccc
-    style solution fill:#ccffcc
+graph TB
+    subgraph "🌍 **Global Scale**"
+        A[**Free Satellite Data**<br/>Landsat, Sentinel-2, MODIS<br/>128+ petabytes archived]
+    end
+    
+    subgraph "🏢 **Commercial Users**"
+        B[**Commodity Traders**<br/>Yield forecasts<br/>3-6 week lead time]
+        C[**Insurance Companies**<br/>Automated claims<br/>Parametric products]
+    end
+    
+    subgraph "👨‍🌾 **Farmer Access**"
+        D[**U.S. Farmer**<br/>30-40% adoption<br/>Direct satellite access]
+        E[**Smallholder Farmer**<br/>5% access<br/>Infrastructure barriers]
+    end
+    
+    A --> B
+    A --> C
+    A --> D
+    A -.Multiple Barriers.-> E
+    
+    classDef global fill:#e3f2fd,stroke:#1976d2,stroke-width:3px
+    classDef commercial fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    classDef farmer fill:#e8f5e9,stroke:#388e3c,stroke-width:2px
+    classDef barrier fill:#ffebee,stroke:#c62828,stroke-width:2px
+    
+    class A global
+    class B,C commercial
+    class D farmer
+    class E barrier
 ```
 
-**Key Findings (Research Data):**
+**Key Statistics:**
 
-- **+7.2% average ROI improvement** by managing for economic vs. agronomic optimum
-- **+5 bu/acre additional yield** when comparing optimized prescriptions vs. farmer-written scripts
-- **+2 bu/acre yield gain** from better seed placement alone (in high zones)
-- **Optimal seeding density consistent:** 8-9 seeds/m² (32,000-36,000 plants/acre) across zones
-- **62% of FieldView users** implement variable rate seeding (DeLay et al., 2021)
+- **Global Level:** 200+ million hectares monitored, 8+ million users, 4.5 billion files downloaded annually
+- **Commercial Level:** $200-300M annual satellite analytics market, major users include Cargill, Archer Daniels Midland
+- **U.S. Farmers:** 30-40% use satellite-based crop monitoring (integrated into farm management platforms)
+- **Smallholder Farmers:** <5% have meaningful satellite data access despite representing majority of global farmers
 
-**Economic Impact (2-year payback):**
+**The Digital Divide:**
 
-| Metric                   | Value               | Impact                   |
-| ------------------------ | ------------------- | ------------------------ |
-| Equipment cost (VRA)     | $15,000-30,000      | $1.80-3.80/acre/year     |
-| Software subscription    | $600-1,200/year     | $0.60-1.20/acre          |
-| VRS seed cost savings    | 5-7% less seed      | ~$2-3/acre               |
-| Yield improvement        | +2 bu/acre          | +$7.40/acre @ $3.70 corn |
-| **Total annual benefit** | -                   | **$6-8/acre**            |
-| **Payback period**       | Equipment ÷ Benefit | **2-3 years**            |
+| Access Metric                    | U.S. Farmers | Sub-Saharan Africa Smallholders | Gap    |
+| -------------------------------- | ------------ | ------------------------------- | ------ |
+| Smartphone ownership             | 85%+         | 30-50%                          | **40%pts**  |
+| Satellite data adoption          | 30-40%       | <5%                             | **30%pts**  |
+| Mobile data cost (% of income)   | 1-2%         | 5-15%                           | **8x higher** |
+| Agricultural extension access    | High         | 1:1000-5000 agent:farmer ratio  | **10-50x worse** |
 
-**Environmental Co-benefits:**
-
-- **2.5 kg/ha reduction in NO₃ leaching** (less seed means less vigorous plants in marginal zones → less water percolation)
-- **7.6 kg/ha reduction in N₂O emissions** (fertilizer follows VRS zones)
-- Better sustainability metrics for ESG reporting
-
-**Speaker Note Detail:** This isn't just about profit - it's also about resource efficiency. When you optimize seed placement, you automatically reduce wasted inputs downstream (fertilizer, water, pesticides).
+**Speaker Note Detail:** This case study shifts focus from technical precision ag to examining how the same "public" data infrastructure creates vastly different outcomes for different farmers globally.
 
 <details>
-<summary><strong>💬 Speaker Notes - Case Study 01.01 Details</strong></summary>
+<summary><strong>💬 Speaker Notes - NASA Harvest Overview</strong></summary>
 
 ### Setup (2 minutes)
 
-- "Field in Iowa, 2012-2017, same field every year"
-- "What they measured: historical yields, soil type, and what was actually applied"
-- "What they found: consistent patterns in yield across soil types"
+- "NASA provides free satellite data - Landsat, Sentinel-2, MODIS, all public domain"
+- "Sounds democratic: same data available to everyone"
+- "Reality: access barriers turn 'free' data into unequal outcomes"
 
-### The Economics (3 minutes)
+### The Three Scales (2 minutes)
 
-**Cost side:**
+**Global:**
+- "NASA Harvest: 40+ countries, petabytes of data"
+- "GEOGLAM Crop Monitor: monthly global crop assessments"
+- "FEWS NET: famine early warning for 40 countries"
 
-- "$15-30K for equipment that works for 10+ years"
-- "Amortized: $1.80-3.80/acre per year"
-- "Plus $600-1200/year software = $0.60-1.20/acre"
-- "Total VRS cost: ~$2.50-5/acre/year"
+**Commercial:**
+- "Trading firms use satellite data for yield forecasts weeks before USDA reports"
+- "Insurance companies automate claims with satellite vegetation indices"
+- "$200-300M market for satellite analytics services"
 
-**Benefit side:**
-
-- "They saved 5-7% on seed just from not over-seeding low zones"
-- "On a 2000-acre farm: $2.50/acre × 2000 = $5,000/year in seed savings"
-- "Plus yield bump in high zones that were previously limited by seeding rate"
-- "Equipment investment paid for itself in 2-3 years"
-
-**The key insight:**
-
-- "Economic optimum ≠ agronomic maximum"
-- "Farmers were seeding for MAX YIELD everywhere"
-- "Reality: better returns from seeding for PROFIT in each zone"
+**Local (the gap):**
+- "U.S. farmer: checks satellite alerts on smartphone over morning coffee"
+- "Ugandan smallholder: heard about 'the satellite that tells when rain comes' but can't access it"
+- "Same satellites, completely different farmer experiences"
 
 ### Why This Matters (1 minute)
 
-- "This is happening on millions of acres right now"
-- "Your job: understand the data pipeline that makes it possible"
-- "Week 7: you'll calculate NDVI from satellite → identify zones"
-- "Week 9: you'll build zone maps yourself"
+- "Data infrastructure isn't neutral - it reflects and amplifies existing inequalities"
+- "You'll work with satellite data in Module 04 and Assignment 4-2"
+- "But consider: who benefits from the tools you build?"
+
+**Full case study:** See `docs/classes/01.03-case-study-nasa-harvest.md` for 15,000-word deep dive
 
 </details>
 
 ---
 
-#### Case Study 01.02: Variable Rate Nitrogen in Corn (Grid Soil Sampling + Economic Optimization)
+#### Case Study 01.03 (cont.): Global Satellite Infrastructure
 
-**Location:** Indiana/Midwest, Corn Belt  
-**Research:** Bongiovanni & Lowenberg-DeBoer (2004) - foundational study, updated with 2024 economics  
-**Method:** Pre-plant grid soil sampling for nitrate, zone-based N prescription
+**The Satellite Systems Behind Agricultural Monitoring:**
 
-**The Challenge:**
+Four key satellites provide different agricultural capabilities:
 
-Nitrogen is the **most yield-limiting nutrient** but also one of the **costliest inputs** ($80-120/acre). Excess application wastes money AND damages the environment (nitrate leaching, N₂O emissions).
+| Satellite      | Resolution | Revisit Time | Key Agriculture Use              |
+| -------------- | ---------- | ------------ | -------------------------------- |
+| **Landsat 8/9**    | 30 meters  | 16 days      | Field-level mapping, 50-year historical record |
+| **Sentinel-2 A/B** | 10 meters  | 5 days       | Active crop monitoring, frequent updates |
+| **MODIS**          | 250-500m   | 1-2 days     | Regional yield forecasting, daily coverage |
+| **SMAP**           | 9-36 km    | 2-3 days     | Soil moisture, irrigation planning |
 
-**Key Findings (Research Data):**
-
-- **$15-25/acre profit increase** from VRN vs. uniform (Bongiovanni, 2004)
-- **3-9% reduction in total N use** while maintaining yields
-- **Field-level ROI: 7.2% improvement** by optimizing for profit vs. maximum yield
-- **Breakeven farm size: ~400 acres** (fixed equipment costs)
-- **Adoption: 25-35%** of US Corn Belt farms use VRN (2023)
-
-**Economic Model (2024 Prices):**
-
-| Component                | Uniform Rate | VRN (Avg)   | Difference                  |
-| ------------------------ | ------------ | ----------- | --------------------------- |
-| N applied                | 180 lb/acre  | 165 lb/acre | -15 lb/acre                 |
-| N cost @ $0.70/lb        | $126.00      | $115.50     | **+$10.50 savings**         |
-| Yield maintained         | 185 bu/acre  | 186 bu/acre | +1 bu/acre @ $4.50 = +$4.50 |
-| VRN technology cost      | $0.00        | $3.30       | -$3.30                      |
-| **Net benefit per acre** | -            | -           | **+$11.70/acre**            |
-
-**Profitability Sensitivity to Prices:**
-
-```mermaid
-flowchart TB
-    accTitle: VRN Profitability Sensitivity Matrix
-    accDescr: How VRN profitability changes with nitrogen and corn prices
-
-    high_n["High N Price<br/>$0.80+/lb<br/>Increases VRN value"] --> benefit_high["VRN benefit:<br/>$18-22/acre"]
-    low_corn["Low Corn Price<br/>$3.50/bu<br/>Increases relative N cost"] --> benefit_high
-
-    medium["Balanced Prices<br/>N: $0.60-0.70/lb<br/>Corn: $4.00-4.50/bu"] --> benefit_med["VRN benefit:<br/>$12-16/acre"]
-
-    low_n["Low N Price<br/>$0.40-0.50/lb<br/>Decreases VRN value"] --> benefit_low["VRN benefit:<br/>$5-10/acre"]
-    high_corn["High Corn Price<br/>$5.00+/bu<br/>Higher grain value"] --> benefit_med
-
-    benefit_high --> adopt["Adopt VRN"]
-    benefit_med --> adopt
-    benefit_low --> adopt
-```
-
-**Environmental Impact & Carbon Credits:**
+**The Data Flow:**
 
 ```mermaid
 flowchart LR
-    accTitle: VRN Environmental & Financial Value
-    accDescr: How variable rate nitrogen reduces environmental impacts with monetizable benefits
-
-    vrn["Adopt VRN<br/>-15 lb N/acre field avg"] --> water["NO₃ Leaching:<br/>-2.2 lb/acre<br/>→ Cleaner groundwater"]
-    vrn --> climate["N₂O Emissions:<br/>-2,018 lb CO₂-eq/acre<br/>→ Climate benefit"]
-
-    water --> eqip["USDA EQIP payments<br/>$10/acre<br/>for nutrient management"]
-
-    climate --> carbon["Carbon credit value<br/>@ $20-50/ton CO₂<br/>= $18-46/acre"]
-
-    eqip --> total["Total economic value:<br/>$28-56/acre<br/>(Economic + Environmental)"]
-    carbon --> total
-
-    style total fill:#ccffcc
+    subgraph Space["🛰️ **Space**"]
+        S1[**Satellites**<br/>Continuous imaging]
+    end
+    
+    subgraph Processing["☁️ **NASA Processing**"]
+        P1[**Atmospheric<br/>Correction**]
+        P2[**Index Calculation**<br/>NDVI, EVI, NDWI]
+    end
+    
+    subgraph Products["📊 **Products**"]
+        PR1[**Crop Type Maps**]
+        PR2[**Yield Forecasts**]
+        PR3[**Drought Indices**]
+    end
+    
+    subgraph Users["👥 **Users**"]
+        U1[**Governments**<br/>USDA, FAO]
+        U2[**Commercial**<br/>Traders, Insurers]
+        U3[**NGOs**<br/>FEWS NET, WFP]
+        U4[**Farmers**<br/>via intermediaries]
+    end
+    
+    S1 --> P1
+    P1 --> P2
+    P2 --> PR1
+    P2 --> PR2
+    P2 --> PR3
+    
+    PR1 --> U1
+    PR2 --> U2
+    PR3 --> U3
+    PR1 -.Limited Access.-> U4
+    
+    classDef space fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    classDef process fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    classDef product fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    classDef user fill:#e8f5e9,stroke:#388e3c,stroke-width:2px
+    
+    class S1 space
+    class P1,P2 process
+    class PR1,PR2,PR3 product
+    class U1,U2,U3,U4 user
 ```
 
-**Nitrogen Price History & VRN Adoption Correlation:**
+**Global Programs Using This Data:**
 
-- **2008:** Urea $800/ton (energy crisis) → **Record VRN interest**
-- **2016:** Urea $200/ton (low oil prices) → VRN adoption plateaus
-- **2021-2022:** Urea $900+/ton (Russia-Ukraine, natural gas prices) → **Farmers desperately seek N savings**
+- **GEOGLAM (Group on Earth Observations):** G20-backed monthly crop assessments for wheat, maize, rice, soybeans
+- **AMIS (Agricultural Market Information System):** Market transparency to prevent food price crises
+- **FEWS NET:** Famine early warning in 40 countries, operated since 1985
+- **NASA Harvest:** Coordinates satellite ag monitoring across 40+ countries
 
-**This is why farmers care about data:** When nitrogen doubles in price, suddenly that $3.30/acre technology cost pays for itself in one season.
-
-**Speaker Note Detail:** The breakeven calculation is crucial. At 400 acres, the math works. At 200 acres, payback is 5+ years (marginal). At 1,000 acres, payback is 1 year. This is why adoption varies by farm size.
+**Speaker Note Detail:** The infrastructure is impressive - billions invested in satellites and processing. But notice the user types: governments, commercial companies, NGOs. Individual farmers are "via intermediaries" - they don't directly access this system.
 
 <details>
-<summary><strong>💬 Speaker Notes - Case Study 01.02 Details</strong></summary>
+<summary><strong>💬 Speaker Notes - Global Infrastructure</strong></summary>
 
-### Setup (2 minutes)
+### The Satellite Constellation (2 minutes)
 
-- "This is from 2004, but economics principles are timeless"
-- "Indiana corn farms, different soil types, 15-20 cooperating farms"
-- "They measured: soil test, actual N applied, actual yields"
-- "Question: Can you use soil data to reduce N while maintaining yield?"
+- "Four satellites, four different capabilities"
+- "Landsat: best historical record (50 years)"
+- "Sentinel-2: best for active monitoring (5-day revisit)"
+- "MODIS: daily global coverage, coarser resolution"
+- "SMAP: soil moisture through clouds"
 
-### The Economics (4 minutes)
+### Processing Pipeline (2 minutes)
 
-**What Bongiovanni found:**
+- "Raw satellite data is useless - needs atmospheric correction, cloud masking"
+- "NASA processes this automatically - 128+ petabytes archived"
+- "Output: vegetation indices (NDVI), crop type maps, yield forecasts"
+- "8 million users download 4.5 billion files per year"
 
-- "Small farms (200 acres): 5-year payback - not attractive"
-- "400-acre farms: 2-3 year payback - sweet spot"
-- "1000+ acre farms: 1-year payback - no-brainer"
+### Global Programs (1 minute)
 
-**The key variables:**
+- "GEOGLAM: G20 created this after 2007-08 food price spikes"
+- "FEWS NET: predicts famines months in advance"
+- "These programs inform international policy - not individual farms"
 
-- "Fixed costs (equipment) don't change"
-- "Variable costs (soil testing) scale up"
-- "Benefits (N savings) scale up"
-- "So bigger farms benefit more"
+### The Question (30 seconds)
 
-**Price sensitivity - this is BIG:**
-
-- "When N is cheap ($0.40/lb), VRN benefit = $7/acre - marginal"
-- "When N is expensive ($0.80/lb), VRN benefit = $20/acre - attractive"
-- "2022 was the BEST year for VRN adoption because N was so expensive"
-
-### Environmental Part (2 minutes)
-
-**NEW since 2004:**
-
-- "Bongiovanni didn't have environmental dollar values"
-- "Now we do: carbon credits, water quality programs, ESG"
-- "Reducing N by 15 lb/acre ≈ 2 metric tons CO₂-eq/ha"
-- "At $20/ton carbon: $40/acre in carbon credits"
-
-**The real value proposition:**
-
-- "Economic benefit: $12/acre"
-- "Environmental payments: $30-50/acre"
-- "Total: $42-62/acre when you combine all programs"
-
-**This explains why big ag companies bought Climate Corp and others:**
-
-- "Not just for profit - also for environmental credibility"
-- "ESG investors want to see carbon reductions"
-- "VRN data proves those reductions happened"
-
-### Connection to Class (1 minute)
-
-- "You'll build soil sampling grids in Assignment 11"
-- "You'll analyze N optimization in Assignment 09"
-- "This is the decision-making infrastructure behind modern farming"
+- "All this infrastructure exists"
+- "How does it actually reach a farmer in Uganda?"
+- "That's the last-mile problem we'll examine next"
 
 </details>
 
 ---
 
-### Combined Impact Framework
+#### Case Study 01.03 (cont.): Commercial Applications
 
-**How these two technologies work together:**
+**How Companies Monetize Free Public Data:**
+
+Satellite data is free, but actionable intelligence is not. Commercial firms add value through processing, modeling, and delivery:
+
+**Commercial Use Case 1: Commodity Trading**
+
+- **Before satellite monitoring:** Traders relied on USDA monthly reports (delayed), weather stations (sparse), ground scouts (expensive)
+- **With satellite monitoring:** Daily crop condition assessments, 3-6 week yield forecast lead time before official reports
+- **Economic value:** Better forecasts → strategic futures positions → millions in trading advantage
+- **Market size:** $200-300M annually for satellite analytics services
+
+**Commercial Use Case 2: Crop Insurance**
+
+Traditional insurance requires expensive field visits ($100-300 per claim). Satellite monitoring enables:
+
+- **Automated loss assessment:** Satellite vegetation indices verify crop damage without field visits
+- **Parametric insurance:** Automatic payout when satellite NDVI drops below threshold - no claim filing required
+- **Example product (Kenya):** $10-20/hectare premium, automatic payout within 2 weeks if NDVI < 0.4 during grain fill
+
+**Commercial Use Case 3: Water Management**
+
+- **OpenET (western U.S.):** Field-level evapotranspiration estimates from Landsat/Sentinel-2
+- **Economic impact:** $20M water savings in Idaho (2023), paid for by water districts and state agencies
+- **Business model:** Free to farmers, funded by water management agencies
+
+**The Pattern: Privatizing Public Data Insights**
 
 ```mermaid
-flowchart TB
-    subgraph data["DATA COLLECTION"]
-        yield[Multi-Year Yield Maps]
-        soil[Grid Soil Sampling]
-        sat[Satellite NDVI Trends]
+graph LR
+    subgraph Public["**Public Investment**"]
+        A[**NASA Satellites**<br/>Billions in public funds]
+        B[**Free Data Distribution**<br/>No access fees]
     end
-
-    subgraph zones["ZONE DELINEATION"]
-        cluster[K-means Clustering<br/>High/Med/Low Productivity]
+    
+    subgraph Private["**Private Value Capture**"]
+        C[**Processing Infrastructure**<br/>Cloud computing<br/>Storage<br/>Bandwidth]
+        D[**Analytical Models**<br/>Machine learning<br/>Crop models<br/>Forecasting]
+        E[**Domain Expertise**<br/>Agronomists<br/>Data scientists<br/>Software engineers]
     end
-
-    subgraph vrs["VARIABLE RATE SEEDING"]
-        seed_rx["Seed Rate by Zone<br/>High: 36k seeds/acre<br/>Med: 32k seeds/acre<br/>Low: 28k seeds/acre"]
+    
+    subgraph Revenue["**Revenue Streams**"]
+        F[**Subscriptions**<br/>$200-300M market]
+        G[**Platform Fees**<br/>API access charges]
+        H[**Consulting Services**<br/>Custom analytics]
     end
-
-    subgraph vrn["VARIABLE RATE NITROGEN"]
-        n_rx["N Rate by Zone<br/>High: 200 lb/acre<br/>Med: 170 lb/acre<br/>Low: 140 lb/acre"]
-    end
-
-    subgraph results["OUTCOMES"]
-        econ["Economic<br/>+$20-35/acre<br/>Better margins"]
-        env["Environmental<br/>-20-30% input use<br/>Carbon credits"]
-        yield_out["Yield Maintained<br/>or Improved<br/>+1-3 bu/acre"]
-    end
-
-    data --> zones
-    zones --> vrs
-    zones --> vrn
-    vrs --> results
-    vrn --> results
-
-    style results fill:#ffffcc,stroke:#ff9900,stroke-width:3px
+    
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+    E --> F
+    E --> G
+    E --> H
+    
+    classDef public fill:#e8f5e9,stroke:#388e3c,stroke-width:3px
+    classDef private fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    classDef revenue fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    
+    class A,B public
+    class C,D,E private
+    class F,G,H revenue
 ```
 
-**Real Numbers (1000-acre farm, 2-year comparison):**
-
-| Metric                           | Uniform     | VRS + VRN       | Improvement       |
-| -------------------------------- | ----------- | --------------- | ----------------- |
-| Average yield                    | 182 bu/acre | 184 bu/acre     | +2 bu             |
-| Seed cost                        | $70/acre    | $68/acre        | $2,000 savings    |
-| N cost                           | $126/acre   | $113/acre       | $13,000 savings   |
-| Technology cost                  | $0          | $6.50/acre      | -$6,500 cost      |
-| Grain value                      | $819/acre   | $828/acre       | $9,000 revenue    |
-| **Net return per acre**          | $623        | $642            | **+$19/acre**     |
-| **Total farm profit**            | $623,000    | $642,000        | **+$19,000/year** |
-| Carbon credit value              | $0          | $20-40/acre     | $20,000-40,000    |
-| **Total value including carbon** | $623,000    | $682,000-82,000 | **+$59,000/year** |
+**Speaker Note Detail:** This isn't necessarily wrong - companies add real value. But it shows that "free" data only benefits those who can afford the $hundreds of thousands in infrastructure to process it.
 
 <details>
-<summary><strong>💬 Speaker Notes - Combined Impact</strong></summary>
+<summary><strong>💬 Speaker Notes - Commercial Applications</strong></summary>
 
-### Set the Stage (1 minute)
+### Commodity Trading (2 minutes)
 
-- "These aren't two separate ideas"
-- "Farms implementing VRS almost always also implement VRN"
-- "The zones are the same - just different prescriptions"
+- "Before satellites: traders flew scouts over fields, counted trucks at grain elevators"
+- "Now: daily MODIS imagery, machine learning models predict yields"
+- "Key advantage: 3-6 week lead time before USDA reports"
+- "That information advantage is worth millions in futures markets"
 
-### Walk Through Numbers (2 minutes)
+### Crop Insurance (2 minutes)
 
-- "1000-acre farm saves $15,000/year in inputs"
-- "Equipment costs $15-25K, paid back in 1-2 years"
-- "From year 3 onward, it's pure profit and environmental benefit"
-- "Now add carbon credits: potential $20-40K additional revenue"
+- "Traditional: adjuster drives to field, assesses damage, $200 cost per claim"
+- "Satellite: check NDVI index, automatic payout if below threshold"
+- "Example: Kenya drought insurance - NDVI drops below 0.4 → automatic payment in 2 weeks"
+- "This only works because NASA already pays for the satellites"
 
-### The Business Model (1 minute)
+### The Value Chain (1 minute)
 
-- "This is why Climate Corp was worth $1B when Bayer bought it in 2013"
-- "Not because of one farm's $19K savings"
-- "But because of 50 million acres × $19/acre = $950 million in farmer savings"
-- "Plus carbon credits, sustainability data for food companies, ESG reports"
+- "Public pays for satellites (billions)"
+- "Companies pay for processing and expertise (millions)"
+- "Companies charge farmers and agribusinesses ($$$ subscriptions)"
+- "Is this technology transfer working? Or is it privatizing public goods?"
+
+### Discussion Questions
+
+- "Should companies pay royalties when building businesses on public data?"
+- "Is this different from building a business using public roads or public education?"
+
+</details>
+
+---
+
+#### Case Study 01.03 (cont.): Local Farmer Access & Barriers
+
+**Two Farmer Realities:**
+
+**U.S. Farmer (Representative Pattern):**
+
+- **Equipment:** 800-hectare operation, $1.5M in machinery, GPS-guided tractors
+- **Technology:** $2,000-3,000/year farm management software that automatically processes Sentinel-2 imagery
+- **Daily workflow:** Email alerts for crop stress detected in satellite imagery → check soil sensors → decide irrigation
+- **Experience:** Satellite data is one layer among many (yield maps, weather, equipment telemetry) - seamlessly integrated
+
+**Ugandan Smallholder Farmer (Representative Barriers):**
+
+- **Equipment:** 2-hectare operation, hand tools, no mechanization
+- **Technology:** Basic mobile phone (not smartphone), unreliable electricity for charging
+- **Access barriers:**
+  - Smartphone: 30-50% penetration in rural Sub-Saharan Africa
+  - Data costs: $1-2/month = 5-15% of monthly income
+  - Extension services: 1:1000-5000 agent-to-farmer ratio (vs. 1:100-300 in developed countries)
+  - Digital literacy: Understanding satellite-derived maps requires education rarely available
+- **Experience:** Heard about "the satellite that tells when rain comes" but cannot access it
+
+**The Last-Mile Problem:**
+
+```mermaid
+graph TD
+    subgraph Satellite["**Satellite Data Available**"]
+        A[**Free Public Data**<br/>Landsat, Sentinel-2<br/>Global coverage]
+    end
+    
+    subgraph Barriers["**Infrastructure Barriers**"]
+        B1[**Smartphone Access**<br/>30-50% penetration]
+        B2[**Internet Data**<br/>$1-2/month<br/>5-15% of income]
+        B3[**Electricity**<br/>Unreliable charging]
+        B4[**Digital Literacy**<br/>Map reading skills]
+        B5[**Extension Services**<br/>1:1000+ farmer ratio]
+    end
+    
+    subgraph Outcome["**Farmer Outcome**"]
+        C1[**U.S. Farmer**<br/>Direct access<br/>30-40% adoption]
+        C2[**Smallholder Farmer**<br/>No access<br/>5% adoption]
+    end
+    
+    A -.Easy Path.-> C1
+    A --> B1
+    A --> B2
+    A --> B3
+    A --> B4
+    A --> B5
+    
+    B1 -.Blocks.-> C2
+    B2 -.Blocks.-> C2
+    B3 -.Blocks.-> C2
+    B4 -.Blocks.-> C2
+    B5 -.Blocks.-> C2
+    
+    classDef satellite fill:#e3f2fd,stroke:#1976d2,stroke-width:3px
+    classDef barrier fill:#ffebee,stroke:#c62828,stroke-width:2px
+    classDef outcome fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    
+    class A satellite
+    class B1,B2,B3,B4,B5 barrier
+    class C1,C2 outcome
+```
+
+**Bridging Attempts:**
+
+- **HarvestNow app (Kenya/Ethiopia):** Low-literacy mobile app with visual icons, ~5,000 users by 2023
+- **Extension service training:** NASA Harvest trains national ag extension to interpret satellite data
+- **Community access points:** Shared tablets at cooperatives, input dealers
+- **SMS/Radio:** Simplified satellite-derived forecasts via text message or community radio
+
+**Farmer Quote (Uganda Study, 2018):**
+
+> "We heard about the satellite that can tell when rain comes, but we don't have the phones that work with it. The agricultural officer came one time and showed us pictures from space, but he doesn't come often enough." — Beatrice, smallholder farmer
+
+**Speaker Note Detail:** The contrast is stark. Same satellites, same "free" data, completely different farmer experiences. The barrier isn't the technology - it's infrastructure, education, and economic access.
+
+<details>
+<summary><strong>💬 Speaker Notes - Local Access</strong></summary>
+
+### The Two Realities (2 minutes)
+
+**U.S. Farmer:**
+- "Checks satellite crop stress alerts on smartphone"
+- "Software costs $3,000/year but makes economic sense at 800 hectares"
+- "Satellite data just one tool among many"
+- "Never directly downloads a Sentinel-2 image - service handles everything"
+
+**Ugandan Smallholder:**
+- "Operates 2 hectares - same size as my backyard"
+- "Has basic phone, not smartphone (30-50% smartphone penetration)"
+- "If she had smartphone, $2/month data plan = 5-15% of income"
+- "Extension officer visited once, showed satellite images, hasn't returned"
+
+### The Barriers Stack (2 minutes)
+
+- "It's not just one problem - it's five overlapping barriers"
+- "Fix smartphones → still need data plan → still need electricity → still need literacy"
+- "This is why bridging attempts (HarvestNow app) reach 5,000 farmers, not 5 million"
+
+### Real Quote (1 minute)
+
+- "Read Beatrice's quote carefully"
+- "She understands value: 'If I knew when rain comes, I'd plant on exactly the right day'"
+- "The barrier isn't interest or understanding - it's access infrastructure"
+
+### Discussion Questions
+
+- "Is this a solvable problem? Or fundamental limit of technology diffusion?"
+- "Who is responsible for building last-mile infrastructure?"
+
+**Full analysis:** See `docs/classes/01.03-case-study-nasa-harvest.md` Section 4
+
+</details>
+
+---
+
+#### Case Study 01.03 (cont.): The Central Tension & Course Connections
+
+**The Ethical Question: Who Benefits from "Free" Data?**
+
+When data is technically free but practically inaccessible, we must ask:
+
+**Stakeholder Benefit Analysis:**
+
+| Stakeholder                  | Access Level | Economic Benefit         | Why?                                   |
+| ---------------------------- | ------------ | ------------------------ | -------------------------------------- |
+| **U.S./European Governments**    | ✅ Direct     | High (policy decisions)  | Full processing capability, expertise  |
+| **Commercial Companies**         | ✅ Direct     | $200-300M annual revenue | Monetize public data                   |
+| **Large-Scale Farmers**          | ✅ Via services | Strong ROI (~$10-20/ha) | Affordable subscriptions, infrastructure |
+| **Developing Country Govts**     | ⚠️ Partial    | Medium (limited capacity) | Data access, limited processing        |
+| **NGOs & Extension**             | ⚠️ Partial    | Medium (intermediary role) | Funding dependent, scaling challenges  |
+| **Smallholder Farmers**          | ❌ Minimal    | Very low (<5% access)    | Infrastructure barriers, cost prohibitive |
+
+**Multiple Perspectives:**
+
+- **NASA/Space agencies:** "We provide the data - that's our mission. We can't solve all infrastructure and development challenges."
+- **Commercial companies:** "We add value - processing, expertise, software. Farmers who pay see strong ROI. We're not exploiting public resources."
+- **Developing country governments:** "Satellite data helps national monitoring, but we can't reach individual farmers due to extension limitations."
+- **Technology critics:** "'Free' data primarily benefits wealthy farmers and companies. We're using public resources to amplify existing inequalities."
+- **Smallholder farmer:** "I need to know when rain comes and when to plant, but that information doesn't reach me."
+
+**Course Connections:**
+
+This case study connects to several course modules:
+
+- **Module 02 (Data Collection):** Satellite remote sensing as automated data collection system; sensor trade-offs (spatial vs. temporal resolution)
+- **Module 04 (Data Processing):** Atmospheric correction, cloud masking, NDVI calculation
+- **Module 07 (Data Integration):** Combining satellite data with weather, soil, yield data
+- **Module 10 (Decision Support):** Different delivery models (direct vs. intermediated farmer access)
+- **Module 12 (Data Ethics):** Access inequality, data sovereignty, benefit distribution
+- **Assignment 4-2:** Implement basic satellite image preprocessing workflow
+- **Assignment 7-1:** Integrate Sentinel-2 imagery with field boundaries and weather data
+
+**Key Takeaways:**
+
+1. **Infrastructure is not neutral** - "Free" data + unequal infrastructure = unequal outcomes
+2. **Multiple delivery models needed** - No single approach works for all contexts
+3. **Technology alone doesn't solve development challenges** - Requires broader infrastructure investment
+4. **Consider beneficiaries when building systems** - Who gains from the tools you create?
+
+**Full case study:** `docs/classes/01.03-case-study-nasa-harvest.md` (14,000 words, 23 discussion questions, Python/SQL examples)
+
+<details>
+<summary><strong>💬 Speaker Notes - Tensions & Takeaways</strong></summary>
+
+### The Core Question (1 minute)
+
+- "Satellite data is 'free' in legal sense"
+- "But requires expensive infrastructure to use"
+- "Result: benefits concentrate among those with existing resources"
+- "Is this technology amplifying inequality?"
+
+### Different Perspectives (2 minutes)
+
+- "NASA: 'We provide the data - that's our job'"
+- "Companies: 'We add real value through processing and expertise'"
+- "Critics: 'You're privatizing public goods'"
+- "Smallholder farmer: 'The information exists but doesn't reach me'"
+- "None of these perspectives is entirely wrong"
+
+### Course Relevance (2 minutes)
+
+- "You'll work with satellite data in Module 04"
+- "You'll integrate it with other data types in Module 07"
+- "But always ask: who will actually use what you build?"
+- "Technology choices aren't neutral - they have distributional consequences"
+
+### Looking Forward
+
+- "Next case study: John Deere Operations Center"
+- "Different tension: When farmers generate data, who owns it?"
+- "Same theme: data infrastructure and power dynamics"
+
+**Discussion questions:** See full case study for 23 provocative, balanced, and applied questions
+
+</details>
+
+---
+
+#### Case Study 01.04: John Deere Operations Center - Equipment Data & Farmer Agency
+
+**Focus:** 🚜 **Equipment-generated agricultural data ecosystems**  
+**Platform:** John Deere Operations Center, 200M+ hectares managed globally  
+**Core Question:** When equipment generates farm data, who owns it and controls access?
+
+**The Connected Equipment Revolution:**
+
+Modern farm equipment doesn't just plant and harvest - it collects thousands of data points per hour. GPS position, yield monitoring, planting rates, fertilizer applications, machine performance - all flowing automatically from tractor to cloud.
+
+```mermaid
+graph TB
+    subgraph Equipment["🚜 **Connected Equipment**"]
+        A[**Tractor/Combine**<br/>GPS, sensors<br/>yield monitors]
+    end
+    
+    subgraph Network["📡 **JDLink Network**"]
+        B[**Cellular Modem**<br/>Real-time transmission<br/>Automatic upload]
+    end
+    
+    subgraph Platform["☁️ **Operations Center**"]
+        C[**Free Tier**<br/>Data storage<br/>Basic visualization]
+        D[**PRO Service**<br/>Remote diagnostics<br/>Advanced analytics<br/>💰 $2-5K/year]
+    end
+    
+    subgraph Farmer["👨‍🌾 **Farmer Experience**"]
+        E[**Daily Use**<br/>Field planning<br/>Progress monitoring]
+        F[**Dependencies**<br/>Historical data trapped<br/>Repair restrictions<br/>Platform lock-in]
+    end
+    
+    A --> B
+    B --> C
+    B --> D
+    C --> E
+    D --> E
+    E --> F
+    
+    classDef equipment fill:#e8f5e9,stroke:#388e3c,stroke-width:3px
+    classDef network fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    classDef platform fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    classDef farmer fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    classDef tension fill:#ffebee,stroke:#c62828,stroke-width:3px
+    
+    class A equipment
+    class B network
+    class C,D platform
+    class E farmer
+    class F tension
+```
+
+**Key Statistics:**
+
+- **Global reach:** 200+ million hectares managed (equivalent to all EU agricultural land)
+- **Platform economics:** $1.5B+ annual technology/precision ag revenue for Deere (2023)
+- **Subscription model:** Free basic tier + paid PRO Service ($2,000-5,000/year estimated)
+- **Adoption:** 60-70% of Operations Center users rely primarily on free tier
+- **Equipment integration:** Works best (sometimes only) with all-Deere fleets
+
+**The Business Model Evolution:**
+
+| Traditional Model (pre-2010)                         | Technology Platform Model (2015-present)                   |
+| ---------------------------------------------------- | ---------------------------------------------------------- |
+| Revenue: Equipment sales + parts + service           | Revenue: Equipment + parts + service + **subscriptions + data** |
+| Customer relationship: Transactional (ends after sale) | Customer relationship: Ongoing (yearly subscription renewal) |
+| Competitive advantage: Product performance, dealer network | Competitive advantage: Product + network + **platform ecosystem** |
+
+**Speaker Note Detail:** This case study examines data ownership and farmer agency. Unlike NASA Harvest (public data, access barriers), here farmers generate the data through their own farming operations - but don't fully control it.
+
+<details>
+<summary><strong>💬 Speaker Notes - John Deere Overview</strong></summary>
+
+### Setup (2 minutes)
+
+- "Modern tractor = sophisticated data collection system"
+- "GPS position every second, yield monitor readings, planting rates, all captured automatically"
+- "Data flows wirelessly: equipment → JDLink modem → Operations Center cloud"
+- "Farmer never manually enters a number - it's all automatic"
+
+### The Platform (2 minutes)
+
+- "Operations Center: free basic tier (60-70% of users)"
+- "PRO Service: $2-5K/year subscription for advanced features"
+- "200+ million hectares managed globally"
+- "Nearly 20 years of development - this is a mature system"
+
+### The Tension (1 minute)
+
+- "Farmer paid $500,000 for the combine"
+- "But data flows through Deere's platform - can't access directly from equipment"
+- "Historical data trapped in Operations Center - hard to export"
+- "Plus repair restrictions: can't fix equipment without dealer diagnostic access"
+- "Question: Do farmers own their data? Their equipment?"
+
+### Why This Matters
+
+- "You'll work with equipment data in Module 08 (security/privacy)"
+- "Module 11: analyze business models like this freemium platform"
+- "Module 12: data ethics - ownership, agency, power"
+
+**Full case study:** See `docs/classes/01.04-case-study-john-deere.md` for 15,000-word analysis
+
+</details>
+
+---
+
+#### Case Study 01.04 (cont.): Daily Farmer Workflow & Platform Value
+
+**Representative Farmer:** 1,200-hectare corn/soybean operation, Iowa, all-Deere fleet ($1.5M equipment value)
+
+**Spring Workflow - Planning & Planting:**
+
+- **March-April:** Reviews last year's yield maps in Operations Center, overlays soil data, generates variable-rate seeding prescriptions
+- **System recommendation:** PRO Service algorithm suggests seeding rates based on 8+ years of field history plus anonymized data from "similar" fields
+- **Work plans:** Creates plans in Operations Center → sends wirelessly to employee's tractor → appears automatically on display
+- **Real-time monitoring:** During planting, watches from office: which field (42% complete), actual vs. target population (31,800 vs. 32,000 seeds/acre - within tolerance)
+- **Automatic alerts:** Smartphone notification if planter skips detected → calls employee before turning around
+
+**Summer Workflow - Monitoring & Management:**
+
+- **Morning:** Check dashboard over coffee - equipment locations, fuel levels, yesterday's progress
+- **Mid-season:** Satellite imagery integrated (third-party service) shows potential stress → visits field → creates variable-rate nitrogen application prescription
+- **Automatic execution:** Prescription transfers wirelessly to sprayer, automatically adjusts rates as it crosses field zones
+
+**Fall Workflow - Harvest & Analysis:**
+
+- **Real-time yield data:** Appears on smartphone as harvest progresses → inform grain marketing decisions
+- **Harvest logistics:** Track which fields harvested, storage bin inventory, moisture levels
+- **End-of-season analysis:** Profitability by field, input effectiveness, equipment performance, multi-year trends
+
+**The Value Proposition:**
+
+- **Time savings:** 200-300 hours annually vs. paper recordkeeping (worth $10,000-15,000 at $50/hour opportunity cost)
+- **Better decisions:** Multi-year historical data reveals patterns invisible in paper records
+- **Team coordination:** Employees access work plans, farmer monitors remotely, everyone works from same data
+- **Compliance:** Export reports for crop insurance, conservation programs in minutes vs. searching filing cabinets
+
+**But Also: The Constraints:**
+
+- **Software bugs:** "During peak planting, Operations Center was down for 6 hours. We couldn't access work plans. We just kept planting with last year's rates and hoped it would come back."
+- **Forced updates:** "Deere pushes software updates automatically. Sometimes features move. I've trained employees on one workflow, then an update changes it."
+- **Subscription cost escalation:** "Features that used to be free now require PRO Service. Feels like bait-and-switch."
+- **Data export limitations:** "Export is technically possible, but format is clunky. It's clear they don't want data leaving their ecosystem."
+- **Multi-brand challenges:** "Bought one Case IH sprayer because Deere was backordered. Getting it to work was a nightmare."
+
+<details>
+<summary><strong>💬 Speaker Notes - Daily Workflow</strong></summary>
+
+### Setup (1 minute)
+
+- "Representative pattern, not specific farm"
+- "1,200 hectares = medium-large U.S. Midwest operation"
+- "All-Deere fleet - this is important because multi-brand is harder"
+
+### Walk Through Workflow (3 minutes)
+
+**Spring:**
+- "Reviews last year's performance → generates prescriptions"
+- "PRO Service recommendation algorithm: 8 years her data + anonymous 'similar farms'"
+- "Sends plans wirelessly to equipment - no paper maps, no manual entry"
+- "Monitors in real-time from office"
+
+**Summer:**
+- "Check dashboard over morning coffee"
+- "Satellite alerts → field visit → create prescription → automatic execution"
+
+**Fall:**
+- "Real-time yield data helps marketing decisions"
+- "End-of-season: Which fields made money? Which lost money?"
+
+### The Value (1 minute)
+
+- "200-300 hours saved annually"
+- "That's $10-15K in opportunity cost"
+- "Better decisions from historical patterns"
+- "Team coordination seamless"
+
+### But Also Constraints (2 minutes)
+
+- "Read the farmer quotes - these are real frustrations from forums and interviews"
+- "Platform downtime during critical operations - 'dead in the water'"
+- "Forced updates changing UI - training problem"
+- "Subscription creep - free features moving to PRO"
+- "Data export intentionally difficult"
+- "Multi-brand 'compatibility' technically exists, functionally problematic"
+
+### Discussion
+
+- "High value AND high dependency - both true simultaneously"
+- "Farmer values platform but resents feeling trapped"
+
+</details>
+
+---
+
+#### Case Study 01.04 (cont.): Data Ownership Tensions
+
+**The Core Question: Who Owns Farm Data?**
+
+Deere's official position: **"Farmers own their data."**
+
+But what does "ownership" mean when:
+
+- Farmers can't directly download data from equipment - must flow through Operations Center
+- Export functionality is intentionally limited (functional but not user-friendly)
+- Historical context is non-exportable (data points yes, analytical insights no)
+- Third-party integrations require Deere's API permission and ongoing access fees
+
+**Legal Ownership vs. Practical Control:**
+
+| Aspect                     | Deere's Position                                   | Farmer Reality                                |
+| -------------------------- | -------------------------------------------------- | --------------------------------------------- |
+| **Data access**                | "Farmers control who can view data"                | Must use Deere's platform - no direct equipment access |
+| **Data export**                | "Farmers can export their data"                    | Export formats are clunky, historical context lost |
+| **Third-party use**            | "Farmers authorize third-party access"             | But Deere controls API terms and can restrict access |
+| **Aggregate data use**         | "We use anonymized data to improve products"       | Farmers contribute data but aren't compensated |
+| **Equipment diagnostic data**  | Deere owns machine telemetry (engine, maintenance) | Farmers need this to repair equipment they own |
+
+**Deere's Retained Rights (from Terms of Service):**
+
+- License to use farmer data to "improve products and services"
+- Right to create "aggregate, anonymized" datasets from farmer data
+- Ownership of all machine-generated diagnostic data
+- Control over data access methods and infrastructure
+- Right to modify terms unilaterally (farmers must accept or lose access)
+
+**The Right-to-Repair Controversy:**
+
+Modern equipment software controls mechanical functions, but Deere restricts diagnostic access:
+
+- **Farmer complaint:** "I own a $500,000 combine, but when it breaks during harvest, I can't fix it myself. Deere locks diagnostic software behind dealer-only tools. I wait hours/days for $300+ dealer visit to diagnose problems I could troubleshoot if I had access to my equipment's data."
+- **Deere's response:** PRO Service now offers remote diagnostics - dealers diagnose remotely, reducing wait time
+- **Farmer counter:** "That's another subscription, and I still can't repair myself. It doesn't address the fundamental issue."
+- **Legislative status:** 20+ U.S. states have considered right-to-repair legislation; few have passed comprehensive laws (as of 2024)
+
+**Who Economically Benefits from Farm-Generated Data?**
+
+```mermaid
+graph TD
+    subgraph Source["📊 **Data Source**"]
+        A[**Farm Operations**<br/>Farmer decisions<br/>+ Equipment capture<br/>= Combined dataset]
+    end
+    
+    subgraph Deere["🏢 **Deere Value Extraction**"]
+        B[**Machine Learning**<br/>Train models on<br/>millions of fields]
+        C[**Product Development**<br/>Design better<br/>equipment/software]
+        D[**Platform Lock-in**<br/>Switching costs<br/>drive equipment sales]
+    end
+    
+    subgraph Revenue["💰 **Revenue Streams**"]
+        E[**Subscriptions**<br/>$1.5B+ technology<br/>revenue annually]
+        F[**Equipment Sales**<br/>Data platform drives<br/>equipment preference]
+        G[**API Fees**<br/>Third-party<br/>access charges]
+    end
+    
+    subgraph Farmer["👨‍🌾 **Farmer Value**"]
+        H[**Better Decisions**<br/>Data-informed<br/>management]
+        I[**Time Savings**<br/>Automated<br/>recordkeeping]
+        J[**No Compensation**<br/>Contribute data<br/>but not paid]
+    end
+    
+    A --> B
+    A --> C
+    A --> D
+    B --> E
+    C --> F
+    D --> F
+    B --> G
+    
+    A -.Free Use.-> H
+    A -.Free Use.-> I
+    A -.No Payment.-> J
+    
+    classDef source fill:#e8f5e9,stroke:#388e3c,stroke-width:3px
+    classDef deere fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    classDef revenue fill:#fff3e0,stroke:#f57c00,stroke-width:3px
+    classDef farmer fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    
+    class A source
+    class B,C,D deere
+    class E,F,G revenue
+    class H,I,J farmer
+```
+
+<details>
+<summary><strong>💬 Speaker Notes - Data Ownership</strong></summary>
+
+### The Official Position (1 minute)
+
+- "Deere says 'farmers own their data'"
+- "True in narrow legal sense: farmers control who else can see it"
+- "But what about practical control?"
+
+### Legal vs. Practical (2 minutes)
+
+- "Can't download data directly from equipment"
+- "Export functionality exists but is intentionally difficult"
+- "Historical context non-exportable - just raw data points"
+- "Third-party access gated by Deere's API terms"
+
+### Right-to-Repair (2 minutes)
+
+- "$500,000 combine breaks during harvest"
+- "Farmer has tools, mechanical skills, could fix it"
+- "But can't access diagnostic codes - dealer-only software"
+- "$300 dealer visit just to diagnose"
+- "PRO Service 'solution': remote diagnostics for another subscription"
+
+### Who Benefits? (2 minutes)
+
+- "Farmers: better decisions, time savings"
+- "Deere: $1.5B tech revenue, equipment sales driven by platform lock-in"
+- "Farmers contribute data → Deere trains ML models → Deere sells those insights back to farmers"
+- "Is this fair exchange? Or extraction?"
+
+### Discussion Questions
+
+- "If you can't meaningfully take data elsewhere, do you really 'own' it?"
+- "Should farmers be compensated when their data trains commercial ML models?"
+- "Where should law draw the line on repair access?"
+
+</details>
+
+---
+
+#### Case Study 01.04 (cont.): Multiple Perspectives & Power Dynamics
+
+**Stakeholder Perspectives on Data Ownership:**
+
+**Farmer perspective:**  
+"I paid for the equipment. The data describes my farming decisions on my land. I should have complete control - ability to access data directly from machines, export in any format, use with any third-party service, repair equipment without manufacturer permission. Current restrictions feel like Deere holding my data hostage to sell subscriptions."
+
+**Deere perspective:**  
+"Farmers do control their data - they decide who can see it and can export it. We need certain rights to use aggregate data to improve products that benefit all farmers. The machine learning models that power PRO Service only work because we pool anonymized data from millions of fields. Equipment repair restrictions protect safety, intellectual property, and emissions compliance."
+
+**Dealer perspective:**  
+"Remote diagnostics and controlled repair access protect the dealer network that provides service in rural areas. If farmers could repair everything themselves, dealers couldn't afford service infrastructure. When truly complex repairs are needed, farmers would be out of luck."
+
+**Third-party platform perspective:**  
+"Deere's control over API access means they decide what tools farmers can use. If we build competing farm management software, Deere can restrict our API access or charge prohibitive fees. This gatekeeping limits innovation and farmer choice."
+
+**Agricultural economist perspective:**  
+"There's legitimate value in aggregate data that justifies Deere retaining some rights. But the current balance tips too far toward manufacturer control. Farmers contribute data that generates substantial value but capture little of that value. Better policy would ensure farmers are either compensated for data contributions or have truly unrestricted data portability."
+
+**The Power Asymmetry:**
+
+Deere is a $50+ billion corporation. Individual farmers are price-takers who must accept offered terms.
+
+**Farmer bargaining power:**
+- Can choose competitors (Case IH, AGCO, Claas) - but they have similar data practices
+- Can collectively organize (Farm Bureau, Farmers Union) - but limited policy success
+- Can refuse to adopt technology - but lose competitive advantage
+
+**Deere bargaining power:**
+- Controls access to equipment farmers depend on for livelihood
+- Can modify terms of service unilaterally (farmers must accept or lose access)
+- Leverages switching costs (historical data, workflow integration) for customer retention
+- Lobbies effectively against regulatory intervention
+
+**Potential Policy Solutions:**
+
+| Approach                        | Description                                              | Status                          |
+| ------------------------------- | -------------------------------------------------------- | ------------------------------- |
+| **Data portability requirements**   | Mandate easy export in standard formats                  | Discussed but not implemented   |
+| **Aggregate data compensation**     | Pay farmers royalties when using their data commercially | Proposed in some farm organizations |
+| **Farmer data cooperatives**        | Enable collective negotiation of data terms              | Emerging (limited scale)        |
+| **Right-to-repair legislation**     | Require manufacturers provide diagnostic access          | 20+ states considering, few passed |
+| **Open data standards**             | Industry-wide standards like ISOBUS                      | ISOBUS exists but limited scope |
+
+<details>
+<summary><strong>💬 Speaker Notes - Perspectives & Power</strong></summary>
+
+### The Perspectives (3 minutes)
+
+- "Read through each perspective carefully"
+- "None is entirely wrong - there are legitimate interests on all sides"
+- "Farmer: 'I bought it, I should control it'"
+- "Deere: 'Aggregate data creates value that requires some manufacturer rights'"
+- "Dealer: 'Restrict repairs too much, rural service infrastructure collapses'"
+- "Economist: 'Current balance tips too far toward manufacturer'"
+
+### The Power Imbalance (2 minutes)
+
+- "Deere: $50B corporation, armies of lawyers"
+- "Individual farmer: price-taker, must accept offered terms"
+- "Even when Deere's position has economic logic, farmers can't negotiate"
+
+### What Could Change This? (2 minutes)
+
+**Data portability:**
+- "Reduce switching costs → increase farmer bargaining power"
+
+**Aggregate data compensation:**
+- "If Deere profits from farmer data → farmers get royalty"
+
+**Farmer cooperatives:**
+- "10,000 farmers collectively negotiate better terms"
+
+**Right-to-repair:**
+- "Farmers and independent shops get diagnostic access"
+
+### Discussion
+
+- "Which approach is most feasible?"
+- "Which addresses root problem vs. symptoms?"
+- "Should government intervene or let market sort it out?"
+
+</details>
+
+---
+
+#### Case Study 01.04 (cont.): Course Connections & Key Takeaways
+
+**Course Connections:**
+
+This case study integrates with multiple course modules:
+
+- **Module 01 (Introduction):** Equipment-generated data as foundational agricultural data source
+- **Module 03 (Data Standards):** ISOBUS standards vs. proprietary protocols; interoperability challenges
+- **Module 06 (Cloud Computing):** Operations Center as cloud-based agricultural data platform; edge computing in equipment
+- **Module 08 (Security & Privacy):** Team access controls; dealer/third-party data sharing; data breach risks
+- **Module 11 (Business Models):** Freemium model (free basic + paid PRO); platform economics; subscription vs. ownership
+- **Module 12 (Data Ethics):** Data ownership tensions; farmer agency vs. manufacturer control; power asymmetries
+- **Module 13 (Policy & Regulation):** Right-to-repair legislation; data portability requirements; antitrust concerns
+- **Assignment 8-1:** Evaluate Operations Center security model and access controls
+- **Assignment 11-2:** Compare data monetization models across agricultural equipment manufacturers
+- **Assignment 12-1:** Analyze John Deere case through farmer autonomy and power dynamics ethics frameworks
+
+**Key Takeaways:**
+
+**1. Data ownership is multifaceted:**
+- Legal ownership (who has legal title to data)
+- Practical control (who can actually access and use data)
+- Economic benefit (who captures value from data)
+
+These three aspects can diverge significantly.
+
+**2. Platform lock-in is cumulative:**
+- Year 1: Easy to leave
+- Years 2-3: Some switching costs
+- Years 6+: Practically impossible without major disruption
+
+**3. Business model shifts risk:**
+- Traditional: One-time equipment purchase → farmer owns
+- Modern: Equipment purchase + ongoing subscriptions → features become services
+
+**4. Power asymmetries shape outcomes:**
+- Individual farmers have limited bargaining power
+- Collective action or regulatory intervention may be necessary for balance
+
+**5. No simple answers:**
+- Aggregate data does create legitimate value
+- Platform infrastructure does require investment
+- But current arrangements may tip too far toward manufacturer control
+
+**Comparison: NASA Harvest vs. John Deere**
+
+| Dimension           | NASA Harvest                      | John Deere Operations Center         |
+| ------------------- | --------------------------------- | ------------------------------------ |
+| **Data source**         | Government satellites (public)    | Farmer equipment operations (private) |
+| **Core tension**        | Access inequality despite "free" data | Ownership ambiguity despite farmer-generated data |
+| **Primary barrier**     | Infrastructure & economic access  | Platform control & switching costs   |
+| **Who benefits most**   | Governments & commercial companies | Manufacturer & large-scale farmers   |
+| **Policy question**     | How to bridge last-mile gap?      | How to ensure farmer data rights?    |
+| **Your role**           | Consider access when building systems | Consider ownership when designing platforms |
+
+**Discussion Questions for Both Case Studies:**
+
+1. Is "free" data that requires expensive infrastructure to access actually free?
+2. When farmers generate data through farming activities, who should control it?
+3. What obligations do companies have when building profitable businesses on public data (NASA) or farmer-generated data (Deere)?
+4. Where should law draw the line between legitimate business interests and anticompetitive platform control?
+5. As a data systems developer, what principles should guide your design choices?
+
+**Full case studies:**
+- NASA Harvest: `docs/classes/01.03-case-study-nasa-harvest.md` (14,000 words)
+- John Deere: `docs/classes/01.04-case-study-john-deere.md` (15,000 words)
+
+Each includes comprehensive analysis, technical appendices with code examples, and 20+ discussion questions.
+
+<details>
+<summary><strong>💬 Speaker Notes - Takeaways & Transition</strong></summary>
+
+### Synthesize the Two Cases (3 minutes)
+
+- "Two very different data ecosystems"
+- "NASA: public data, access barriers"
+- "Deere: farmer-generated data, ownership ambiguity"
+- "Common theme: infrastructure and power shape who benefits"
+
+### Key Principles (2 minutes)
+
+**For both cases:**
+- "Data infrastructure is not neutral"
+- "Legal rights don't ensure practical control"
+- "Economic value often concentrates with intermediaries"
+- "Individual users (farmers) have limited bargaining power"
+
+### Your Role (1 minute)
+
+- "You'll build agricultural data systems"
+- "Your choices shape who can access and benefit"
+- "Technology design is never just technical - it's also political and ethical"
+
+### Looking Forward
+
+- "Next section: Industry trends"
+- "Then we'll look at specific data types and technologies"
+- "But keep these case studies in mind throughout the course"
+
+### Assignment Preview
+
+- "Module 12: Ethics analysis assignment"
+- "You'll choose one of these case studies and analyze through ethical frameworks"
+- "Start thinking about which perspective you find most compelling"
 
 </details>
 
