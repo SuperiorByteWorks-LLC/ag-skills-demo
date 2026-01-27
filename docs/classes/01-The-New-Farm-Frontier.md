@@ -407,7 +407,7 @@ For each data type:
 
 **Location:** Iowa, Midwest US  
 **Research:** McNunn et al. (2019) - 6-year study  
-**Technology:** Climate FieldView Seeds Pro prescription tool  
+**Technology:** Climate FieldView Seeds Pro prescription tool
 
 **The Opportunity:**
 
@@ -440,14 +440,14 @@ flowchart LR
 
 **Economic Impact (2-year payback):**
 
-| Metric | Value | Impact |
-|--------|-------|--------|
-| Equipment cost (VRA) | $15,000-30,000 | $1.80-3.80/acre/year |
-| Software subscription | $600-1,200/year | $0.60-1.20/acre |
-| VRS seed cost savings | 5-7% less seed | ~$2-3/acre |
-| Yield improvement | +2 bu/acre | +$7.40/acre @ $3.70 corn |
-| **Total annual benefit** | - | **$6-8/acre** |
-| **Payback period** | Equipment ÷ Benefit | **2-3 years** |
+| Metric                   | Value               | Impact                   |
+| ------------------------ | ------------------- | ------------------------ |
+| Equipment cost (VRA)     | $15,000-30,000      | $1.80-3.80/acre/year     |
+| Software subscription    | $600-1,200/year     | $0.60-1.20/acre          |
+| VRS seed cost savings    | 5-7% less seed      | ~$2-3/acre               |
+| Yield improvement        | +2 bu/acre          | +$7.40/acre @ $3.70 corn |
+| **Total annual benefit** | -                   | **$6-8/acre**            |
+| **Payback period**       | Equipment ÷ Benefit | **2-3 years**            |
 
 **Environmental Co-benefits:**
 
@@ -469,18 +469,21 @@ flowchart LR
 ### The Economics (3 minutes)
 
 **Cost side:**
+
 - "$15-30K for equipment that works for 10+ years"
 - "Amortized: $1.80-3.80/acre per year"
 - "Plus $600-1200/year software = $0.60-1.20/acre"
 - "Total VRS cost: ~$2.50-5/acre/year"
 
 **Benefit side:**
+
 - "They saved 5-7% on seed just from not over-seeding low zones"
 - "On a 2000-acre farm: $2.50/acre × 2000 = $5,000/year in seed savings"
 - "Plus yield bump in high zones that were previously limited by seeding rate"
 - "Equipment investment paid for itself in 2-3 years"
 
 **The key insight:**
+
 - "Economic optimum ≠ agronomic maximum"
 - "Farmers were seeding for MAX YIELD everywhere"
 - "Reality: better returns from seeding for PROFIT in each zone"
@@ -500,7 +503,7 @@ flowchart LR
 
 **Location:** Indiana/Midwest, Corn Belt  
 **Research:** Bongiovanni & Lowenberg-DeBoer (2004) - foundational study, updated with 2024 economics  
-**Method:** Pre-plant grid soil sampling for nitrate, zone-based N prescription  
+**Method:** Pre-plant grid soil sampling for nitrate, zone-based N prescription
 
 **The Challenge:**
 
@@ -516,13 +519,13 @@ Nitrogen is the **most yield-limiting nutrient** but also one of the **costliest
 
 **Economic Model (2024 Prices):**
 
-| Component | Uniform Rate | VRN (Avg) | Difference |
-|-----------|-------------|-----------|------------|
-| N applied | 180 lb/acre | 165 lb/acre | -15 lb/acre |
-| N cost @ $0.70/lb | $126.00 | $115.50 | **+$10.50 savings** |
-| Yield maintained | 185 bu/acre | 186 bu/acre | +1 bu/acre @ $4.50 = +$4.50 |
-| VRN technology cost | $0.00 | $3.30 | -$3.30 |
-| **Net benefit per acre** | - | - | **+$11.70/acre** |
+| Component                | Uniform Rate | VRN (Avg)   | Difference                  |
+| ------------------------ | ------------ | ----------- | --------------------------- |
+| N applied                | 180 lb/acre  | 165 lb/acre | -15 lb/acre                 |
+| N cost @ $0.70/lb        | $126.00      | $115.50     | **+$10.50 savings**         |
+| Yield maintained         | 185 bu/acre  | 186 bu/acre | +1 bu/acre @ $4.50 = +$4.50 |
+| VRN technology cost      | $0.00        | $3.30       | -$3.30                      |
+| **Net benefit per acre** | -            | -           | **+$11.70/acre**            |
 
 **Profitability Sensitivity to Prices:**
 
@@ -677,17 +680,17 @@ flowchart TB
 
 **Real Numbers (1000-acre farm, 2-year comparison):**
 
-| Metric | Uniform | VRS + VRN | Improvement |
-|--------|---------|-----------|------------|
-| Average yield | 182 bu/acre | 184 bu/acre | +2 bu |
-| Seed cost | $70/acre | $68/acre | $2,000 savings |
-| N cost | $126/acre | $113/acre | $13,000 savings |
-| Technology cost | $0 | $6.50/acre | -$6,500 cost |
-| Grain value | $819/acre | $828/acre | $9,000 revenue |
-| **Net return per acre** | $623 | $642 | **+$19/acre** |
-| **Total farm profit** | $623,000 | $642,000 | **+$19,000/year** |
-| Carbon credit value | $0 | $20-40/acre | $20,000-40,000 |
-| **Total value including carbon** | $623,000 | $682,000-82,000 | **+$59,000/year** |
+| Metric                           | Uniform     | VRS + VRN       | Improvement       |
+| -------------------------------- | ----------- | --------------- | ----------------- |
+| Average yield                    | 182 bu/acre | 184 bu/acre     | +2 bu             |
+| Seed cost                        | $70/acre    | $68/acre        | $2,000 savings    |
+| N cost                           | $126/acre   | $113/acre       | $13,000 savings   |
+| Technology cost                  | $0          | $6.50/acre      | -$6,500 cost      |
+| Grain value                      | $819/acre   | $828/acre       | $9,000 revenue    |
+| **Net return per acre**          | $623        | $642            | **+$19/acre**     |
+| **Total farm profit**            | $623,000    | $642,000        | **+$19,000/year** |
+| Carbon credit value              | $0          | $20-40/acre     | $20,000-40,000    |
+| **Total value including carbon** | $623,000    | $682,000-82,000 | **+$59,000/year** |
 
 <details>
 <summary><strong>💬 Speaker Notes - Combined Impact</strong></summary>
@@ -980,9 +983,9 @@ A: "Possible but not recommended. Pick one you can stick with."
 
 ### Key Research Papers (Speaker Reference)
 
-- **Bongiovanni, R., & Lowenberg-DeBoer, J. (2004).** Precision Agriculture and Sustainability. _Precision Agriculture_, 5(4), 359-387. https://doi.org/10.1023/B:PRAG.0000040806.39604.aa
+- **Bongiovanni, R., & Lowenberg-DeBoer, J. (2004).** Precision Agriculture and Sustainability. _Precision Agriculture_, 5(4), 359-387. <https://doi.org/10.1023/B:PRAG.0000040806.39604.aa>
 
-- **McNunn, G., Heaton, E., Archontoulis, S., Licht, M., & VanLoocke, A. (2019).** Using a crop modeling framework for precision cost-benefit analysis of variable seeding and nitrogen application rates. _Frontiers in Sustainable Food Systems_, 3, 108. https://doi.org/10.3389/fsufs.2019.00108
+- **McNunn, G., Heaton, E., Archontoulis, S., Licht, M., & VanLoocke, A. (2019).** Using a crop modeling framework for precision cost-benefit analysis of variable seeding and nitrogen application rates. _Frontiers in Sustainable Food Systems_, 3, 108. <https://doi.org/10.3389/fsufs.2019.00108>
 
 <details>
 <summary><strong>💬 Speaker Notes</strong></summary>
