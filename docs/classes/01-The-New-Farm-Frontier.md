@@ -418,27 +418,27 @@ graph TB
     subgraph "🌍 **Global Scale**"
         A[**Free Satellite Data**<br/>Landsat, Sentinel-2, MODIS<br/>128+ petabytes archived]
     end
-    
+
     subgraph "🏢 **Commercial Users**"
         B[**Commodity Traders**<br/>Yield forecasts<br/>3-6 week lead time]
         C[**Insurance Companies**<br/>Automated claims<br/>Parametric products]
     end
-    
+
     subgraph "👨‍🌾 **Farmer Access**"
         D[**U.S. Farmer**<br/>30-40% adoption<br/>Direct satellite access]
         E[**Smallholder Farmer**<br/>5% access<br/>Infrastructure barriers]
     end
-    
+
     A --> B
     A --> C
     A --> D
     A -.Multiple Barriers.-> E
-    
+
     classDef global fill:#e3f2fd,stroke:#1976d2,stroke-width:3px
     classDef commercial fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
     classDef farmer fill:#e8f5e9,stroke:#388e3c,stroke-width:2px
     classDef barrier fill:#ffebee,stroke:#c62828,stroke-width:2px
-    
+
     class A global
     class B,C commercial
     class D farmer
@@ -454,12 +454,12 @@ graph TB
 
 **The Digital Divide:**
 
-| Access Metric                    | U.S. Farmers | Sub-Saharan Africa Smallholders | Gap    |
-| -------------------------------- | ------------ | ------------------------------- | ------ |
-| Smartphone ownership             | 85%+         | 30-50%                          | **40%pts**  |
-| Satellite data adoption          | 30-40%       | <5%                             | **30%pts**  |
-| Mobile data cost (% of income)   | 1-2%         | 5-15%                           | **8x higher** |
-| Agricultural extension access    | High         | 1:1000-5000 agent:farmer ratio  | **10-50x worse** |
+| Access Metric                  | U.S. Farmers | Sub-Saharan Africa Smallholders | Gap              |
+| ------------------------------ | ------------ | ------------------------------- | ---------------- |
+| Smartphone ownership           | 85%+         | 30-50%                          | **40%pts**       |
+| Satellite data adoption        | 30-40%       | <5%                             | **30%pts**       |
+| Mobile data cost (% of income) | 1-2%         | 5-15%                           | **8x higher**    |
+| Agricultural extension access  | High         | 1:1000-5000 agent:farmer ratio  | **10-50x worse** |
 
 **Speaker Note Detail:** This case study shifts focus from technical precision ag to examining how the same "public" data infrastructure creates vastly different outcomes for different farmers globally.
 
@@ -475,16 +475,19 @@ graph TB
 ### The Three Scales (2 minutes)
 
 **Global:**
+
 - "NASA Harvest: 40+ countries, petabytes of data"
 - "GEOGLAM Crop Monitor: monthly global crop assessments"
 - "FEWS NET: famine early warning for 40 countries"
 
 **Commercial:**
+
 - "Trading firms use satellite data for yield forecasts weeks before USDA reports"
 - "Insurance companies automate claims with satellite vegetation indices"
 - "$200-300M market for satellite analytics services"
 
 **Local (the gap):**
+
 - "U.S. farmer: checks satellite alerts on smartphone over morning coffee"
 - "Ugandan smallholder: heard about 'the satellite that tells when rain comes' but can't access it"
 - "Same satellites, completely different farmer experiences"
@@ -507,12 +510,12 @@ graph TB
 
 Four key satellites provide different agricultural capabilities:
 
-| Satellite      | Resolution | Revisit Time | Key Agriculture Use              |
-| -------------- | ---------- | ------------ | -------------------------------- |
+| Satellite          | Resolution | Revisit Time | Key Agriculture Use                            |
+| ------------------ | ---------- | ------------ | ---------------------------------------------- |
 | **Landsat 8/9**    | 30 meters  | 16 days      | Field-level mapping, 50-year historical record |
-| **Sentinel-2 A/B** | 10 meters  | 5 days       | Active crop monitoring, frequent updates |
-| **MODIS**          | 250-500m   | 1-2 days     | Regional yield forecasting, daily coverage |
-| **SMAP**           | 9-36 km    | 2-3 days     | Soil moisture, irrigation planning |
+| **Sentinel-2 A/B** | 10 meters  | 5 days       | Active crop monitoring, frequent updates       |
+| **MODIS**          | 250-500m   | 1-2 days     | Regional yield forecasting, daily coverage     |
+| **SMAP**           | 9-36 km    | 2-3 days     | Soil moisture, irrigation planning             |
 
 **The Data Flow:**
 
@@ -521,41 +524,41 @@ flowchart LR
     subgraph Space["🛰️ **Space**"]
         S1[**Satellites**<br/>Continuous imaging]
     end
-    
+
     subgraph Processing["☁️ **NASA Processing**"]
         P1[**Atmospheric<br/>Correction**]
         P2[**Index Calculation**<br/>NDVI, EVI, NDWI]
     end
-    
+
     subgraph Products["📊 **Products**"]
         PR1[**Crop Type Maps**]
         PR2[**Yield Forecasts**]
         PR3[**Drought Indices**]
     end
-    
+
     subgraph Users["👥 **Users**"]
         U1[**Governments**<br/>USDA, FAO]
         U2[**Commercial**<br/>Traders, Insurers]
         U3[**NGOs**<br/>FEWS NET, WFP]
         U4[**Farmers**<br/>via intermediaries]
     end
-    
+
     S1 --> P1
     P1 --> P2
     P2 --> PR1
     P2 --> PR2
     P2 --> PR3
-    
+
     PR1 --> U1
     PR2 --> U2
     PR3 --> U3
     PR1 -.Limited Access.-> U4
-    
+
     classDef space fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
     classDef process fill:#fff3e0,stroke:#f57c00,stroke-width:2px
     classDef product fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
     classDef user fill:#e8f5e9,stroke:#388e3c,stroke-width:2px
-    
+
     class S1 space
     class P1,P2 process
     class PR1,PR2,PR3 product
@@ -640,19 +643,19 @@ graph LR
         A[**NASA Satellites**<br/>Billions in public funds]
         B[**Free Data Distribution**<br/>No access fees]
     end
-    
+
     subgraph Private["**Private Value Capture**"]
         C[**Processing Infrastructure**<br/>Cloud computing<br/>Storage<br/>Bandwidth]
         D[**Analytical Models**<br/>Machine learning<br/>Crop models<br/>Forecasting]
         E[**Domain Expertise**<br/>Agronomists<br/>Data scientists<br/>Software engineers]
     end
-    
+
     subgraph Revenue["**Revenue Streams**"]
         F[**Subscriptions**<br/>$200-300M market]
         G[**Platform Fees**<br/>API access charges]
         H[**Consulting Services**<br/>Custom analytics]
     end
-    
+
     A --> B
     B --> C
     C --> D
@@ -660,11 +663,11 @@ graph LR
     E --> F
     E --> G
     E --> H
-    
+
     classDef public fill:#e8f5e9,stroke:#388e3c,stroke-width:3px
     classDef private fill:#fff3e0,stroke:#f57c00,stroke-width:2px
     classDef revenue fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
-    
+
     class A,B public
     class C,D,E private
     class F,G,H revenue
@@ -734,7 +737,7 @@ graph TD
     subgraph Satellite["**Satellite Data Available**"]
         A[**Free Public Data**<br/>Landsat, Sentinel-2<br/>Global coverage]
     end
-    
+
     subgraph Barriers["**Infrastructure Barriers**"]
         B1[**Smartphone Access**<br/>30-50% penetration]
         B2[**Internet Data**<br/>$1-2/month<br/>5-15% of income]
@@ -742,29 +745,29 @@ graph TD
         B4[**Digital Literacy**<br/>Map reading skills]
         B5[**Extension Services**<br/>1:1000+ farmer ratio]
     end
-    
+
     subgraph Outcome["**Farmer Outcome**"]
         C1[**U.S. Farmer**<br/>Direct access<br/>30-40% adoption]
         C2[**Smallholder Farmer**<br/>No access<br/>5% adoption]
     end
-    
+
     A -.Easy Path.-> C1
     A --> B1
     A --> B2
     A --> B3
     A --> B4
     A --> B5
-    
+
     B1 -.Blocks.-> C2
     B2 -.Blocks.-> C2
     B3 -.Blocks.-> C2
     B4 -.Blocks.-> C2
     B5 -.Blocks.-> C2
-    
+
     classDef satellite fill:#e3f2fd,stroke:#1976d2,stroke-width:3px
     classDef barrier fill:#ffebee,stroke:#c62828,stroke-width:2px
     classDef outcome fill:#fff3e0,stroke:#f57c00,stroke-width:2px
-    
+
     class A satellite
     class B1,B2,B3,B4,B5 barrier
     class C1,C2 outcome
@@ -789,12 +792,14 @@ graph TD
 ### The Two Realities (2 minutes)
 
 **U.S. Farmer:**
+
 - "Checks satellite crop stress alerts on smartphone"
 - "Software costs $3,000/year but makes economic sense at 800 hectares"
 - "Satellite data just one tool among many"
 - "Never directly downloads a Sentinel-2 image - service handles everything"
 
 **Ugandan Smallholder:**
+
 - "Operates 2 hectares - same size as my backyard"
 - "Has basic phone, not smartphone (30-50% smartphone penetration)"
 - "If she had smartphone, $2/month data plan = 5-15% of income"
@@ -831,14 +836,14 @@ When data is technically free but practically inaccessible, we must ask:
 
 **Stakeholder Benefit Analysis:**
 
-| Stakeholder                  | Access Level | Economic Benefit         | Why?                                   |
-| ---------------------------- | ------------ | ------------------------ | -------------------------------------- |
-| **U.S./European Governments**    | ✅ Direct     | High (policy decisions)  | Full processing capability, expertise  |
-| **Commercial Companies**         | ✅ Direct     | $200-300M annual revenue | Monetize public data                   |
-| **Large-Scale Farmers**          | ✅ Via services | Strong ROI (~$10-20/ha) | Affordable subscriptions, infrastructure |
-| **Developing Country Govts**     | ⚠️ Partial    | Medium (limited capacity) | Data access, limited processing        |
-| **NGOs & Extension**             | ⚠️ Partial    | Medium (intermediary role) | Funding dependent, scaling challenges  |
-| **Smallholder Farmers**          | ❌ Minimal    | Very low (<5% access)    | Infrastructure barriers, cost prohibitive |
+| Stakeholder                   | Access Level    | Economic Benefit           | Why?                                      |
+| ----------------------------- | --------------- | -------------------------- | ----------------------------------------- |
+| **U.S./European Governments** | ✅ Direct       | High (policy decisions)    | Full processing capability, expertise     |
+| **Commercial Companies**      | ✅ Direct       | $200-300M annual revenue   | Monetize public data                      |
+| **Large-Scale Farmers**       | ✅ Via services | Strong ROI (~$10-20/ha)    | Affordable subscriptions, infrastructure  |
+| **Developing Country Govts**  | ⚠️ Partial      | Medium (limited capacity)  | Data access, limited processing           |
+| **NGOs & Extension**          | ⚠️ Partial      | Medium (intermediary role) | Funding dependent, scaling challenges     |
+| **Smallholder Farmers**       | ❌ Minimal      | Very low (<5% access)      | Infrastructure barriers, cost prohibitive |
 
 **Multiple Perspectives:**
 
@@ -921,34 +926,34 @@ graph TB
     subgraph Equipment["🚜 **Connected Equipment**"]
         A[**Tractor/Combine**<br/>GPS, sensors<br/>yield monitors]
     end
-    
+
     subgraph Network["📡 **JDLink Network**"]
         B[**Cellular Modem**<br/>Real-time transmission<br/>Automatic upload]
     end
-    
+
     subgraph Platform["☁️ **Operations Center**"]
         C[**Free Tier**<br/>Data storage<br/>Basic visualization]
         D[**PRO Service**<br/>Remote diagnostics<br/>Advanced analytics<br/>💰 $2-5K/year]
     end
-    
+
     subgraph Farmer["👨‍🌾 **Farmer Experience**"]
         E[**Daily Use**<br/>Field planning<br/>Progress monitoring]
         F[**Dependencies**<br/>Historical data trapped<br/>Repair restrictions<br/>Platform lock-in]
     end
-    
+
     A --> B
     B --> C
     B --> D
     C --> E
     D --> E
     E --> F
-    
+
     classDef equipment fill:#e8f5e9,stroke:#388e3c,stroke-width:3px
     classDef network fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
     classDef platform fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
     classDef farmer fill:#fff3e0,stroke:#f57c00,stroke-width:2px
     classDef tension fill:#ffebee,stroke:#c62828,stroke-width:3px
-    
+
     class A equipment
     class B network
     class C,D platform
@@ -966,10 +971,10 @@ graph TB
 
 **The Business Model Evolution:**
 
-| Traditional Model (pre-2010)                         | Technology Platform Model (2015-present)                   |
-| ---------------------------------------------------- | ---------------------------------------------------------- |
-| Revenue: Equipment sales + parts + service           | Revenue: Equipment + parts + service + **subscriptions + data** |
-| Customer relationship: Transactional (ends after sale) | Customer relationship: Ongoing (yearly subscription renewal) |
+| Traditional Model (pre-2010)                               | Technology Platform Model (2015-present)                          |
+| ---------------------------------------------------------- | ----------------------------------------------------------------- |
+| Revenue: Equipment sales + parts + service                 | Revenue: Equipment + parts + service + **subscriptions + data**   |
+| Customer relationship: Transactional (ends after sale)     | Customer relationship: Ongoing (yearly subscription renewal)      |
 | Competitive advantage: Product performance, dealer network | Competitive advantage: Product + network + **platform ecosystem** |
 
 **Speaker Note Detail:** This case study examines data ownership and farmer agency. Unlike NASA Harvest (public data, access barriers), here farmers generate the data through their own farming operations - but don't fully control it.
@@ -1062,16 +1067,19 @@ graph TB
 ### Walk Through Workflow (3 minutes)
 
 **Spring:**
+
 - "Reviews last year's performance → generates prescriptions"
 - "PRO Service recommendation algorithm: 8 years her data + anonymous 'similar farms'"
 - "Sends plans wirelessly to equipment - no paper maps, no manual entry"
 - "Monitors in real-time from office"
 
 **Summer:**
+
 - "Check dashboard over morning coffee"
 - "Satellite alerts → field visit → create prescription → automatic execution"
 
 **Fall:**
+
 - "Real-time yield data helps marketing decisions"
 - "End-of-season: Which fields made money? Which lost money?"
 
@@ -1115,13 +1123,13 @@ But what does "ownership" mean when:
 
 **Legal Ownership vs. Practical Control:**
 
-| Aspect                     | Deere's Position                                   | Farmer Reality                                |
-| -------------------------- | -------------------------------------------------- | --------------------------------------------- |
-| **Data access**                | "Farmers control who can view data"                | Must use Deere's platform - no direct equipment access |
-| **Data export**                | "Farmers can export their data"                    | Export formats are clunky, historical context lost |
-| **Third-party use**            | "Farmers authorize third-party access"             | But Deere controls API terms and can restrict access |
-| **Aggregate data use**         | "We use anonymized data to improve products"       | Farmers contribute data but aren't compensated |
-| **Equipment diagnostic data**  | Deere owns machine telemetry (engine, maintenance) | Farmers need this to repair equipment they own |
+| Aspect                        | Deere's Position                                   | Farmer Reality                                         |
+| ----------------------------- | -------------------------------------------------- | ------------------------------------------------------ |
+| **Data access**               | "Farmers control who can view data"                | Must use Deere's platform - no direct equipment access |
+| **Data export**               | "Farmers can export their data"                    | Export formats are clunky, historical context lost     |
+| **Third-party use**           | "Farmers authorize third-party access"             | But Deere controls API terms and can restrict access   |
+| **Aggregate data use**        | "We use anonymized data to improve products"       | Farmers contribute data but aren't compensated         |
+| **Equipment diagnostic data** | Deere owns machine telemetry (engine, maintenance) | Farmers need this to repair equipment they own         |
 
 **Deere's Retained Rights (from Terms of Service):**
 
@@ -1147,25 +1155,25 @@ graph TD
     subgraph Source["📊 **Data Source**"]
         A[**Farm Operations**<br/>Farmer decisions<br/>+ Equipment capture<br/>= Combined dataset]
     end
-    
+
     subgraph Deere["🏢 **Deere Value Extraction**"]
         B[**Machine Learning**<br/>Train models on<br/>millions of fields]
         C[**Product Development**<br/>Design better<br/>equipment/software]
         D[**Platform Lock-in**<br/>Switching costs<br/>drive equipment sales]
     end
-    
+
     subgraph Revenue["💰 **Revenue Streams**"]
         E[**Subscriptions**<br/>$1.5B+ technology<br/>revenue annually]
         F[**Equipment Sales**<br/>Data platform drives<br/>equipment preference]
         G[**API Fees**<br/>Third-party<br/>access charges]
     end
-    
+
     subgraph Farmer["👨‍🌾 **Farmer Value**"]
         H[**Better Decisions**<br/>Data-informed<br/>management]
         I[**Time Savings**<br/>Automated<br/>recordkeeping]
         J[**No Compensation**<br/>Contribute data<br/>but not paid]
     end
-    
+
     A --> B
     A --> C
     A --> D
@@ -1173,16 +1181,16 @@ graph TD
     C --> F
     D --> F
     B --> G
-    
+
     A -.Free Use.-> H
     A -.Free Use.-> I
     A -.No Payment.-> J
-    
+
     classDef source fill:#e8f5e9,stroke:#388e3c,stroke-width:3px
     classDef deere fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
     classDef revenue fill:#fff3e0,stroke:#f57c00,stroke-width:3px
     classDef farmer fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
-    
+
     class A source
     class B,C,D deere
     class E,F,G revenue
@@ -1254,11 +1262,13 @@ graph TD
 Deere is a $50+ billion corporation. Individual farmers are price-takers who must accept offered terms.
 
 **Farmer bargaining power:**
+
 - Can choose competitors (Case IH, AGCO, Claas) - but they have similar data practices
 - Can collectively organize (Farm Bureau, Farmers Union) - but limited policy success
 - Can refuse to adopt technology - but lose competitive advantage
 
 **Deere bargaining power:**
+
 - Controls access to equipment farmers depend on for livelihood
 - Can modify terms of service unilaterally (farmers must accept or lose access)
 - Leverages switching costs (historical data, workflow integration) for customer retention
@@ -1266,13 +1276,13 @@ Deere is a $50+ billion corporation. Individual farmers are price-takers who mus
 
 **Potential Policy Solutions:**
 
-| Approach                        | Description                                              | Status                          |
-| ------------------------------- | -------------------------------------------------------- | ------------------------------- |
-| **Data portability requirements**   | Mandate easy export in standard formats                  | Discussed but not implemented   |
-| **Aggregate data compensation**     | Pay farmers royalties when using their data commercially | Proposed in some farm organizations |
-| **Farmer data cooperatives**        | Enable collective negotiation of data terms              | Emerging (limited scale)        |
-| **Right-to-repair legislation**     | Require manufacturers provide diagnostic access          | 20+ states considering, few passed |
-| **Open data standards**             | Industry-wide standards like ISOBUS                      | ISOBUS exists but limited scope |
+| Approach                          | Description                                              | Status                              |
+| --------------------------------- | -------------------------------------------------------- | ----------------------------------- |
+| **Data portability requirements** | Mandate easy export in standard formats                  | Discussed but not implemented       |
+| **Aggregate data compensation**   | Pay farmers royalties when using their data commercially | Proposed in some farm organizations |
+| **Farmer data cooperatives**      | Enable collective negotiation of data terms              | Emerging (limited scale)            |
+| **Right-to-repair legislation**   | Require manufacturers provide diagnostic access          | 20+ states considering, few passed  |
+| **Open data standards**           | Industry-wide standards like ISOBUS                      | ISOBUS exists but limited scope     |
 
 <details>
 <summary><strong>💬 Speaker Notes - Perspectives & Power</strong></summary>
@@ -1295,15 +1305,19 @@ Deere is a $50+ billion corporation. Individual farmers are price-takers who mus
 ### What Could Change This? (2 minutes)
 
 **Data portability:**
+
 - "Reduce switching costs → increase farmer bargaining power"
 
 **Aggregate data compensation:**
+
 - "If Deere profits from farmer data → farmers get royalty"
 
 **Farmer cooperatives:**
+
 - "10,000 farmers collectively negotiate better terms"
 
 **Right-to-repair:**
+
 - "Farmers and independent shops get diagnostic access"
 
 ### Discussion
@@ -1336,6 +1350,7 @@ This case study integrates with multiple course modules:
 **Key Takeaways:**
 
 **1. Data ownership is multifaceted:**
+
 - Legal ownership (who has legal title to data)
 - Practical control (who can actually access and use data)
 - Economic benefit (who captures value from data)
@@ -1343,33 +1358,37 @@ This case study integrates with multiple course modules:
 These three aspects can diverge significantly.
 
 **2. Platform lock-in is cumulative:**
+
 - Year 1: Easy to leave
 - Years 2-3: Some switching costs
 - Years 6+: Practically impossible without major disruption
 
 **3. Business model shifts risk:**
+
 - Traditional: One-time equipment purchase → farmer owns
 - Modern: Equipment purchase + ongoing subscriptions → features become services
 
 **4. Power asymmetries shape outcomes:**
+
 - Individual farmers have limited bargaining power
 - Collective action or regulatory intervention may be necessary for balance
 
 **5. No simple answers:**
+
 - Aggregate data does create legitimate value
 - Platform infrastructure does require investment
 - But current arrangements may tip too far toward manufacturer control
 
 **Comparison: NASA Harvest vs. John Deere**
 
-| Dimension           | NASA Harvest                      | John Deere Operations Center         |
-| ------------------- | --------------------------------- | ------------------------------------ |
-| **Data source**         | Government satellites (public)    | Farmer equipment operations (private) |
-| **Core tension**        | Access inequality despite "free" data | Ownership ambiguity despite farmer-generated data |
-| **Primary barrier**     | Infrastructure & economic access  | Platform control & switching costs   |
-| **Who benefits most**   | Governments & commercial companies | Manufacturer & large-scale farmers   |
-| **Policy question**     | How to bridge last-mile gap?      | How to ensure farmer data rights?    |
-| **Your role**           | Consider access when building systems | Consider ownership when designing platforms |
+| Dimension             | NASA Harvest                          | John Deere Operations Center                      |
+| --------------------- | ------------------------------------- | ------------------------------------------------- |
+| **Data source**       | Government satellites (public)        | Farmer equipment operations (private)             |
+| **Core tension**      | Access inequality despite "free" data | Ownership ambiguity despite farmer-generated data |
+| **Primary barrier**   | Infrastructure & economic access      | Platform control & switching costs                |
+| **Who benefits most** | Governments & commercial companies    | Manufacturer & large-scale farmers                |
+| **Policy question**   | How to bridge last-mile gap?          | How to ensure farmer data rights?                 |
+| **Your role**         | Consider access when building systems | Consider ownership when designing platforms       |
 
 **Discussion Questions for Both Case Studies:**
 
@@ -1380,6 +1399,7 @@ These three aspects can diverge significantly.
 5. As a data systems developer, what principles should guide your design choices?
 
 **Full case studies:**
+
 - NASA Harvest: `docs/classes/01.03-case-study-nasa-harvest.md` (14,000 words)
 - John Deere: `docs/classes/01.04-case-study-john-deere.md` (15,000 words)
 
@@ -1398,6 +1418,7 @@ Each includes comprehensive analysis, technical appendices with code examples, a
 ### Key Principles (2 minutes)
 
 **For both cases:**
+
 - "Data infrastructure is not neutral"
 - "Legal rights don't ensure practical control"
 - "Economic value often concentrates with intermediaries"
