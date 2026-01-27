@@ -1,6 +1,6 @@
 # 01 - The New Farm Frontier: Inside the Agricultural Data Revolution
 
-_Agricultural Data Analytics Course | Spring 2026_
+_Agricultural Data Systems_
 
 ---
 
@@ -9,9 +9,7 @@ _Agricultural Data Analytics Course | Spring 2026_
 - **Use the "Q&A" feature** in Zoom for questions
 - Keep your **camera on** during class if possible
 - Please **mute yourself** to avoid interruptions
-- Use **"Raise hand"** feature when you want to speak
-- Don't forget to **lower your hand** once finished
-- Ensure Zoom is updated to the latest version
+- Use the **"Raise hand"** feature when you want to speak (and lower it when finished)
 
 <details>
 <summary><strong>💬 Speaker Notes</strong></summary>
@@ -220,6 +218,8 @@ After this class, you'll be able to:
 **Reality:** "Age matters less than crop type and profitability. Corn/soy farmers of all ages adopted quickly."
 
 </details>
+
+---
 
 ### Key Data Types in Modern Farming
 
@@ -451,6 +451,8 @@ For each data type:
 
 </details>
 
+---
+
 ### Real-World Applications & Case Studies
 
 #### Case Study 1: Yield Optimization in Iowa Corn 🌽
@@ -650,6 +652,8 @@ For each data type:
 (Answer: Cost, environmental impact, fungicide resistance risk)
 
 </details>
+
+---
 
 ### Industry Trends & Challenges
 
@@ -940,5 +944,3 @@ A: "Possible but not recommended. Pick one you can stick with."
 </details>
 
 ---
-
-_Last Updated: January 26, 2026_

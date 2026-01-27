@@ -1,121 +1,248 @@
-# Geospatial Analysis with Python + Workshop & Demo (Class 06)
+# 06 - Geospatial Analysis with Python + Workshop and Demo
 
-> Agricultural Data Analytics Course  
-> Instructor: Clayton Young
-
----
-
-## Slide 1 – Title Slide
-
-- **Course**: Agricultural Data Analytics Course
-- **Class**: 06 – Geospatial Analysis with Python + Workshop & Demo
-- **Instructor**: Clayton Young
+_Agricultural Data Systems_
 
 ---
 
-## Slide 2 – Housekeeping
+## 🏠 Housekeeping
 
-- **Use the "Q&A" feature** in Zoom if you want to ask a question.
-- Ensure Zoom is updated to the latest version to use all features.
-- Keep your **camera on** during class if possible.
-- Please **mute yourself** so you don't accidentally interrupt the instructor.
-- Use the **"Raise hand"** feature in Zoom when you want to ask a question.
-- Don't forget to **lower your hand** once finished.
+- **Use the "Q&A" feature** in Zoom for questions
+- Keep your **camera on** during class if possible
+- Please **mute yourself** to avoid interruptions
+- Use the **"Raise hand"** feature when you want to speak (and lower it when finished)
 
----
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
 
-## Slide 3 – Syllabus Review
+- Confirm students can open sample geospatial files
+- Remind students to keep outputs in a dedicated geospatial folder
 
-> High-level view of where this class fits in the overall course.
-
-| Class | Title                                                                           |
-| ----- | ------------------------------------------------------------------------------- |
-| 01    | The New Farm Frontier: Inside the Agricultural Data Revolution                  |
-| 02    | Gearing Up: Building Your Smart Farm Workspace + Demo                           |
-| 03    | Navigating the US Agricultural Data Landscape + Workshop                        |
-| 04    | Clean Fields, Clean Data + Demo                                                 |
-| 05    | Exploratory Data Analysis: Finding Farm Insights + Demo                         |
-| 06    | Geospatial Analysis with Python + Workshop & Demo                               |
-| 07    | Watching from Above: Satellite & Drone Intelligence + Workshop & Demo           |
-| 08    | Weather Patterns & Climate Data Analysis                                        |
-| 09    | Advanced Spatial Integration & Transformations + Workshop                       |
-| 10    | US Precision Agriculture Systems & Real Farm Data                               |
-| 11    | Soil Health & Sustainability Metrics + Workshop                                 |
-| 12    | From Data to Decisions: Building Dashboards that Tell a Story + Workshop & Demo |
-| 13    | Ethics, Ownership & the Politics of US Farm Data + Guest Speaker                |
-| 14    | The Future Farm: Trends, Careers & Final Reflections                            |
+</details>
 
 ---
 
-## Slide 4 – Class Agenda
+## 📋 Syllabus Review
 
-1. **GeoDataFrames & spatial data structures**
-2. **Shapefiles, geometries, & coordinate systems**
-3. **Reprojection & coordinate transformations**
-4. **Mapping & spatial visualization**
-5. **Workshop: Field boundary analysis**
-6. **Demo: Mapping US row crop fields**
+Last class we explored datasets and surfaced patterns through EDA. Today we add spatial analysis in Python to map and interpret field-level data.
 
----
+_This connects to Class 07 next week, where we work with satellite and drone imagery._
 
-## Slide 5 – GeoDataFrames & Spatial Data Structures
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
 
-> **Section Overview**: Introduction to GeoPandas and spatial data organization.
+- Reinforce that most agricultural insights have a spatial dimension
+- Note that CRS errors are common and worth double-checking
 
-- _Content to be developed._
+</details>
 
 ---
 
-## Slide 6 – Shapefiles, Geometries, & Coordinate Systems
+## 📍 Agenda
 
-> **Section Overview**: Understanding geometry types (points, lines, polygons) and coordinate reference systems (CRS).
+- [x] Housekeeping
+- [ ] Syllabus review
+- [ ] GeoDataFrames and spatial data structures
+- [ ] Shapefiles, geometries, and coordinate systems
+- [ ] Reprojection and coordinate transformations
+- [ ] Mapping and spatial visualization
+- [ ] Workshop: Field boundary analysis
+- [ ] Demo: Mapping US row crop fields
 
-- _Content to be developed._
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
 
----
+- Emphasize the workshop as the key hands-on component
+- If time is short, compress the visualization section
 
-## Slide 7 – Reprojection & Coordinate Transformations
-
-> **Section Overview**: Converting between CRS and transforming spatial data.
-
-- _Content to be developed._
-
----
-
-## Slide 8 – Mapping & Spatial Visualization
-
-> **Section Overview**: Creating interactive and static maps using Folium, Matplotlib, and other libraries.
-
-- _Content to be developed._
+</details>
 
 ---
 
-## Slide 9 – Workshop: Field Boundary Analysis
+## 🎯 Learning Outcomes
 
-> **Hands-on Workshop**: Students work with farm field boundaries and perform spatial queries.
+After this class, you'll be able to:
 
-- _Instructor-facilitated workshop._
+- **Create** GeoDataFrames and inspect spatial datasets
+- **Explain** coordinate reference systems and why they matter
+- **Reproject** data to align spatial layers accurately
+- **Visualize** geospatial data for agricultural insights
+- **Perform** basic spatial analysis on field boundaries
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Ask students to share one spatial question they want to answer
+- Tie outcomes to the assignment map deliverable
+
+</details>
 
 ---
 
-## Slide 10 – Demo: Mapping US Row Crop Fields
+## 📚 Content
 
-> **Live Demo**: Visualizing USDA field data and performing spatial operations.
+### GeoDataFrames and Spatial Data Structures
 
-- _Instructor-led demo with interactive mapping._
+We introduce GeoPandas and the data structures used to store spatial features.
+
+Key points:
+
+- Geometry columns and attribute tables
+- Vector features: points, lines, polygons
+- Common file inputs and outputs
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Show a quick `gdf.head()` and plot example
+- Emphasize the link between geometry and attributes
+
+</details>
 
 ---
 
-## Assignment (Class 06)
+### Shapefiles, Geometries, and Coordinate Systems
 
-**Title**: Geospatial Field Analysis  
-**Due Date**: _TBD_  
-**Points**: _xx_
+We review file formats and how coordinate systems define location and scale.
 
-**Description**:
+Key points:
 
-- Load and visualize field boundaries for your region.
-- Perform spatial joins with weather and soil data.
-- Create maps highlighting key spatial patterns.
+- Shapefile components and alternatives
+- CRS basics and EPSG codes
+- Consequences of mismatched CRS
 
-**Dashboard Element**: _TBD_
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Use a quick CRS mismatch example to show misalignment
+- Encourage students to record CRS in their notes
+
+</details>
+
+---
+
+### Reprojection and Coordinate Transformations
+
+We convert datasets to compatible CRS for analysis and mapping.
+
+Key points:
+
+- When to reproject and why
+- Choosing projections by region and purpose
+- Verifying results after transformation
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Demonstrate a simple `to_crs` step
+- Remind students to document original CRS
+
+</details>
+
+---
+
+### Mapping and Spatial Visualization
+
+We create maps that highlight spatial patterns in agricultural data.
+
+Key points:
+
+- Static vs interactive map options
+- Color scales and readability
+- Annotating maps for clarity
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Show a map with a clear legend and units
+- Discuss how color choices affect interpretation
+
+</details>
+
+---
+
+### Workshop: Field Boundary Analysis
+
+Students work with field boundary data and perform spatial queries.
+
+Key points:
+
+- Load boundaries and intersect with other layers
+- Calculate area and basic metrics
+- Save outputs for downstream use
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Encourage students to ask for help early if stuck
+- Reinforce that errors are common in geospatial work
+
+</details>
+
+---
+
+### Demo: Mapping US Row Crop Fields
+
+We demonstrate a complete map workflow from raw boundaries to visualization.
+
+Key points:
+
+- Data loading, CRS checks, and plotting
+- Adding contextual layers such as counties or states
+- Exporting map visuals for reports
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Narrate each step and highlight best practices
+- Encourage students to reuse the demo as a template
+
+</details>
+
+---
+
+## ✍️ Assignment
+
+### Task: Geospatial Field Analysis
+
+**Objective:** Analyze field boundaries and produce a map-based summary.
+
+**Instructions:**
+1. Load and visualize field boundaries for your region.
+2. Join boundaries with weather or soil data for context.
+3. Create a map highlighting key spatial patterns.
+
+**What to submit:** A notebook or report with maps, code, and interpretation notes.
+
+**Due:** TBD
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Encourage clear map titles, legends, and captions
+- Remind students to document CRS choices
+
+</details>
+
+---
+
+## 🔗 Resources & References
+
+### Official Sources
+
+- [USGS National Map](https://www.usgs.gov/programs/national-geospatial-program/national-map) - Base layers and boundaries
+
+### Tools
+
+- [GeoPandas](https://geopandas.org/) - Python geospatial library
+- [Shapely](https://shapely.readthedocs.io/) - Geometry operations
+- [QGIS](https://qgis.org/) - Desktop GIS for validation
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Recommend QGIS for troubleshooting spatial issues
+- Point students to GeoPandas docs for examples
+
+</details>
+
+---

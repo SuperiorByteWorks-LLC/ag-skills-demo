@@ -1,121 +1,252 @@
-# Clean Fields, Clean Data + Demo (Class 04)
+# 04 - Clean Fields, Clean Data + Demo
 
-> Agricultural Data Analytics Course  
-> Instructor: Clayton Young
-
----
-
-## Slide 1 – Title Slide
-
-- **Course**: Agricultural Data Analytics Course
-- **Class**: 04 – Clean Fields, Clean Data + Demo
-- **Instructor**: Clayton Young
+_Agricultural Data Systems_
 
 ---
 
-## Slide 2 – Housekeeping
+## 🏠 Housekeeping
 
-- **Use the "Q&A" feature** in Zoom if you want to ask a question.
-- Ensure Zoom is updated to the latest version to use all features.
-- Keep your **camera on** during class if possible.
-- Please **mute yourself** so you don't accidentally interrupt the instructor.
-- Use the **"Raise hand"** feature in Zoom when you want to ask a question.
-- Don't forget to **lower your hand** once finished.
+- **Use the "Q&A" feature** in Zoom for questions
+- Keep your **camera on** during class if possible
+- Please **mute yourself** to avoid interruptions
+- Use the **"Raise hand"** feature when you want to speak (and lower it when finished)
 
----
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
 
-## Slide 3 – Syllabus Review
+- Confirm students have a sample dataset downloaded from Class 03
+- Remind them to save scripts for reuse in later assignments
 
-> High-level view of where this class fits in the overall course.
-
-| Class | Title                                                                           |
-| ----- | ------------------------------------------------------------------------------- |
-| 01    | The New Farm Frontier: Inside the Agricultural Data Revolution                  |
-| 02    | Gearing Up: Building Your Smart Farm Workspace + Demo                           |
-| 03    | Navigating the US Agricultural Data Landscape + Workshop                        |
-| 04    | Clean Fields, Clean Data + Demo                                                 |
-| 05    | Exploratory Data Analysis: Finding Farm Insights + Demo                         |
-| 06    | Geospatial Analysis with Python + Workshop & Demo                               |
-| 07    | Watching from Above: Satellite & Drone Intelligence + Workshop & Demo           |
-| 08    | Weather Patterns & Climate Data Analysis                                        |
-| 09    | Advanced Spatial Integration & Transformations + Workshop                       |
-| 10    | US Precision Agriculture Systems & Real Farm Data                               |
-| 11    | Soil Health & Sustainability Metrics + Workshop                                 |
-| 12    | From Data to Decisions: Building Dashboards that Tell a Story + Workshop & Demo |
-| 13    | Ethics, Ownership & the Politics of US Farm Data + Guest Speaker                |
-| 14    | The Future Farm: Trends, Careers & Final Reflections                            |
+</details>
 
 ---
 
-## Slide 4 – Class Agenda
+## 📋 Syllabus Review
 
-1. **Data wrangling fundamentals**
-2. **Intro to SQL**
-3. **Merging & joining datasets**
-4. **USDA & weather data integration**
-5. **AI assistants for data cleaning**
-6. **Demo: Python & SQL cleaning workflow**
+Last class we mapped the data landscape and pulled sample datasets. Today we focus on cleaning, validating, and integrating those datasets for analysis.
 
----
+_This connects to Class 05 next week, where we run exploratory data analysis on cleaned data._
 
-## Slide 5 – Data Wrangling Fundamentals
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
 
-> **Section Overview**: Identifying and handling missing values, outliers, duplicates, and inconsistencies.
+- Reinforce that cleaning decisions affect every downstream result
+- Mention that every assignment from here forward assumes clean inputs
 
-- _Content to be developed._
+</details>
 
 ---
 
-## Slide 6 – Intro to SQL
+## 📍 Agenda
 
-> **Section Overview**: Basic SQL queries for agricultural databases (SELECT, WHERE, JOIN, GROUP BY).
+- [x] Housekeeping
+- [ ] Syllabus review
+- [ ] Data wrangling fundamentals
+- [ ] Intro to SQL
+- [ ] Merging and joining datasets
+- [ ] USDA and weather data integration
+- [ ] AI assistants for data cleaning
+- [ ] Demo: Python and SQL cleaning workflow
 
-- _Content to be developed._
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
 
----
+- Keep the demo flexible to absorb extra time
+- If time is short, compress the AI section
 
-## Slide 7 – Merging & Joining Datasets
-
-> **Section Overview**: Combining field data with weather, soil, and market information.
-
-- _Content to be developed._
-
----
-
-## Slide 8 – USDA & Weather Data Integration
-
-> **Section Overview**: Practical examples of merging USDA crop data with NOAA weather data.
-
-- _Content to be developed._
+</details>
 
 ---
 
-## Slide 9 – AI Assistants for Data Cleaning
+## 🎯 Learning Outcomes
 
-> **Section Overview**: Using GitHub Copilot and other AI tools to generate cleaning scripts.
+After this class, you'll be able to:
 
-- _Content to be developed._
+- **Identify** common data quality issues in agricultural datasets
+- **Apply** SQL filters and joins for cleaning tasks
+- **Merge** multiple sources into a unified table
+- **Validate** cleaned data with repeatable checks
+- **Use** AI tools to accelerate routine cleaning steps
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Ask students which data issues they saw in their downloads
+- Tie outcomes to the assignment deliverable
+
+</details>
 
 ---
 
-## Slide 10 – Demo: Python & SQL Cleaning Workflow
+## 📚 Content
 
-> **Live Demo**: Walk through a complete data cleaning pipeline using pandas and SQL.
+### Data Wrangling Fundamentals
 
-- _Instructor-led demo with real agricultural datasets._
+We cover the core cleaning steps that make data usable for analysis.
+
+Key points:
+
+- Missing values, duplicates, and inconsistent units
+- Standardizing column names and categories
+- Logging assumptions and transformations
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Use a quick before and after example to show impact
+- Emphasize that documentation is part of cleaning
+
+</details>
 
 ---
 
-## Assignment (Class 04)
+### Intro to SQL
 
-**Title**: Data Cleaning Pipeline  
-**Due Date**: _TBD_  
-**Points**: _xx_
+We use SQL to filter, join, and summarize agricultural datasets.
 
-**Description**:
+Key points:
 
-- Download raw agricultural data from multiple sources.
-- Write a Python script to clean, validate, and merge the datasets.
-- Document data quality issues and your resolution strategies.
+- `SELECT`, `WHERE`, `GROUP BY`, `JOIN`
+- Data type casting and validation
+- Saving queries for reuse
 
-**Dashboard Element**: _TBD_
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Show a simple query on a crop dataset
+- Explain where SQL fits alongside Python
+
+</details>
+
+---
+
+### Merging and Joining Datasets
+
+We combine multiple sources into a consistent analytical view.
+
+Key points:
+
+- Join keys and row alignment
+- Left vs inner joins in agricultural contexts
+- Avoiding accidental duplication
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Remind students to check row counts after joins
+- Note that mismatches often signal data issues
+
+</details>
+
+---
+
+### USDA and Weather Data Integration
+
+We align USDA data with NOAA weather series for analysis.
+
+Key points:
+
+- Temporal alignment (daily vs monthly)
+- Geographic identifiers and crosswalks
+- Unit conversions and normalization
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Highlight the importance of documenting alignment decisions
+- Mention time zone and calendar year pitfalls
+
+</details>
+
+---
+
+### AI Assistants for Data Cleaning
+
+We use AI tools to generate boilerplate cleaning scripts and checks.
+
+Key points:
+
+- Use specific prompts and sample schema
+- Validate AI outputs against expectations
+- Keep a log of AI-assisted decisions
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Share a prompt template that works well for cleaning tasks
+- Reinforce that AI does not replace verification
+
+</details>
+
+---
+
+### Demo: Python and SQL Cleaning Workflow
+
+We walk through a complete cleaning pipeline on a real dataset.
+
+Key points:
+
+- Load raw files and standardize columns
+- Run SQL checks to validate merges
+- Export a clean, analysis-ready table
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Narrate decisions and trade-offs as you go
+- Pause for questions at each major step
+
+</details>
+
+---
+
+## ✍️ Assignment
+
+### Task: Data Cleaning Pipeline
+
+**Objective:** Build a repeatable cleaning workflow for raw agricultural datasets.
+
+**Instructions:**
+1. Download raw data from multiple sources.
+2. Clean, validate, and merge the datasets using Python and or SQL.
+3. Document data quality issues and how you resolved them.
+
+**What to submit:** A notebook or script with a short write-up of cleaning decisions.
+
+**Due:** TBD
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Encourage students to include before and after row counts
+- Suggest a short data log at the top of the notebook
+
+</details>
+
+---
+
+## 🔗 Resources & References
+
+### Official Sources
+
+- [USDA NASS QuickStats](https://quickstats.nass.usda.gov/) - Crop and livestock data
+- [NOAA NCEI](https://www.ncei.noaa.gov/) - Climate and weather archives
+
+### Reading Materials
+
+- [Tidy Data Principles](https://vita.had.co.nz/papers/tidy-data.pdf) - Core framework for clean datasets
+
+### Tools
+
+- [pandas](https://pandas.pydata.org/) - Data cleaning library
+- [SQLBolt](https://sqlbolt.com/) - SQL refresher and practice
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Point students to SQLBolt if they need a refresher
+- Encourage bookmarking pandas docs for quick reference
+
+</details>
+
+---

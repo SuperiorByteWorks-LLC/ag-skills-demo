@@ -1,134 +1,268 @@
-# The Future Farm: Trends, Careers & Final Reflections (Class 14)
+# 14 - The Future Farm: Trends, Careers, and Final Reflections
 
-> Agricultural Data Analytics Course  
-> Instructor: Clayton Young
-
----
-
-## Slide 1 – Title Slide
-
-- **Course**: Agricultural Data Analytics Course
-- **Class**: 14 – The Future Farm: Trends, Careers & Final Reflections
-- **Instructor**: Clayton Young
+_Agricultural Data Systems_
 
 ---
 
-## Slide 2 – Housekeeping
+## 🏠 Housekeeping
 
-- **Use the "Q&A" feature** in Zoom if you want to ask a question.
-- Ensure Zoom is updated to the latest version to use all features.
-- Keep your **camera on** during class if possible.
-- Please **mute yourself** so you don't accidentally interrupt the instructor.
-- Use the **"Raise hand"** feature in Zoom when you want to ask a question.
-- Don't forget to **lower your hand** once finished.
+- **Use the "Q&A" feature** in Zoom for questions
+- Keep your **camera on** during class if possible
+- Please **mute yourself** to avoid interruptions
+- Use the **"Raise hand"** feature when you want to speak (and lower it when finished)
 
----
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
 
-## Slide 3 – Syllabus Review
+- Confirm final project presentation order and timing
+- Remind students to have their presentation files ready
 
-> High-level view of where this class fits in the overall course.
-
-| Class | Title                                                                           |
-| ----- | ------------------------------------------------------------------------------- |
-| 01    | The New Farm Frontier: Inside the Agricultural Data Revolution                  |
-| 02    | Gearing Up: Building Your Smart Farm Workspace + Demo                           |
-| 03    | Navigating the US Agricultural Data Landscape + Workshop                        |
-| 04    | Clean Fields, Clean Data + Demo                                                 |
-| 05    | Exploratory Data Analysis: Finding Farm Insights + Demo                         |
-| 06    | Geospatial Analysis with Python + Workshop & Demo                               |
-| 07    | Watching from Above: Satellite & Drone Intelligence + Workshop & Demo           |
-| 08    | Weather Patterns & Climate Data Analysis                                        |
-| 09    | Advanced Spatial Integration & Transformations + Workshop                       |
-| 10    | US Precision Agriculture Systems & Real Farm Data                               |
-| 11    | Soil Health & Sustainability Metrics + Workshop                                 |
-| 12    | From Data to Decisions: Building Dashboards that Tell a Story + Workshop & Demo |
-| 13    | Ethics, Ownership & the Politics of US Farm Data + Guest Speaker                |
-| 14    | The Future Farm: Trends, Careers & Final Reflections                            |
+</details>
 
 ---
 
-## Slide 4 – Class Agenda
+## 📋 Syllabus Review
 
-1. **Emerging trends in agricultural technology**
-2. **Climate-resilient agriculture & adaptation**
-3. **Career pathways in ag-tech & data science**
-4. **Industry forecast & opportunities**
-5. **Student final project presentations**
-6. **Course reflection & feedback**
-7. **Closing remarks & next steps**
+Last class we examined ethics and ownership in farm data. Today we look ahead to future trends, career paths, and final reflections.
 
----
+_This is the final class, so we focus on takeaways and next steps._
 
-## Slide 5 – Emerging Trends in Agricultural Technology
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
 
-> **Section Overview**: AI/ML in farming, digital twins, autonomous systems, and blockchain for supply chains.
+- Celebrate progress and emphasize practical outcomes
+- Encourage students to reflect on skills gained
 
-- _Content to be developed._
+</details>
 
 ---
 
-## Slide 6 – Climate-Resilient Agriculture & Adaptation
+## 📍 Agenda
 
-> **Section Overview**: Strategies for adapting to climate change; water management, crop selection, and risk mitigation.
+- [x] Housekeeping
+- [ ] Syllabus review
+- [ ] Emerging trends in agricultural technology
+- [ ] Climate resilient agriculture and adaptation
+- [ ] Career pathways in ag tech and data science
+- [ ] Industry forecast and opportunities
+- [ ] Student final project presentations
+- [ ] Course reflection and feedback
+- [ ] Closing remarks and next steps
 
-- _Content to be developed._
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
 
----
+- Keep presentation timing tight to respect each student
+- Reserve time for course feedback and reflections
 
-## Slide 7 – Career Pathways in Ag-Tech & Data Science
-
-> **Section Overview**: Job roles (data analyst, GIS specialist, agronomy specialist), companies, and skill requirements.
-
-- _Content to be developed._
-
----
-
-## Slide 8 – Industry Forecast & Opportunities
-
-> **Section Overview**: Market growth, funding trends, and emerging opportunities in agricultural data.
-
-- _Content to be developed._
+</details>
 
 ---
 
-## Slide 9 – Student Final Project Presentations
+## 🎯 Learning Outcomes
 
-> **Student Showcase**: Students present their Row Crop Intelligence Dashboard projects.
+After this class, you'll be able to:
 
-- _Student presentations and peer feedback._
+- **Describe** emerging trends shaping agricultural data systems
+- **Explain** climate adaptation strategies in data-driven agriculture
+- **Identify** career pathways and required skill sets
+- **Evaluate** industry opportunities and challenges
+- **Reflect** on course outcomes and next steps
 
----
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
 
-## Slide 10 – Course Reflection & Feedback
+- Ask students to name one trend they find most compelling
+- Encourage them to link trends to their final projects
 
-> **Reflective Discussion**: Students share key learnings and feedback on the course.
-
-- _Open reflection and discussion._
-
----
-
-## Slide 11 – Closing Remarks & Next Steps
-
-> **Wrap-Up**: Instructor closing remarks, resources for continued learning, and networking opportunities.
-
-- _Final remarks and Q&A._
+</details>
 
 ---
 
-## Final Project Submission
+## 📚 Content
 
-**Title**: Row Crop Intelligence Dashboard (Final Project)  
-**Due Date**: _TBD_  
-**Points**: _xx_
+### Emerging Trends in Agricultural Technology
 
-**Presentations**: In-class during this session.
+We review key innovations shaping the future of agriculture.
 
-**Components**:
+Key points:
 
-- Comprehensive data pipeline (cleaning, integration, analysis)
-- Exploratory data analysis and statistical findings
-- Geospatial analysis with visualizations
-- Machine learning models (if applicable)
-- Interactive dashboard for stakeholders
-- Documentation and methodology guide
-- Reflection on ethics, limitations, and future work
+- AI and machine learning in agronomy
+- Digital twins and automation
+- Blockchain and traceability
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Keep examples concrete and tied to data workflows
+- Emphasize which trends are already in production
+
+</details>
+
+---
+
+### Climate Resilient Agriculture and Adaptation
+
+We discuss how data supports resilience planning and risk mitigation.
+
+Key points:
+
+- Climate risk modeling
+- Water management and stress monitoring
+- Adaptive management strategies
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Encourage students to connect this to their weather analysis work
+- Highlight the importance of long-term datasets
+
+</details>
+
+---
+
+### Career Pathways in Ag Tech and Data Science
+
+We outline roles, skills, and growth paths in the industry.
+
+Key points:
+
+- Data analyst, GIS specialist, agronomy analyst
+- Portfolio and project expectations
+- Networking and professional development
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Encourage students to use their final project as a portfolio piece
+- Share recommended communities or meetups
+
+</details>
+
+---
+
+### Industry Forecast and Opportunities
+
+We review market signals, funding trends, and emerging opportunities.
+
+Key points:
+
+- Market growth indicators
+- Investment trends in ag tech
+- Regional opportunity areas
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Use one recent funding example to illustrate momentum
+- Encourage students to track industry newsletters
+
+</details>
+
+---
+
+### Student Final Project Presentations
+
+Students present their Row Crop Intelligence Dashboard projects.
+
+Key points:
+
+- Project scope and data sources
+- Key insights and visualizations
+- Lessons learned and next steps
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Keep feedback structured and supportive
+- Encourage peers to ask constructive questions
+
+</details>
+
+---
+
+### Course Reflection and Feedback
+
+We capture reflections on learning outcomes and course improvements.
+
+Key points:
+
+- Most valuable skills gained
+- Areas for course improvement
+- How students will apply skills next
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Encourage honest feedback and specific suggestions
+- Close with appreciation for student effort
+
+</details>
+
+---
+
+### Closing Remarks and Next Steps
+
+We wrap up the course with guidance for future growth.
+
+Key points:
+
+- Continuing learning resources
+- Portfolio and resume guidance
+- Staying connected to the community
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Remind students to keep copies of their work
+- Offer ways to stay in touch
+
+</details>
+
+---
+
+## ✍️ Assignment
+
+### Task: Final project submission
+
+**Objective:** Submit and present the final Row Crop Intelligence Dashboard.
+
+**Instructions:**
+1. Finalize your dashboard and documentation.
+2. Prepare a short presentation of findings.
+3. Submit final deliverables and links.
+
+**What to submit:** Dashboard link, documentation, and presentation materials.
+
+**Due:** TBD
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Confirm submission channels and deadlines
+- Encourage students to verify links before submitting
+
+</details>
+
+---
+
+## 🔗 Resources & References
+
+### Reading Materials
+
+- [AgFunder News](https://agfundernews.com/) - Industry trends and funding news
+
+### Tools
+
+- [USDA Data](https://www.usda.gov/data) - Continued access to data resources
+- [Streamlit Community Cloud](https://streamlit.io/cloud) - Hosting for dashboards
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Encourage students to continue exploring industry resources
+- Mention that portfolio hosting can help with job searches
+
+</details>
+
+---

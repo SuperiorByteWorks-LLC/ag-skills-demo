@@ -1,131 +1,273 @@
-# Exploratory Data Analysis: Finding Farm Insights + Demo (Class 05)
+# 05 - Exploratory Data Analysis: Finding Farm Insights + Demo
 
-> Agricultural Data Analytics Course  
-> Instructor: Clayton Young
-
----
-
-## Slide 1 – Title Slide
-
-- **Course**: Agricultural Data Analytics Course
-- **Class**: 05 – Exploratory Data Analysis: Finding Farm Insights + Demo
-- **Instructor**: Clayton Young
+_Agricultural Data Systems_
 
 ---
 
-## Slide 2 – Housekeeping
+## 🏠 Housekeeping
 
-- **Use the "Q&A" feature** in Zoom if you want to ask a question.
-- Ensure Zoom is updated to the latest version to use all features.
-- Keep your **camera on** during class if possible.
-- Please **mute yourself** so you don't accidentally interrupt the instructor.
-- Use the **"Raise hand"** feature in Zoom when you want to ask a question.
-- Don't forget to **lower your hand** once finished.
+- **Use the "Q&A" feature** in Zoom for questions
+- Keep your **camera on** during class if possible
+- Please **mute yourself** to avoid interruptions
+- Use the **"Raise hand"** feature when you want to speak (and lower it when finished)
 
----
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
 
-## Slide 3 – Syllabus Review
+- Confirm students have a cleaned dataset ready for exploration
+- Remind students to save charts for later dashboard work
 
-> High-level view of where this class fits in the overall course.
-
-| Class | Title                                                                           |
-| ----- | ------------------------------------------------------------------------------- |
-| 01    | The New Farm Frontier: Inside the Agricultural Data Revolution                  |
-| 02    | Gearing Up: Building Your Smart Farm Workspace + Demo                           |
-| 03    | Navigating the US Agricultural Data Landscape + Workshop                        |
-| 04    | Clean Fields, Clean Data + Demo                                                 |
-| 05    | Exploratory Data Analysis: Finding Farm Insights + Demo                         |
-| 06    | Geospatial Analysis with Python + Workshop & Demo                               |
-| 07    | Watching from Above: Satellite & Drone Intelligence + Workshop & Demo           |
-| 08    | Weather Patterns & Climate Data Analysis                                        |
-| 09    | Advanced Spatial Integration & Transformations + Workshop                       |
-| 10    | US Precision Agriculture Systems & Real Farm Data                               |
-| 11    | Soil Health & Sustainability Metrics + Workshop                                 |
-| 12    | From Data to Decisions: Building Dashboards that Tell a Story + Workshop & Demo |
-| 13    | Ethics, Ownership & the Politics of US Farm Data + Guest Speaker                |
-| 14    | The Future Farm: Trends, Careers & Final Reflections                            |
+</details>
 
 ---
 
-## Slide 4 – Class Agenda
+## 📋 Syllabus Review
 
-1. **DataFrames & exploratory data analysis fundamentals**
-2. **Pandas/Polars operations & time-series basics**
-3. **Descriptive statistics for farm data**
-4. **Visualization fundamentals & correlation analysis**
-5. **AI for alternative metrics or visualizations**
-6. **Demo: Python EDA notebook walkthrough**
-7. **Peer share**
+Last class we cleaned and integrated raw datasets. Today we explore the data to uncover patterns, outliers, and questions for deeper analysis.
 
----
+_This connects to Class 06 next week, where we add geospatial analysis to our workflow._
 
-## Slide 5 – DataFrames & Exploratory Data Analysis Fundamentals
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
 
-> **Section Overview**: Understanding data structure, shape, and basic statistical properties.
+- Emphasize that EDA shapes every modeling decision later
+- Encourage curiosity and experimentation
 
-- _Content to be developed._
+</details>
 
 ---
 
-## Slide 6 – Pandas/Polars Operations & Time-Series Basics
+## 📍 Agenda
 
-> **Section Overview**: Filtering, grouping, resampling, and handling temporal agricultural data.
+- [x] Housekeeping
+- [ ] Syllabus review
+- [ ] DataFrames and EDA fundamentals
+- [ ] Pandas and Polars operations with time series
+- [ ] Descriptive statistics for farm data
+- [ ] Visualization and correlation analysis
+- [ ] AI for alternative metrics or visualizations
+- [ ] Demo: Python EDA notebook walkthrough
+- [ ] Peer share
 
-- _Content to be developed._
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
 
----
+- Keep peer share short and focused on insights
+- If time is short, blend AI prompts into the demo
 
-## Slide 7 – Descriptive Statistics for Farm Data
-
-> **Section Overview**: Mean, median, variance, percentiles, and other summary statistics for agricultural metrics.
-
-- _Content to be developed._
-
----
-
-## Slide 8 – Visualization Fundamentals & Correlation Analysis
-
-> **Section Overview**: Creating plots (histograms, scatter, line, heatmaps) and identifying relationships between variables.
-
-- _Content to be developed._
+</details>
 
 ---
 
-## Slide 9 – AI for Alternative Metrics or Visualizations
+## 🎯 Learning Outcomes
 
-> **Section Overview**: Using AI assistants to suggest novel visualizations or metrics.
+After this class, you'll be able to:
 
-- _Content to be developed._
+- **Profile** agricultural datasets using descriptive statistics
+- **Apply** key pandas and Polars operations for exploration
+- **Visualize** distributions, trends, and relationships
+- **Interpret** correlations and outliers with agricultural context
+- **Generate** alternative metrics or charts using AI assistance
 
----
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
 
-## Slide 10 – Demo: Python EDA Notebook Walkthrough
+- Ask students to name one question they want to answer with EDA
+- Tie outcomes to the assignment deliverable
 
-> **Live Demo**: Jupyter notebook demonstrating complete EDA workflow on row crop data.
-
-- _Instructor-led demo with interactive exploration._
-
----
-
-## Slide 11 – Peer Share
-
-> **Student Presentations**: Brief presentations of interesting findings from student exploratory analyses.
-
-- _Open peer discussion._
+</details>
 
 ---
 
-## Assignment (Class 05)
+## 📚 Content
 
-**Title**: Row Crop Exploratory Data Analysis  
-**Due Date**: _TBD_  
-**Points**: _xx_
+### DataFrames and EDA Fundamentals
 
-**Description**:
+We review how to inspect datasets quickly and understand their structure.
 
-- Conduct a comprehensive EDA on row crop yield or soil health data.
-- Generate at least 5 visualizations.
-- Document statistical findings and correlations.
-- Submit as Jupyter notebook with markdown commentary.
+Key points:
 
-**Dashboard Element**: _TBD_
+- Shape, schema, and missing values
+- Basic summaries and sanity checks
+- Building an exploration checklist
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Demonstrate `df.info()` and `df.describe()` on a sample dataset
+- Encourage students to log questions as they explore
+
+</details>
+
+---
+
+### Pandas and Polars Operations with Time Series
+
+We focus on grouping, filtering, and resampling time-based agricultural data.
+
+Key points:
+
+- Grouping by geography or season
+- Resampling daily data to weekly or monthly
+- Handling missing timestamps
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Show a quick resampling example and discuss trade-offs
+- Note differences between pandas and Polars APIs
+
+</details>
+
+---
+
+### Descriptive Statistics for Farm Data
+
+We calculate metrics that help explain yield, inputs, and environmental impacts.
+
+Key points:
+
+- Mean, median, variance, and percentiles
+- Outlier detection and validation
+- Comparing distributions across regions
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Use a histogram to show skewed yield data
+- Remind students that outliers can be real events
+
+</details>
+
+---
+
+### Visualization and Correlation Analysis
+
+We turn statistical results into visual stories and relationships.
+
+Key points:
+
+- Histograms, scatter plots, line charts, heatmaps
+- Correlation vs causation in agriculture
+- Matching chart type to the question
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Encourage clear labeling and consistent units
+- Mention common visualization pitfalls to avoid
+
+</details>
+
+---
+
+### AI for Alternative Metrics or Visualizations
+
+We use AI tools to brainstorm new metrics or chart ideas.
+
+Key points:
+
+- Provide AI with schema and sample rows
+- Validate AI output with domain knowledge
+- Document AI-assisted insights
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Show a sample prompt and discuss why it works
+- Reinforce that AI does not replace verification
+
+</details>
+
+---
+
+### Demo: Python EDA Notebook Walkthrough
+
+We walk through a full EDA notebook using row crop data.
+
+Key points:
+
+- Combine text, charts, and insights
+- Build a reproducible notebook structure
+- Export visuals for dashboards
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Encourage students to save the notebook as a template
+- Pause after each section so students can follow along
+
+</details>
+
+---
+
+### Peer Share
+
+Students share one insight and one visualization from their exploration.
+
+Key points:
+
+- Keep shares brief and focused
+- Ask one follow-up question per share
+- Capture ideas for future analysis
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Call on 3 to 5 volunteers
+- Reinforce positive feedback and curiosity
+
+</details>
+
+---
+
+## ✍️ Assignment
+
+### Task: Row Crop Exploratory Data Analysis
+
+**Objective:** Conduct a structured EDA and communicate insights with visuals.
+
+**Instructions:**
+1. Run EDA on a row crop yield or soil health dataset.
+2. Create at least five visualizations that support key insights.
+3. Summarize findings, correlations, and open questions.
+
+**What to submit:** A Jupyter notebook with markdown commentary and embedded charts.
+
+**Due:** TBD
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Emphasize quality of insights over number of charts
+- Suggest a short insights section at the end of the notebook
+
+</details>
+
+---
+
+## 🔗 Resources & References
+
+### Official Sources
+
+- [USDA NASS QuickStats](https://quickstats.nass.usda.gov/) - Baseline crop statistics for EDA
+
+### Reading Materials
+
+- [Exploratory Data Analysis](https://www.itl.nist.gov/div898/handbook/eda/eda.htm) - NIST EDA reference
+
+### Tools
+
+- [pandas](https://pandas.pydata.org/) - Data analysis toolkit
+- [Polars](https://pola.rs/) - Fast DataFrame library
+- [seaborn](https://seaborn.pydata.org/) - Statistical visualization library
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Encourage students to compare pandas and Polars performance
+- Point students to the NIST guide for deeper context
+
+</details>
+
+---

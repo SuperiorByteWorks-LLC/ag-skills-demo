@@ -1,112 +1,251 @@
-# US Precision Agriculture Systems & Real Farm Data (Class 10)
+# 10 - US Precision Agriculture Systems and Real Farm Data
 
-> Agricultural Data Analytics Course  
-> Instructor: Clayton Young
-
----
-
-## Slide 1 – Title Slide
-
-- **Course**: Agricultural Data Analytics Course
-- **Class**: 10 – US Precision Agriculture Systems & Real Farm Data
-- **Instructor**: Clayton Young
+_Agricultural Data Systems_
 
 ---
 
-## Slide 2 – Housekeeping
+## 🏠 Housekeeping
 
-- **Use the "Q&A" feature** in Zoom if you want to ask a question.
-- Ensure Zoom is updated to the latest version to use all features.
-- Keep your **camera on** during class if possible.
-- Please **mute yourself** so you don't accidentally interrupt the instructor.
-- Use the **"Raise hand"** feature in Zoom when you want to ask a question.
-- Don't forget to **lower your hand** once finished.
+- **Use the "Q&A" feature** in Zoom for questions
+- Keep your **camera on** during class if possible
+- Please **mute yourself** to avoid interruptions
+- Use the **"Raise hand"** feature when you want to speak (and lower it when finished)
 
----
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
 
-## Slide 3 – Syllabus Review
+- Confirm students have access to case study materials
+- Emphasize that today connects concepts to real industry systems
 
-> High-level view of where this class fits in the overall course.
-
-| Class | Title                                                                           |
-| ----- | ------------------------------------------------------------------------------- |
-| 01    | The New Farm Frontier: Inside the Agricultural Data Revolution                  |
-| 02    | Gearing Up: Building Your Smart Farm Workspace + Demo                           |
-| 03    | Navigating the US Agricultural Data Landscape + Workshop                        |
-| 04    | Clean Fields, Clean Data + Demo                                                 |
-| 05    | Exploratory Data Analysis: Finding Farm Insights + Demo                         |
-| 06    | Geospatial Analysis with Python + Workshop & Demo                               |
-| 07    | Watching from Above: Satellite & Drone Intelligence + Workshop & Demo           |
-| 08    | Weather Patterns & Climate Data Analysis                                        |
-| 09    | Advanced Spatial Integration & Transformations + Workshop                       |
-| 10    | US Precision Agriculture Systems & Real Farm Data                               |
-| 11    | Soil Health & Sustainability Metrics + Workshop                                 |
-| 12    | From Data to Decisions: Building Dashboards that Tell a Story + Workshop & Demo |
-| 13    | Ethics, Ownership & the Politics of US Farm Data + Guest Speaker                |
-| 14    | The Future Farm: Trends, Careers & Final Reflections                            |
+</details>
 
 ---
 
-## Slide 4 – Class Agenda
+## 📋 Syllabus Review
 
-1. **Precision agriculture technologies overview**
-2. **Variable rate application (VRA) & auto-guidance**
-3. **Equipment data & machine learning**
-4. **IoT sensors & real-time farm monitoring**
-5. **Case studies: John Deere, Climate FieldView**
-6. **Economics & ROI of precision agriculture**
+Last class we integrated spatial layers into cohesive datasets. Today we explore precision agriculture systems and the data they generate.
 
----
+_This connects to Class 11 next week, where we focus on soil health and sustainability metrics._
 
-## Slide 5 – Precision Agriculture Technologies Overview
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
 
-> **Section Overview**: History and evolution of precision ag; key technologies (GPS, GIS, sensors).
+- Emphasize real-world workflows and data flow
+- Highlight that vendor platforms shape data availability
 
-- _Content to be developed._
+</details>
 
 ---
 
-## Slide 6 – Variable Rate Application (VRA) & Auto-Guidance
+## 📍 Agenda
 
-> **Section Overview**: Using spatial data to apply inputs at optimal rates; automated steering systems.
+- [x] Housekeeping
+- [ ] Syllabus review
+- [ ] Precision agriculture technologies overview
+- [ ] Variable rate application and auto-guidance
+- [ ] Equipment data and machine learning
+- [ ] IoT sensors and real-time farm monitoring
+- [ ] Case studies: John Deere and Climate FieldView
+- [ ] Economics and ROI of precision agriculture
 
-- _Content to be developed._
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
 
----
+- Keep case studies grounded in data flow examples
+- Invite students to share any industry experiences
 
-## Slide 7 – Equipment Data & Machine Learning
-
-> **Section Overview**: Analyzing combine and tractor data; predictive maintenance; yield prediction.
-
-- _Content to be developed._
-
----
-
-## Slide 8 – IoT Sensors & Real-Time Farm Monitoring
-
-> **Section Overview**: Soil, weather, and crop sensors; data streaming and cloud connectivity.
-
-- _Content to be developed._
+</details>
 
 ---
 
-## Slide 9 – Case Studies: John Deere, Climate FieldView
+## 🎯 Learning Outcomes
 
-> **Real-World Examples**: Industry-leading precision ag platforms and their data workflows.
+After this class, you'll be able to:
 
-- _Case study analysis._
+- **Describe** the core technologies behind precision agriculture systems
+- **Explain** how variable rate application uses spatial data
+- **Interpret** equipment telemetry and sensor data streams
+- **Evaluate** the ROI of precision agriculture investments
+- **Identify** real farm datasets suitable for analysis
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Ask students to connect one technology to a data source
+- Highlight that ROI varies by crop and region
+
+</details>
 
 ---
 
-## Slide 10 – Economics & ROI of Precision Agriculture
+## 📚 Content
 
-> **Financial Analysis**: Costs vs. benefits of precision ag adoption; yield and input savings.
+### Precision Agriculture Technologies Overview
 
-- _Content to be developed._
+We review the history and technology stack that powers precision agriculture.
+
+Key points:
+
+- GPS, GIS, and onboard sensing
+- Data integration across equipment and platforms
+- Real-time decision support systems
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Share a quick timeline of precision ag adoption
+- Emphasize the role of data standards and interoperability
+
+</details>
 
 ---
 
-## Assignment (Class 10)
+### Variable Rate Application and Auto-Guidance
 
-**Title**: No assignment for this class  
-**Focus**: Preparing for final project; understanding real-world precision ag data sources and workflows.
+We connect spatial prescriptions to field equipment execution.
+
+Key points:
+
+- Prescription maps and zone-based management
+- Guidance systems and accuracy requirements
+- Measuring results and adjusting prescriptions
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Explain how VRA reduces input waste
+- Mention that guidance accuracy matters for repeatability
+
+</details>
+
+---
+
+### Equipment Data and Machine Learning
+
+We analyze the data produced by tractors and combines for operational insights.
+
+Key points:
+
+- Telemetry streams and sensor types
+- Predictive maintenance and performance monitoring
+- Yield prediction and model feedback loops
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Use one machine learning example tied to equipment data
+- Emphasize data quality and calibration
+
+</details>
+
+---
+
+### IoT Sensors and Real-Time Farm Monitoring
+
+We explore on-farm sensors and how they feed real-time dashboards.
+
+Key points:
+
+- Soil, weather, and crop sensors
+- Edge vs cloud processing
+- Alerting and decision support
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Note latency and connectivity constraints in rural settings
+- Tie this to dashboard design in Class 12
+
+</details>
+
+---
+
+### Case Studies: John Deere and Climate FieldView
+
+We examine two major platforms and the data workflows they enable.
+
+Key points:
+
+- Data ingestion and normalization
+- Insights delivered to growers
+- Gaps and limitations in access
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Keep focus on data flow rather than product marketing
+- Ask students what metrics they would prioritize
+
+</details>
+
+---
+
+### Economics and ROI of Precision Agriculture
+
+We review cost-benefit trade-offs and adoption drivers.
+
+Key points:
+
+- Input savings and yield gains
+- Labor efficiency and operational scale
+- Payback period considerations
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Use a simple ROI example to show decision framing
+- Remind students that ROI varies by farm type
+
+</details>
+
+---
+
+## ✍️ Assignment
+
+### Task: No assignment this class
+
+**Objective:** Prepare for the final project by understanding precision ag data workflows.
+
+**Instructions:**
+1. Review the case study notes from today.
+2. Identify at least one data source you want to use in your final project.
+3. Draft a short plan for how you might integrate that data.
+
+**What to submit:** No formal submission required.
+
+**Due:** N/A
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Encourage students to bring questions to office hours
+- Suggest documenting ideas in the project plan
+
+</details>
+
+---
+
+## 🔗 Resources & References
+
+### Official Sources
+
+- [USDA Precision Agriculture](https://www.usda.gov/topics/farming/precision-agriculture) - USDA overview and resources
+
+### Reading Materials
+
+- [ISPA Resources](https://www.ispag.org/resources/) - Industry reference materials
+
+### Tools
+
+- [John Deere Operations Center](https://operationscenter.deere.com/) - Platform overview
+- [Climate FieldView](https://climate.com/fieldview) - Precision ag data platform
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Clarify that platform access may require accounts or subscriptions
+- Encourage focusing on data flows rather than product features
+
+</details>
+
+---

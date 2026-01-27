@@ -1,6 +1,6 @@
 # 00 - Welcome Class
 
-_Agricultural Data Analytics Course | Spring 2026_
+_Agricultural Data Systems_
 
 ---
 
@@ -9,9 +9,7 @@ _Agricultural Data Analytics Course | Spring 2026_
 - **Use the "Q&A" feature** in Zoom for questions
 - Keep your **camera on** during class if possible
 - Please **mute yourself** to avoid interruptions
-- Use **"Raise hand"** feature when you want to speak
-- Don't forget to **lower your hand** once finished
-- Ensure Zoom is updated to the latest version
+- Use the **"Raise hand"** feature when you want to speak (and lower it when finished)
 
 <details>
 <summary><strong>💬 Speaker Notes</strong></summary>
@@ -208,6 +206,8 @@ You're learning from someone who has built the actual systems that power precisi
 
 </details>
 
+---
+
 ### Program Management Partner
 
 **Role:** Logistics, scheduling, and non-technical support
@@ -235,6 +235,8 @@ You're learning from someone who has built the actual systems that power precisi
 
 </details>
 
+---
+
 ### Course Structure: 14 Classes
 
 | Class | Title                          | Focus                          |
@@ -257,11 +259,11 @@ You're learning from someone who has built the actual systems that power precisi
 
 **Learning Progression:**
 
-1. **Weeks 1-3:** Foundation (data landscape, tools, setup)
-2. **Weeks 4-6:** Core skills (cleaning, EDA, geospatial)
-3. **Weeks 7-9:** Advanced techniques (remote sensing, integration)
-4. **Weeks 10-12:** Applied projects (precision ag, dashboards)
-5. **Weeks 13-14:** Context and careers (ethics, future)
+1. **Classes 1-3:** Foundation (data landscape, tools, setup)
+2. **Classes 4-6:** Core skills (cleaning, EDA, geospatial)
+3. **Classes 7-9:** Advanced techniques (remote sensing, integration)
+4. **Classes 10-12:** Applied projects (precision ag, dashboards)
+5. **Classes 13-14:** Context and careers (ethics, future)
 
 <details>
 <summary><strong>💬 Speaker Notes</strong></summary>
@@ -305,6 +307,8 @@ A: "Plan for 4-6 hours per week on assignments. Some weeks more, some less."
 A: "Office hours, AI tools, and peer collaboration. Reach out early if struggling."
 
 </details>
+
+---
 
 ### Assignments & Final Project
 
@@ -386,6 +390,8 @@ Response: "Debug with AI, use office hours, collaborate with peers. Show your pr
 
 </details>
 
+---
+
 ### Introduction to the Data Download Script
 
 **Repository:** [`SuperiorByteWorks-LLC/agri-data-toolkit`](https://github.com/SuperiorByteWorks-LLC/agri-data-toolkit)
@@ -453,6 +459,8 @@ Response: "Debug with AI, use office hours, collaborate with peers. Show your pr
 - "Same principles, just scaled up"
 
 </details>
+
+---
 
 ### AI Tools: Perplexity & VS Code Agents
 
@@ -543,6 +551,8 @@ Response: "Debug with AI, use office hours, collaborate with peers. Show your pr
 
 </details>
 
+---
+
 ### AI Fundamentals: Context Is Everything
 
 **The Problem:**
@@ -611,6 +621,8 @@ What could be causing the timeout and how can I fix it?
 - Build good prompt together
 
 </details>
+
+---
 
 ### AI Fundamentals: Retry with Different Models
 
@@ -798,5 +810,3 @@ This orientation class has no graded assignment. Your focus should be on:
 </details>
 
 ---
-
-_Last Updated: January 26, 2026_

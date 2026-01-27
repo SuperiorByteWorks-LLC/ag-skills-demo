@@ -1,6 +1,6 @@
 # 02 - Gearing Up: Building Your Smart Farm Workspace
 
-_Agricultural Data Analytics Course | Spring 2026_
+_Agricultural Data Systems_
 
 ---
 
@@ -9,9 +9,7 @@ _Agricultural Data Analytics Course | Spring 2026_
 - **Use the "Q&A" feature** in Zoom for questions
 - Keep your **camera on** during class if possible
 - Please **mute yourself** to avoid interruptions
-- Use **"Raise hand"** feature when you want to speak
-- Don't forget to **lower your hand** once finished
-- Ensure Zoom is updated to the latest version
+- Use the **"Raise hand"** feature when you want to speak (and lower it when finished)
 
 <details>
 <summary><strong>💬 Speaker Notes</strong></summary>
@@ -301,6 +299,8 @@ Python is the industry standard for agricultural data analysis because:
 
 </details>
 
+---
+
 ### Essential Data Science Libraries
 
 **Core Libraries for Agricultural Data:**
@@ -531,6 +531,8 @@ python -c "import rasterio; print('Rasterio:', rasterio.__version__)"
 
 </details>
 
+---
+
 ### Git & GitHub Workflow
 
 **Why Version Control for Agricultural Data Projects?**
@@ -736,6 +738,8 @@ GitHub now requires **Personal Access Tokens (PAT)** instead of passwords:
 - "What would you do if...?" scenarios
 
 </details>
+
+---
 
 ### VS Code & AI Assistant Integration
 
@@ -979,6 +983,8 @@ GitHub now requires **Personal Access Tokens (PAT)** instead of passwords:
 - Fix bug
 
 </details>
+
+---
 
 ### Live Demo: Complete Workspace Setup
 
@@ -1289,5 +1295,3 @@ Expected output: No errors, version numbers displayed
 </details>
 
 ---
-
-_Last Updated: January 26, 2026_

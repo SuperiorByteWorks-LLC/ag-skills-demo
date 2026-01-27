@@ -1,115 +1,251 @@
-# Soil Health & Sustainability Metrics + Workshop (Class 11)
+# 11 - Soil Health and Sustainability Metrics + Workshop
 
-> Agricultural Data Analytics Course  
-> Instructor: Clayton Young
-
----
-
-## Slide 1 – Title Slide
-
-- **Course**: Agricultural Data Analytics Course
-- **Class**: 11 – Soil Health & Sustainability Metrics + Workshop
-- **Instructor**: Clayton Young
+_Agricultural Data Systems_
 
 ---
 
-## Slide 2 – Housekeeping
+## 🏠 Housekeeping
 
-- **Use the "Q&A" feature** in Zoom if you want to ask a question.
-- Ensure Zoom is updated to the latest version to use all features.
-- Keep your **camera on** during class if possible.
-- Please **mute yourself** so you don't accidentally interrupt the instructor.
-- Use the **"Raise hand"** feature in Zoom when you want to ask a question.
-- Don't forget to **lower your hand** once finished.
+- **Use the "Q&A" feature** in Zoom for questions
+- Keep your **camera on** during class if possible
+- Please **mute yourself** to avoid interruptions
+- Use the **"Raise hand"** feature when you want to speak (and lower it when finished)
 
----
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
 
-## Slide 3 – Syllabus Review
+- Confirm students can access soil datasets or sample CSVs
+- Note that sustainability metrics influence policy and incentives
 
-> High-level view of where this class fits in the overall course.
-
-| Class | Title                                                                           |
-| ----- | ------------------------------------------------------------------------------- |
-| 01    | The New Farm Frontier: Inside the Agricultural Data Revolution                  |
-| 02    | Gearing Up: Building Your Smart Farm Workspace + Demo                           |
-| 03    | Navigating the US Agricultural Data Landscape + Workshop                        |
-| 04    | Clean Fields, Clean Data + Demo                                                 |
-| 05    | Exploratory Data Analysis: Finding Farm Insights + Demo                         |
-| 06    | Geospatial Analysis with Python + Workshop & Demo                               |
-| 07    | Watching from Above: Satellite & Drone Intelligence + Workshop & Demo           |
-| 08    | Weather Patterns & Climate Data Analysis                                        |
-| 09    | Advanced Spatial Integration & Transformations + Workshop                       |
-| 10    | US Precision Agriculture Systems & Real Farm Data                               |
-| 11    | Soil Health & Sustainability Metrics + Workshop                                 |
-| 12    | From Data to Decisions: Building Dashboards that Tell a Story + Workshop & Demo |
-| 13    | Ethics, Ownership & the Politics of US Farm Data + Guest Speaker                |
-| 14    | The Future Farm: Trends, Careers & Final Reflections                            |
+</details>
 
 ---
 
-## Slide 4 – Class Agenda
+## 📋 Syllabus Review
 
-1. **Soil health indicators**
-2. **Sensor-based soil monitoring**
-3. **Carbon sequestration & soil carbon accounting**
-4. **USDA & NRCS conservation programs**
-5. **Sustainability scorecards & metrics**
-6. **Workshop: Building a soil health dashboard**
+Last class we explored precision agriculture systems and real farm data. Today we focus on soil health metrics and sustainability indicators that guide long-term decisions.
 
----
+_This connects to Class 12 next week, where we translate insights into dashboards._
 
-## Slide 5 – Soil Health Indicators
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
 
-> **Section Overview**: Organic matter, aggregate stability, infiltration, and biological activity metrics.
+- Reinforce that soil health is a foundational variable in ag analytics
+- Note the reporting implications of sustainability metrics
 
-- _Content to be developed._
+</details>
 
 ---
 
-## Slide 6 – Sensor-Based Soil Monitoring
+## 📍 Agenda
 
-> **Section Overview**: Soil moisture, temperature, and nutrient sensors; data collection and analysis.
+- [x] Housekeeping
+- [ ] Syllabus review
+- [ ] Soil health indicators
+- [ ] Sensor-based soil monitoring
+- [ ] Carbon sequestration and soil carbon accounting
+- [ ] USDA and NRCS conservation programs
+- [ ] Sustainability scorecards and metrics
+- [ ] Workshop: Building a soil health dashboard
 
-- _Content to be developed._
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
 
----
+- Keep the workshop focused on a small set of metrics
+- If time is short, shorten the program overview
 
-## Slide 7 – Carbon Sequestration & Soil Carbon Accounting
-
-> **Section Overview**: Quantifying soil carbon; carbon credit markets; climate-smart agriculture.
-
-- _Content to be developed._
-
----
-
-## Slide 8 – USDA & NRCS Conservation Programs
-
-> **Section Overview**: Overview of programs like Conservation Reserve Program (CRP), Environmental Quality Incentives Program (EQIP).
-
-- _Content to be developed._
+</details>
 
 ---
 
-## Slide 9 – Sustainability Scorecards & Metrics
+## 🎯 Learning Outcomes
 
-> **Section Overview**: Developing composite indicators for farm sustainability assessment.
+After this class, you'll be able to:
 
-- _Content to be developed._
+- **Identify** core soil health indicators and why they matter
+- **Explain** how sensors measure soil conditions over time
+- **Assess** soil carbon metrics and sequestration claims
+- **Summarize** conservation programs tied to data reporting
+- **Design** a basic soil health dashboard concept
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Ask students which soil metrics they think are most actionable
+- Tie outcomes to sustainability reporting expectations
+
+</details>
 
 ---
 
-## Slide 10 – Workshop: Building a Soil Health Dashboard
+## 📚 Content
 
-> **Hands-on Workshop**: Students create a dashboard tracking soil health metrics over time.
+### Soil Health Indicators
 
-- _Instructor-facilitated workshop._
+We review the physical, chemical, and biological indicators used in soil health assessments.
+
+Key points:
+
+- Organic matter, infiltration, aggregate stability
+- Nutrient balance and pH
+- Biological activity indicators
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Provide a quick list of indicators and explain why each matters
+- Emphasize consistent measurement over time
+
+</details>
 
 ---
 
-## Assignment (Class 11)
+### Sensor-Based Soil Monitoring
 
-**Title**: No assignment for this class  
-**Due Date**: _TBD_  
-**Points**: _xx_
+We explore how sensors capture soil moisture, temperature, and nutrient data.
 
-**Focus**: Exploring soil health data and sustainability metrics for integration into final project.
+Key points:
+
+- Common sensor types and placement
+- Data quality and calibration
+- Integrating sensor data with field maps
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Highlight that sensor data is often noisy and needs filtering
+- Mention the trade-off between sensor density and cost
+
+</details>
+
+---
+
+### Carbon Sequestration and Soil Carbon Accounting
+
+We examine how soil carbon is measured and reported in sustainability programs.
+
+Key points:
+
+- Carbon sampling protocols
+- Uncertainty and verification standards
+- Implications for carbon credit markets
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Emphasize transparency and measurement limitations
+- Connect to broader sustainability reporting trends
+
+</details>
+
+---
+
+### USDA and NRCS Conservation Programs
+
+We review conservation programs that rely on data reporting and monitoring.
+
+Key points:
+
+- Program goals and eligibility
+- Reporting requirements
+- Data sources commonly used
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Provide one example program and typical metrics required
+- Encourage students to read program documentation
+
+</details>
+
+---
+
+### Sustainability Scorecards and Metrics
+
+We discuss how farms compile multiple indicators into a sustainability view.
+
+Key points:
+
+- Composite scoring approaches
+- Aligning metrics to stakeholder needs
+- Communicating trade-offs clearly
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Encourage students to avoid oversimplifying complex metrics
+- Mention that transparency builds trust
+
+</details>
+
+---
+
+### Workshop: Building a Soil Health Dashboard
+
+Students sketch a dashboard concept that tracks soil health over time.
+
+Key points:
+
+- Choose 3 to 5 core metrics
+- Design charts that emphasize trends
+- Define audience and decisions supported
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Encourage students to think about who uses the dashboard
+- Ask them to justify metric choices
+
+</details>
+
+---
+
+## ✍️ Assignment
+
+### Task: No assignment this class
+
+**Objective:** Prepare soil health metrics for final project integration.
+
+**Instructions:**
+1. Review soil health indicators discussed today.
+2. Identify which metrics align with your final project goals.
+3. Draft a short list of data sources to support those metrics.
+
+**What to submit:** No formal submission required.
+
+**Due:** N/A
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Encourage students to bring metric questions to office hours
+- Suggest capturing these notes in the project planning doc
+
+</details>
+
+---
+
+## 🔗 Resources & References
+
+### Official Sources
+
+- [USDA NRCS Soil Health](https://www.nrcs.usda.gov/conservation-basics/natural-resource-concerns/soils) - Soil health overview
+- [USDA Web Soil Survey](https://websoilsurvey.nrcs.usda.gov/) - Soil data portal
+
+### Reading Materials
+
+- [Soil Health Institute](https://soilhealthinstitute.org/) - Research and metrics
+
+### Tools
+
+- [COMET-Farm](https://comet-farm.com/) - Carbon and greenhouse gas estimation
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Encourage students to explore the Web Soil Survey for their region
+- Remind them that soil data often has coarse resolution
+
+</details>
+
+---

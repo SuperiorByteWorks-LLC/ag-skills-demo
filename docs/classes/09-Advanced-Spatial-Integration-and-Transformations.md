@@ -1,121 +1,252 @@
-# Advanced Spatial Integration & Transformations + Workshop (Class 09)
+# 09 - Advanced Spatial Integration and Transformations + Workshop
 
-> Agricultural Data Analytics Course  
-> Instructor: Clayton Young
-
----
-
-## Slide 1 – Title Slide
-
-- **Course**: Agricultural Data Analytics Course
-- **Class**: 09 – Advanced Spatial Integration & Transformations + Workshop
-- **Instructor**: Clayton Young
+_Agricultural Data Systems_
 
 ---
 
-## Slide 2 – Housekeeping
+## 🏠 Housekeeping
 
-- **Use the "Q&A" feature** in Zoom if you want to ask a question.
-- Ensure Zoom is updated to the latest version to use all features.
-- Keep your **camera on** during class if possible.
-- Please **mute yourself** so you don't accidentally interrupt the instructor.
-- Use the **"Raise hand"** feature in Zoom when you want to ask a question.
-- Don't forget to **lower your hand** once finished.
+- **Use the "Q&A" feature** in Zoom for questions
+- Keep your **camera on** during class if possible
+- Please **mute yourself** to avoid interruptions
+- Use the **"Raise hand"** feature when you want to speak (and lower it when finished)
 
----
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
 
-## Slide 3 – Syllabus Review
+- Confirm students can load prior geospatial outputs
+- Remind students to bring their field boundary datasets
 
-> High-level view of where this class fits in the overall course.
-
-| Class | Title                                                                           |
-| ----- | ------------------------------------------------------------------------------- |
-| 01    | The New Farm Frontier: Inside the Agricultural Data Revolution                  |
-| 02    | Gearing Up: Building Your Smart Farm Workspace + Demo                           |
-| 03    | Navigating the US Agricultural Data Landscape + Workshop                        |
-| 04    | Clean Fields, Clean Data + Demo                                                 |
-| 05    | Exploratory Data Analysis: Finding Farm Insights + Demo                         |
-| 06    | Geospatial Analysis with Python + Workshop & Demo                               |
-| 07    | Watching from Above: Satellite & Drone Intelligence + Workshop & Demo           |
-| 08    | Weather Patterns & Climate Data Analysis                                        |
-| 09    | Advanced Spatial Integration & Transformations + Workshop                       |
-| 10    | US Precision Agriculture Systems & Real Farm Data                               |
-| 11    | Soil Health & Sustainability Metrics + Workshop                                 |
-| 12    | From Data to Decisions: Building Dashboards that Tell a Story + Workshop & Demo |
-| 13    | Ethics, Ownership & the Politics of US Farm Data + Guest Speaker                |
-| 14    | The Future Farm: Trends, Careers & Final Reflections                            |
+</details>
 
 ---
 
-## Slide 4 – Class Agenda
+## 📋 Syllabus Review
 
-1. **Overlaying spatial datasets**
-2. **Coordinate transformations & reprojection**
-3. **Zonal statistics & spatial aggregation**
-4. **Buffer operations & proximity analysis**
-5. **Workshop: Integrated field analysis**
-6. **QGIS demo & workflow automation**
+Last class we learned geospatial analysis foundations. Today we combine multiple spatial layers and perform advanced transformations to create richer insights.
 
----
+_This connects to Class 10 next week, where we explore real precision agriculture systems and data._
 
-## Slide 5 – Overlaying Spatial Datasets
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
 
-> **Section Overview**: Combining multiple spatial layers (fields, weather stations, soil types).
+- Emphasize that integration is where spatial insights become actionable
+- Remind students to track CRS choices carefully
 
-- _Content to be developed._
+</details>
 
 ---
 
-## Slide 6 – Coordinate Transformations & Reprojection
+## 📍 Agenda
 
-> **Section Overview**: Advanced CRS handling and datum transformations.
+- [x] Housekeeping
+- [ ] Syllabus review
+- [ ] Overlaying spatial datasets
+- [ ] Coordinate transformations and reprojection
+- [ ] Zonal statistics and spatial aggregation
+- [ ] Buffer operations and proximity analysis
+- [ ] Workshop: Integrated field analysis
+- [ ] QGIS demo and workflow automation
 
-- _Content to be developed._
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
 
----
+- If time is tight, shorten the QGIS demo and focus on the workshop
+- Encourage students to ask questions about join logic
 
-## Slide 7 – Zonal Statistics & Spatial Aggregation
-
-> **Section Overview**: Computing statistics within field zones (e.g., mean yield per zone).
-
-- _Content to be developed._
-
----
-
-## Slide 8 – Buffer Operations & Proximity Analysis
-
-> **Section Overview**: Creating buffers around features and analyzing spatial relationships.
-
-- _Content to be developed._
+</details>
 
 ---
 
-## Slide 9 – Workshop: Integrated Field Analysis
+## 🎯 Learning Outcomes
 
-> **Hands-on Workshop**: Students combine field data, weather, satellite, and soil information.
+After this class, you'll be able to:
 
-- _Instructor-facilitated workshop._
+- **Integrate** multiple spatial layers into a single analysis view
+- **Transform** spatial datasets to align projections and datums
+- **Compute** zonal statistics for agricultural zones
+- **Apply** buffer and proximity analysis to spatial questions
+- **Automate** spatial workflows using QGIS or Python
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Ask students which spatial layer combinations they expect to use most
+- Tie outcomes to the final project spatial workflow
+
+</details>
 
 ---
 
-## Slide 10 – QGIS Demo & Workflow Automation
+## 📚 Content
 
-> **Demo**: Using QGIS for visualization and PyQGIS for scripting spatial workflows.
+### Overlaying Spatial Datasets
 
-- _Instructor-led demo._
+We combine field boundaries, weather grids, soil maps, and imagery layers.
+
+Key points:
+
+- Choosing a primary layer and join logic
+- Handling mismatched geometries
+- Validating overlay results
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Use a simple overlay example to show intersection results
+- Emphasize checking row counts and geometry validity
+
+</details>
 
 ---
 
-## Assignment (Class 09)
+### Coordinate Transformations and Reprojection
 
-**Title**: Integrated Spatial Analysis  
-**Due Date**: _TBD_  
-**Points**: _xx_
+We apply advanced CRS and datum transformations for accurate overlays.
 
-**Description**:
+Key points:
 
-- Integrate field boundaries with weather, soil, and satellite data.
-- Perform zonal statistics to correlate spatial variables with yield.
-- Create a comprehensive spatial analysis report.
+- Identifying transformation requirements
+- Choosing projection for distance and area calculations
+- Verifying alignment after reprojection
 
-**Dashboard Element**: _TBD_
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Highlight the difference between geographic and projected CRS
+- Remind students to document CRS decisions
+
+</details>
+
+---
+
+### Zonal Statistics and Spatial Aggregation
+
+We compute statistics within boundaries to summarize spatial layers.
+
+Key points:
+
+- Mean, median, and percentile summaries
+- Aggregating rasters to polygons
+- Comparing zones across fields or seasons
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Show a simple zonal stats example
+- Mention common pitfalls with nodata values
+
+</details>
+
+---
+
+### Buffer Operations and Proximity Analysis
+
+We analyze spatial relationships using distance-based methods.
+
+Key points:
+
+- Buffering features to assess influence zones
+- Proximity to waterways, roads, or storage facilities
+- Decision support use cases
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Ask students how proximity could affect farm decisions
+- Emphasize that buffer distance must be justified
+
+</details>
+
+---
+
+### Workshop: Integrated Field Analysis
+
+Students build an integrated spatial dataset using multiple layers.
+
+Key points:
+
+- Combine field boundaries with weather and soil layers
+- Compute zonal summaries
+- Export a clean analysis table
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Encourage students to validate each join step
+- Remind them to save intermediate outputs
+
+</details>
+
+---
+
+### QGIS Demo and Workflow Automation
+
+We demonstrate a spatial workflow in QGIS and discuss automation options.
+
+Key points:
+
+- Visual validation of overlays
+- Using QGIS for quick inspection
+- Automating steps with Python or QGIS models
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Keep the demo focused on a few key actions
+- Encourage students to use QGIS as a debugging tool
+
+</details>
+
+---
+
+## ✍️ Assignment
+
+### Task: Integrated Spatial Analysis
+
+**Objective:** Combine multiple spatial datasets and produce a summarized analysis output.
+
+**Instructions:**
+1. Integrate field boundaries with weather, soil, and satellite data.
+2. Perform zonal statistics to summarize key metrics.
+3. Create a short report describing spatial patterns and findings.
+
+**What to submit:** A notebook or report with maps, outputs, and interpretation notes.
+
+**Due:** TBD
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Encourage clear tables and annotated maps
+- Remind students to note CRS and data sources
+
+</details>
+
+---
+
+## 🔗 Resources & References
+
+### Official Sources
+
+- [USGS National Map](https://www.usgs.gov/programs/national-geospatial-program/national-map) - Base layers and boundaries
+
+### Tools
+
+- [QGIS](https://qgis.org/) - GIS desktop toolkit
+- [GeoPandas](https://geopandas.org/) - Python geospatial analysis
+- [PostGIS](https://postgis.net/) - Spatial database extension
+
+### Reading Materials
+
+- [PROJ Documentation](https://proj.org/) - CRS and transformation reference
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Encourage practice in both QGIS and Python
+- Emphasize documenting CRS transformations
+
+</details>
+
+---

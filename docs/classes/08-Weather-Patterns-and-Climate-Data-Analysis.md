@@ -1,122 +1,252 @@
-# Weather Patterns & Climate Data Analysis (Class 08)
+# 08 - Weather Patterns and Climate Data Analysis
 
-> Agricultural Data Analytics Course  
-> Instructor: Clayton Young
-
----
-
-## Slide 1 – Title Slide
-
-- **Course**: Agricultural Data Analytics Course
-- **Class**: 08 – Weather Patterns & Climate Data Analysis
-- **Instructor**: Clayton Young
+_Agricultural Data Systems_
 
 ---
 
-## Slide 2 – Housekeeping
+## 🏠 Housekeeping
 
-- **Use the "Q&A" feature** in Zoom if you want to ask a question.
-- Ensure Zoom is updated to the latest version to use all features.
-- Keep your **camera on** during class if possible.
-- Please **mute yourself** so you don't accidentally interrupt the instructor.
-- Use the **"Raise hand"** feature in Zoom when you want to ask a question.
-- Don't forget to **lower your hand** once finished.
+- **Use the "Q&A" feature** in Zoom for questions
+- Keep your **camera on** during class if possible
+- Please **mute yourself** to avoid interruptions
+- Use the **"Raise hand"** feature when you want to speak (and lower it when finished)
 
----
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
 
-## Slide 3 – Syllabus Review
+- Confirm students can access weather datasets or APIs
+- Remind students to keep time zones and units consistent
 
-> High-level view of where this class fits in the overall course.
-
-| Class | Title                                                                           |
-| ----- | ------------------------------------------------------------------------------- |
-| 01    | The New Farm Frontier: Inside the Agricultural Data Revolution                  |
-| 02    | Gearing Up: Building Your Smart Farm Workspace + Demo                           |
-| 03    | Navigating the US Agricultural Data Landscape + Workshop                        |
-| 04    | Clean Fields, Clean Data + Demo                                                 |
-| 05    | Exploratory Data Analysis: Finding Farm Insights + Demo                         |
-| 06    | Geospatial Analysis with Python + Workshop & Demo                               |
-| 07    | Watching from Above: Satellite & Drone Intelligence + Workshop & Demo           |
-| 08    | Weather Patterns & Climate Data Analysis                                        |
-| 09    | Advanced Spatial Integration & Transformations + Workshop                       |
-| 10    | US Precision Agriculture Systems & Real Farm Data                               |
-| 11    | Soil Health & Sustainability Metrics + Workshop                                 |
-| 12    | From Data to Decisions: Building Dashboards that Tell a Story + Workshop & Demo |
-| 13    | Ethics, Ownership & the Politics of US Farm Data + Guest Speaker                |
-| 14    | The Future Farm: Trends, Careers & Final Reflections                            |
+</details>
 
 ---
 
-## Slide 4 – Class Agenda
+## 📋 Syllabus Review
 
-1. **NOAA & NASA weather data sources**
-2. **Time-series analysis & seasonal patterns**
-3. **Extreme weather & climate impacts on agriculture**
-4. **Growing degree days (GDD) & heat indices**
-5. **Drought monitoring & climate resilience**
-6. **Case study: Midwest drought analysis**
+Last class we analyzed imagery for crop health. Today we examine weather and climate drivers that explain crop outcomes.
 
----
+_This connects to Class 09 next week, where we integrate spatial layers for advanced analysis._
 
-## Slide 5 – NOAA & NASA Weather Data Sources
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
 
-> **Section Overview**: National Weather Service, Climate Prediction Center, and NASA Earth Observations.
+- Emphasize that weather is the most common confounding variable
+- Note that climate context improves imagery interpretation
 
-- _Content to be developed._
+</details>
 
 ---
 
-## Slide 6 – Time-Series Analysis & Seasonal Patterns
+## 📍 Agenda
 
-> **Section Overview**: Decomposing temporal trends, seasonality, and anomalies in weather data.
+- [x] Housekeeping
+- [ ] Syllabus review
+- [ ] NOAA and NASA weather data sources
+- [ ] Time-series analysis and seasonal patterns
+- [ ] Extreme weather and climate impacts on agriculture
+- [ ] Growing degree days and heat indices
+- [ ] Drought monitoring and climate resilience
+- [ ] Case study: Midwest drought analysis
 
-- _Content to be developed._
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
 
----
+- Keep the case study concise to allow more time for methods
+- Encourage questions about data quality and missing observations
 
-## Slide 7 – Extreme Weather & Climate Impacts on Agriculture
-
-> **Section Overview**: Frost risk, hail, flooding, and extreme heat as agricultural hazards.
-
-- _Content to be developed._
-
----
-
-## Slide 8 – Growing Degree Days (GDD) & Heat Indices
-
-> **Section Overview**: Calculating heat accumulation and stress indices for crop phenology.
-
-- _Content to be developed._
+</details>
 
 ---
 
-## Slide 9 – Drought Monitoring & Climate Resilience
+## 🎯 Learning Outcomes
 
-> **Section Overview**: Drought indices (PDSI, SPI) and adaptation strategies.
+After this class, you'll be able to:
 
-- _Content to be developed._
+- **Locate** reliable weather and climate data sources
+- **Analyze** seasonal patterns and anomalies in time series
+- **Explain** how extreme weather impacts crop outcomes
+- **Calculate** growing degree days and heat indices
+- **Evaluate** drought metrics for agricultural planning
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Ask students to name a weather variable most important to their region
+- Tie outcomes to the trend analysis assignment
+
+</details>
 
 ---
 
-## Slide 10 – Case Study: Midwest Drought Analysis
+## 📚 Content
 
-> **Real-World Example**: Analysis of 2012 drought impact on corn and soybean production.
+### NOAA and NASA Weather Data Sources
 
-- _Case study with historical weather data._
+We review the primary sources of historical and real-time weather data for agriculture.
+
+Key points:
+
+- NOAA NCEI archives and station data
+- NASA Earthdata products for climate variables
+- Data licensing and update cadence
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Show where to find station metadata and coverage
+- Highlight differences between station and gridded data
+
+</details>
 
 ---
 
-## Assignment (Class 08)
+### Time-Series Analysis and Seasonal Patterns
 
-**Title**: Row Crop Weather & Trend Analysis  
-**Due Date**: _TBD_  
-**Points**: _xx_
+We break down weather time series to identify seasonality and anomalies.
 
-**Description**:
+Key points:
 
-- Download historical weather data (30+ years) for a Midwest county.
-- Analyze temperature, precipitation, and GDD trends.
-- Identify extreme events and their correlation with yield.
-- Present findings with time-series visualizations.
+- Trend, seasonal, and residual components
+- Rolling averages and smoothing
+- Comparing multi-year baselines
 
-**Dashboard Element**: _TBD_
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Use a simple decomposition chart as an example
+- Remind students to align granularity with questions
+
+</details>
+
+---
+
+### Extreme Weather and Climate Impacts on Agriculture
+
+We connect weather hazards to yield variability and farm risk.
+
+Key points:
+
+- Frost, heat stress, hail, flooding
+- Event frequency and severity metrics
+- Linking events to crop outcomes
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Encourage students to annotate extreme events in charts
+- Emphasize the difference between events and long-term trends
+
+</details>
+
+---
+
+### Growing Degree Days and Heat Indices
+
+We calculate heat accumulation metrics used in crop development models.
+
+Key points:
+
+- Base temperature selection
+- Daily accumulation and seasonal totals
+- Comparing GDD across regions or years
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Provide a quick GDD calculation example
+- Mention that base temperature varies by crop
+
+</details>
+
+---
+
+### Drought Monitoring and Climate Resilience
+
+We review drought indices and how they inform management decisions.
+
+Key points:
+
+- PDSI, SPI, and soil moisture indicators
+- Drought classifications and maps
+- Resilience planning and adaptation
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Show a drought map and ask students to interpret it
+- Connect to irrigation and planting decisions
+
+</details>
+
+---
+
+### Case Study: Midwest Drought Analysis
+
+We analyze a historic drought event and link it to yield outcomes.
+
+Key points:
+
+- Data selection and period boundaries
+- Comparing yields to baseline years
+- Lessons learned for risk management
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Use the case study to reinforce data storytelling
+- Ask students how they would communicate findings to growers
+
+</details>
+
+---
+
+## ✍️ Assignment
+
+### Task: Row Crop Weather and Trend Analysis
+
+**Objective:** Analyze long-term weather trends and relate them to crop outcomes.
+
+**Instructions:**
+1. Download at least 30 years of weather data for a Midwest county.
+2. Analyze temperature, precipitation, and GDD trends.
+3. Identify extreme events and connect them to yield patterns.
+
+**What to submit:** A notebook or report with time-series visualizations and interpretations.
+
+**Due:** TBD
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Encourage clear chart labeling and year ranges
+- Remind students to document data sources and units
+
+</details>
+
+---
+
+## 🔗 Resources & References
+
+### Official Sources
+
+- [NOAA NCEI](https://www.ncei.noaa.gov/) - Climate and weather archives
+- [NASA Earthdata](https://earthdata.nasa.gov/) - Satellite and climate data portal
+
+### Tools
+
+- [Climate Data Online](https://www.ncdc.noaa.gov/cdo-web/) - NOAA station data access
+- [PRISM Climate Group](https://prism.oregonstate.edu/) - Gridded climate datasets
+
+### Reading Materials
+
+- [Drought.gov](https://www.drought.gov/) - Drought monitoring and resources
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+- Encourage students to compare station data vs gridded data
+- Emphasize consistent units across sources
+
+</details>
+
+---
