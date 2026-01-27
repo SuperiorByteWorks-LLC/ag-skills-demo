@@ -207,6 +207,7 @@ Key points:
 **Objective:** Analyze field boundaries and produce a map-based summary.
 
 **Instructions:**
+
 1. Load and visualize field boundaries for your region.
 2. Join boundaries with weather or soil data for context.
 3. Create a map highlighting key spatial patterns.

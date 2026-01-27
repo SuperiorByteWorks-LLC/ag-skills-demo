@@ -207,6 +207,7 @@ Key points:
 **Objective:** Combine multiple spatial datasets and produce a summarized analysis output.
 
 **Instructions:**
+
 1. Integrate field boundaries with weather, soil, and satellite data.
 2. Perform zonal statistics to summarize key metrics.
 3. Create a short report describing spatial patterns and findings.

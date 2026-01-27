@@ -228,6 +228,7 @@ Key points:
 **Objective:** Submit and present the final Row Crop Intelligence Dashboard.
 
 **Instructions:**
+
 1. Finalize your dashboard and documentation.
 2. Prepare a short presentation of findings.
 3. Submit final deliverables and links.

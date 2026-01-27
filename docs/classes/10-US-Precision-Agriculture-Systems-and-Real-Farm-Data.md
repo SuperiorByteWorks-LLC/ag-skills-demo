@@ -207,6 +207,7 @@ Key points:
 **Objective:** Prepare for the final project by understanding precision ag data workflows.
 
 **Instructions:**
+
 1. Review the case study notes from today.
 2. Identify at least one data source you want to use in your final project.
 3. Draft a short plan for how you might integrate that data.

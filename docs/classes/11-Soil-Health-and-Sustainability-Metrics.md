@@ -207,6 +207,7 @@ Key points:
 **Objective:** Prepare soil health metrics for final project integration.
 
 **Instructions:**
+
 1. Review soil health indicators discussed today.
 2. Identify which metrics align with your final project goals.
 3. Draft a short list of data sources to support those metrics.

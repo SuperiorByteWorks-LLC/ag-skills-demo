@@ -3,6 +3,7 @@
 ## 🎨 COLOR PALETTE
 
 ### PRIMARY BRAND COLORS
+
 ```
 #2D5016  - Dark Green (Titles, Primary Elements)
 #4CAF50  - Medium Green (Accent Bar, Highlights)
@@ -10,12 +11,14 @@
 ```
 
 ### SECONDARY COLORS
+
 ```
 #1E88E5  - Blue (Secondary Headings, Data)
 #F57C00  - Orange (Warm Accent, Emphasis)
 ```
 
 ### NEUTRALS
+
 ```
 #FFFFFF   - White (Main Background)
 #F5F5F5   - Light Gray (Alternate Rows)
@@ -50,15 +53,15 @@
 
 ## 🏷️ TEXT SIZES & WEIGHTS
 
-| Element | Size | Weight | Color |
-|---------|------|--------|-------|
-| Title Slide Main | 48-54pt | Bold | #FFFFFF |
-| Title Slide Sub | 28-32pt | Regular | #E8F5E9 |
-| Slide Title | 32-36pt | Bold | #2D5016 |
-| Heading Level 3 | 24-28pt | Semibold | #1E88E5 |
-| Body Text | 20-24pt | Regular | #212121 |
-| Captions | 14-18pt | Regular | #666666 |
-| Footer | 10-12pt | Regular | #999999 |
+| Element          | Size    | Weight   | Color   |
+| ---------------- | ------- | -------- | ------- |
+| Title Slide Main | 48-54pt | Bold     | #FFFFFF |
+| Title Slide Sub  | 28-32pt | Regular  | #E8F5E9 |
+| Slide Title      | 32-36pt | Bold     | #2D5016 |
+| Heading Level 3  | 24-28pt | Semibold | #1E88E5 |
+| Body Text        | 20-24pt | Regular  | #212121 |
+| Captions         | 14-18pt | Regular  | #666666 |
+| Footer           | 10-12pt | Regular  | #999999 |
 
 **Font**: Segoe UI, Calibri, or Arial (sans-serif only)
 
@@ -67,11 +70,13 @@
 ## 🎬 THE 6 SLIDE TYPES
 
 ### 1️⃣ TITLE SLIDE
+
 - Gradient: #2D5016 → #4CAF50
 - Text: #FFFFFF (title), #E8F5E9 (subtitle)
 - Centered, full-screen background
 
 ### 2️⃣ CONTENT SLIDE
+
 - Background: #FFFFFF
 - Title: #2D5016 (dark green)
 - Text: #212121 (dark gray)
@@ -79,6 +84,7 @@
 - Max 5 bullets
 
 ### 3️⃣ TWO-COLUMN
+
 - Background: #FFFFFF
 - Title: #2D5016
 - Left Col BG: #F5F5F5
@@ -87,6 +93,7 @@
 - Accent bar: #4CAF50
 
 ### 4️⃣ DATA CHART
+
 - Background: #FFFFFF with #EEEEEE grid
 - Title: #2D5016
 - Series 1: #1E88E5 (blue)
@@ -96,12 +103,14 @@
 - Series 5: #9C27B0 (purple)
 
 ### 5️⃣ CALL-TO-ACTION
+
 - Background: #2D5016 gradient
 - Text: #FFFFFF
 - Accent: #4CAF50 or #F57C00
 - No top bar (full background)
 
 ### 6️⃣ DATA TABLE
+
 - Header BG: #1E88E5, Text: #FFFFFF
 - Row 1 BG: #FFFFFF
 - Row 2 BG: #F5F5F5 (alternating)
@@ -113,12 +122,14 @@
 ## 🎨 DESIGN ELEMENTS
 
 **Top Accent Bar**
+
 - Position: Top of content slides
 - Height: 5px
 - Color: #4CAF50
 - Always include (except title/CTA slides)
 
 **Callout Box**
+
 - Background: #F5F5F5
 - Border: 3px left #4CAF50
 - Radius: 4-6px
@@ -126,6 +137,7 @@
 - Text: #212121
 
 **Margins & Spacing**
+
 - Horizontal margins: 48pt
 - Vertical margins: 36pt
 - Between sections: 24-36pt
@@ -152,13 +164,13 @@
 ## 🚀 AI PROMPT
 
 > "Create ELVTR agricultural analytics slide:
-> 
+>
 > Colors: Dark green title (#2D5016), 5pt green bar (#4CAF50), white background, dark gray text (#212121), blue headers (#1E88E5)
-> 
+>
 > Typography: Segoe UI/Calibri, 32-36pt title (bold), 20-24pt body (regular), 1.4 line spacing
-> 
+>
 > Design: 5pt green accent bar at top, max 5 bullets, professional agricultural theme, clean minimal style
-> 
+>
 > Content: [Your content]"
 
 ---

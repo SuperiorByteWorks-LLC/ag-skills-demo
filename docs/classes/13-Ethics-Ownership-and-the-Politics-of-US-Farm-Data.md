@@ -228,6 +228,7 @@ Key points:
 **Objective:** Reflect on ethical and policy considerations for the final project.
 
 **Instructions:**
+
 1. Identify one ethical concern related to your chosen data sources.
 2. Document how you will address privacy and ownership in your project.
 3. Note any policy constraints you need to consider.

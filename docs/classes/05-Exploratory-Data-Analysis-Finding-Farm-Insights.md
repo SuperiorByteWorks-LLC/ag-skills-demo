@@ -228,6 +228,7 @@ Key points:
 **Objective:** Conduct a structured EDA and communicate insights with visuals.
 
 **Instructions:**
+
 1. Run EDA on a row crop yield or soil health dataset.
 2. Create at least five visualizations that support key insights.
 3. Summarize findings, correlations, and open questions.

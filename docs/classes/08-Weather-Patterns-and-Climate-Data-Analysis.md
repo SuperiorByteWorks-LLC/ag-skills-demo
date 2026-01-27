@@ -207,6 +207,7 @@ Key points:
 **Objective:** Analyze long-term weather trends and relate them to crop outcomes.
 
 **Instructions:**
+
 1. Download at least 30 years of weather data for a Midwest county.
 2. Analyze temperature, precipitation, and GDD trends.
 3. Identify extreme events and connect them to yield patterns.

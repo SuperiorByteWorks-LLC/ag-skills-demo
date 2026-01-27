@@ -228,6 +228,7 @@ Key points:
 **Objective:** Use satellite imagery to evaluate crop health over time.
 
 **Instructions:**
+
 1. Download Sentinel-2 or Landsat imagery for a crop field.
 2. Compute NDVI and at least one additional vegetation index.
 3. Create a time-series visualization and document insights.

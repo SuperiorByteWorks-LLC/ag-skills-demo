@@ -3,6 +3,7 @@
 ## 🎨 THE ELVTR COLOR PALETTE
 
 ### Tier 1: Brand Colors (PRIMARY - Use Most Frequently)
+
 ```
 #2D5016  - Dark Green (Primary - slide titles, main text)
 #4CAF50  - Medium Green (Accent bar, emphasis, highlights)
@@ -10,6 +11,7 @@
 ```
 
 ### Tier 2: Secondary Colors (Use for Visual Variety)
+
 ```
 #1E88E5  - Primary Blue (Secondary headings, data highlights, column headers)
 #F57C00  - Orange (Warm accent, emphasis, callout boxes)
@@ -17,6 +19,7 @@
 ```
 
 ### Tier 3: Accent & Alert Colors
+
 ```
 #D32F2F  - Red (Alerts, important warnings, critical data)
 #9C27B0  - Purple (Data visualization series, alternative accents)
@@ -24,6 +27,7 @@
 ```
 
 ### Tier 4: Neutral Palette (Text, Backgrounds, Borders)
+
 ```
 #FFFFFF   - White (Primary background for all content slides)
 #F9F9F9   - Off-white (Subtle background alternative)
@@ -42,6 +46,7 @@
 ## 📐 SLIDE STRUCTURE & LAYOUT
 
 ### Standard Content Slide Layout
+
 ```
 ┌─────────────────────────────────────────────────────────┐
 │ ═══════════ 5pt Green Accent Bar (#4CAF50) ═════════════│  ← ALWAYS INCLUDE
@@ -65,6 +70,7 @@
 ```
 
 ### Spacing Standards
+
 ```
 Slide Margins:           36-48pt (0.5-0.67 inches)
 Between Sections:        24-36pt vertical
@@ -80,6 +86,7 @@ Line Height:             1.3-1.5 depending on element
 ## 🏷️ TYPOGRAPHY HIERARCHY
 
 ### Font Family
+
 ```
 Primary Font:    Segoe UI (Microsoft Office standard)
 Fallback 1:      Calibri
@@ -90,24 +97,25 @@ Style:           Sans-serif (modern, clean, readable)
 
 ### Font Size & Weight Specifications
 
-| Element | Size | Weight | Color | Notes |
-|---------|------|--------|-------|-------|
-| **Title Slide - Main** | 48-54pt | Bold (700) | #FFFFFF | White on gradient |
-| **Title Slide - Subtitle** | 28-32pt | Regular (400) | #E8F5E9 | Light green on dark |
-| **Title Slide - Metadata** | 14-16pt | Regular (400) | #CCCCCC | Date, instructor, session |
-| **Slide Title** | 32-36pt | Bold (700) | #2D5016 | Dark green |
-| **Section Heading** | 36-40pt | Bold (700) | #2D5016 | Dark green |
-| **Heading Level 3** | 24-28pt | Semibold (600) | #1E88E5 | Blue |
-| **Heading Level 4** | 20-24pt | Semibold (600) | #2D5016 | Dark green |
-| **Body Text** | 20-24pt | Regular (400) | #212121 | Dark gray on white |
-| **Bullet Points** | 20-24pt | Regular (400) | #212121 | Dark gray |
-| **Column Headers** | 20-24pt | Bold (700) | #1E88E5 | Blue |
-| **Small Text/Captions** | 14-18pt | Regular (400) | #666666 | Medium gray |
-| **Data Labels** | 12-14pt | Regular (400) | #555555 | Dark gray |
-| **Source/Attribution** | 10-12pt | Regular (400) | #999999 | Muted gray |
-| **Footer Text** | 10-12pt | Regular (400) | #CCCCCC | Light gray |
+| Element                    | Size    | Weight         | Color   | Notes                     |
+| -------------------------- | ------- | -------------- | ------- | ------------------------- |
+| **Title Slide - Main**     | 48-54pt | Bold (700)     | #FFFFFF | White on gradient         |
+| **Title Slide - Subtitle** | 28-32pt | Regular (400)  | #E8F5E9 | Light green on dark       |
+| **Title Slide - Metadata** | 14-16pt | Regular (400)  | #CCCCCC | Date, instructor, session |
+| **Slide Title**            | 32-36pt | Bold (700)     | #2D5016 | Dark green                |
+| **Section Heading**        | 36-40pt | Bold (700)     | #2D5016 | Dark green                |
+| **Heading Level 3**        | 24-28pt | Semibold (600) | #1E88E5 | Blue                      |
+| **Heading Level 4**        | 20-24pt | Semibold (600) | #2D5016 | Dark green                |
+| **Body Text**              | 20-24pt | Regular (400)  | #212121 | Dark gray on white        |
+| **Bullet Points**          | 20-24pt | Regular (400)  | #212121 | Dark gray                 |
+| **Column Headers**         | 20-24pt | Bold (700)     | #1E88E5 | Blue                      |
+| **Small Text/Captions**    | 14-18pt | Regular (400)  | #666666 | Medium gray               |
+| **Data Labels**            | 12-14pt | Regular (400)  | #555555 | Dark gray                 |
+| **Source/Attribution**     | 10-12pt | Regular (400)  | #999999 | Muted gray                |
+| **Footer Text**            | 10-12pt | Regular (400)  | #CCCCCC | Light gray                |
 
 ### Line Spacing by Element
+
 ```
 Slide Titles:             1.0 (tight, professional)
 Section Headings:         1.1 (compact)
@@ -127,6 +135,7 @@ Captions:                 1.2 (secondary content)
 **Purpose**: Course/session introduction, visual impact
 
 **Layout Structure**:
+
 - Full-screen background (gradient or image)
 - Centered content vertically and horizontally
 - Large title dominating the slide
@@ -134,6 +143,7 @@ Captions:                 1.2 (secondary content)
 - Optional: Instructor name, date, session number at bottom
 
 **Color Scheme**:
+
 ```
 Background:      Linear gradient from #2D5016 (top) → #4CAF50 (bottom)
 Title Text:      #FFFFFF (white)
@@ -143,6 +153,7 @@ Accent Element:  #F57C00 (optional orange line or icon)
 ```
 
 **Typography**:
+
 ```
 Title:           48-54pt, Bold, White (#FFFFFF)
 Subtitle:        28-32pt, Regular, Light Green (#E8F5E9)
@@ -151,6 +162,7 @@ Session/Date:    14-16pt, Regular, Light Gray (#CCCCCC)
 ```
 
 **Design Elements**:
+
 - No top accent bar (full background color)
 - Gradient background from dark to medium green
 - Center alignment
@@ -158,6 +170,7 @@ Session/Date:    14-16pt, Regular, Light Gray (#CCCCCC)
 - Optional: Subtle image or pattern overlay
 
 **Example Composition**:
+
 ```
 [40px padding]
 [Large Title - 54pt Bold White]
@@ -176,6 +189,7 @@ Session/Date:    14-16pt, Regular, Light Gray (#CCCCCC)
 **Purpose**: Listing key points, agenda items, learning objectives, course schedule
 
 **Layout Structure**:
+
 - Title at top of slide
 - Bullet points below (maximum 5 per slide)
 - Optional: Icon or image in corner (not required)
@@ -183,6 +197,7 @@ Session/Date:    14-16pt, Regular, Light Gray (#CCCCCC)
 - Ample white space
 
 **Color Scheme**:
+
 ```
 Background:      #FFFFFF (white)
 Title Color:     #2D5016 (dark green)
@@ -192,6 +207,7 @@ Optional Icon:   #1E88E5 (blue) if included
 ```
 
 **Typography**:
+
 ```
 Title:           32-36pt, Bold, Dark Green (#2D5016)
 Bullets:         20-24pt, Regular, Dark Gray (#212121)
@@ -199,6 +215,7 @@ Sub-bullets:     18-20pt, Regular, Dark Gray (#212121)
 ```
 
 **Design Elements**:
+
 - 5pt solid line in #4CAF50 at very top
 - White background (#FFFFFF)
 - Left margin 48pt, right margin 48pt
@@ -208,6 +225,7 @@ Sub-bullets:     18-20pt, Regular, Dark Gray (#212121)
 - Optional: Icon (20-40px) right-aligned in corner
 
 **Example Composition**:
+
 ```
 [5pt green bar]
 [36pt top margin]
@@ -231,6 +249,7 @@ Sub-bullets:     18-20pt, Regular, Dark Gray (#212121)
 **Purpose**: Side-by-side comparison, pros/cons, before/after, alternative approaches
 
 **Layout Structure**:
+
 - Title at top spanning full width
 - Two columns below (45% width each, 10% gap in center)
 - Headers in each column
@@ -238,6 +257,7 @@ Sub-bullets:     18-20pt, Regular, Dark Gray (#212121)
 - 5pt green accent bar at top
 
 **Color Scheme**:
+
 ```
 Background:          #FFFFFF (white overall)
 Title Color:         #2D5016 (dark green)
@@ -251,6 +271,7 @@ Accent Bar:          #4CAF50 (green) - 5pt top
 ```
 
 **Typography**:
+
 ```
 Title:               32-36pt, Bold, Dark Green (#2D5016)
 Column Headers:      24pt, Bold, Blue (#1E88E5)
@@ -259,6 +280,7 @@ Column Bullets:      18-20pt, Regular, Dark Gray (#212121)
 ```
 
 **Layout Calculations**:
+
 ```
 Total Width:         960px (standard slide)
 Left Margin:         48pt (36px)
@@ -275,6 +297,7 @@ Right Column:        ~320px
 ```
 
 **Design Elements**:
+
 - 5pt green accent bar at top
 - Light gray background for left column
 - White background for right column (creates alternation)
@@ -283,6 +306,7 @@ Right Column:        ~320px
 - Icons or small images (60-80px) in column corners
 
 **Example Composition**:
+
 ```
 [5pt green bar]
 [36pt spacing]
@@ -304,12 +328,14 @@ Column Header (Blue)     |    Column Header (Blue)
 **Purpose**: Display charts, graphs, analytics results, trends, comparisons
 
 **Layout Structure**:
+
 - Title at top (32-36pt)
 - Chart/visualization (fills 65-75% of slide height)
 - Data source/legend at bottom (10-12pt)
 - Optional: Brief description or annotations
 
 **Color Scheme**:
+
 ```
 Background:          #FFFFFF (white)
 Title Color:         #2D5016 (dark green)
@@ -333,6 +359,7 @@ Source Attribution:  #999999 (muted gray)
 ```
 
 **Typography**:
+
 ```
 Title:               32-36pt, Bold, Dark Green (#2D5016)
 Legend:              14pt, Regular, Dark Gray (#212121)
@@ -342,6 +369,7 @@ Source:              10-12pt, Regular, Muted Gray (#999999)
 ```
 
 **Chart Specifications**:
+
 ```
 Chart Dimensions:    Width 70-80% of slide, Height 60-70% of content area
 Chart Type:          Bar, Line, Area, Scatter (avoid 3D)
@@ -353,6 +381,7 @@ Legend Position:     Right side or bottom, outside plot area
 ```
 
 **Design Elements**:
+
 - 5pt green accent bar at top
 - White background with light gray gridlines
 - Bold series colors with high contrast
@@ -362,6 +391,7 @@ Legend Position:     Right side or bottom, outside plot area
 - Optional: Subtle shadow behind chart (drop shadow 0 4px 8px)
 
 **Example Composition**:
+
 ```
 [5pt green bar]
 [36pt spacing]
@@ -385,6 +415,7 @@ Legend or Data Source (10-12pt Gray)
 **Purpose**: Homework assignments, next steps, Q&A prompts, key deadlines, action items
 
 **Layout Structure**:
+
 - Centered or left-aligned content
 - Large, prominent text (28-36pt)
 - Optional: Number badge, icon, or highlight box
@@ -392,6 +423,7 @@ Legend or Data Source (10-12pt Gray)
 - No 5pt accent bar (full background color used instead)
 
 **Color Scheme**:
+
 ```
 Background:      Linear gradient #2D5016 (dark green) or solid
 Text:            #FFFFFF (white)
@@ -402,6 +434,7 @@ Shadow:          0 8px 16px rgba(0, 0, 0, 0.3) - optional
 ```
 
 **Typography**:
+
 ```
 Main Text:       28-36pt, Bold, White (#FFFFFF)
 Sub-text:        20-24pt, Regular, White (#FFFFFF)
@@ -410,6 +443,7 @@ Due Date:        18-20pt, Semibold, Orange (#F57C00)
 ```
 
 **Design Elements**:
+
 - Full-screen color background (gradient preferred)
 - Centered or left-aligned text
 - Large number badge in orange if applicable
@@ -419,6 +453,7 @@ Due Date:        18-20pt, Semibold, Orange (#F57C00)
 - Optional: Icon or illustration (80-120px)
 
 **Example Composition**:
+
 ```
 [Dark Green Gradient Background]
 [Centered Content]
@@ -443,6 +478,7 @@ Due Date:        18-20pt, Semibold, Orange (#F57C00)
 **Purpose**: Displaying tabular data with clear hierarchy, comparison matrices, schedule tables
 
 **Layout Structure**:
+
 - Title at top
 - Table with header row and data rows
 - Alternating row colors for readability
@@ -450,6 +486,7 @@ Due Date:        18-20pt, Semibold, Orange (#F57C00)
 - 5pt green accent bar at top
 
 **Color Scheme**:
+
 ```
 Background:           #FFFFFF (overall slide)
 Title:                #2D5016 (dark green)
@@ -466,6 +503,7 @@ Accent Bar:           #4CAF50 (medium green) - 5pt top
 ```
 
 **Typography**:
+
 ```
 Title:                32-36pt, Bold, Dark Green (#2D5016)
 Header Row:           14-16pt, Bold, White (#FFFFFF)
@@ -475,6 +513,7 @@ Source:               10-12pt, Regular, Muted Gray (#999999)
 ```
 
 **Table Specifications**:
+
 ```
 Header Row Height:    40-44px
 Data Row Height:      32-36px
@@ -488,6 +527,7 @@ Max Rows:             10-12 per slide (if more, span multiple slides)
 ```
 
 **Design Elements**:
+
 - 5pt green accent bar at top
 - Blue or green header row with white text
 - Alternating white and light gray rows
@@ -498,6 +538,7 @@ Max Rows:             10-12 per slide (if more, span multiple slides)
 - Source citation below table
 
 **Example Composition**:
+
 ```
 [5pt green bar]
 [36pt spacing]
@@ -523,6 +564,7 @@ Max Rows:             10-12 per slide (if more, span multiple slides)
 ## 🎨 DESIGN ELEMENTS & PATTERNS
 
 ### Top Accent Bar (Universal Element)
+
 ```
 Position:         Top of slide (except title slides)
 Height:           5px (exactly)
@@ -535,6 +577,7 @@ Does NOT Apply:   Title slides, assignment/CTA slides
 ```
 
 ### Side Accent Bar (Optional Element)
+
 ```
 Position:         Left margin (optional)
 Width:            3px (exactly)
@@ -547,6 +590,7 @@ Best Use:         Charts, important sections, data slides
 ```
 
 ### Rounded Corner Callout Box
+
 ```
 Background:       #F5F5F5 (light gray)
 Border:           3px solid #4CAF50 (green) on left
@@ -560,21 +604,23 @@ Usage:            Key takeaways, important notes, highlights
 ```
 
 **Example Callout HTML**:
+
 ```html
-<div style="
+<div
+  style="
   background: #F5F5F5;
   border-left: 3px solid #4CAF50;
   border-radius: 4px;
   padding: 20px;
   margin: 18px 0;
-">
-  <p style="color: #212121; font-size: 18pt;">
-    <strong>Key Point:</strong> This is an important takeaway.
-  </p>
+"
+>
+  <p style="color: #212121; font-size: 18pt;"><strong>Key Point:</strong> This is an important takeaway.</p>
 </div>
 ```
 
 ### Icon & Image Usage
+
 ```
 Style:            Flat design or professional photography
 Size Range:       80-200px (depending on prominence)
@@ -589,6 +635,7 @@ Agricultural:     Preferred when showing farming/data visuals
 ```
 
 ### Divider Lines
+
 ```
 Thin Line:        1px solid #CCCCCC (medium gray)
 Medium Line:      2px solid #DDDDDD (light gray)
@@ -604,6 +651,7 @@ Width:            60-100% of content width (not full width)
 ## 🎬 COLOR APPLICATION BY CONTEXT
 
 ### Titles & Headings
+
 ```
 H1 (Main Title):      #2D5016 (dark green) - 32-54pt
 H2 (Section Title):   #2D5016 (dark green) - 36-40pt
@@ -613,6 +661,7 @@ Labels (Data):        #212121 (dark gray) - 12-14pt
 ```
 
 ### Body Text
+
 ```
 Primary Text:    #212121 (dark gray) on #FFFFFF (white)
 Secondary Text:  #666666 (medium gray) on #FFFFFF (white)
@@ -622,6 +671,7 @@ Light Text:      #E8F5E9 (light green) on dark backgrounds
 ```
 
 ### Data Visualization
+
 ```
 Background:      #FFFFFF (white)
 Grid:            #EEEEEE (very light gray)
@@ -635,6 +685,7 @@ Highlight:       #FF9800 (light orange) - accent a single value
 ```
 
 ### Backgrounds
+
 ```
 Content Slides:        #FFFFFF (white)
 Alternate Sections:    #F5F5F5 (light gray)
@@ -649,6 +700,7 @@ Callouts:              #F5F5F5 (light gray) with green border
 ## ✅ VISUAL CONSISTENCY CHECKLIST
 
 ### Essential Elements
+
 - [ ] 5pt green accent bar (#4CAF50) at top of content slides
 - [ ] Dark green titles (#2D5016) on all slides
 - [ ] White or light gray backgrounds (#FFFFFF or #F5F5F5)
@@ -656,6 +708,7 @@ Callouts:              #F5F5F5 (light gray) with green border
 - [ ] Sans-serif font throughout (Segoe UI, Calibri, or Arial)
 
 ### Typography
+
 - [ ] Title is 32-36pt, bold, dark green
 - [ ] Body text is 20-24pt, regular, dark gray
 - [ ] Captions are 14-18pt, regular, medium gray
@@ -663,6 +716,7 @@ Callouts:              #F5F5F5 (light gray) with green border
 - [ ] No text smaller than 10pt
 
 ### Layout & Spacing
+
 - [ ] Left/right margins are 36-48pt
 - [ ] Top/bottom margins are 36pt minimum
 - [ ] White space between sections
@@ -670,6 +724,7 @@ Callouts:              #F5F5F5 (light gray) with green border
 - [ ] Consistent alignment (left-aligned text, centered titles)
 
 ### Colors
+
 - [ ] Primary green (#2D5016) used consistently for titles
 - [ ] Secondary blue (#1E88E5) for emphasis and headers
 - [ ] Orange (#F57C00) used sparingly for accent
@@ -677,6 +732,7 @@ Callouts:              #F5F5F5 (light gray) with green border
 - [ ] High contrast between text and background (4.5:1 minimum)
 
 ### Content
+
 - [ ] Single main idea per slide
 - [ ] Professional agricultural imagery where used
 - [ ] Data source cited on all charts
@@ -684,6 +740,7 @@ Callouts:              #F5F5F5 (light gray) with green border
 - [ ] Callout boxes used for key takeaways
 
 ### Accessibility
+
 - [ ] Text has sufficient contrast (WCAG AA standard: 4.5:1 for normal text)
 - [ ] Font size readable from distance (minimum 14pt for body)
 - [ ] No critical information conveyed by color alone
@@ -699,6 +756,7 @@ When asking AI tools to generate ELVTR-style slides, use this comprehensive prom
 **"Create an ELVTR agricultural data analytics slide with these exact specifications:**
 
 **COLORS:**
+
 - Title color: Dark green (#2D5016)
 - Accent bar: 5pt solid medium green (#4CAF50) at top
 - Background: White (#FFFFFF) or light gray (#F5F5F5)
@@ -708,6 +766,7 @@ When asking AI tools to generate ELVTR-style slides, use this comprehensive prom
 - Borders: Light gray (#DDDDDD)
 
 **TYPOGRAPHY:**
+
 - Font family: Segoe UI, Calibri, or Arial (sans-serif only)
 - Slide title: 32-36pt, bold, dark green
 - Body text: 20-24pt, regular, dark gray
@@ -716,6 +775,7 @@ When asking AI tools to generate ELVTR-style slides, use this comprehensive prom
 - Line spacing: 1.4 for body, 1.3 for bullets
 
 **LAYOUT:**
+
 - Margins: 48pt left/right, 36pt top/bottom
 - Maximum 5 bullet points per slide
 - One main idea per slide
@@ -724,6 +784,7 @@ When asking AI tools to generate ELVTR-style slides, use this comprehensive prom
 - Clear visual hierarchy with adequate white space
 
 **DESIGN STYLE:**
+
 - Modern and professional
 - Agricultural/farming focused
 - Data-centric and analytical
@@ -733,13 +794,14 @@ When asking AI tools to generate ELVTR-style slides, use this comprehensive prom
 
 **SLIDE TYPE:** [Choose: Title Slide / Content Slide / Two-Column / Chart / Table / Call-to-Action]
 
-**CONTENT:** [Your specific content here]"**
+**CONTENT:** [Your specific content here]"\*\*
 
 ---
 
 ## 📊 DATA VISUALIZATION COLOR PALETTE
 
 ### Chart Series Order (ALWAYS USE IN THIS SEQUENCE)
+
 ```
 1st Series:  #1E88E5  (Blue - primary/main data)
 2nd Series:  #F57C00  (Orange - secondary/comparison)
@@ -752,6 +814,7 @@ When asking AI tools to generate ELVTR-style slides, use this comprehensive prom
 ### How to Apply to Different Chart Types
 
 **Line Chart:**
+
 - Line 1: #1E88E5 (2-3px width)
 - Line 2: #F57C00 (2-3px width)
 - Line 3: #4CAF50 (2-3px width)
@@ -760,6 +823,7 @@ When asking AI tools to generate ELVTR-style slides, use this comprehensive prom
 - Axis: #555555 (dark gray)
 
 **Bar Chart:**
+
 - Bar 1: #1E88E5 (standard height)
 - Bar 2: #F57C00 (standard height)
 - Bar 3: #4CAF50 (standard height)
@@ -767,12 +831,14 @@ When asking AI tools to generate ELVTR-style slides, use this comprehensive prom
 - Axis labels: #555555
 
 **Stacked Bar:**
+
 - Segment 1: #1E88E5 (bottom)
 - Segment 2: #F57C00 (middle)
 - Segment 3: #4CAF50 (top)
 - Borders: 1px #DDDDDD between segments
 
 **Scatter Plot:**
+
 - Series 1 Points: #1E88E5 (8-10px diameter)
 - Series 2 Points: #F57C00 (8-10px diameter)
 - Series 3 Points: #4CAF50 (8-10px diameter)
@@ -780,6 +846,7 @@ When asking AI tools to generate ELVTR-style slides, use this comprehensive prom
 - Grid: #EEEEEE
 
 **Area Chart:**
+
 - Area 1: #1E88E5 (60% opacity)
 - Area 2: #F57C00 (60% opacity)
 - Area 3: #4CAF50 (60% opacity)
@@ -789,27 +856,28 @@ When asking AI tools to generate ELVTR-style slides, use this comprehensive prom
 
 ## 🎨 COMPLETE COLOR REFERENCE TABLE
 
-| Use Case | Color | Hex | RGB | When to Use |
-|----------|-------|-----|-----|-------------|
-| Primary Titles | Dark Green | #2D5016 | 45, 80, 22 | All slide titles |
-| Accent Bar | Medium Green | #4CAF50 | 76, 175, 80 | Top of content slides |
-| Light Highlight | Light Green | #E8F5E9 | 232, 245, 233 | Text on dark, accents |
-| Secondary Headings | Blue | #1E88E5 | 30, 136, 229 | H3, column headers |
-| Warm Accent | Orange | #F57C00 | 245, 124, 0 | Emphasis, badges |
-| Alert/Critical | Red | #D32F2F | 211, 47, 47 | Warnings, alerts |
-| Purple Series | Purple | #9C27B0 | 156, 39, 176 | Data series 5 |
-| Primary Background | White | #FFFFFF | 255, 255, 255 | Slide backgrounds |
-| Alt Background | Light Gray | #F5F5F5 | 245, 245, 245 | Alternate rows |
-| Primary Text | Dark Gray | #212121 | 33, 33, 33 | Body text |
-| Secondary Text | Gray | #666666 | 102, 102, 102 | Secondary info |
-| Muted Text | Muted | #999999 | 153, 153, 153 | Captions |
-| Borders | Light Border | #DDDDDD | 221, 221, 221 | Table/divider lines |
+| Use Case           | Color        | Hex     | RGB           | When to Use           |
+| ------------------ | ------------ | ------- | ------------- | --------------------- |
+| Primary Titles     | Dark Green   | #2D5016 | 45, 80, 22    | All slide titles      |
+| Accent Bar         | Medium Green | #4CAF50 | 76, 175, 80   | Top of content slides |
+| Light Highlight    | Light Green  | #E8F5E9 | 232, 245, 233 | Text on dark, accents |
+| Secondary Headings | Blue         | #1E88E5 | 30, 136, 229  | H3, column headers    |
+| Warm Accent        | Orange       | #F57C00 | 245, 124, 0   | Emphasis, badges      |
+| Alert/Critical     | Red          | #D32F2F | 211, 47, 47   | Warnings, alerts      |
+| Purple Series      | Purple       | #9C27B0 | 156, 39, 176  | Data series 5         |
+| Primary Background | White        | #FFFFFF | 255, 255, 255 | Slide backgrounds     |
+| Alt Background     | Light Gray   | #F5F5F5 | 245, 245, 245 | Alternate rows        |
+| Primary Text       | Dark Gray    | #212121 | 33, 33, 33    | Body text             |
+| Secondary Text     | Gray         | #666666 | 102, 102, 102 | Secondary info        |
+| Muted Text         | Muted        | #999999 | 153, 153, 153 | Captions              |
+| Borders            | Light Border | #DDDDDD | 221, 221, 221 | Table/divider lines   |
 
 ---
 
 ## 🏥 DESIGN HEALTH CHECKLIST
 
 **MUST HAVE (Non-negotiable):**
+
 - ✅ Dark green title (#2D5016) - brand consistency
 - ✅ 5pt green accent bar (#4CAF50) - visual identity
 - ✅ Sans-serif font only (Segoe UI, Calibri, Arial)
@@ -818,6 +886,7 @@ When asking AI tools to generate ELVTR-style slides, use this comprehensive prom
 - ✅ Clear visual hierarchy
 
 **SHOULD HAVE (Best Practice):**
+
 - ✅ Adequate margins (36-48pt)
 - ✅ Maximum 5 bullet points per slide
 - ✅ Professional imagery (agricultural focused)
@@ -826,6 +895,7 @@ When asking AI tools to generate ELVTR-style slides, use this comprehensive prom
 - ✅ Rounded corner callout boxes for emphasis
 
 **DO NOT INCLUDE (Avoid):**
+
 - ❌ Jarring or inconsistent color combinations
 - ❌ More than 2 font families on one slide
 - ❌ Crowded or cluttered layouts

@@ -228,6 +228,7 @@ Key points:
 **Objective:** Integrate course skills into a comprehensive decision-support dashboard.
 
 **Instructions:**
+
 1. Combine datasets (USDA, weather, satellite, soil, precision ag).
 2. Build an interactive dashboard that tells a clear story.
 3. Document your pipeline, assumptions, and key findings.

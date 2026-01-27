@@ -207,6 +207,7 @@ Key points:
 **Objective:** Build a repeatable cleaning workflow for raw agricultural datasets.
 
 **Instructions:**
+
 1. Download raw data from multiple sources.
 2. Clean, validate, and merge the datasets using Python and or SQL.
 3. Document data quality issues and how you resolved them.
