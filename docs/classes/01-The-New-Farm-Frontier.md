@@ -2034,22 +2034,22 @@ U.S. agriculture is not monolithic. A corn farmer in Iowa, a wheat producer in K
 
 ```mermaid
 graph TB
-    subgraph "🌽 **Corn Belt**"
-        CB1[**Primary System**<br/>Corn-soybean rotation<br/>Yield maximization]
-        CB2[**Key Data Needs**<br/>Tile drainage mapping<br/>N management<br/>Multi-year rotation]
-        CB3[**Tech Adoption: HIGH**<br/>60-75% precision ag<br/>2-4 year ROI]
+    subgraph CB["🌽 Corn Belt"]
+        CB1["Primary System<br/>Corn-soybean rotation<br/>Yield maximization"]
+        CB2["Key Data Needs<br/>Tile drainage mapping<br/>N management<br/>Multi-year rotation"]
+        CB3["Tech Adoption: HIGH<br/>60-75 percent precision ag<br/>2-4 year ROI"]
     end
 
-    subgraph "🌾 **Great Plains**"
-        GP1[**Primary System**<br/>Wheat, irrigated corn<br/>Water management]
-        GP2[**Key Data Needs**<br/>Irrigation tracking<br/>Aquifer monitoring<br/>Drought indices]
-        GP3[**Tech Adoption: SELECTIVE**<br/>GPS high (90%)<br/>VRT lower (30-50%)]
+    subgraph GP["🌾 Great Plains"]
+        GP1["Primary System<br/>Wheat, irrigated corn<br/>Water management"]
+        GP2["Key Data Needs<br/>Irrigation tracking<br/>Aquifer monitoring<br/>Drought indices"]
+        GP3["Tech Adoption: SELECTIVE<br/>GPS high 90 percent<br/>VRT lower 30-50 percent"]
     end
 
-    subgraph "🌱 **Southeast**"
-        SE1[**Primary System**<br/>Cotton, diverse crops<br/>Disease management]
-        SE2[**Key Data Needs**<br/>Multi-crop integration<br/>Pest scouting<br/>Cotton quality tracking]
-        SE3[**Tech Adoption: MODERATE**<br/>35-55% precision ag<br/>10-25% below Corn Belt]
+    subgraph SE["🌱 Southeast"]
+        SE1["Primary System<br/>Cotton, diverse crops<br/>Disease management"]
+        SE2["Key Data Needs<br/>Multi-crop integration<br/>Pest scouting<br/>Cotton quality tracking"]
+        SE3["Tech Adoption: MODERATE<br/>35-55 percent precision ag<br/>10-25 percent below Corn Belt"]
     end
 
     CB1 --> CB2
