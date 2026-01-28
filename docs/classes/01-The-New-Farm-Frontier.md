@@ -66,30 +66,49 @@ This connects to Class 02 next week, where you'll build your smart farm workspac
 ## 📍 Agenda
 
 - [x] Housekeeping
-- [ ] Evolution of agricultural data (15 min)
-- [ ] Key data types in modern farming (20 min)
-- [ ] Real-world case studies with numbers (20 min)
-- [ ] Industry trends & challenges (10 min)
-- [ ] Assignment preview (5 min)
-- [ ] Q&A (5 min)
+- [ ] Evolution of agricultural data (10 min)
+- [ ] Key data types in modern farming (8 min)
+- [ ] Who's shaping the agricultural data field (20 min)
+- [ ] Real-world case studies (15 min - overview only, detailed reading assigned)
+- [ ] How data drives decisions (20 min - focus on 2 decision types)
+- [ ] Assignment preview (3 min)
+- [ ] Q&A (4 min)
 
-**Total:** 75 minutes
+**Total:** 80 minutes
 
 <details>
 <summary><strong>💬 Speaker Notes</strong></summary>
 
-- "Packed agenda today covering the full data landscape"
-- "Mix of history, technical concepts, and real case study examples"
-- "The case studies will show you actual research findings with numbers"
-- "First assignment is introduced at the end"
+**Updated Structure:** Two major new sections added to align with PowerPoint presentation structure.
 
-### Pacing
+**Pacing Strategy for 80-Minute Class:**
 
-- Evolution: 15 min (don't rush - sets context)
-- Data types: 20 min (core learning)
-- Case studies: 20 min (engagement and relevance - this is the new stuff)
-- Trends: 10 min (quick overview)
-- Assignment: 5 min (clear and actionable)
+1. **Evolution (10 min):** Condensed from 15 min - hit key eras without deep dive
+2. **Data Types (8 min):** Condensed from 20 min - overview + mermaid diagram, detailed examples in speaker notes
+3. **Who's Shaping the Field (20 min):** NEW SECTION - Critical for understanding industry landscape
+   - Equipment manufacturers (4 min)
+   - Software platforms (5 min)
+   - Satellite providers (3 min)
+   - Government & standards (3 min)
+   - Market consolidation (5 min)
+4. **Case Studies (15 min):** Condensed from 20 min - Provide 5-minute overview of each case study
+   - NASA Harvest: 5 min (detailed document assigned for reading)
+   - John Deere: 5 min (detailed document assigned for reading)
+   - Regional Diversity: 5 min (detailed document assigned for reading)
+5. **How Data Drives Decisions (20 min):** NEW SECTION - Practical application focus
+   - Intro + cycle (3 min)
+   - Planting decisions (5 min)
+   - Nitrogen management (6 min)
+   - Skip irrigation & harvest in lecture (assigned reading), just mention them (1 min)
+   - Universal cycle recap (5 min)
+6. **Assignment (3 min):** Quick overview, detailed instructions in markdown
+7. **Q&A (4 min):** Buffer time
+
+**Flexibility Options:**
+- If running long: Skip market consolidation subsection (5 min saved), reduce case study time to 10 min total (5 min saved)
+- If running short: Add irrigation decision example (6 min), expand case study discussion (5 min)
+
+**Assignment Note:** All three case study documents (01.03, 01.04, 01.05) are comprehensive standalone readings. In class, provide 5-minute summaries; students read full documents as homework.
 
 </details>
 
@@ -396,6 +415,383 @@ For each data type:
 - "We combined all six types in FieldView"
 - "Farmer opens one dashboard, sees everything"
 - "That's what you're building toward in Class 12"
+
+</details>
+
+---
+
+### Who's Shaping the Agricultural Data Field
+
+**The Ecosystem:** A complex landscape of equipment manufacturers, software platforms, satellite providers, government agencies, and industry organizations competing and collaborating to control agricultural data.
+
+**Key Insight:** The agricultural data field isn't just farmers and researchers anymore—it's a multi-billion dollar industry where equipment manufacturers, seed companies, and tech platforms all compete for data access and control.
+
+#### The Major Players
+
+```mermaid
+graph TD
+    A[🚜 **Equipment Manufacturers**<br/>John Deere, CNH, AGCO] -->|Equipment Data| D[💾 **Data Platforms**]
+    B[🛰️ **Satellite Providers**<br/>Planet Labs, NASA Harvest] -->|Remote Sensing| D
+    C[🏢 **Farm Management Software**<br/>FieldView, Granular, FBN] -->|Analytics & Tools| D
+    D -->|Insights & Services| E[👨‍🌾 **Farmers**]
+    F[🏛️ **Government & Research**<br/>USDA, Universities] -->|Standards & Data| D
+    G[🤝 **Industry Organizations**<br/>AgGateway, Open Ag Data Alliance] -->|Interoperability Standards| D
+    
+    style A fill:#2E7D32,color:#fff
+    style B fill:#1565C0,color:#fff
+    style C fill:#F57C00,color:#fff
+    style D fill:#6A1B9A,color:#fff
+    style E fill:#C62828,color:#fff
+    style F fill:#00695C,color:#fff
+    style G fill:#4527A0,color:#fff
+```
+
+**Speaker Note Detail:**
+
+<details>
+<summary>Click to expand speaker notes (5-6 minutes)</summary>
+
+**Opening Frame (1 min):**
+- "We've talked about what data exists and why it matters. Now let's talk about WHO controls this data."
+- "This isn't academic—farmers make decisions daily about which platforms to use, whose equipment to buy, and who gets access to their data."
+- "Understanding the players helps you understand the power dynamics and business models shaping the field."
+
+**The Ecosystem Map (1 min):**
+- Walk through the mermaid diagram
+- "Notice everything flows THROUGH data platforms to reach farmers"
+- "The platform owners have enormous power—they're the gatekeepers"
+- "This creates both opportunities (data integration) and risks (lock-in, control)"
+
+**Transition to details:**
+- "Let me break down each category of player, what they offer, and what they want from farmers' data."
+
+**Timing:** 5-6 minutes total for this intro slide
+
+</details>
+
+---
+
+#### Equipment Manufacturers: The Platform Builders
+
+**The Big Four:**
+
+**🚜 John Deere** - Market leader, 200M+ hectares on Operations Center
+- Vertically integrated: Makes equipment AND runs the data platform
+- Major acquisitions: Blue River Technology ($305M, AI/computer vision), Bear Flag Robotics ($250M, autonomy)
+- Business model: Equipment sales + annual software subscriptions ($3K-15K/year)
+
+**🚜 CNH Industrial** - AFS Connect (Case IH), PLM Connect (New Holland)
+- Second-largest equipment manufacturer globally
+- Competing platform strategy: Multi-brand within CNH family
+
+**🚜 AGCO** - Fuse platform (Massey Ferguson, Fendt, Challenger brands)
+- Claims multi-brand interoperability (works with non-AGCO equipment)
+- Third major player in global equipment market
+
+**🔧 Trimble Agriculture** - Hardware + software provider
+- GPS guidance systems, auto-steer, field mapping
+- Platform-agnostic: Partners with multiple equipment brands
+- Focus on precision hardware integration
+
+**The Trend:** Equipment manufacturers are becoming software companies. The tractor is now a data collection device.
+
+**Speaker Note Detail:**
+
+<details>
+<summary>Click to expand speaker notes (4-5 minutes)</summary>
+
+**John Deere Deep Dive (2 min):**
+- "John Deere is the 800-lb gorilla in this space"
+- "They've managed 200 million hectares—that's an area larger than Mexico—through their Operations Center platform"
+- "Their strategy: You buy our equipment, you use our platform, we get your data"
+- "Recent controversy: 'Right to Repair' battles—farmers want to fix their own tractors, Deere says 'that's our software, you just license it'"
+- "But they're investing heavily: $305M for Blue River (AI-powered weed recognition), $250M for Bear Flag (autonomous tractors)"
+
+**The Competition (1.5 min):**
+- "CNH and AGCO are trying to catch up, but they're years behind Deere in data platform maturity"
+- "Trimble is interesting—they're the Switzerland of precision ag, working with everyone"
+- "But notice: All four are trying to control the data layer, not just sell hardware"
+
+**Business Model Shift (1 min):**
+- "This is critical: Equipment margins are thin (5-10%), but software margins are fat (60-80%)"
+- "John Deere's stock valuation increasingly reflects software revenue, not just iron"
+- "A $500K combine that generates $5K/year in subscription revenue for 15 years = $75K additional revenue"
+- "Farmers are noticing: 'I bought the tractor, why do I pay an annual fee to use MY data?'"
+
+**Discussion prompt:** "Anyone here familiar with the Right to Repair movement? How does that apply to farm equipment?"
+
+**Timing:** 4-5 minutes for this section
+
+</details>
+
+---
+
+#### Software Platforms: The Data Aggregators
+
+**Farm Management Software (the digital layer):**
+
+**📊 Climate FieldView** (Bayer/Monsanto) - Market leader, ~40% Corn Belt penetration
+- Acquired by Monsanto (2013, ~$1B), now part of Bayer
+- Subscription tiers: $3K-5K/year typical for mid-size farm
+- Integrated with seed business: "Buy our seeds, get better platform features"
+
+**📊 Granular** (Corteva/DowDuPont) - Enterprise farm management
+- Focus on large farms and corporate farming operations
+- Financial planning, field operations, equipment integration
+- Owned by competitor to Bayer (Corteva)
+
+**🌾 Farmers Business Network (FBN)** - Farmer-owned cooperative model
+- Disrupting traditional model: Farmers pool data, negotiate input prices
+- Transparency: "Here's what your neighbor paid for seed"
+- Growing fast, challenging incumbent agribusiness
+
+**📱 FarmLogs / Bushel** - Cloud-based, independent operators
+- Focus on smaller farms, grain marketing integration
+- More affordable entry point ($500-1500/year)
+
+**The Tension:** These platforms are owned by input suppliers (seeds, chemicals). Do farmers trust them with data that could be used for pricing?
+
+**Speaker Note Detail:**
+
+<details>
+<summary>Click to expand speaker notes (5-6 minutes)</summary>
+
+**Climate FieldView Dominance (2 min):**
+- "FieldView is the Microsoft Windows of farm data platforms—they won the Corn Belt"
+- "Monsanto (now Bayer) paid ~$1 billion for the Climate Corporation in 2013—huge bet on digital ag"
+- "Their model: Give away basic features, charge for advanced analytics, integrate with seed sales"
+- "Example: 'Our hybrid recommendation tool works best if you buy our seeds'"
+- "Farmers love the tool but worry: 'Does Bayer use my yield data to price seeds next year?'"
+
+**The Corteva Counter (1 min):**
+- "Granular is Corteva's answer to FieldView—but they're behind in market share"
+- "Interesting dynamic: Two seed/chemical giants (Bayer vs Corteva) now compete on farm data platforms"
+- "This wasn't the business model 10 years ago—shows how critical data has become"
+
+**FBN - The Disruptor (2 min):**
+- "Farmers Business Network is farmer-owned—huge difference"
+- "Their pitch: 'Pool your data, we'll benchmark you anonymously, negotiate better prices on inputs'"
+- "Example: 'You paid $200/bag for seed. Farmers 50 miles away paid $175. Here's why.'"
+- "This terrifies traditional ag retailers—it's like Costco coming to farming"
+- "But it requires trust: Farmers must share yield data, field boundaries, input costs"
+
+**The Smaller Players (1 min):**
+- "FarmLogs and Bushel serve smaller farms, more price-sensitive customers"
+- "They're independent (not owned by input suppliers)—that matters for trust"
+- "But they lack the R&D budgets of Bayer or Corteva—feature gap is real"
+
+**Key Tension to Highlight:**
+- "Notice the conflict of interest: The companies selling farmers seeds and chemicals also run the data platforms"
+- "Would you trust your health data to a platform owned by your pharmacy? Same dynamic here."
+- "This drives the 'data ownership' debates we'll discuss in case studies"
+
+**Timing:** 5-6 minutes for this section
+
+</details>
+
+---
+
+#### Satellite & Remote Sensing: Eyes in the Sky
+
+**Commercial Satellite Providers:**
+
+**🛰️ Planet Labs** - Daily global imaging (Dove constellation)
+- 200+ satellites, 3-5 meter resolution
+- Daily revisit time (Landsat = 16 days, Planet = every day)
+- Business model: Subscription access to imagery and analytics
+
+**🛰️ Descartes Labs / Taranis** - AI-powered crop monitoring
+- High-resolution imagery (sub-meter via aircraft + satellite)
+- Computer vision for disease detection, pest identification, yield estimation
+- Selling insights, not just images
+
+**Government Programs:**
+
+**🌍 NASA Harvest** - Free satellite data for global food security (covered in depth in Case Study 01.03)
+- Landsat, MODIS, Sentinel satellites (free public data)
+- Challenge: Data is free but requires expertise to use
+
+**The Value Proposition:** Real-time field monitoring at scale. See every field, every day, catch problems early.
+
+**Speaker Note Detail:**
+
+<details>
+<summary>Click to expand speaker notes (3-4 minutes)</summary>
+
+**Planet Labs - The Daily View (1.5 min):**
+- "Planet Labs has over 200 satellites—largest constellation in history"
+- "They image the entire Earth's landmass every single day at 3-5 meter resolution"
+- "Compare to Landsat: 16-day revisit, 30-meter pixels. Planet = daily, sharper"
+- "Use case: Insurance companies subscribe to Planet data to verify crop conditions, detect failed acres, settle claims faster"
+- "Farmers rarely subscribe directly—too expensive ($5K-20K/year depending on acreage)"
+- "Instead, they access Planet data through FarmLogs, FieldView, or crop insurance companies"
+
+**AI-Powered Monitoring (1 min):**
+- "Descartes Labs and Taranis are the next evolution: Don't just show images, interpret them"
+- "Example: Taranis uses drones + AI to identify individual diseased plants, alert farmer to spray specific zones"
+- "They're selling agronomic recommendations, not pixels"
+- "This is where the money is: Turn data into decisions"
+
+**NASA Harvest - The Public Option (1 min):**
+- "We'll cover NASA Harvest deeply in Case Study 01.03, but key point here:"
+- "Landsat and Sentinel data are free, global, and consistent—but you need a PhD to process it"
+- "NASA Harvest tries to bridge that gap: pre-process data, make it usable for developing countries"
+- "Example: Ukraine used Harvest data during war to estimate wheat production, inform global food markets"
+
+**The Accessibility Gap:**
+- "Free data ≠ accessible data. This is a theme we'll return to."
+- "Satellite imagery is only valuable if you can turn it into actionable insights"
+
+**Timing:** 3-4 minutes for this section
+
+</details>
+
+---
+
+#### Government, Research & Standards Organizations
+
+**Government Agencies (U.S. context):**
+
+**🏛️ USDA**
+- **NASS** (National Agricultural Statistics Service) - Official crop production statistics
+- **ERS** (Economic Research Service) - Economic analysis, price forecasts
+- **NRCS** (Natural Resources Conservation Service) - Conservation program data, soil surveys
+
+**📚 Land-Grant Universities** (Iowa State, Purdue, U of Illinois, etc.)
+- Extension services: Research → farmer education
+- Field trials, variety testing, precision ag research
+- Critical bridge: Translate academic research into practical farmer tools
+
+**Industry Standards Organizations:**
+
+**🔗 AgGateway** - Data standards and interoperability
+- ADAPT (Agricultural Data Application Programming Toolkit)
+- Goal: Make John Deere data work with Climate FieldView work with Trimble
+- Progress is slow—companies benefit from lock-in
+
+**🔗 Open Ag Data Alliance** - Open-source API standards
+- Farmer-friendly data portability
+- Competing with proprietary platform approaches
+
+**🤝 American Farm Bureau Federation** - Farmer advocacy
+- "Privacy and Security Principles for Farm Data" (2014, updated 2021)
+- Lobbying for farmer data rights, portability requirements
+
+**The Role:** Setting rules, standards, and norms in a fragmented, competitive landscape.
+
+**Speaker Note Detail:**
+
+<details>
+<summary>Click to expand speaker notes (4-5 minutes)</summary>
+
+**Government Data as Public Good (1.5 min):**
+- "USDA collects massive amounts of agricultural data—and it's public"
+- "NASS publishes Crop Production reports: acres planted, yield forecasts, inventory levels"
+- "These reports move commodity markets—traders watch NASS releases like the Fed watches employment data"
+- "ERS provides long-term analysis: What's the 10-year trend in farm income? How do tariffs affect soybean prices?"
+- "NRCS has soil survey data for every field in America—free, detailed, essential for precision ag"
+- "This is baseline data infrastructure—private platforms build on top of it"
+
+**Universities - The Knowledge Brokers (1 min):**
+- "Land-grant universities (created by Morrill Acts, 1862/1890) have a mandate: Research + education for agriculture"
+- "Extension agronomists run field trials: Which corn hybrid performs best in central Iowa? When should I apply fungicide?"
+- "They're trusted neutral parties—not selling anything, just publishing results"
+- "Farmers trust university data more than company marketing—but companies fund university research, so tensions exist"
+
+**The Interoperability Battle (2 min):**
+- "AgGateway is trying to solve a massive problem: Data doesn't move between platforms"
+- "Example: You have a John Deere tractor, Case IH planter, Trimble GPS, and Climate FieldView software. How do they talk to each other?"
+- "ADAPT framework says: 'Here's a common data format. Everyone translate your proprietary format to ADAPT.'"
+- "In theory, this would let farmers switch platforms without losing data—huge for farmer power"
+- "In practice, companies slow-roll adoption. Why? Lock-in is profitable."
+- "Open Ag Data Alliance is pushing harder—farmer-backed, demanding portability"
+
+**Farm Bureau Advocacy (0.5 min):**
+- "Farm Bureau represents 6 million farm families—big political voice"
+- "Their 2014 data principles: Farmers own their data, can delete it, must consent to third-party sharing"
+- "These aren't laws (yet), just principles—but they shape norms"
+
+**Discussion Question:** "Should agricultural data be treated like health data under HIPAA? Should there be regulations?"
+
+**Timing:** 4-5 minutes for this section
+
+</details>
+
+---
+
+#### Market Consolidation: Who's Buying Whom?
+
+**Major Mergers & Acquisitions (2013-2024):**
+
+**🔀 Mega-Mergers:**
+- **Bayer acquires Monsanto** ($63B, 2018) → includes Climate FieldView digital platform
+- **DowDuPont merger creates Corteva** (2019) → includes Granular software platform
+- **ChemChina acquires Syngenta** ($43B, 2017) → global seed/chemical consolidation
+
+**🔀 Equipment + AI Acquisitions:**
+- **John Deere acquires Blue River Technology** ($305M, 2017) → AI-powered weed detection
+- **John Deere acquires Bear Flag Robotics** ($250M, 2021) → Autonomous tractor technology
+- **AGCO acquires Precision Planting** ($190M, 2017) → Planting technology and data
+
+**The Pattern:** Seed/chemical companies and equipment manufacturers are converging. The goal? Control the full stack from input sales to data analytics.
+
+**Farmer Concern:** "My seed company owns my data platform, which integrates with my equipment manufacturer's system. Where's the competition? Where's my leverage?"
+
+```mermaid
+graph LR
+    A[2010: Separate Industries] --> B[2013-2018: Acquisitions]
+    B --> C[2024: Integrated Platforms]
+    
+    A1[Seed Companies<br/>Monsanto, DuPont] -.-> B
+    A2[Equipment Makers<br/>Deere, Case IH] -.-> B
+    A3[Software Startups<br/>Climate Corp, Granular] -.-> B
+    
+    C --> D[Bayer FieldView<br/>Seeds + Data + AI]
+    C --> E[John Deere Ops Center<br/>Equipment + Data + Autonomy]
+    C --> F[Corteva Granular<br/>Seeds + Data + Analytics]
+    
+    style A fill:#90A4AE,color:#000
+    style B fill:#FF6F00,color:#fff
+    style C fill:#C62828,color:#fff
+    style D fill:#1565C0,color:#fff
+    style E fill:#2E7D32,color:#fff
+    style F fill:#6A1B9A,color:#fff
+```
+
+**Speaker Note Detail:**
+
+<details>
+<summary>Click to expand speaker notes (4-5 minutes)</summary>
+
+**The Consolidation Wave (1.5 min):**
+- "In 2013, Monsanto, DuPont, Dow, and Syngenta were seed and chemical companies. Period."
+- "By 2024, three mega-corporations (Bayer, Corteva, Syngenta/ChemChina) control ~60% of global seed market AND major digital ag platforms"
+- "John Deere was a tractor company. Now they're an AI and autonomy company that happens to make tractors."
+- "Walk through the mermaid diagram: Separate industries → Acquisition frenzy → Integrated platforms"
+
+**Why This Happened (1.5 min):**
+- "Follow the money: Seed and chemical margins are under pressure (generics, regulation, farmer pushback on prices)"
+- "But data platforms have software margins—60-80% gross margins vs. 20-30% for seeds"
+- "Equipment companies see the same thing: Selling iron is a low-margin commodity business, but selling software subscriptions is high-margin recurring revenue"
+- "Example: John Deere CFO in 2021 earnings call: 'Our technology and software revenue is the fastest-growing, highest-margin segment'"
+- "They're all chasing the same prize: Become the platform that farmers can't leave"
+
+**What Farmers See (1 min):**
+- "Imagine you're a corn farmer in Iowa:"
+- "You buy Bayer seeds, use Bayer FieldView software, spray Bayer fungicide based on FieldView recommendations"
+- "Is FieldView optimizing for YOUR profit, or Bayer's chemical sales?"
+- "You're locked in: All your historical data is in FieldView, switching platforms means losing 10 years of yield maps"
+- "This is the 'walled garden' problem—and farmers are noticing"
+
+**The Counterforces (0.5 min):**
+- "That's why farmer-owned FBN is growing, why Right to Repair is a movement, why AgGateway interoperability matters"
+- "Farmers want portability, competition, and control over their data"
+- "The battle over agricultural data is fundamentally a battle over market power"
+
+**Transition:**
+- "Now that you know WHO the players are and WHAT they want, let's look at real-world case studies of how this plays out"
+
+**Timing:** 4-5 minutes for this section
 
 </details>
 
@@ -2213,6 +2609,521 @@ Most successful platforms use:
 - "When we study data integration, think: integrating WHAT data FOR WHOM?"
 - "When we study machine learning, think: trained on WHICH region's data?"
 - "Regional diversity shapes everything in agricultural data systems"
+
+</details>
+
+---
+
+### How Data Drives Decisions in Modern Agriculture
+
+**The Fundamental Shift:** Traditional farming relied on experience + observation + intuition. Data-driven farming adds data analytics to enhance—not replace—farmer judgment.
+
+**Critical Principle:** Data doesn't make decisions. Farmers make decisions informed by data.
+
+**What We'll Cover:**
+1. Four decision types where data creates measurable value
+2. The data → decision cycle that applies across agriculture
+3. Time scales of decisions (real-time to multi-year)
+4. Success factors for data-driven decision making
+
+```mermaid
+graph LR
+    A[📊 **Data Collection**<br/>Sensors, Satellites, Observations] --> B[🔄 **Integration**<br/>Combine Sources]
+    B --> C[🧮 **Analysis**<br/>Compare to Thresholds]
+    C --> D[💡 **Insight**<br/>What It Means]
+    D --> E[✅ **Decision**<br/>Action to Take]
+    E --> F[🚜 **Implementation**<br/>Execute]
+    F --> G[📈 **Outcome Measurement**<br/>Did It Work?]
+    G -.->|Learning Loop| A
+    
+    style A fill:#1565C0,color:#fff
+    style B fill:#00695C,color:#fff
+    style C fill:#F57C00,color:#fff
+    style D fill:#6A1B9A,color:#fff
+    style E fill:#C62828,color:#fff
+    style F fill:#2E7D32,color:#fff
+    style G fill:#4527A0,color:#fff
+```
+
+**Speaker Note Detail:**
+
+<details>
+<summary>Click to expand speaker notes (3-4 minutes)</summary>
+
+**Frame the Section (1 min):**
+- "We've seen what data exists, who controls it, and real-world case studies"
+- "Now let's get practical: How does a farmer actually USE data to make better decisions?"
+- "I'm going to walk through four common decision types, then show you the universal cycle that applies to all of them"
+
+**The Data-Decision Cycle (1.5 min):**
+- Walk through the mermaid diagram
+- "This cycle happens at different time scales—sometimes in hours (irrigation), sometimes over years (variety selection)"
+- "The key is the feedback loop: Measure outcomes, learn, refine your decision rules"
+- "Farmers who skip step 7 (outcome measurement) don't improve—they just repeat the same decisions"
+
+**Preview the Examples (0.5 min):**
+- "We'll look at four decisions where data creates measurable, documented value:"
+- "Planting timing, in-season nitrogen, irrigation scheduling, harvest and marketing"
+- "Each one follows this cycle, but at different time scales and with different data sources"
+
+**Timing:** 3-4 minutes for this intro slide
+
+</details>
+
+---
+
+#### Decision Type 1: Planting Decisions
+
+**The Question:** When should I plant? What variety? What seeding rate?
+
+**Data Inputs:**
+- 🌡️ Soil temperature at seed depth (minimum 50°F for corn, 60°F for soybeans)
+- 💧 Soil moisture (field capacity assessment, workability test)
+- 🌤️ 10-day weather forecast (rain events that could delay planting)
+- 📅 Historical planting dates and yield outcomes (5-10 years of data)
+- 🚜 Field readiness (equipment tire marks test, compaction risk)
+
+**Analysis Framework:**
+```
+Optimal Planting Window = 
+    First date: soil temp ≥ threshold AND soil moisture adequate AND no rain <48 hours
+    Last date: yield loss <10% (varies by region, ~May 20 in Iowa, May 30 in North Dakota)
+    
+If current_date in optimal_window AND field_ready:
+    → Plant now
+Else if too_wet:
+    → Wait (compaction causes 3-5 year yield drag)
+Else if too_late:
+    → Switch to earlier-maturing variety
+```
+
+**Real Impact:**
+- ✅ **Optimal timing:** Full yield potential
+- ⚠️ **2 weeks late:** 10-20% yield loss ($50-100/acre on 200 bu/acre corn)
+- 🚫 **Planting wet soil:** Compaction reduces yields for 3-5 years
+
+**Example Decision Output:**
+- "Plant Field A on Tuesday (soil 52°F, no rain forecast, field ready)"
+- "Wait on Field B until next week (too wet, tire marks visible, compaction risk)"
+- "Use 105-day hybrid on Field C instead of 115-day (late planting, shorter season needed)"
+
+**Speaker Note Detail:**
+
+<details>
+<summary>Click to expand speaker notes (5-6 minutes)</summary>
+
+**Why Planting Matters (1 min):**
+- "Planting date is the single most important decision for corn and soybean yield"
+- "In Iowa, planting May 1 vs. May 20 can mean 20-30 bushel/acre difference"
+- "At $4.50/bu, that's $90-135/acre lost—on a 1,000 acre farm, that's $90,000-135,000"
+- "Farmers know this intuitively, but data helps them optimize within that window"
+
+**The Data Inputs (2 min):**
+- "Soil temperature: Old method was 'stick your hand in the dirt.' Now: wireless soil temp sensors, $200-400, real-time monitoring"
+- "Weather forecast: NOAA, Weather Underground, specialized ag weather services (DTN, Climate FieldView weather)"
+- "Historical data: Your own yield monitor data, 5-10 years. What happened when you planted April 25 vs. May 10?"
+- "Field readiness: Simple test—drive across field, look for tire marks. If soil compacts easily, it's too wet."
+
+**The Compaction Risk (1 min):**
+- "This is where data prevents costly mistakes"
+- "Planting wet soil causes compaction—dense layers that roots can't penetrate"
+- "Yield impact lasts 3-5 years because you can't easily fix deep compaction"
+- "Farmers feel pressure to plant early (maximize yield window), but data says: 'Field B is 25% moisture, that's too wet, wait 4 days'"
+- "That's a $20,000+ decision (avoided compaction over 100 acres for 5 years)"
+
+**Late Planting Adjustments (1 min):**
+- "If you miss the optimal window, data helps you adapt"
+- "Switch from 115-day hybrid (full-season) to 105-day hybrid (early maturing)"
+- "Trade off: Shorter-season hybrids usually yield 5-10% less, but they mature before frost"
+- "Data tells you: 'At this planting date, 115-day hybrid has 20% chance of frost before maturity. Switch to 105-day.'"
+
+**Real-World Example (0.5 min):**
+- "2019 spring: Record rainfall across Midwest, millions of acres planted late or not at all"
+- "Farmers with good data made better variety switches, salvaged yields"
+- "Farmers without data: Planted full-season hybrids late, got caught by early frost in October, lost entire fields"
+
+**Discussion Question:** "What are the limits of data here? What does farmer experience add that data can't?"
+
+**Timing:** 5-6 minutes for this section
+
+</details>
+
+---
+
+#### Decision Type 2: In-Season Nitrogen Management
+
+**The Question:** Does my corn need more nitrogen? How much? Where in the field?
+
+**Data Inputs:**
+- 📷 Crop sensor NDVI readings (vegetation greenness, weekly scans)
+- 🧪 Tissue test results (actual plant nitrogen concentration)
+- 🎯 Yield goal and current crop stage (V8, V12, tasseling)
+- 🌧️ Rainfall data (heavy rain leaches nitrogen from soil)
+- 🧫 Soil nitrogen test (if sampled)
+
+**Analysis Framework:**
+```
+Compare field NDVI to reference strip (adequately fertilized area):
+    
+    If zone_NDVI < reference_NDVI * 0.85:
+        → N deficiency likely
+        → Calculate N need: (yield_goal * 1.2 lb N/bu) - N_applied - soil_N - mineralization
+        → Economic threshold: Will N application pay for itself?
+            If (yield_increase * grain_price) > (N_cost + application_cost):
+                → Apply N to deficient zones
+            Else:
+                → No application (won't pay)
+    Else:
+        → No additional N needed
+```
+
+**Real Impact:**
+- ✅ **Correct N application:** Prevent 20-40 bu/acre loss ($80-160/acre value)
+- ✅ **Avoid excess N:** Save $30-50/acre in input costs
+- 🌍 **Environmental benefit:** Reduce N leaching by 15-25%, less nitrate in waterways
+
+**Example Decision Output:**
+- "Apply 40 lbs N/acre to west 60 acres (NDVI = 0.68, reference = 0.82, deficiency detected)"
+- "No additional N needed on east 40 acres (NDVI = 0.80, adequate)"
+- "Apply before Thursday rain (incorporate N, avoid volatilization loss)"
+
+**Speaker Note Detail:**
+
+<details>
+<summary>Click to expand speaker notes (6-7 minutes)</summary>
+
+**Why In-Season N Matters (1.5 min):**
+- "Nitrogen is the #1 input cost for corn (after land)—typically $80-120/acre"
+- "Apply too little: Yield loss (corn is a nitrogen hog, needs ~1.2 lbs N per bushel produced)"
+- "Apply too much: Wasted money + environmental damage (nitrate leaching into rivers, Gulf of Mexico dead zone)"
+- "The challenge: You apply most N at planting, but you don't know yet how much the crop will actually need"
+- "Weather matters: Heavy rain leaches N deep into soil, out of root zone"
+- "In-season N management lets you correct: 'Looks like my pre-plant N wasn't enough, I'll sidedress 40 lbs/acre now'"
+
+**The Data: NDVI Sensors (2 min):**
+- "NDVI = Normalized Difference Vegetation Index—measures how green/healthy plants are"
+- "Healthy, N-sufficient corn: NDVI ~0.80-0.85 during vegetative growth"
+- "N-deficient corn: NDVI ~0.60-0.70 (lighter green, less chlorophyll)"
+- "Sensors: tractor-mounted crop sensors (e.g., Holland GreenSeeker, ~$5K), satellite NDVI (free from Sentinel-2, or $500-2K/year from FieldView)"
+- "The trick: Compare your field to a 'reference strip' where you deliberately over-applied N (so you know that area has enough)"
+- "If Field Zone A has NDVI = 0.68 and Reference Strip has NDVI = 0.82, then Zone A is deficient"
+
+**The Economic Calculation (2 min):**
+- "Data tells you WHERE deficiency exists, but economics tells you WHETHER to act"
+- "Example: Zone needs 40 lbs N/acre. Cost = $0.60/lb N + $8/acre application = $32/acre"
+- "If N deficiency would cause 10 bu/acre loss, and corn is $4.50/bu, that's $45/acre loss prevented"
+- "$45 benefit - $32 cost = $13/acre net gain. DO IT."
+- "But if deficiency would only cause 5 bu/acre loss: $22.50 benefit - $32 cost = -$9.50/acre. DON'T DO IT."
+- "This is where farmers without data over-apply: 'Better safe than sorry.' Data makes it precise."
+
+**Environmental Impact (1 min):**
+- "Over-application isn't just wasteful—it's harmful"
+- "Excess N leaches into tile drainage → rivers → Gulf of Mexico → algae blooms → hypoxic 'dead zone' (size of New Jersey)"
+- "Precision N management reduces over-application by 15-25%"
+- "Farmers save money AND reduce environmental footprint—rare win-win"
+- "This is why conservation groups and environmental regulators are pushing hard for precision N tools"
+
+**Timing is Critical (0.5 min):**
+- "In-season N works best before V12 growth stage (12 leaves, ~knee-high corn)"
+- "After V12, corn's N demand peaks, and late N doesn't fully correct deficiency"
+- "Data + timely action = value. Data + delay = missed opportunity."
+
+**Real-World Challenge:**
+- "Farmers ask: 'How do I know my sensor is calibrated correctly? What if my reference strip is wrong?'"
+- "Answer: Ground-truth with tissue tests (lab analysis, $15-25 per sample). Validate sensors with actual plant N concentration."
+
+**Timing:** 6-7 minutes for this section
+
+</details>
+
+---
+
+#### Decision Type 3: Irrigation Scheduling
+
+**The Question:** Do I irrigate today? How much water to apply?
+
+**Data Inputs:**
+- 💧 Soil moisture sensors at multiple depths (12", 24", 36")
+- 🌤️ Evapotranspiration (ET) rate from weather station (daily crop water use, inches/day)
+- ☔ 7-day weather forecast (rain probability and amount)
+- 🌾 Crop growth stage (determines stress sensitivity—reproductive stage is critical)
+- 🏜️ Soil water-holding capacity (clay = high, sand = low, varies by soil type)
+
+**Analysis Framework:**
+```
+MAD = Management Allowed Depletion (% of water capacity before stress)
+    - Corn vegetative: MAD = 50%
+    - Corn reproductive (pollination): MAD = 40% (more sensitive)
+    
+Current soil moisture % = sensor reading
+Days until MAD = (current_moisture - MAD_threshold) / daily_ET
+
+Decision tree:
+    If current_moisture < MAD_threshold:
+        If rain_forecast > 0.5" in next 3 days AND probability > 60%:
+            → Wait (let rain meet crop need)
+        Else:
+            → Irrigate now (refill to field capacity)
+    Else:
+        → No irrigation needed (monitor daily)
+```
+
+**Real Impact:**
+- ✅ **Prevent pollination stress:** Protect 30-50 bu/acre ($120-200/acre value)
+- ✅ **Avoid unnecessary irrigation:** Save $30-40/acre in pumping/energy costs
+- 💧 **Water conservation:** 15-25% reduction in total water applied
+
+**Example Decision Output:**
+- "Irrigate Field 1 tonight: 1.5 inches (soil moisture at 35%, below 40% MAD, no rain forecast)"
+- "Skip Field 2: 70% chance of rain Thursday (0.8" forecast, current moisture 45%, adequate)"
+- "Monitor Field 3: approaching threshold (42% moisture), check sensors tomorrow morning"
+
+**Speaker Note Detail:**
+
+<details>
+<summary>Click to expand speaker notes (6-7 minutes)</summary>
+
+**Why Irrigation Decisions Matter (1.5 min):**
+- "Irrigation is expensive: $30-60/acre per application (electricity/diesel to pump water)"
+- "Over a season: 6-10 irrigation events = $180-600/acre operational cost"
+- "But the crop damage from missed irrigation is catastrophic: Corn stressed during pollination loses 30-50 bu/acre"
+- "At $4.50/bu, that's $135-225/acre loss from ONE missed irrigation during the critical 2-week pollination window"
+- "The decision: Don't irrigate too early (waste money/water), don't irrigate too late (crop stress), don't skip irrigation when it's needed (yield loss)"
+
+**The Data: Soil Moisture Sensors (2 min):**
+- "Modern soil moisture sensors: wireless probes at 12", 24", 36" depths, ~$300-500 per site, transmit hourly"
+- "They measure volumetric water content: 'This soil is 38% water by volume'"
+- "Compare to 'field capacity' (maximum water soil can hold, ~45% for silt loam) and 'wilting point' (minimum before crop stress, ~20%)"
+- "Management Allowed Depletion (MAD): The % you can let soil dry before irrigating"
+- "Example: Corn in vegetative growth can tolerate 50% depletion. But during pollination, you only allow 40% depletion (more sensitive to stress)."
+- "ET (evapotranspiration): How much water the crop uses per day—calculated from temperature, humidity, wind, solar radiation. Typical ET for corn in July: 0.25-0.35 inches/day"
+- "Sensors + ET + weather forecast = perfect information for irrigation scheduling"
+
+**The Decision Logic (2 min):**
+- "Let's walk through a real decision:"
+- "Field 1: Corn at VT stage (tasseling/pollination—critical!). Soil moisture sensor reads 35%. MAD for pollination = 40%. You're BELOW threshold."
+- "Check 7-day forecast: 20% chance of rain in next 3 days, <0.2" expected. Not enough."
+- "Decision: Irrigate tonight, apply 1.5 inches (refill from 35% to 45% field capacity)."
+- "Field 2: Same crop stage, but soil moisture = 45% (adequate). Forecast: 70% chance of 0.8" rain Thursday. Decision: WAIT. Let nature do the work."
+- "This is where data saves money: Without sensors, farmers often irrigate Field 2 'just to be safe,' wasting $40 in pumping costs and 1.5 inches of water."
+
+**Water Conservation (1 min):**
+- "This isn't just about farmer economics—it's about aquifer sustainability"
+- "High Plains (Nebraska, Kansas, Texas panhandle): Ogallala Aquifer is dropping 1-3 feet/year in some areas"
+- "Every gallon saved extends the aquifer's life and neighbors' irrigation capacity"
+- "Data-driven irrigation reduces over-application by 15-25%—that's 3-6 inches saved over a season"
+- "On 1,000 acres, that's 80-160 million gallons of water conserved"
+
+**When Data Fails (0.5 min):**
+- "Sensors can fail: Rodents chew wires, lightning strikes, batteries die"
+- "Weather forecasts are wrong: '70% chance of rain' means 30% chance of NO rain"
+- "Farmers use data + experience: 'The forecast says rain, but I see those clouds, and I've been farming here 30 years—I'm irrigating tonight just in case.'"
+- "Data informs, but farmer decides"
+
+**Real-World Example:**
+- "2012 drought: Farmers with irrigation + soil moisture sensors maintained 180-200 bu/acre corn yields while dryland (non-irrigated) neighbors got 60-80 bu/acre"
+- "The difference: Knowing exactly when to irrigate during that 2-week pollination window"
+
+**Timing:** 6-7 minutes for this section
+
+</details>
+
+---
+
+#### Decision Type 4: Harvest Timing and Marketing
+
+**The Question:** When to harvest? Sell immediately or store grain?
+
+**Data Inputs for Harvest Timing:**
+- 🌾 Grain moisture (combine yield monitor, handheld moisture meter, real-time)
+- 🌤️ Weather forecast (rain delays, drying conditions)
+- 📊 Field yield estimates (preliminary yield maps from combine)
+- 🔥 Dryer capacity and energy costs ($0.03-0.05/point of moisture removed)
+- 🏭 Storage availability (on-farm bins vs. commercial elevator)
+
+**Data Inputs for Marketing:**
+- 💰 Real-time grain prices (elevator bids, futures market, cash vs. basis)
+- 📈 Yield estimates (determines how much grain to market)
+- 💵 Storage costs ($0.03-0.05/bu/month for commercial storage)
+- 📍 Basis levels (local elevator price - futures price, varies by location and month)
+- 💳 Cash flow needs (operating loan due, input bills for next season)
+
+**Decision Framework:**
+```
+Harvest Timing:
+    If grain_moisture < 20% AND weather_window ≥ 3 days AND field_accessible:
+        → Begin harvest
+    Else if grain_moisture > 23%:
+        → Wait (high drying cost: $0.04/point above 15%, >$0.30/bu to dry from 25% to 15%)
+        
+Marketing Decision:
+    Option A: Sell at harvest
+        Price = current elevator bid (typically harvest low, but no storage cost)
+        Benefit: Immediate cash flow, no storage risk
+        
+    Option B: Store and sell later
+        Expected price = futures target OR historical basis improvement
+        Cost = storage ($0.03-0.05/bu/month) + opportunity cost of cash
+        Benefit: Potential price increase (if market cooperates)
+        
+    Decision: Compare Option A cash vs. Option B expected return - storage costs
+```
+
+**Real Impact:**
+- ✅ **Optimal harvest moisture:** Save $0.15-0.30/bu in drying costs
+- ✅ **Strategic storage timing:** Gain $0.20-0.50/bu (when market improves)
+- ⚠️ **Risk management:** Diversify sales (50% at harvest, 50% stored), avoid selling everything at seasonal low
+
+**Example Decision Output:**
+- "Begin harvest Monday in Field A (22% moisture, 3-day weather window, dry to 15% = $0.28/bu cost, acceptable)"
+- "Wait on Field B (26% moisture, too wet, drying cost = $0.44/bu, wait for field dry-down)"
+- "Sell 50% of harvest at elevator ($4.20/bu, need cash for operating loan payment)"
+- "Store 50% until January (historical basis improves $0.30/bu post-harvest, storage cost = $0.15/bu for 3 months, net gain = $0.15/bu)"
+
+**Speaker Note Detail:**
+
+<details>
+<summary>Click to expand speaker notes (6-7 minutes)</summary>
+
+**Why Harvest and Marketing Matter (1.5 min):**
+- "Harvest timing affects grain quality, drying costs, and storage options"
+- "Marketing timing affects revenue: The difference between selling at harvest low ($4.00/bu) vs. spring high ($4.60/bu) is $0.60/bu"
+- "On 200 bu/acre * 500 acres = 100,000 bu, that's $60,000 revenue difference"
+- "But storage isn't free: $0.03-0.05/bu/month commercial storage, plus risk (price could go DOWN, not up)"
+- "This is the ultimate data-driven decision: Real-time operational data (moisture, yield) meets market data (prices, basis, forecasts)"
+
+**Harvest Timing: The Moisture Question (2 min):**
+- "Corn naturally dries in the field as it matures: Starts at 30-35% moisture, drops to 20-25% at 'black layer' (physiological maturity)"
+- "Commercial grain standard: 15% moisture (anything above that, you pay drying costs or discounts)"
+- "Decision: Harvest early (22-25% moisture, less field loss, but high drying costs) or wait (let field dry naturally, save drying costs, but risk weather damage)?"
+- "Data helps: Real-time moisture readings from combine (yield monitor with moisture sensor, standard on modern combines)"
+- "Example: Field A reads 22% average moisture. Drying cost = $0.04/point above 15% = 7 points * $0.04 = $0.28/bu"
+- "For 200 bu/acre, that's $56/acre drying cost. Is it worth it? Check the weather forecast:"
+- "If 80% chance of rain next week, harvest now and pay $56/acre drying. If sunny forecast, wait 5 days, let field dry naturally to 18-20%, save $16-32/acre in drying costs."
+
+**Marketing: Sell Now or Store? (2.5 min):**
+- "At harvest, grain prices are typically at their seasonal low (supply flood: every farmer harvests in October)"
+- "But storage costs money: $0.03-0.05/bu/month, plus you don't have cash now (opportunity cost)"
+- "The decision: Will prices increase enough to cover storage costs?"
+- "Historical basis patterns help: 'In my county, basis typically improves $0.20-0.30/bu from October to January (local elevators need grain for winter deliveries, pay up)'"
+- "If basis improves $0.30/bu and storage costs $0.15/bu for 3 months, net gain = $0.15/bu"
+- "But risk: What if prices DROP $0.40/bu? Then you lose $0.40 - $0.15 (saved on storage you didn't pay) = net -$0.25/bu loss"
+- "Smart strategy: Diversify timing. Sell 50% at harvest (lock in cash flow, pay operating loan), store 50% (bet on price improvement)"
+- "Data platforms (e.g., Bushel, FarmLogs) provide historical basis charts, real-time elevator bids, futures prices—all in one dashboard"
+
+**The Cash Flow Reality (1 min):**
+- "Many farmers HAVE to sell at harvest—they have operating loans due, input bills for next season"
+- "Banks often require: 'You must sell enough grain to pay off this year's loan by December 31'"
+- "So the decision isn't purely 'what maximizes revenue,' it's 'what meets cash flow requirements while maximizing revenue on the rest'"
+- "This is where farm financial management software (e.g., Granular) integrates: Track loan payments, input bills, cash flow projections, and grain marketing all together"
+
+**Real-World Example:**
+- "2021 harvest: Corn prices at harvest = $5.20/bu (historically high due to strong demand, tight stocks)"
+- "Many farmers sold 100% at harvest, thinking 'This is a great price!'"
+- "By March 2022: Prices hit $7.50/bu (Ukraine war, export demand surge)"
+- "Farmers who stored gained $2.30/bu - $0.20 storage = $2.10/bu extra. On 100,000 bu, that's $210,000 difference."
+- "But farmers who sold at $5.20 weren't WRONG—they locked in a profit, avoided storage risk. Hindsight is 20/20."
+
+**The Limits of Data:**
+- "No one can predict geopolitical events (Ukraine war), weather in South America, Chinese demand shifts"
+- "Data shows historical patterns, but markets are forward-looking and unpredictable"
+- "Best practice: Use data to understand typical patterns, but diversify risk (don't bet everything on one marketing decision)"
+
+**Timing:** 6-7 minutes for this section
+
+</details>
+
+---
+
+#### The Universal Data-Decision Cycle
+
+**The 7-Step Cycle (applies to all decisions):**
+
+```mermaid
+graph TD
+    A[**1. Data Collection**<br/>Sensors, Satellites, Observations] --> B[**2. Integration**<br/>Combine Multiple Sources]
+    B --> C[**3. Analysis**<br/>Compare to Thresholds, Models]
+    C --> D[**4. Insight Generation**<br/>What Does It Mean?]
+    D --> E[**5. Decision**<br/>What Action to Take?]
+    E --> F[**6. Implementation**<br/>Execute the Action]
+    F --> G[**7. Outcome Measurement**<br/>Did It Work?]
+    G -.->|**Learning Loop**<br/>Refine Decision Rules| A
+    
+    style A fill:#1565C0,color:#fff
+    style B fill:#00695C,color:#fff
+    style C fill:#F57C00,color:#fff
+    style D fill:#6A1B9A,color:#fff
+    style E fill:#C62828,color:#fff
+    style F fill:#2E7D32,color:#fff
+    style G fill:#4527A0,color:#fff
+```
+
+**Time Scales of Agricultural Decisions:**
+
+| Time Scale | Decision Examples | Data Refresh Rate | Tolerance for Error |
+|------------|------------------|-------------------|---------------------|
+| **Real-Time** (hours) | Irrigation control, harvest moisture monitoring | Minutes to hours | Low (immediate impact) |
+| **Daily/Weekly** | Pest scouting, nitrogen sidedress timing, spray applications | Daily | Medium (narrow window) |
+| **Seasonal** (weeks-months) | Variety selection, planting schedule, marketing strategy | Weekly to monthly | Medium (adjustable) |
+| **Multi-Year** (strategic) | Technology adoption, land acquisition, crop rotation planning | Annually | High (long-term trends) |
+
+**Key Success Factors:**
+
+1. **Data Quality:** Garbage in = garbage out (sensor calibration, data validation critical)
+2. **Timely Analysis:** Real-time decisions need real-time data (latency kills value)
+3. **Farmer Judgment:** Data informs, farmer decides (local knowledge + experience essential)
+4. **Economic Thresholds:** Will this decision pay for itself? (ROI calculation required)
+5. **Continuous Learning:** Measure outcomes, refine decision rules (close the loop)
+
+**The Bottom Line:**
+
+Data-driven decisions reduce risk, improve efficiency, and increase profitability—**but only when farmers understand both the data AND their farm's unique context.**
+
+Farmers are not data scientists. The tools must be simple, trustworthy, and clearly valuable.
+
+**Speaker Note Detail:**
+
+<details>
+<summary>Click to expand speaker notes (5-6 minutes)</summary>
+
+**Recap the Four Decisions (1 min):**
+- "We've walked through four specific decisions: planting, nitrogen, irrigation, marketing"
+- "Each one uses different data sources, different time scales, different thresholds"
+- "But notice the pattern: They all follow the same 7-step cycle"
+- "This cycle is universal—it applies to every data-driven decision in agriculture (and beyond)"
+
+**The Learning Loop is Critical (1.5 min):**
+- "Step 7—outcome measurement—is where most farmers drop the ball"
+- "Example: You applied 40 lbs N/acre to the deficient zone based on sensor data. Did yield in that zone improve compared to last year? By how much?"
+- "If you don't measure outcomes, you can't refine your decision rules"
+- "Farmers who measure outcomes improve year over year: 'Last year I irrigated at 40% soil moisture, but the crop showed stress. This year I'll irrigate at 45%.'"
+- "That's the learning loop: Data → Decision → Outcome → Refined Decision Next Time"
+
+**Time Scales Matter (1.5 min):**
+- Walk through the table
+- "Irrigation is real-time: You need soil moisture data updated hourly, decisions within hours"
+- "But variety selection is seasonal: You choose hybrids in March, plant in May, harvest in October—9 month cycle"
+- "Technology adoption is multi-year: 'Should I buy a $500K autonomous tractor?' That's a 7-10 year depreciation decision, based on long-term labor cost trends"
+- "The data refresh rate must match the decision time scale: Don't pay for real-time satellite data if you make decisions once a month"
+
+**Success Factors - The Reality Check (1.5 min):**
+- "Factor 1: Data quality. If your soil moisture sensor is miscalibrated, you'll over-irrigate or under-irrigate. Garbage in = garbage out."
+- "Factor 2: Timeliness. Real-time decisions need real-time data. If your satellite imagery is 5 days old, you've missed the spray window for pests."
+- "Factor 3: Farmer judgment. Data can't replace local knowledge. 'This field has a wet spot that always floods—don't plant corn there, even if the yield map says it's good ground.'"
+- "Factor 4: Economic thresholds. Farmers are businesses. Data-driven decisions must pay for themselves. If a $5K/year software subscription saves you $2K/year, don't buy it."
+- "Factor 5: Continuous learning. Agriculture is experimentation. Test, measure, refine. The best farmers are scientists at heart."
+
+**The Bottom Line (0.5 min):**
+- "Data doesn't replace farmers—it empowers them"
+- "The farmers who succeed with data are the ones who combine data insights with deep experience, local knowledge, and business sense"
+- "Your job as agricultural data scientists: Build tools that are simple, trustworthy, and clearly valuable"
+- "If a farmer can't see the value in 5 minutes, they won't use it"
+
+**Transition to Assignment:**
+- "Now it's your turn. In Assignment 01, you'll go into a field and collect your own agricultural data"
+- "You'll document what you observe, think about what decisions that data could inform, and start building your own data-driven decision framework"
+
+**Timing:** 5-6 minutes for this final section
 
 </details>
 
