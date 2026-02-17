@@ -414,7 +414,7 @@ This template includes:
 **Cloning the Repository:**
 
 1. **Fork the repository** (recommended):
-   - Visit: https://github.com/SuperiorByteWorks-LLC/agent-project
+   - Visit: <https://github.com/SuperiorByteWorks-LLC/agent-project>
    - Click "Fork" button (top right)
    - This creates your own copy
 
@@ -427,6 +427,7 @@ This template includes:
    ```
 
 3. **Open in VS Code:**
+
    ```bash
    code .
    ```
@@ -763,6 +764,7 @@ The agri-toolkit package is a Python library for:
    ```
 
 5. **Verify installation:**
+
    ```bash
    python -c "import agri_toolkit; print('agri-toolkit installed')"
    ```
@@ -2456,9 +2458,11 @@ sequenceDiagram
 4. Application type: "Web application"
 5. Name: `Your App OAuth`
 6. Authorized redirect URIs:
+
    ```
    https://your-domain.auth.<account>.workers.dev/auth/callback
    ```
+
    (You'll update this later with your actual domain)
 7. Click "Create"
 8. Copy your:
