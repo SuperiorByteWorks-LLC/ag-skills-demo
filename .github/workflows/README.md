@@ -1,71 +1,89 @@
 # CI/CD Workflow Architecture
 
 > **Simplified, phase-based orchestration with environment validation**
+> **For AI agents:** read [../../AGENTS.md](../../AGENTS.md) first, then use this guide for CI-specific implementation details.
 
 ## 📊 Architecture Overview
 
 ```mermaid
 graph TD
-    A[Pull Request / Push] --> B[ci.yml]
-    B --> C[Phase 1: Validation & Core CI]
-    
-    C --> D[validate-environment]
-    C --> E[core-ci]
-    
-    D --> D1[ensure-required-labels]
-    D --> D2[validate-credentials]
-    D --> D3[check-preview-conflicts]
-    
-    E --> F[Phase 2: Tests & Build]
-    
-    F --> F1[test-docs-links]
-    F --> F2[test-crewai]
-    F --> F3[test-website]
-    
-    F3 --> G[Phase 3: Deploy]
-    D --> G
-    
-    G --> G1[deploy-preview]
-    G --> G2[deploy-production]
-    
-    E --> H[Phase 4: AI Review]
-    F --> H
-    G --> H
-    
-    H --> H1[crewai-review]
-    
-    style D fill:#e1f5ff
-    style E fill:#fff4e1
-    style F fill:#e8f5e9
-    style G fill:#fce4ec
-    style H fill:#f3e5f5
+A[Pull Request / Push] --> B[ci.yml]
+B --> C[Phase 1: Validate]
+
+C --> D[validate-environment]
+C --> E[core-ci]
+D --> F[validate stage gate: waits for all phase-1 jobs]
+E --> F
+
+D --> D1[ensure-required-labels]
+D --> D2[validate-credentials]
+D --> D3[check-preview-conflicts]
+
+F --> G[Phase 2: Test/Build]
+
+G --> G1[test-docs-links]
+G --> G2[test-crewai]
+G --> G3[test-website]
+G --> G4[test-agri-toolkit]
+G --> G5[build-agri-toolkit]
+G1 --> H[test-build stage gate: waits for all phase-2 jobs]
+G2 --> H
+G3 --> H
+G4 --> H
+G5 --> H
+
+H --> I[Phase 3: Deploy]
+
+I --> I1[deploy-preview]
+I --> I2[deploy-production]
+I1 --> J[deploy stage gate: waits for preview/production]
+I2 --> J
+
+J --> K[Phase 4: CrewAI Review]
+
+K --> K1["crewai-review (last)"]
+
+style D fill:#e1f5ff
+style E fill:#fff4e1
+style F fill:#fff9c4
+style G fill:#e8f5e9
+style H fill:#fff9c4
+style I fill:#fce4ec
+style J fill:#fff9c4
+style K fill:#f3e5f5
 ```
 
 ## 🔄 Workflow Phases
 
-### Phase 1: Validation & Core CI (Parallel)
+### Phase 1: Validate (Parallel + Gate)
 
 ```mermaid
 graph LR
-    A[Start] --> B[validate-environment]
-    A --> C[core-ci]
-    
-    B --> B1[ensure-required-labels]
-    B --> B2[validate-credentials]
-    B --> B3[check-preview-conflicts]
-    
-    C --> C1[Ruff Format]
-    C1 --> C2[Ruff Lint]
-    C2 --> C3[Auto-fix & Commit]
-    
-    style B fill:#e1f5ff
-    style C fill:#fff4e1
+A[Start] --> B[validate-environment]
+A --> C[core-ci]
+
+B --> B1[ensure-required-labels]
+B --> B2[validate-credentials]
+B --> B3[check-preview-conflicts]
+
+C --> C1[Ruff Format]
+C1 --> C2[Ruff Lint]
+C2 --> C3[Auto-fix & Commit]
+
+B --> D[validate stage gate]
+C --> D
+
+style B fill:#e1f5ff
+style C fill:#fff4e1
+style D fill:#fff9c4
 ```
 
 **validate-environment** (3 parallel jobs):
 - `ensure-required-labels` - Creates deployment labels if missing
-- `validate-credentials` - Validates Cloudflare, Google, OpenRouter secrets
+- `validate-credentials` - Validates Cloudflare, Google, NVIDIA/OpenRouter secrets
 - `check-preview-conflicts` - Warns if multiple PRs have preview label
+
+The `validate` stage gate only passes when both `validate-environment` and `core-ci` are complete.
 
 **core-ci**:
 - Format checking with Ruff
@@ -73,25 +91,35 @@ graph LR
 - Auto-fixes and commits if needed
 - Outputs `final-commit-sha` for downstream jobs
 
-### Phase 2: Tests & Build (Conditional)
+### Phase 2: Test/Build (Conditional + Gate)
 
 ```mermaid
 graph TD
-    A[core-ci complete] --> B{Files changed?}
-    
-    B -->|.md files| C[test-docs-links]
-    B -->|.crewai/ files| D[test-crewai]
-    B -->|apps/website/ files| E[test-website]
-    B -->|No changes| F[Skip gracefully]
-    
-    C --> G[Validate links]
-    D --> H[Run CrewAI tests]
-    E --> I[Build website]
-    
-    I --> J[Upload artifact]
-    
-    style B fill:#fff9c4
-    style F fill:#e0e0e0
+A[validate stage complete] --> B{Files changed?}
+
+B -->|.md files| C[test-docs-links]
+B -->|.crewai/ files| D[test-crewai]
+B -->|apps/website/ files| E[test-website]
+B -->|packages/agri-data-toolkit/ files| F[test-agri-toolkit]
+B -->|packages/agri-data-toolkit/ files| G[build-agri-toolkit]
+B -->|No changes| H[Skip gracefully]
+
+C --> I[Validate links]
+D --> J[Run CrewAI tests]
+E --> K[Build website]
+F --> L[Run pytest with matrix]
+G --> M[Build wheel/sdist]
+
+K --> N[Upload artifact]
+M --> N
+
+I --> O[test-build stage gate]
+J --> O
+L --> O
+N --> O
+
+style B fill:#fff9c4
+style H fill:#e0e0e0
 ```
 
 Each test workflow:
@@ -99,24 +127,42 @@ Each test workflow:
 - Skips gracefully if no changes detected
 - Posts summary to Actions output
 
-### Phase 3: Deploy (Conditional)
+The `test-build` stage gate only passes when all test and build jobs are complete.
+
+**test-agri-toolkit**:
+- Runs pytest with matrix (Python 3.13)
+- Installs Poetry and dependencies
+- Generates sample field boundaries
+- Runs tests with coverage
+- Uploads coverage to Codecov
+
+**build-agri-toolkit**:
+- Builds wheel and source distribution
+- Verifies package can be built and imported
+- Uploads build artifacts
+
+### Phase 3: Deploy (Conditional + Gate)
 
 ```mermaid
 graph TD
-    A[Tests passed] --> B{Event type?}
-    
-    B -->|PR with label| C[deploy-preview]
-    B -->|Push to main| D[deploy-production]
-    
-    C --> C1[Deploy to Cloudflare Pages]
-    C1 --> C2[Update custom domain DNS]
-    C2 --> C3[Post preview URL to PR]
-    
-    D --> D1[Deploy to production]
-    D1 --> D2[Update production domain]
-    
-    style C fill:#e1f5ff
-    style D fill:#c8e6c9
+A[test-build stage passed] --> B{Event type?}
+
+B -->|PR with label| C[deploy-preview]
+B -->|Push to main| D[deploy-production]
+
+C --> C1[Deploy to Cloudflare Pages]
+C1 --> C2[Update custom domain DNS]
+C2 --> C3[Post preview URL to PR]
+
+D --> D1[Deploy to production]
+D1 --> D2[Update production domain]
+
+C --> E[deploy stage gate]
+D --> E
+
+style C fill:#e1f5ff
+style D fill:#c8e6c9
+style E fill:#fff9c4
 ```
 
 **deploy-preview** (PRs only):
@@ -129,20 +175,22 @@ graph TD
 - Deploys to production domain
 - No manual approval required
 
-### Phase 4: AI Review (After all phases)
+The `deploy` stage gate only passes when both deploy jobs are either complete (`success`) or intentionally skipped.
+
+### Phase 4: CrewAI Review (Runs Last)
 
 ```mermaid
 graph LR
-    A[All jobs complete] --> B[crewai-review]
-    B --> C[Analyze test results]
-    C --> D[Generate review]
-    D --> E[Post to Actions summary]
-    
-    style B fill:#f3e5f5
+A[validate + test-build + deploy complete] --> B[crewai-review]
+B --> C[Analyze test results]
+C --> D[Generate review]
+D --> E[Post to Actions summary]
+
+style B fill:#f3e5f5
 ```
 
 **crewai-review**:
-- Runs after all other jobs
+- Runs after `validate`, `test-build`, and `deploy` stage gates
 - Analyzes test results and code changes
 - Posts AI-generated review to GitHub Actions summary
 
@@ -150,38 +198,42 @@ graph LR
 
 ```mermaid
 graph TD
-    A[.github/workflows/] --> B[ci.yml]
-    A --> C[Reusable Workflows]
-    A --> D[Configurations]
-    
-    C --> C1[validate-environment-reusable.yml]
-    C --> C2[format-lint-reusable.yml]
-    C --> C3[link-check-reusable.yml]
-    C --> C4[test-crewai-reusable.yml]
-    C --> C5[website-test-build-reusable.yml]
-    C --> C6[preview-deploy-reusable.yml]
-    C --> C7[production-deploy-reusable.yml]
-    C --> C8[crewai-review-reusable.yml]
-    
-    D --> D1[agents/]
-    D --> D2[jobs/]
-    D --> D3[workspaces/]
-    
-    style B fill:#ffd54f
-    style C fill:#e1f5ff
-    style D fill:#e0e0e0
+A[.github/workflows/] --> B[ci.yml]
+A --> C[Reusable Workflows]
+A --> D[Configurations]
+
+C --> C1[validate-environment-reusable.yml]
+C --> C2[format-lint-reusable.yml]
+C --> C3[link-check-reusable.yml]
+C --> C4[test-crewai-reusable.yml]
+C --> C5[website-test-build-reusable.yml]
+C --> C6[agri-test-reusable.yml]
+C --> C7[agri-build-reusable.yml]
+C --> C8[preview-deploy-reusable.yml]
+C --> C9[production-deploy-reusable.yml]
+C --> C10[crewai-review-reusable.yml]
+
+D --> D1[agents/]
+D --> D2[jobs/]
+D --> D3[workspaces/]
+
+style B fill:#ffd54f
+style C fill:#e1f5ff
+style D fill:#e0e0e0
 ```
 
 ### Key Files
 
 | File | Purpose | Phase |
-|------|---------|-------|
+| ----------------------------------- | ------------------------------------------ | ----- |
 | `ci.yml` | **Main orchestrator** - Single entry point | All |
 | `validate-environment-reusable.yml` | Validates environment setup | 1 |
 | `format-lint-reusable.yml` | Code quality checks | 1 |
 | `link-check-reusable.yml` | Documentation link validation | 2 |
 | `test-crewai-reusable.yml` | CrewAI testing | 2 |
 | `website-test-build-reusable.yml` | Website build & test | 2 |
+| `agri-test-reusable.yml` | Agri Toolkit Python testing with matrix | 2 |
+| `agri-build-reusable.yml` | Agri Toolkit Python package build | 2 |
 | `preview-deploy-reusable.yml` | Preview deployments | 3 |
 | `production-deploy-reusable.yml` | Production deployments | 3 |
 | `crewai-review-reusable.yml` | AI code review | 4 |
@@ -459,19 +511,24 @@ test-website:  needs: [core-ci]
 ## 📊 Workflow Status
 
 | Workflow | Status | Phase | Notes |
-|----------|--------|-------|-------|
+| -------------------- | --------- | ----- | ---------------- |
 | validate-environment | ✅ Active | 1 | 3 parallel jobs |
 | core-ci | ✅ Active | 1 | Format & lint |
+| validate | ✅ Active | 1 | Stage gate |
 | test-docs-links | ✅ Active | 2 | Self-detecting |
 | test-crewai | ✅ Active | 2 | Self-detecting |
 | test-website | ✅ Active | 2 | Self-detecting |
+| test-agri-toolkit | ✅ Active | 2 | Self-detecting, matrix |
+| build-agri-toolkit | ✅ Active | 2 | Build wheel/sdist |
+| test-build | ✅ Active | 2 | Stage gate |
 | deploy-preview | ✅ Active | 3 | Label-triggered |
 | deploy-production | ✅ Active | 3 | Main branch only |
+| deploy | ✅ Active | 3 | Stage gate |
 | crewai-review | ✅ Active | 4 | AI-powered |
 
 ---
 
-**Last Updated:** 2026-01-24  
-**Architecture:** Phase-based with parallel validation  
-**Entry Point:** `.github/workflows/ci.yml`  
+**Last Updated:** 2026-02-15
+**Architecture:** Phase-based with explicit stage gates
+**Entry Point:** `.github/workflows/ci.yml`
 **Questions?** Open an issue or check the [troubleshooting guide](#-troubleshooting)

@@ -98,18 +98,10 @@ node_modules/
 .next/
 out/
 
-# CrewAI workspace (generated at runtime)
-.crewai/workspace/*.txt
-.crewai/workspace/*.json
-.crewai/workspace/*.md
-.crewai/workspace/trace/*.log
-.crewai/workspace/trace/*.txt
-.crewai/workspace/trace/*.json
-.crewai/*.log
-
-# Keep workspace directory structure
+# CrewAI workspace (ephemeral files generated at runtime)
+.crewai/workspace/
 !.crewai/workspace/.gitkeep
-!.crewai/workspace/trace/.gitkeep
+.crewai/*.log
 
 # OS specific
 Thumbs.db
@@ -142,3 +134,4 @@ dmypy.json
 *.gpkg
 !examples/*.geojson
 !tests/fixtures/*.geojson
+.env

@@ -1,197 +1,186 @@
-# Scripts
+# Scripts Guide
 
-Utility scripts for startup-blueprint repository.
-
-## Credential Validation
-
-### `validate-credentials.sh`
-
-Validates all environment variables and secrets required for the startup-blueprint project.
-
-**Runs automatically** on every PR commit via GitHub Actions.
-
-#### What It Checks
-
-| Service          | Credentials   | Type          | Validation                                                         |
-| ---------------- | ------------- | ------------- | ------------------------------------------------------------------ |
-| **Cloudflare**   | API Token     | Secret        | Tests with `wrangler whoami`                                       |
-|                  | Account ID    | Secret        | Checks if set                                                      |
-| **Google OAuth** | Client ID     | Secret        | Format validation (.apps.googleusercontent.com)                    |
-|                  | Client Secret | Secret        | Format validation (GOCSPX-)                                        |
-|                  | Redirect URI  | Variable      | Format validation (https://\*.SuperiorByteWorks.com/auth/callback) |
-| **OpenRouter**   | API Key       | Secret        | Format validation (sk-or-v1-) + API call test                      |
-| **GitHub**       | Token         | Auto-provided | Checks availability in Actions context                             |
-
-#### Usage
-
-**In GitHub Actions (Automatic)**:
-
-```yaml
-# Runs in CI on every PR
-validate-credentials:
-  name: Validate Credentials
-  uses: ./.github/workflows/validate-credentials-reusable.yml
-  secrets: inherit
-```
-
-**Local Testing**:
-
-```bash
-# Export credentials first
-export CLOUDFLARE_API_TOKEN="your-token"
-export CLOUDFLARE_ACCOUNT_ID="your-account-id"
-export GOOGLE_CLIENT_ID="your-client-id"
-export GOOGLE_CLIENT_SECRET="your-secret"
-export GOOGLE_REDIRECT_URI="https://yourdomain.com/auth/callback"
-export OPENROUTER_API_KEY="sk-or-v1-your-key"
-
-# Run validation
-bash scripts/validate-credentials.sh
-```
-
-#### Output
-
-The script generates a formatted markdown table in GitHub Actions summary:
-
-```markdown
-| Service          | Credential    | Type     | Value        | Status          |
-| ---------------- | ------------- | -------- | ------------ | --------------- |
-| **Cloudflare**   | API Token     | Secret   | ••••••••     | ✅ Valid        |
-|                  | Account ID    | Secret   | abc12345•••  | ✅ Set          |
-|                  |               |          |              | **✅ Valid**    |
-| **Google OAuth** | Client ID     | Secret   | 123456789••• | ✅ Valid Format |
-|                  | Client Secret | Secret   | ••••••••     | ✅ Valid Format |
-|                  | Redirect URI  | Variable | https://...  | ✅ Valid Format |
-|                  |               |          |              | **✅ Valid**    |
-| **OpenRouter**   | API Key       | Secret   | sk-or-v1•••  | ✅ Valid        |
-```
-
-#### Status Codes
-
-- ✅ **Valid**: Credential is properly configured and validated
-- ⚠️ **Warning**: Credential is set but format may be invalid or rate limited
-- ❌ **Invalid**: Credential is missing, expired, or invalid
-- **Bold rows**: Overall service status (merged cells concept)
-
-#### Exit Codes
-
-- `0`: All credentials valid
-- `1`: One or more credentials invalid or missing
-
-#### Validation Details
-
-**Cloudflare**
-
-- API Token: Tests with `wrangler whoami` command
-- Account ID: Verifies it's set and displays first 8 chars
-
-**Google OAuth**
-
-- Client ID: Format validation (`.apps.googleusercontent.com`)
-- Client Secret: Format validation (`GOCSPX-`)
-- Redirect URI: Format validation + endpoint reachability
-
-**OpenRouter**
-
-- API Key: Format validation (`sk-or-v1-`)
-- Actual API test: Calls `/api/v1/models` endpoint
-- HTTP status codes:
-  - `200`: Valid and active
-  - `401`: Invalid or expired
-  - `429`: Valid but rate limited
-
-**GitHub**
-
-- Token: Checks availability (auto-provided in Actions)
-
-#### Troubleshooting
-
-**Cloudflare Token Invalid**:
-
-1. Generate new token at [dash.cloudflare.com/profile/api-tokens](https://dash.cloudflare.com/profile/api-tokens)
-2. Ensure permissions include:
-   - Cloudflare Pages (Edit)
-   - D1 (Edit)
-   - Workers Scripts (Edit)
-   - Workers R2 Storage (Edit)
-   - Workers KV Storage (Edit)
-3. Update in GitHub: Settings → Secrets → `CLOUDFLARE_API_TOKEN`
-
-**Google OAuth Invalid**:
-
-1. Verify credentials at [console.cloud.google.com](https://console.cloud.google.com/apis/credentials)
-2. Check redirect URI matches exactly (including trailing paths)
-3. Update in GitHub Secrets
-
-**OpenRouter API Key Invalid**:
-
-1. Generate new key at [openrouter.ai/keys](https://openrouter.ai/keys)
-2. Ensure sufficient credits in account
-3. Update in GitHub: Settings → Secrets → `OPENROUTER_API_KEY`
-4. If rate limited, wait or upgrade plan
-
-**Script Fails in CI**:
-
-1. Check Actions logs for specific error
-2. Verify all secrets are set in repo settings
-3. Ensure secrets aren't expired
-
-#### Adding New Credentials
-
-To add validation for new services:
-
-1. **Add validation function** in `scripts/validate-credentials.sh`:
-
-   ```bash
-   validate_myservice() {
-     if [ -z "${MY_API_KEY:-}" ]; then
-       log_error "MY_API_KEY not set"
-       add_row "**MyService**" "API Key" "Secret" "•••" "❌ Not Set"
-       OVERALL_RESULT=1
-       return
-     fi
-
-     # Test the credential
-     if curl -s -H "Authorization: Bearer $MY_API_KEY" https://api.myservice.com/test | grep -q "success"; then
-       add_row "**MyService**" "API Key" "Secret" "•••" "✅ Valid"
-     else
-       add_row "**MyService**" "API Key" "Secret" "•••" "❌ Invalid"
-       OVERALL_RESULT=1
-     fi
-   }
-   ```
-
-2. **Call function** in main execution:
-
-   ```bash
-   validate_cloudflare
-   validate_google
-   validate_openrouter
-   validate_myservice  # Add here
-   validate_optional
-   ```
-
-3. **Add to workflow** in `.github/workflows/validate-credentials-reusable.yml`:
-
-   ```yaml
-   env:
-     MY_API_KEY: ${{ secrets.MY_API_KEY }}
-   ```
-
-4. **Document** in this README
-
-#### Files
-
-- **Script**: `scripts/validate-credentials.sh`
-- **Workflow**: `.github/workflows/validate-credentials-reusable.yml`
-- **CI Integration**: `.github/workflows/ci.yml` (Phase 2)
+_Operational scripts for local CI, credential checks, and persistent review memory management._
 
 ---
 
-## Future Scripts
+## 📋 Overview
 
-Additional scripts will be documented here as they're added:
+The `scripts/` directory contains operator-facing automation used during local development and review.
 
-- `setup-cloudflare.sh` - Initial Cloudflare infrastructure setup
-- `deploy-preview.sh` - Deploy preview environments
-- `cleanup-old-deployments.sh` - Remove stale preview deployments
+| Script                            | Purpose                                                          | Common use                                                    |
+| --------------------------------- | ---------------------------------------------------------------- | ------------------------------------------------------------- |
+| `scripts/ci-local.sh`             | Runs local CI phases and optional CrewAI review                  | Pre-commit/pre-push validation and full review runs           |
+| `scripts/validate-credentials.sh` | Checks required environment variables and provider configuration | Fast environment sanity check before review/deploy            |
+| `scripts/memory.sh`               | Manages persistent CrewAI review memory and suppressions         | Add/list memory rules and reduce repeated low-signal findings |
+
+---
+
+## 🔄 Workflow map
+
+```mermaid
+flowchart LR
+    accTitle: Scripts Workflow Map
+    accDescr: How local operators use scripts for validation, review, and memory updates
+
+    start["Start local work"] --> creds["validate-credentials.sh"]
+    creds --> ci["ci-local.sh"]
+    ci --> decision{"Need memory update?"}
+    decision -->|Yes| memory["memory.sh"]
+    decision -->|No| done["Proceed with commit/push"]
+    memory --> rerun["Re-run ci-local.sh --review"]
+    rerun --> done
+
+    classDef step fill:#dbeafe,stroke:#2563eb,stroke-width:2px,color:#1e3a5f
+    classDef decision fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#78350f
+    classDef success fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#14532d
+
+    class start,creds,ci,memory,rerun step
+    class decision decision
+    class done success
+```
+
+---
+
+## ⚙️ Script details
+
+### `scripts/ci-local.sh`
+
+Runs local pipeline phases with optional review/deploy paths.
+
+Common examples:
+
+```bash
+# Full local CI (format/lint/tests/build; no review)
+./scripts/ci-local.sh
+
+# Quick review path
+./scripts/ci-local.sh --review
+
+# Full-review path (broader specialist routing)
+./scripts/ci-local.sh --full-review --step review
+
+# Complete full review (all specialists, complete-repo scope)
+./scripts/ci-local.sh --complete-full-review --step review
+
+# Single step execution
+./scripts/ci-local.sh --step test-crewai
+```
+
+Key behavior:
+
+- Acquires `.ci-local.lock` to prevent concurrent local runs.
+- Clears `.crewai/workspace` at startup to avoid stale artifacts.
+- Uses OpenRouter local review path by default when review flags are set.
+
+### `scripts/validate-credentials.sh`
+
+Checks local environment requirements for review/deploy workflows.
+
+Common examples:
+
+```bash
+# Validate current environment
+./scripts/validate-credentials.sh
+
+# Validate with explicit values in shell session
+OPENROUTER_API_KEY=... ./scripts/validate-credentials.sh
+```
+
+### `scripts/memory.sh`
+
+Thin wrapper over `.crewai/tools/memory_cli.py` to manage persistent memory.
+
+Common examples:
+
+```bash
+# List learned memories
+./scripts/memory.sh --list-memories
+
+# Add a learned memory
+./scripts/memory.sh --add-memory "Do not flag fake placeholders in .env.example" --source maintainer-policy --confidence 1.0
+
+# List suppressions
+./scripts/memory.sh --list-suppressions
+
+# Add suppression scoped to example env files
+./scripts/memory.sh --add-suppression "placeholder api keys and tokens" --reason "Template placeholders are expected" --file-glob "*.env.example"
+
+# Deactivate suppression by id
+./scripts/memory.sh --deactivate-suppression sup-001
+
+# Show context injected into local review prompts
+./scripts/memory.sh --show-context
+
+# Compact memory and trim review-history trend
+./scripts/memory.sh --compact-memory --max-trend-entries 50
+
+# Export SQL seed and optionally materialize runtime SQLite
+./scripts/memory.sh --export-sql
+./scripts/memory.sh --materialize-sqlite
+
+# Inspect backend mode and resolved storage paths
+./scripts/memory.sh --backend-status --json
+```
+
+---
+
+## 🧠 Memory lifecycle
+
+```mermaid
+flowchart TD
+    accTitle: Memory Update Lifecycle
+    accDescr: How memory rules are added, persisted, and consumed by local review runs
+
+    add["memory.sh --add-memory/--add-suppression"] --> store[".crewai/memory/*.json updated"]
+    store --> load["main.py loads memory_context.md"]
+    load --> inject["Context pack includes persistent review memory"]
+    inject --> review["Specialists/full/quick consume memory guidance"]
+    review --> result["Lower repeated low-signal findings"]
+
+    classDef step fill:#dbeafe,stroke:#2563eb,stroke-width:2px,color:#1e3a5f
+    classDef success fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#14532d
+
+    class add,store,load,inject,review step
+    class result success
+```
+
+---
+
+## 💾 Backend modes
+
+```mermaid
+flowchart TD
+    accTitle: Memory backend mode selection
+    accDescr: How memory manager selects local, cloud, or self-hosted mode and falls back to local-safe storage.
+
+    start["memory manager init"] --> mode{"MEM0_BACKEND set?"}
+    mode -->|no| toggles{"Legacy toggles set?"}
+    mode -->|local| local["Local JSON + SQL seed"]
+    mode -->|cloud| cloud["mem0 cloud"]
+    mode -->|self-hosted| hosted["mem0 self-hosted"]
+    toggles -->|none| local
+    toggles -->|USE_MEM0_CLOUD=true| cloud
+    toggles -->|USE_MEM0_SELF_HOSTED=true| hosted
+    cloud --> fallback["Fallback to local on init failure"]
+    hosted --> fallback
+    fallback --> local
+
+    classDef primary fill:#dbeafe,stroke:#2563eb,stroke-width:2px,color:#1e3a5f
+    classDef safe fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#14532d
+    classDef caution fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#78350f
+
+    class start,mode,toggles primary
+    class local safe
+    class cloud,hosted,fallback caution
+```
+
+---
+
+## ✅ Practical playbook
+
+1. Run `./scripts/validate-credentials.sh` before any review run.
+2. Run `./scripts/ci-local.sh --review` for standard PR checks.
+3. If review noise repeats, update memory with `./scripts/memory.sh`.
+4. Re-run `./scripts/ci-local.sh --complete-full-review --step review` when validating deep specialist behavior.
+5. Commit script or memory policy changes with updated issue/PR/kanban/ADR records.
