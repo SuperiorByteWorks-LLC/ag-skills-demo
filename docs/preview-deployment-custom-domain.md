@@ -20,31 +20,79 @@ This feature automatically configures a custom domain for PR preview deployments
 
 ### Cloudflare API Token Permissions
 
-Your `CLOUDFLARE_API_TOKEN` must have these permissions:
+Your `CLOUDFLARE_API_TOKEN` must have these exact permissions:
 
-| Permission                     | Level | Purpose                                |
-| ------------------------------ | ----- | -------------------------------------- |
-| **Account → Cloudflare Pages** | Edit  | Deploy to Pages, manage custom domains |
-| **Zone → DNS**                 | Edit  | Create/update CNAME records            |
-| **Zone → Zone**                | Read  | Find Zone ID for base domain           |
+| Permission                     | Type | Purpose                          |
+| ------------------------------ | ---- | -------------------------------- |
+| **Account → Cloudflare Pages** | Edit | Deploy to Pages, manage projects |
+| **Zone → DNS**                 | Edit | Create/update CNAME records      |
+| **Zone → Zone**                | Read | Find Zone ID for domain          |
 
-#### How to Verify/Update Token Permissions
+#### How to Create the Token (Step by Step)
 
-1. Go to [Cloudflare Dashboard → My Profile → API Tokens](https://dash.cloudflare.com/profile/api-tokens)
-2. Find your `CLOUDFLARE_API_TOKEN` and click **Edit**
-3. Ensure the permissions above are granted
-4. If missing, add them and save
+1. **Go to Cloudflare Dashboard:**
+   - Visit [dash.cloudflare.com](https://dash.cloudflare.com)
+   - Log in to your account
 
-#### Test Your Token
+2. **Navigate to API Tokens:**
+   - Click your profile icon (top-right)
+   - Select "My Profile"
+   - Click "API Tokens" in the left sidebar
+
+3. **Create Custom Token:**
+   - Click **"Create Custom Token"**
+   - Name: `GitHub-Actions-Deploy`
+
+4. **Set Permissions (exactly as shown below):**
+
+   Click "Add +" and add each row:
+
+   | Permission | Type             |
+   | ---------- | ---------------- | ---- |
+   | Account    | Cloudflare Pages | Edit |
+   | Zone       | DNS              | Edit |
+   | Zone       | Zone             | Read |
+
+   Your permissions should look like:
+
+   ```
+   - Account:Cloudflare Pages:Edit
+   - Zone:DNS:Edit
+   - Zone:Zone:Read
+   ```
+
+5. **Configure Token Settings:**
+   - **Account Resources**: Include your account (dropdown)
+   - **Zone Resources**: Include All Zones (dropdown)
+   - **TTL**: Never expire (or set to 1 year)
+
+6. **Create and Copy:**
+   - Click "Continue to summary"
+   - Click "Create Token"
+   - **IMPORTANT**: Copy the token NOW - you won't see it again!
+   - Save it somewhere safe (you'll add it to GitHub Secrets)
+
+#### How to Verify Token Works
 
 ```bash
-# Should return list of zones (not an error)
-curl -X GET "https://api.cloudflare.com/client/v4/zones" \
-  -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
-  -H "Content-Type: application/json" | jq
+# Test your token
+curl -X GET "https://api.cloudflare.com/client/v4/user/tokens/verify" \
+  -H "Authorization: Bearer YOUR_TOKEN_HERE" \
+  -H "Content-Type: application/json"
 ```
 
-If you get `"success": true` and see your zones, you're ready!
+Expected response: `{"success": true, "result": {"id": "...", "name": "GitHub-Actions-Deploy", ...}}`
+
+#### How to Get Your Account ID
+
+1. In Cloudflare Dashboard, look at the URL:
+   - `https://dash.cloudflare.com/ACCOUNT_ID_HERE`
+   - Copy the alphanumeric string in the URL
+
+2. Or go to:
+   - Click your profile icon
+   - Select "My Profile"
+   - Scroll down to "Account ID"
 
 ---
 

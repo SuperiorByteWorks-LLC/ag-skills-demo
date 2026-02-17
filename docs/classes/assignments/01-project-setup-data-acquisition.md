@@ -1,4 +1,4 @@
-# Assignment 1: Project Setup and Field Data Acquisition
+# Assignment 1: Field Data Acquisition and Documentation
 
 > **Back to [Class Materials](../classes.md)** — Overview of all classes and assignments.
 
@@ -12,7 +12,7 @@
 | Field                 | Value                                    |
 | --------------------- | ---------------------------------------- |
 | **Assignment Number** | 1                                        |
-| **Title**             | Project Setup and Field Data Acquisition |
+| **Title**             | Field Data Acquisition and Documentation |
 | **Grade Value**       | 5 points                                 |
 | **Due Date**          | February 26, 2026, 11:59 PM PT           |
 
@@ -22,156 +22,187 @@
 
 After completing this assignment, you will be able to:
 
-- Set up your development environment using VS Code and GitHub Codespaces
-- Clone and configure the course template repository
-- Establish a professional Git workflow with feature branches
-- Install and configure an AI coding assistant (OpenCode or Roo Code)
-- Run local CI to verify your setup
-- Plan your work using the AI-assisted workflow (describe in English, AI helps create plans with Mermaid diagrams)
+- Set up your development environment with VS Code and an AI assistant
+- Configure secrets for deployment and AI code review
+- Use AI to create a feature branch in your repository
 - Download agricultural field data using the agri-toolkit
-- Visualize field boundaries in VS Code
-- Understand best practices for data storage (data ≠ code)
+- Verify your setup works and see your website deployed
 
 ---
 
 ## Overview
 
-In this first assignment, you will transition from theory to practice by setting up your personal project environment and acquiring the raw data that will power your Row Crop Intelligence Data Dashboard.
+In this first assignment, you will set up your development environment, configure deployment secrets, and download approximately 200 random field boundaries. This is the foundation for all future assignments.
 
-This assignment focuses on **setup and verification** — ensuring your environment works correctly before we dive into data analysis in later assignments.
+**Default behavior:** You get random fields. If you want specific fields later, you can modify the download parameters.
 
 ---
 
 ## The AI-Assisted Workflow
-
-Before starting, understand how you will work throughout this course:
 
 ```mermaid
 flowchart TB
     accTitle: AI-Assisted Development Workflow
     accDescr: How you work with AI in this course
 
-    describe[You describe what you want<br/>in English] --> mermaid[AI helps create<br/>Mermaid diagram]
-    mermaid --> plan[You review and refine<br/>the plan]
-    plan --> implement[AI implements<br/>the code]
+    describe[You describe what you want<br/>in English] --> implement[AI implements<br/>the code]
     implement --> review[You review<br/>the code]
     review --> verify[You verify<br/>the output]
-    verify --> loop{More work?}
-    loop -->|Yes| describe
-    loop -->|No| done[Done]
+    verify --> done[Done or<br/>iterate]
 
     style describe fill:#e1f5ff
-    style mermaid fill:#fff9c4
-    style plan fill:#e8f5e9
     style implement fill:#fff9c4
     style review fill:#f3e5f5
     style verify fill:#e8f5e9
 ```
 
-**Key principle:** You describe what you want in English. AI helps formalize your plan with Mermaid diagrams, then implements the code. You review and verify the output.
+**Key principle:** You describe what you want in English. AI writes the code. You review and verify.
 
 ---
 
 ## Instructions
 
-### Step 1: Set Up Your Development Environment
+### Step 1: Choose Your Development Environment
 
-**Choose your environment:**
+Choose one of these options:
 
-| Option                | Description                 | Best For                     |
-| --------------------- | --------------------------- | ---------------------------- |
-| **GitHub Codespaces** | Cloud-based VS Code         | Consistent, no setup         |
-| **WSL + VS Code**     | Windows Subsystem for Linux | Windows users who want local |
-| **Mac/Linux**         | Native terminal + VS Code   | Mac/Linux users              |
-
-**If using GitHub Codespaces:**
-
-1. Log in to your GitHub account
-2. Navigate to the course template repository
-3. Click "Code" → "Create codespace on main"
-4. Wait for environment to build (2-3 minutes)
-
-**If using local development:**
-
-1. Install [VS Code](https://code.visualstudio.com/)
-2. Set up your Linux environment (WSL for Windows, native for Mac/Linux)
-3. Install Python and required tools
+| Option                | Description                           | Best For                                 |
+| --------------------- | ------------------------------------- | ---------------------------------------- |
+| **GitHub Codespaces** | Cloud-based VS Code in your browser   | Quickest setup, no installation needed   |
+| **WSL + VS Code**     | Windows Subsystem for Linux + VS Code | Windows users who want local development |
+| **Mac/Linux**         | Native terminal + VS Code             | Mac and Linux users                      |
 
 ---
 
-### Step 2: Clone the Template Repository
+#### Option A: GitHub Codespaces (Recommended)
 
-**The Template:**
+1. Log in to your GitHub account
+2. Go to [github.com/SuperiorByteWorks-LLC/agent-project](https://github.com/SuperiorByteWorks-LLC/agent-project)
+3. Click the **Code** button
+4. Select **Create codespace on main**
+5. Wait 2-3 minutes for the environment to build
+6. You'll see VS Code in your browser
 
-We use a professional-grade template: [SuperiorByteWorks-LLC/agent-project](https://github.com/SuperiorByteWorks-LLC/agent-project)
+**Extensions are pre-installed** in Codespaces.
 
-This template includes:
+---
 
-- **AGENTS.md** - Instructions for AI assistants
-- **docs/agentic/** - Documentation standards and templates
-- **.github/** - CI/CD workflows for automated testing
-- **.crewai/** - AI code review system
-- **packages/agri-data-toolkit/** - The Python package you will use
+#### Option B: WSL + VS Code (Windows)
 
-**Clone the template:**
+1. **Install WSL:**
+   - Open PowerShell as Administrator
+   - Run: `wsl --install`
+   - Restart your computer
+   - Open "Ubuntu" from the Start menu
+
+2. **Install VS Code:**
+   - Download from [code.visualstudio.com](https://code.visualstudio.com/)
+   - During install, check "Add to PATH"
+   - After install, open VS Code
+   - Install the "WSL" extension (search "WSL" in Extensions)
+
+3. **Connect VS Code to WSL:**
+   - Press `Ctrl+Shift+P`
+   - Type "WSL: Connect to WSL"
+   - Press Enter
+   - You'll see "WSL: Ubuntu" in the bottom-left corner
+
+---
+
+#### Option C: Mac/Linux
+
+1. **Install VS Code:**
+   - Download from [code.visualstudio.com](https://code.visualstudio.com/)
+   - Drag to Applications folder
+
+2. **Install Command Line Tools:**
+   - Open VS Code
+   - Press `Cmd+Shift+P`
+   - Type "Shell Command: Install 'code' command in PATH"
+   - Press Enter
+
+---
+
+### Step 2: Install Required Extensions
+
+In VS Code, open Extensions (`Ctrl+Shift+X`) and install:
+
+| Extension               | Purpose                               |
+| ----------------------- | ------------------------------------- |
+| **OpenCode**            | AI assistant for coding (recommended) |
+| **Roo Code**            | Alternative AI assistant              |
+| **GitHub Copilot**      | Another AI alternative                |
+| **GitLens**             | Enhanced Git features                 |
+| **Markdown All in One** | Markdown editing                      |
+
+**In GitHub Codespaces**, these are usually pre-installed.
+
+---
+
+### Step 3: Clone the Template Repository
 
 ```bash
-# In your terminal (in Codespace or local)
 git clone https://github.com/SuperiorByteWorks-LLC/agent-project.git
 cd agent-project
 ```
 
-**Important:** Do NOT fork — clone directly. This is your working copy.
+In VS Code:
+
+- File → Open Folder
+- Select the `agent-project` folder
 
 ---
 
-### Step 3: Configure Git
+### Step 4: Configure Deployment Secrets
 
-Set up your identity:
+This is critical - without these secrets, your website won't deploy and AI code review won't work.
 
-```bash
-git config --global user.name "Your Name"
-git config --global user.email "your.email@example.com"
-```
+#### Get Cloudflare Credentials (for website deployment)
 
----
+1. **Create Cloudflare account** (free): [dash.cloudflare.com](https://dash.cloudflare.com)
 
-### Step 4: Install and Test AI Assistant
+2. **Get API Token:**
+   - Go to Dashboard → Profile → API Tokens
+   - Click "Create Custom Token"
+   - Use template: **"Edit Cloudflare Workers"**
+   - Name: `GitHub-Actions`
+   - Set these permissions:
+     - Zone: Read
+     - Account: Edit (for Pages)
+     - Workers: Edit
+   - Create and **copy the token** (you won't see it again!)
 
-**Install OpenCode (Recommended):**
+3. **Get Account ID:**
+   - Copy from your dashboard URL: `https://dash.cloudflare.com/ACCOUNT_ID`
+   - Or go to Overview → Account ID
 
-1. In VS Code, open Extensions (Ctrl+Shift+X)
-2. Search for "OpenCode"
-3. Install and reload
+#### Get OpenRouter API Key (for AI code review)
 
-**Or install Roo Code (Alternative):**
+1. Go to [openrouter.ai](https://openrouter.ai)
+2. Sign up and go to Keys
+3. Create a new key and **copy it**
 
-1. Search for "Roo Code" in Extensions
-2. Install and sign up at [roocode.ai](https://roocode.ai/)
+#### Add Secrets to GitHub
 
-**Verify it works:**
+1. Go to your repository on GitHub
+2. Click **Settings** → **Secrets and variables** → **Actions**
+3. Add these secrets:
 
-1. Create a new file: `test_ai.py`
-2. Type a comment describing what you want:
-   ```python
-   # Function to calculate field area in acres from square meters
-   ```
-3. The AI should suggest code
-4. Press Tab to accept the suggestion
+| Secret Name             | Where to Find                   |
+| ----------------------- | ------------------------------- |
+| `CLOUDFLARE_API_TOKEN`  | From Cloudflare API Tokens page |
+| `CLOUDFLARE_ACCOUNT_ID` | From Cloudflare dashboard URL   |
+| `OPENROUTER_API_KEY`    | From openrouter.ai Keys page    |
 
-**Take a screenshot** showing your AI assistant working in VS Code.
+**Mark complete:** ☐
 
 ---
 
 ### Step 5: Run Local CI
 
-Your template includes automated testing. Run it to verify everything works:
+Open a terminal in VS Code (`` Ctrl+` ``) and run:
 
 ```bash
-# Navigate to your repository
-cd agent-project
-
-# Run local CI
 ./scripts/ci-local.sh
 ```
 
@@ -182,94 +213,94 @@ This runs:
 - Tests
 - Package build
 
-**Take a screenshot** showing CI passing (green checkmarks).
+**Mark complete:** ☐
 
 ---
 
-### Step 6: Create a Feature Branch
+### Step 6: Create a Feature Branch Using AI
 
-Create a branch for your project work:
+This is your first task for the AI assistant:
+
+**In OpenCode, type:**
+
+```
+"Create a new Git branch called 'feature/assignment-01-setup' and switch to it."
+```
+
+The AI will run the git command for you.
+
+**Verify it worked:**
+
+Look at the Source Control panel on the left side of VS Code. You should see your new branch name at the top.
+
+**Mark complete:** ☐
+
+---
+
+### Step 7: Create Your Project Tracker
+
+Ask AI to create a tracking file:
+
+**In OpenCode, type:**
+
+```
+"Create a markdown file called 'docs/project/assignment-01-tracker.md' with:
+
+## Assignment 1: Field Data Acquisition
+
+### Executive Summary
+[Fill in what you did for this assignment]
+
+### Steps Completed
+- [ ] Environment setup
+- [ ] Extensions installed
+- [ ] Template cloned
+- [ ] Secrets configured (Cloudflare + OpenRouter)
+- [ ] Local CI passing
+- [ ] Feature branch created
+- [ ] agri-toolkit installed
+- [ ] ~200 fields downloaded
+- [ ] Website deployed
+
+### Issues Encountered
+[Document any problems and how you solved them]
+
+### Notes
+[Any other observations]"
+```
+
+As you complete each step, ask AI to update the file to mark it as done.
+
+**Mark complete:** ☐
+
+---
+
+### Step 8: Push to Trigger Deployment
+
+Now let's trigger your first deployment:
 
 ```bash
-# Create and switch to new branch
-git checkout -b feature/field-data-setup
+git push -u origin feature/assignment-01-setup
 ```
 
-**Verify you're on your branch:**
+**Watch the deployment:**
 
-```bash
-git branch
-```
+1. Go to GitHub → **Actions** tab
+2. Watch the workflow run
+3. When complete, your website is live!
 
-You should see `* feature/field-data-setup` (the asterisk indicates your current branch).
+**For preview deployment:**
+
+1. Go to your Pull Request on GitHub
+2. Add the label **"Deploy: Website Preview"**
+3. Wait for deployment to complete
+4. You'll see a preview URL as a comment
+
+**Mark complete:** ☐
 
 ---
 
-### Step 7: Plan Your Data Acquisition with AI
-
-Now use the AI-assisted workflow to plan your work:
-
-**Describe what you want:**
-
-```
-"I need to download approximately 200 field boundaries using the agri-toolkit package.
-My plan is to:
-1. Install the agri-toolkit package
-2. Run the download script to get field data
-3. Explore the downloaded files to understand the data structure
-4. Visualize at least one field boundary"
-
-Ask AI: "Help me create a Mermaid diagram showing this workflow"
-```
-
-**AI will create a diagram like:**
-
-```mermaid
-flowchart TB
-    accTitle: Field Data Acquisition Plan
-    accDescr: Steps to download and explore agricultural field data
-
-    start[Start] --> install[Install agri-toolkit]
-    install --> download[Download ~200 fields]
-    download --> explore[Explore data structure]
-    explore --> visualize[Visualize field boundary]
-    visualize --> document[Document findings]
-    visualize --> done[Done]
-
-    style install fill:#e1f5ff
-    style download fill:#fff9c4
-    style explore fill:#e8f5e9
-    style visualize fill:#f3e5f5
-```
-
-**Create a planning document:**
-
-Ask AI to help you create `docs/project/pr/assignment-01-plan.md`:
-
-```markdown
-# Assignment 1 Plan: Field Data Acquisition
-
-## Goal
-
-Download and explore ~200 agricultural field boundaries
-
-## Steps
-
-1. Install agri-toolkit package
-2. Run download script
-3. Explore downloaded files
-4. Visualize one field
-
-## Data Details
-
-- Location: [Your choice of region]
-- Crop types: [Corn/Soybeans/etc.]
-- File formats expected: GeoJSON/Shapefile
-```
-
----
-
-### Step 8: Install agri-toolkit and Download Data
+### Step 9: Install agri-toolkit and Download Data
 
 **Install the package:**
 
@@ -277,163 +308,134 @@ Download and explore ~200 agricultural field boundaries
 cd packages/agri-data-toolkit
 python -m venv venv
 source venv/bin/activate  # On Mac/Linux
-# On Windows: venv\Scripts\activate
+# On Windows (in WSL): source venv/bin/activate
 pip install -e .
 ```
 
-**Download field boundaries:**
+**Download ~200 fields:**
 
 ```bash
-# Download 200 fields
 python -m agri_toolkit.boundaries download --count 200 --output data/fields/
 ```
+
+This downloads random field boundaries across the US with associated data.
 
 **Verify the download:**
 
 ```bash
-# List downloaded files
 ls -la data/fields/
 ```
 
+**Mark complete:** ☐
+
 ---
 
-### Step 9: Explore and Visualize Your Data
-
-**Use AI to explore:**
+### Step 10: Explore Your Data
 
 Ask AI:
 
+**In OpenCode, type:**
+
 ```
 "Write Python code to:
-1. List all GeoJSON files in the data/fields/ directory
-2. Load one field boundary file
-3. Print the field ID, county, state, and area in acres
-4. Create a simple visualization of the field"
+1. List all files in data/fields/
+2. Show file extensions
+3. Load one GeoJSON file and print its properties (field_id, county, state, crop type, acres)"
 ```
 
-**Take a screenshot** showing the field boundary visualization.
+Run the code and see what data you got.
+
+**Mark complete:** ☐
 
 ---
 
-### Step 10: Understand Data vs. Code
+### Step 11: Commit and Push
 
-**Important: Data does not belong in Git!**
+Ask AI:
 
-Your `.gitignore` should exclude data files:
-
-```bash
-# Check what's ignored
-cat .gitignore | grep data
-```
-
-You should see entries like:
+**In OpenCode, type:**
 
 ```
-data/
-data/*
-!data/.gitkeep
+"Stage all changes, commit with a descriptive message, and push to the feature/assignment-01-setup branch."
 ```
 
-This means:
-
-- ✅ Code goes in Git
-- ❌ Data files do NOT go in Git
-- ✅ Only `data/.gitkeep` goes in Git (to preserve the folder structure)
-
-**Verify your setup:**
-
-```bash
-# This should show no data files
-git status data/
-```
+**Mark complete:** ☐
 
 ---
 
-### Step 11: Commit and Push Your Work
+## Progress Checklist
 
-**Stage your changes:**
+Use this to track your progress:
 
-```bash
-git add .
-```
-
-**Create a commit:**
-
-```bash
-git commit -m "feat(assignment-01): setup project and download field data
-
-- Clone template repository
-- Configure VS Code with OpenCode AI assistant
-- Run local CI - all checks pass
-- Create feature branch for assignment work
-- Download ~200 field boundaries
-- Visualize field boundaries
-- Add data exploration documentation"
-```
-
-**Push to GitHub:**
-
-```bash
-git push origin feature/field-data-setup
-```
+- ☐ Environment setup (Codespaces or WSL+VS Code)
+- ☐ Extensions installed (OpenCode, GitLens, etc.)
+- ☐ Template repository cloned
+- ☐ Secrets configured (Cloudflare + OpenRouter)
+- ☐ Local CI passing
+- ☐ Feature branch created (using AI)
+- ☐ Tracker file created
+- ☐ Website deployed (preview or production)
+- ☐ agri-toolkit installed
+- ☐ ~200 fields downloaded
+- ☐ Data explored
+- ☐ Changes committed and pushed
 
 ---
 
 ## Deliverables
 
-### Required
+### 1. GitHub Repository Link
 
-| Deliverable           | Description                             |
-| --------------------- | --------------------------------------- |
-| **GitHub Repository** | Link to your repository with all work   |
-| **Screenshots**       | See below                               |
-| **Planning Document** | `docs/project/pr/assignment-01-plan.md` |
+Submit the URL to your repository with the `feature/assignment-01-setup` branch.
 
-### Screenshots to Submit
+### 2. Two Screenshots
 
-1. **AI Assistant Working** - Screenshot showing OpenCode or Roo Code suggesting code in VS Code
-2. **CI Passing** - Screenshot showing `./scripts/ci-local.sh` passing all checks
-3. **Feature Branch** - Screenshot showing you're on `feature/field-data-setup` branch
-4. **Field Visualization** - Screenshot showing a field boundary visualized in VS Code
+**Screenshot 1 - Development Environment:**
+
+- VS Code with Source Control panel visible (showing your branch name)
+- OpenCode in the bottom panel
+- Your `docs/project/assignment-01-tracker.md` file open in the editor
+
+**Screenshot 2 - Deployed Website:**
+
+- Your website deployed to Cloudflare Pages
+- Show the preview URL or production URL in a browser
+
+### 3. Updated Tracker File
+
+Your `docs/project/assignment-01-tracker.md` should be updated with what you completed.
 
 ---
 
 ## Grading Criteria
 
-| Criterion         | Points | Description                                              |
-| ----------------- | ------ | -------------------------------------------------------- |
-| Environment Setup | 1      | Successfully set up VS Code/Codespaces with AI assistant |
-| Git Workflow      | 1      | Created feature branch, committed, and pushed correctly  |
-| CI Verification   | 1      | Local CI runs and passes                                 |
-| Data Acquisition  | 1      | Downloaded field data using agri-toolkit                 |
-| Documentation     | 1      | Created planning document with Mermaid diagram           |
+| Criterion          | Points | Description                                     |
+| ------------------ | ------ | ----------------------------------------------- |
+| Environment Setup  | 1      | VS Code + OpenCode working + secrets configured |
+| Website Deployment | 1      | Cloudflare Pages deployed and accessible        |
+| AI-Assisted Branch | 1      | Created branch using AI                         |
+| Data Download      | 1      | Downloaded ~200 fields                          |
+| Commit & Push      | 1      | Changes committed and pushed to feature branch  |
+
+---
+
+## Key Reminders
+
+- **Data stays local:** Don't commit data files to Git. Only code.
+- **Use AI:** When stuck, ask OpenCode for help.
+- **Two screenshots required:** One of VS Code setup, one of deployed website.
+- **Push triggers deployment:** Once secrets are set, pushing to a branch starts the deployment.
 
 ---
 
 ## Resources
 
-### Required
-
 - [VS Code Download](https://code.visualstudio.com/)
 - [Template Repository](https://github.com/SuperiorByteWorks-LLC/agent-project)
 - [OpenCode Extension](https://marketplace.visualstudio.com/items?itemName=opencode.opencode)
-- [Roo Code](https://roocode.ai/)
-
-### Documentation
-
-- [AGENTS.md Guide](https://github.com/SuperiorByteWorks-LLC/agent-project/blob/main/AGENTS.md)
-- [Markdown Style Guide](https://github.com/SuperiorByteWorks-LLC/agent-project/blob/main/docs/agentic/markdown_style_guide.md)
-- [Mermaid Diagram Guide](https://github.com/SuperiorByteWorks-LLC/agent-project/blob/main/docs/agentic/mermaid_style_guide.md)
-
----
-
-## Tips
-
-- **Use AI for help:** When stuck, ask your AI assistant
-- **Screenshots matter:** Make sure yours are clear and show the required information
-- **Don't commit data:** Remember — code goes in Git, data stays local
-- **Run CI often:** Run `./scripts/ci-local.sh` before committing to catch issues early
-- **Describe, don't dictate:** You tell AI what you want in English, AI writes the code
+- [WSL Installation Guide](https://learn.microsoft.com/en-us/windows/wsl/install)
+- [Cloudflare Dashboard](https://dash.cloudflare.com)
+- [OpenRouter Keys](https://openrouter.ai/keys)
 
 ---
 
@@ -442,37 +444,6 @@ git push origin feature/field-data-setup
 - **Office Hours:** See Canvas for schedule
 - **Discussion Forum:** Post questions there
 - **AI Assistant:** Use for code help, debugging, and explanations
-
----
-
-## The Workflow in Practice
-
-```mermaid
-flowchart LR
-    accTitle: Assignment 1 Complete Workflow
-    accDescr: From environment setup to data visualization
-
-    setup[Environment<br/>Setup] --> clone[Clone<br/>Template]
-    clone --> ai[Install AI<br/>Assistant]
-    ai --> ci[Run Local<br/>CI]
-    ci --> branch[Create<br/>Branch]
-    branch --> plan[Plan with AI<br/>(Mermaid)]
-    plan --> download[Download<br/>Data]
-    download --> visualize[Visualize<br/>Fields]
-    visualize --> commit[Commit &<br/>Push]
-    commit --> done[Done!]
-
-    style setup fill:#e1f5ff
-    style clone fill:#e1f5ff
-    style ai fill:#fff9c4
-    style ci fill:#e8f5e9
-    style branch fill:#e1f5ff
-    style plan fill:#fff9c4
-    style download fill:#fff9c4
-    style visualize fill:#f3e5f5
-    style commit fill:#e8f5e9
-    style done fill:#e1f5ff
-```
 
 ---
 

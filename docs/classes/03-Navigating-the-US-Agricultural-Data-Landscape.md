@@ -1123,76 +1123,6 @@ Create a unified dataset with all attributes joined by field."
 
 ---
 
-## ✍️ Assignment
-
-### Task: US Agricultural Data Source Survey
-
-**Objective:** Identify, access, and document high-value agricultural datasets for your region.
-
-**Instructions:**
-
-1. **Select Your Focus**
-   - Choose a state (preferably your home state or one of interest)
-   - Choose a county within that state
-   - Choose 1-2 crop types
-
-2. **Find Data Sources**
-   - Use AI to discover relevant datasets
-   - Focus on USDA, NASA, NOAA, NRCS sources
-   - Document at least 3-5 sources
-
-3. **Download Samples**
-   - Download at least 2 sample datasets using AI assistance
-   - Use API or web portal as appropriate
-   - Save in your project's data directory
-
-4. **Document Each Source**
-   - Create a markdown file for each dataset
-   - Include: source URL, data type, format, time period, key fields
-   - Include: how to access programmatically
-
-5. **Explore the Data**
-   - Use AI to write exploration code
-   - Generate summary statistics
-   - Identify any data quality issues
-
-**What to Submit:**
-
-Submit to Canvas:
-
-1. Link to your repository with downloaded data
-2. Documentation files for each data source
-3. Summary: Which sources are most valuable for your region and why
-
-**Due:** Before Class 04
-
-<details>
-<summary><strong>💬 Speaker Notes</strong></summary>
-
-### Assignment Review (3 minutes)
-
-- "This is your first data-focused assignment"
-- "Focus on quality, not quantity"
-- "You'll reuse these sources throughout the course"
-
-### Support Available
-
-- Office hours this week
-- Discussion forum for data source questions
-- AI assistant for code help
-
-### Real-World Connection
-
-"At Climate Corp:
-
-- Data source research was a full-time job for some team members
-- Understanding what's available is a marketable skill
-- Documentation saves everyone time"
-
-</details>
-
----
-
 ## 🔗 Resources & References
 
 ### Official Sources
@@ -2605,6 +2535,18 @@ flowchart TB
 4. **Multiple sources** can be combined for comprehensive analysis
 5. **AI assistants** help find, download, and explore data
 6. **Understanding limitations** is as important as knowing capabilities
+
+---
+
+## 📝 Assignment
+
+This class corresponds to **Assignment 1: Field Data Acquisition and Documentation**.
+
+For detailed instructions, deliverables, and grading criteria, see:
+
+**[Assignment 1: Field Data Acquisition and Documentation](./assignments/01-project-setup-data-acquisition.md)**
+
+**Note:** In this assignment, you'll simply download the default ~200 random field boundaries using the agri-toolkit. After downloading, explore the data briefly to understand its structure. This is the foundation you'll use for all future assignments.
 
 ---
 

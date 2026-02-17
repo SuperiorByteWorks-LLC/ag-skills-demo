@@ -8,7 +8,7 @@
 
 ## Summary
 
-Create an assignment template and first assignment for the Agricultural Data Systems course. The first assignment covers project setup, Git workflow, AI assistant configuration, and field data acquisition.
+Create an assignment template and first assignment for the Agricultural Data Systems course. The first assignment covers project setup, Git workflow, AI assistant configuration, secrets setup (Cloudflare + OpenRouter), website deployment, and field data acquisition.
 
 ---
 
@@ -18,6 +18,12 @@ Create an assignment template and first assignment for the Agricultural Data Sys
 
 - `docs/classes/assignment_template.md` - Reusable template for future assignments
 - `docs/classes/assignments/01-project-setup-data-acquisition.md` - First assignment (5 points)
+- `docs/project/issues/issue-00000002-document-cloudflare-token-setup.md` - Issue tracking
+
+### Updated Files
+
+- `docs/preview-deployment-custom-domain.md` - Added exact Cloudflare API token permissions and step-by-step instructions
+- `docs/classes/02-Gearing-Up-Building-Your-Smart-Farm-Workspace.md` - Added Cloudflare deployment and Google OAuth sections
 
 ### Content
 
@@ -29,31 +35,43 @@ Create an assignment template and first assignment for the Agricultural Data Sys
    - Environment setup (Codespaces/WSL/Local)
    - Template repository cloning
    - AI assistant installation (OpenCode/Roo Code)
+   - **Secrets configuration** (Cloudflare + OpenRouter) ← NEW
    - Local CI execution
    - Feature branch creation
-   - AI-assisted planning with Mermaid diagrams
+   - **Website deployment (Cloudflare Pages)** ← NEW
    - Data download (~200 fields)
    - Field boundary visualization
    - Data vs. code best practices
+
+3. **Cloudflare Token Documentation** ← NEW
+   - Exact permissions required:
+     - Account:Cloudflare Pages:Edit
+     - Zone:DNS:Edit
+     - Zone:Zone:Read
+   - Step-by-step token creation
+   - How to get Account ID
+   - How to verify token works
 
 ---
 
 ## Testing
 
-- [ ] Template follows markdown style guide
-- [ ] Assignment has clear objectives
-- [ ] Instructions are step-by-step
-- [ ] Deliverables are clearly defined
-- [ ] Grading criteria are explicit
+- [x] Template follows markdown style guide
+- [x] Assignment has clear objectives
+- [x] Instructions are step-by-step
+- [x] Deliverables are clearly defined
+- [x] Grading criteria are explicit
+- [x] Cloudflare token documentation is accurate
 
 ---
 
 ## Notes
 
-- Assignment aligns with Class 2 content (VS Code, AI assistants, Git workflow)
+- Assignment aligns with Class 2 content (VS Code, AI assistants, Git workflow, deployment)
 - Follows AI-assisted workflow (describe in English, AI creates Mermaid)
 - Emphasizes data ≠ code (data not committed to Git)
-- Includes required screenshots for verification
+- Includes required screenshots for verification (2 screenshots: dev env + deployed website)
+- All 3 secrets required: CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID, OPENROUTER_API_KEY
 
 ---
 

@@ -66,12 +66,13 @@ This connects to **Class 03** next week, where you will use these tools to downl
 ## 📍 Agenda
 
 - [x] Housekeeping
-- [ ] VS Code + AI Assistant Setup (15 min)
-- [ ] Clone Template Repository (10 min)
-- [ ] Repository Tour: AGENTS.md and Agentic Framework (10 min)
-- [ ] Install agri-toolkit Package (10 min)
-- [ ] Test: Download 2-5 Field Boundaries (15 min)
-- [ ] QGIS Overview (optional) (5 min)
+- [ ] VS Code + AI Assistant Setup (10 min)
+- [ ] Clone Template Repository (5 min)
+- [ ] Run Local CI (5 min)
+- [ ] GitHub Secrets Setup (10 min)
+- [ ] Cloudflare Deployment Setup (15 min)
+- [ ] Google OAuth Setup (10 min)
+- [ ] Test: Download 2-5 Field Boundaries (10 min)
 - [ ] AI Workflow Demo: Planning with Mermaid (10 min)
 - [ ] Q&A and troubleshooting (5 min)
 
@@ -82,12 +83,12 @@ This connects to **Class 03** next week, where you will use these tools to downl
 
 ### Pacing
 
-- VS Code + AI Assistant: 15 min
-- Clone repo: 10 min
-- Repo tour: 10 min
-- Package install: 10 min
-- Field download: 15 min
-- QGIS overview: 5 min
+- VS Code + AI Assistant: 10 min
+- Clone repo + CI: 10 min
+- Secrets Setup: 10 min
+- Cloudflare Deployment: 15 min
+- Google OAuth: 10 min
+- Field download: 10 min
 - AI Workflow demo: 10 min
 - Q&A: 5 min flexible
 
@@ -101,8 +102,10 @@ After this class, you will be able to:
 
 - **Install** and configure VS Code with an AI coding assistant (OpenCode, Roo Code, or GitHub Copilot)
 - **Clone** the course template repository with professional CI/CD and agentic framework
-- **Navigate** the repository structure (AGENTS.md, docs/agentic/, .crewai/, .github/)
-- **Install** the agri-toolkit Python package in a virtual environment
+- **Run** local CI to verify your setup
+- **Configure** GitHub secrets for OpenRouter and Cloudflare
+- **Deploy** your website to Cloudflare Pages (preview and production)
+- **Set up** Google OAuth for user authentication
 - **Execute** field boundary downloads using the toolkit (2-5 fields)
 - **Use** the AI-assisted workflow: describe what you want in English + Mermaid, have AI implement, review and verify
 
@@ -112,18 +115,21 @@ After this class, you will be able to:
 "By end of class, you should have:
 
 1. VS Code + AI assistant working
-2. Template repository cloned and understood
-3. AGENTS.md read and understood
-4. agri-toolkit package installed
-5. Successfully downloaded 2-5 field boundaries
-6. Understand the AI-assisted workflow (you plan/review, AI implements)"
+2. Template repository cloned
+3. Local CI passing
+4. GitHub secrets configured (OpenRouter + Cloudflare)
+5. Website deployed to preview URL
+6. Google OAuth credentials ready
+7. Successfully downloaded 2-5 field boundaries
+8. Understand the AI-assisted workflow (you plan/review, AI implements)"
 
 ### Success Criteria
 
 - AI assistant icon visible in VS Code
 - Template repo cloned locally
-- Can explain what AGENTS.md is for
-- import agri_toolkit works without errors
+- Local CI passing
+- Cloudflare secrets in GitHub
+- Preview deployment URL working
 - 2-5 field boundary GeoJSON files saved locally
 
 </details>
@@ -2225,6 +2231,403 @@ python -c "import os; print(os.getenv('OPENROUTER_API_KEY'))"
 
 ---
 
+### Cloudflare Website Deployment Setup
+
+**What is Cloudflare Pages?**
+
+Cloudflare Pages is a free static site hosting service that deploys your website automatically when you push to GitHub.
+
+**Why Cloudflare?**
+
+- ✅ Free tier with unlimited bandwidth
+- ✅ Automatic preview deployments for every PR
+- ✅ Custom domains with free SSL
+- ✅ Fast global CDN
+- ✅ Integrated with GitHub Actions
+
+**The Deployment Pipeline:**
+
+```mermaid
+flowchart TB
+    accTitle: Cloudflare Pages Deployment Pipeline
+    accDescr: How your website deploys automatically
+
+    push[Push to GitHub] --> ci[GitHub Actions CI]
+    ci --> test{Tests Pass?}
+    test -->|No| fix[Fix Issues]
+    fix --> push
+    test -->|Yes| preview[Deploy Preview]
+    preview --> pr_review[Review PR]
+    pr_review --> merge[Merge to Main]
+    merge --> production[Deploy Production]
+
+    style ci fill:#e1f5ff
+    style preview fill:#fff9c4
+    style production fill:#e8f5e9
+```
+
+#### Step 1: Create Cloudflare Account
+
+1. Go to [cloudflare.com](https://cloudflare.com)
+2. Sign up for free account
+3. Verify your email
+
+#### Step 2: Get Cloudflare API Credentials
+
+**Option A: Using GitHub Codespaces (Recommended)**
+
+The template includes a script to help you set up:
+
+```bash
+# Run the credential validation script
+./scripts/validate-credentials.sh
+```
+
+This will prompt you for:
+
+- `CLOUDFLARE_API_TOKEN` - For deploying websites
+- `CLOUDFLARE_ACCOUNT_ID` - Your Cloudflare account ID
+
+**Option B: Manual Setup**
+
+1. Go to [Cloudflare Dashboard → My Profile → API Tokens](https://dash.cloudflare.com/profile/api-tokens)
+2. Click "Create Custom Token"
+3. Use template "Edit Cloudflare Workers"
+4. Name: `GitHub-Actions`
+5. Set permissions:
+   - Zone: Read
+   - Account: Edit (for Pages)
+   - Workers: Edit
+6. Create and copy the token
+
+**Get Account ID:**
+
+1. Go to [Cloudflare Dashboard](https://dash.cloudflare.com)
+2. Your account ID is in the URL: `https://dash.cloudflare.com/ACCOUNT_ID`
+3. Or go to Overview → Account ID
+
+#### Step 3: Add Secrets to GitHub
+
+Add both secrets to your repository:
+
+1. Go to your repository on GitHub
+2. Click Settings → Secrets and variables → Actions
+3. Add these secrets:
+
+| Secret Name             | Where to Find              |
+| ----------------------- | -------------------------- |
+| `CLOUDFLARE_API_TOKEN`  | Cloudflare API Tokens page |
+| `CLOUDFLARE_ACCOUNT_ID` | Cloudflare dashboard URL   |
+
+#### Step 4: Verify Deployment Works
+
+The template is pre-configured with GitHub Actions that deploy to Cloudflare Pages.
+
+**To test:**
+
+1. Make a small change (like adding a comment)
+2. Commit and push
+3. Go to GitHub → Actions tab
+4. Watch the deployment run
+5. Once complete, you'll see your preview URL
+
+**Expected workflow:**
+
+```mermaid
+sequenceDiagram
+    participant You
+    participant GitHub
+    participant CI
+    participant Cloudflare
+
+    You->>GitHub: Push code
+    GitHub->>CI: Trigger workflows
+    CI->>CI: Run tests
+    CI->>Cloudflare: Deploy preview
+    Cloudflare-->>You: Preview URL in PR
+    You->>GitHub: Merge PR
+    CI->>Cloudflare: Deploy production
+    Cloudflare-->>You: Production URL
+```
+
+<details>
+<summary><strong>Speaker Notes</strong></summary>
+
+### Teaching Strategy (10 minutes)
+
+#### Explain the Value (2 minutes)
+
+- "Every push = a live website"
+- "Preview URLs for every PR"
+- "Free forever for personal projects"
+
+#### Live Demo (6 minutes)
+
+**Show the deployment in action:**
+
+1. Make a small change in Codespace
+2. Commit and push
+3. Navigate to Actions tab
+4. Show the workflow running
+5. Show the preview URL appearing
+6. Show the production deployment
+
+#### Common Student Issues (2 minutes)
+
+**Issue: Deployment fails**
+
+- Check: Are CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID set correctly?
+- Check: Is the token expired?
+- Solution: Regenerate token in Cloudflare dashboard
+
+**Issue: "Permission denied"**
+
+- Check: Does token have Workers and Pages edit permissions?
+- Solution: Create new token with correct permissions
+
+### Real-World Context
+
+"At Climate Corp:
+
+- We used Cloudflare Pages for documentation sites
+- Every PR got a live preview URL
+- Made code review much easier
+- Same setup you're using today"
+
+</details>
+
+---
+
+### Google OAuth Setup for User Authentication
+
+**What is Google OAuth?**
+
+OAuth lets users log in with their Google account instead of creating new passwords. Your template includes Google OAuth for the startup app.
+
+**Why Google OAuth?**
+
+- ✅ No password management needed
+- ✅ Secure (Google handles authentication)
+- ✅ Users trust Google sign-in
+- ✅ Free to set up
+
+**The OAuth Flow:**
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Website
+    participant Google
+    participant Database
+
+    User->>Website: Click "Login with Google"
+    Website->>Google: Redirect to Google
+    User->>Google: Enter credentials
+    Google->>Website: Return with auth code
+    Website->>Google: Exchange code for token
+    Google->>Website: Return access token
+    Website->>Google: Get user info (email, name)
+    Website->>Database: Create/update user
+    Database-->>Website: User record
+    Website-->>User: Logged in!
+```
+
+#### Step 1: Create Google Cloud Project
+
+1. Go to [console.cloud.google.com](https://console.cloud.google.com)
+2. Click "New Project"
+3. Name: `your-project-name`
+4. Click "Create"
+
+#### Step 2: Enable Google+ API
+
+1. In your project, go to "APIs & Services" → "Library"
+2. Search for "Google+ API" or "Identity Services"
+3. Click "Enable"
+
+#### Step 3: Create OAuth Credentials
+
+1. Go to "APIs & Services" → "Credentials"
+2. Click "Create Credentials" → "OAuth client ID"
+3. Configure consent screen (if prompted):
+   - User Type: External
+   - Fill in required fields (email, app name)
+   - Skip scopes for now
+4. Application type: "Web application"
+5. Name: `Your App OAuth`
+6. Authorized redirect URIs:
+   ```
+   https://your-domain.auth.<account>.workers.dev/auth/callback
+   ```
+   (You'll update this later with your actual domain)
+7. Click "Create"
+8. Copy your:
+   - `GOOGLE_CLIENT_ID`
+   - `GOOGLE_CLIENT_SECRET`
+
+#### Step 4: Add Secrets to GitHub
+
+Add these additional secrets:
+
+| Secret Name            | Value                     |
+| ---------------------- | ------------------------- |
+| `GOOGLE_CLIENT_ID`     | From Google Cloud Console |
+| `GOOGLE_CLIENT_SECRET` | From Google Cloud Console |
+
+#### Step 5: Update Configuration
+
+The template reads these from environment variables:
+
+```bash
+# In your .env file (local development)
+GOOGLE_CLIENT_ID=your-client-id.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=your-client-secret
+GOOGLE_REDIRECT_URI=https://your-domain.auth.workers.dev/auth/callback
+```
+
+**For deployment:**
+
+The GitHub Actions workflow will use the GitHub secrets automatically.
+
+<details>
+<summary><strong>Speaker Notes</strong></summary>
+
+### Teaching Strategy (8 minutes)
+
+#### Explain OAuth (3 minutes)
+
+- "Users log in with Google, not passwords"
+- "We never see or store passwords"
+- "Google handles security"
+
+#### Walk Through Setup (5 minutes)
+
+**Live demo:**
+
+1. Show Google Cloud Console
+2. Create project
+3. Enable API
+4. Create credentials
+5. Show client ID/secret
+
+**Common issues:**
+
+- Forgetting to enable API
+- Wrong redirect URI (update later)
+- Consent screen not configured
+
+### Why This Matters
+
+"At Climate Corp:
+
+- All web apps used OAuth
+- Made onboarding easy
+- No password resets to manage
+- Users appreciated not creating new accounts"
+
+</details>
+
+---
+
+### Complete Deployment Workflow
+
+Now your complete setup includes:
+
+```mermaid
+flowchart LR
+    accTitle: Complete CI/CD and Deployment Pipeline
+    accDescr: From code push to live website with authentication
+
+    subgraph GitHub
+        code[Your Code] --> push[Push]
+        push --> actions[GitHub Actions]
+    end
+
+    subgraph CI
+        actions --> test[Tests]
+        test --> lint[Format/Lint]
+        lint --> build[Build]
+    end
+
+    subgraph Deploy
+        build --> preview[Preview Deploy]
+        preview --> production[Production Deploy]
+    end
+
+    subgraph Auth
+        production --> oauth[Google OAuth]
+        oauth --> users[Users Can Login]
+    end
+
+    style code fill:#e1f5ff
+    style test fill:#fff9c4
+    style preview fill:#e8f5e9
+    style production fill:#e8f5e9
+    style oauth fill:#f3e5f5
+```
+
+**What you have after setup:**
+
+| Component             | What It Does             |
+| --------------------- | ------------------------ |
+| **GitHub Actions**    | Runs tests on every push |
+| **Preview Deploy**    | Every PR gets a live URL |
+| **Production Deploy** | Main branch = live site  |
+| **Cloudflare Pages**  | Free hosting with SSL    |
+| **Google OAuth**      | Users can log in         |
+
+**Your workflow:**
+
+```bash
+# 1. Create a feature branch
+git checkout -b feature/my-feature
+
+# 2. Make changes, commit
+git add .
+git commit -m "feat: add new feature"
+
+# 3. Push - triggers CI and preview deploy
+git push -u origin feature/my-feature
+
+# 4. Review the preview URL in GitHub
+
+# 5. Merge to main - triggers production deploy
+```
+
+**Access your websites:**
+
+- Preview: Posted as comment on your PR
+- Production: Your custom domain (after DNS setup)
+
+<details>
+<summary><strong>Speaker Notes</strong></summary>
+
+### Teaching Strategy (5 minutes)
+
+#### Review the Complete Picture (3 minutes)
+
+- "You now have professional-grade deployment"
+- "Same tools as startups use"
+- "Free for personal projects"
+
+#### Show in GitHub (2 minutes)
+
+- Navigate to your repo on GitHub
+- Show the Actions tab with running workflows
+- Show a previous deployment
+- Point out where preview URLs appear
+
+### Key Takeaways
+
+- Push code → tests run → site deploys
+- Every PR gets a preview URL
+- Merge to main → production deploys
+- Google OAuth enables user login
+
+</details>
+
+---
+
 ### AI Workflow Demo: Planning with Mermaid
 
 **The Core Workflow**
@@ -4083,75 +4486,6 @@ Thumbs.db
 
 ---
 
-## ✍️ Assignment
-
-### Class 02 Assignment: Smart Farm Workspace Setup
-
-**Objective:** Set up your complete development environment and download your first field boundaries.
-
-**Tasks:**
-
-1. **VS Code + AI Assistant Setup**
-   - [ ] Install VS Code
-   - [ ] Install AI assistant (OpenCode, Roo Code, or Copilot)
-   - [ ] Configure and test the AI assistant
-   - [ ] Test with a simple request
-
-2. **Clone Template Repository**
-   - [ ] Fork https://github.com/SuperiorByteWorks-LLC/agent-project on GitHub
-   - [ ] Clone your fork locally
-   - [ ] Open in VS Code
-   - [ ] Verify AGENTS.md and docs/agentic/ exist
-
-3. **Install agri-toolkit**
-   - [ ] Create virtual environment in packages/agri-data-toolkit/
-   - [ ] Install the package with pip install -e .
-   - [ ] Verify import works
-
-4. **Download Field Boundaries**
-   - [ ] Use CLI to find fields in a county of your choice
-   - [ ] Download 2-5 field boundaries as GeoJSON
-   - [ ] View them in VS Code (GeoJSON Viewer extension)
-   - [ ] Ask AI to write code to explore one field
-   - [ ] Run and verify the output
-
-5. **Read AGENTS.md**
-   - [ ] Read the AGENTS.md file
-   - [ ] Understand the AI-assisted workflow
-   - [ ] Know what docs/agentic/ contains
-
-**What to Submit:**
-
-Submit to Canvas:
-
-1. Screenshot of AI assistant working in VS Code
-2. Link to your forked repository
-3. Screenshot of field boundary visualization
-4. One example of output from AI-written exploration code
-
-**Due:** Before Class 03
-
-</details>
-
-<details>
-<summary><strong>Speaker Notes</strong></summary>
-
-### Assignment Review (2 minutes)
-
-- "Five tasks - all hands-on"
-- "Everything needed for Class 03"
-- "Screenshots prove completion"
-
-### Support Available
-
-- Office hours this week
-- Discussion forum
-- AI assistant for troubleshooting
-
-</details>
-
----
-
 ## 🔗 Resources & References
 
 ### Installation Guides
@@ -4176,6 +4510,16 @@ Submit to Canvas:
 
 - [USDA CLU Data](https://www.fsa.usda.gov/programs-and-services/aerial-photography/) - Field boundaries
 - [NASS QuickStats](https://quickstats.nass.usda.gov/) - Crop data
+
+---
+
+## 📝 Assignment
+
+This class corresponds to **Assignment 1: Field Data Acquisition and Documentation**.
+
+For detailed instructions, deliverables, and grading criteria, see:
+
+**[Assignment 1: Field Data Acquisition and Documentation](./assignments/01-project-setup-data-acquisition.md)**
 
 ---
 
