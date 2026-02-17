@@ -36,12 +36,12 @@ requirement session_timeout {
 
 element auth_service {
     type: service
-    docref: auth-service-v2
+    docref: authservicev2
 }
 
 element crypto_module {
     type: module
-    docref: crypto-lib-v3
+    docref: cryptolibv3
 }
 
 auth_service - satisfies -> high_availability
@@ -60,10 +60,12 @@ crypto_module - satisfies -> data_encryption
 - Use `element` for design components that satisfy requirements
 - Relationship types: `- satisfies ->`, `- traces ->`, `- contains ->`, `- derives ->`, `- refines ->`, `- copies ->`
 - Keep to **3–5 requirements** per diagram
-- **Avoid special characters in text fields** — spell out symbols and remove hyphens:
+- **Avoid special characters in text fields and docref** — spell out symbols and remove hyphens:
   - "99.9 percent" not "99.9%"
   - "AES 256" not "AES-256"
   - "end to end" not "end-to-end"
+  - "authservicev2" not "auth-service-v2"
+  - "componentref" not "component-ref"
 - Use 4-space indentation inside `{ }` blocks
 
 ---
@@ -73,17 +75,17 @@ crypto_module - satisfies -> data_encryption
 ```mermaid
 requirementDiagram
 
-    requirement your_requirement {
-        id: 1
-        text: The requirement statement here
-        risk: medium
-        verifymethod: test
-    }
+requirement your_requirement {
+    id: 1
+    text: The requirement statement here
+    risk: medium
+    verifymethod: test
+}
 
-    element your_component {
-        type: service
-        docref: component-ref
-    }
+element your_component {
+    type: service
+    docref: componentref
+}
 
-    your_component - satisfies -> your_requirement
+your_component - satisfies -> your_requirement
 ```
