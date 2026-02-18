@@ -62,10 +62,19 @@ data/metadata/**
 !data/raw/.gitkeep
 !data/processed/.gitkeep
 !data/metadata/.gitkeep
+packages/agri-data-toolkit/data/
+!packages/agri-data-toolkit/data/.gitkeep
+packages/agri-data-toolkit/data/raw/**
+packages/agri-data-toolkit/data/processed/**
+packages/agri-data-toolkit/data/metadata/**
+!packages/agri-data-toolkit/data/raw/.gitkeep
+!packages/agri-data-toolkit/data/processed/.gitkeep
+!packages/agri-data-toolkit/data/metadata/.gitkeep
 
 # Credentials and secrets
 .env
 .env.local
+.env.*.local
 *.key
 *.pem
 credentials.json
@@ -80,6 +89,19 @@ logs/
 tmp/
 temp/
 *.tmp
+
+# Node
+node_modules/
+*.tsbuildinfo
+
+# JS build outputs
+.next/
+out/
+
+# CrewAI workspace (ephemeral files generated at runtime)
+.crewai/workspace/
+!.crewai/workspace/.gitkeep
+.crewai/*.log
 
 # OS specific
 Thumbs.db
@@ -112,3 +134,4 @@ dmypy.json
 *.gpkg
 !examples/*.geojson
 !tests/fixtures/*.geojson
+.env

@@ -1,443 +1,239 @@
-name: CI/CD Pipeline
-
-# This workflow auto-formats code, then runs linting, testing, and building
-# All in one sequential pipeline to ensure CI always runs on formatted code
-# Runs only on pull requests to avoid duplicate runs
+name: CI
 
 on:
   pull_request:
-    branches:
-      - main
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+permissions:
+  contents: write
+  checks: write
+  pull-requests: write
+  deployments: write
+  issues: write
 
 jobs:
-  # Job 1: Auto-format code and commit if needed
-  format:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write  # Allow pushing formatting changes
+  # ============================================================================
+  # PHASE 1: Environment Validation & Core CI - Run in parallel
+  # ============================================================================
 
+  validate-environment:
+    name: Validate / Environment
+    uses: ./.github/workflows/validate-environment-reusable.yml
+    secrets: inherit
+
+  core-ci:
+    name: Validate / Core CI
+    uses: ./.github/workflows/format-lint-reusable.yml
+    secrets: inherit
+
+  # ============================================================================
+  # PHASE 1 GATE: Resolve commit and validate stage completion
+  # ============================================================================
+
+  validate:
+    name: Validate
+    needs: [validate-environment, core-ci]
+    if: |
+      always() &&
+      needs.validate-environment.result == 'success' &&
+      (needs.core-ci.result == 'success' || needs.core-ci.result == 'failure')
+    runs-on: ubuntu-latest
     outputs:
-      formatted_sha: ${{ steps.get-sha.outputs.sha }}
-
+      final-commit-sha: ${{ steps.resolve_commit.outputs.sha }}
+      core_ci_result: ${{ steps.resolve_commit.outputs.core_ci_result }}
     steps:
-      - name: Check out code
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.head_ref || github.ref_name }}
-          token: ${{ secrets.GITHUB_TOKEN }}
-          fetch-depth: 0
-
-      - name: Set up Python 3.13
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.13'
-
-      - name: Install Poetry
-        uses: snok/install-poetry@v1
-        with:
-          version: latest
-          virtualenvs-create: true
-          virtualenvs-in-project: true
-
-      - name: Load cached venv
-        id: cached-poetry-dependencies
-        uses: actions/cache@v4
-        with:
-          path: .venv
-          key: venv-${{ runner.os }}-3.13-${{ hashFiles('**/poetry.lock') }}
-
-      - name: Install dependencies
-        run: poetry install --no-interaction --with dev
-
-      - name: Run autopep8 (whitespace cleanup)
+      - name: Resolve commit for downstream stages
+        id: resolve_commit
         run: |
-          poetry run autopep8 --in-place --recursive --select=W src/ tests/
-          echo "✅ autopep8 whitespace cleanup complete"
-
-      - name: Run Black formatter
+          echo "sha=${{ needs.core-ci.outputs.final-commit-sha }}" >> "$GITHUB_OUTPUT"
+          echo "core_ci_result=${{ needs.core-ci.result }}" >> "$GITHUB_OUTPUT"
+      - name: Stage summary
         run: |
-          poetry run black src/ tests/
-          echo "✅ Black formatting complete"
+          echo "## ✅ Validate Environment" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "- validate-environment: ${{ needs.validate-environment.result }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- core-ci: ${{ needs.core-ci.result }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- final commit sha: ${{ needs.core-ci.outputs.final-commit-sha }}" >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Run isort
-        run: |
-          poetry run isort src/ tests/
-          echo "✅ Import sorting complete"
+  # ============================================================================
+  # PHASE 2: Tests & Builds - Run in parallel after validate gate
+  # ============================================================================
 
-      - name: Check for formatting changes
-        id: verify-changed-files
-        run: |
-          if [[ -z $(git status --porcelain) ]]; then
-            echo "changed=false" >> $GITHUB_OUTPUT
-            echo "ℹ️  No formatting changes needed"
-          else
-            echo "changed=true" >> $GITHUB_OUTPUT
-            echo "📝 Formatting changes detected:"
-            git status --short
-          fi
+  test-docs-links:
+    name: Test-Build / Docs Links
+    needs: [validate]
+    if: |
+      always() &&
+      needs.validate.result == 'success'
+    uses: ./.github/workflows/link-check-reusable.yml
+    with:
+      commit_sha: ${{ needs.validate.outputs.final-commit-sha }}
+    secrets: inherit
 
-      - name: Commit formatting changes
-        if: steps.verify-changed-files.outputs.changed == 'true'
-        run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add -A
-          git commit -m "style: auto-format code with autopep8, Black and isort"
-          git push
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  test-crewai:
+    name: Test-Build / CrewAI
+    needs: [validate]
+    if: |
+      always() &&
+      needs.validate.result == 'success'
+    uses: ./.github/workflows/test-crewai-reusable.yml
+    with:
+      commit_sha: ${{ needs.validate.outputs.final-commit-sha }}
+    secrets: inherit
 
-      - name: Get current SHA for next jobs
-        id: get-sha
-        run: |
-          echo "sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
-          echo "📍 Current SHA: $(git rev-parse HEAD)"
+  test-website:
+    name: Test-Build / Website
+    needs: [validate]
+    if: |
+      always() &&
+      needs.validate.result == 'success'
+    uses: ./.github/workflows/website-test-build-reusable.yml
+    with:
+      commit_sha: ${{ needs.validate.outputs.final-commit-sha }}
+    secrets: inherit
 
-  # Job 2: Lint (runs on formatted code)
-  lint:
-    needs: format
+  test-agri-toolkit:
+    name: Test-Build / Agri Toolkit
+    needs: [validate]
+    if: |
+      always() &&
+      needs.validate.result == 'success'
+    uses: ./.github/workflows/agri-test-reusable.yml
+    with:
+      commit_sha: ${{ needs.validate.outputs.final-commit-sha }}
+    secrets: inherit
+
+  build-agri-toolkit:
+    name: Test-Build / Agri Toolkit Build
+    needs: [validate]
+    if: |
+      always() &&
+      needs.validate.result == 'success'
+    uses: ./.github/workflows/agri-build-reusable.yml
+    with:
+      commit_sha: ${{ needs.validate.outputs.final-commit-sha }}
+    secrets: inherit
+
+  # ============================================================================
+  # PHASE 2 GATE: All tests and builds must complete
+  # ============================================================================
+
+  test-build:
+    name: Test-Build
+    needs: [validate, test-docs-links, test-crewai, test-website, test-agri-toolkit, build-agri-toolkit]
+    if: |
+      always() &&
+      needs.validate.result == 'success' &&
+      needs.test-docs-links.result == 'success' &&
+      needs.test-crewai.result == 'success' &&
+      needs.test-website.result == 'success' &&
+      needs.test-agri-toolkit.result == 'success' &&
+      needs.build-agri-toolkit.result == 'success'
     runs-on: ubuntu-latest
-
     steps:
-      - name: Check out formatted code
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ needs.format.outputs.formatted_sha }}
-          fetch-depth: 0
+      - name: Stage summary
+        run: |
+          echo "## ✅ Test & Build" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "- test-docs-links: ${{ needs.test-docs-links.result }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- test-crewai: ${{ needs.test-crewai.result }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- test-website: ${{ needs.test-website.result }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- test-agri-toolkit: ${{ needs.test-agri-toolkit.result }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- build-agri-toolkit: ${{ needs.build-agri-toolkit.result }}" >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Set up Python 3.13
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.13'
+  # ============================================================================
+  # PHASE 3: Deployments - Environment-aware deployments after test-build gate
+  # ============================================================================
 
-      - name: Install Poetry
-        uses: snok/install-poetry@v1
-        with:
-          version: latest
-          virtualenvs-create: true
-          virtualenvs-in-project: true
+  deploy-preview:
+    name: Deploy / Preview
+    needs: [test-build]
+    if: |
+      github.event_name == 'pull_request' &&
+      needs.test-build.result == 'success' &&
+      contains(github.event.pull_request.labels.*.name, 'Deploy: Website Preview')
+    uses: ./.github/workflows/preview-deploy-reusable.yml
+    with:
+      workspace: website
+      build_artifact: website-build
+      pr_number: ${{ github.event.pull_request.number }}
+      head_ref: ${{ github.event.pull_request.head.ref }}
+    secrets: inherit
 
-      - name: Load cached venv
-        id: cached-poetry-dependencies
-        uses: actions/cache@v4
-        with:
-          path: .venv
-          key: venv-${{ runner.os }}-3.13-${{ hashFiles('**/poetry.lock') }}
+  deploy-production:
+    name: Deploy / Production
+    needs: [test-build]
+    if: |
+      github.event_name == 'push' &&
+      github.ref == 'refs/heads/main' &&
+      needs.test-build.result == 'success' &&
+      contains(github.event.head_commit.message, 'Merge pull request')
+    uses: ./.github/workflows/production-deploy-reusable.yml
+    with:
+      workspace: website
+      build_artifact: website-build
+    secrets: inherit
 
-      - name: Install dependencies
-        run: poetry install --no-interaction --with dev
+  # ============================================================================
+  # PHASE 3 GATE: Deploy stage completion
+  # ============================================================================
 
-      - name: Run Black check
-        run: poetry run black --check src/ tests/
-
-      - name: Run isort check
-        run: poetry run isort --check-only src/ tests/
-
-      - name: Run flake8 linting
-        run: poetry run flake8 src/ tests/
-
-      - name: Run mypy type checking
-        run: poetry run mypy src/ --ignore-missing-imports
-
-  # Job 3: Test (runs after lint passes)
-  test:
-    needs: [format, lint]
+  deploy:
+    name: Deploy
+    needs: [test-build, deploy-preview, deploy-production]
+    if: |
+      always() &&
+      needs.test-build.result == 'success' &&
+      (needs.deploy-preview.result == 'success' || needs.deploy-preview.result == 'skipped') &&
+      (needs.deploy-production.result == 'success' || needs.deploy-production.result == 'skipped')
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: write  # Allow posting comments
-
-    strategy:
-      matrix:
-        python-version: ['3.13']
-
     steps:
-      - name: Check out formatted code
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ needs.format.outputs.formatted_sha }}
-          fetch-depth: 0
-
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ matrix.python-version }}
-
-      - name: Install Poetry
-        uses: snok/install-poetry@v1
-        with:
-          version: latest
-          virtualenvs-create: true
-          virtualenvs-in-project: true
-
-      - name: Load cached venv
-        id: cached-poetry-dependencies
-        uses: actions/cache@v4
-        with:
-          path: .venv
-          key: venv-${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('**/poetry.lock') }}
-
-      - name: Install dependencies
-        run: poetry install --no-interaction --with dev
-
-      - name: Install GDAL system dependencies
+      - name: Stage summary
         run: |
-          sudo apt-get update
-          sudo apt-get install -y gdal-bin libgdal-dev
+          echo "## ✅ Deploy" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "- deploy-preview: ${{ needs.deploy-preview.result }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- deploy-production: ${{ needs.deploy-production.result }}" >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Generate sample data for tests
-        run: poetry run python scripts/generate_sample_field_boundaries.py
+  # ============================================================================
+  # PHASE 4: AI Agents - Code review and analysis after all phases complete
+  # ============================================================================
 
-      - name: Run tests with coverage
-        id: pytest
-        continue-on-error: true
-        run: |
-          # Run standard tests
-          poetry run pytest tests/ -v --cov=src/agri_toolkit --cov-report=xml --cov-report=term
-
-          # Run persistent data generation test explicitly
-          echo "Generating persistent test data..."
-          poetry run pytest tests/test_downloaders/test_field_boundaries_persistent.py -v
-
-      - name: Upload coverage to Codecov
-        if: steps.pytest.outcome == 'success'
-        uses: codecov/codecov-action@v4
-        with:
-          file: ./coverage.xml
-          flags: unittests
-          name: codecov-umbrella
-          fail_ci_if_error: false
-
-      - name: Generate test data visualization map
-        id: generate-map
-        continue-on-error: true
-        run: |
-          # Ensure directory exists
-          mkdir -p data/raw/field_boundaries
-
-          # Find the test GeoJSON file (prefer the one generated by persistent test)
-          if [ -f "data/raw/field_boundaries/fields.geojson" ]; then
-            GEOJSON_FILE="data/raw/field_boundaries/fields.geojson"
-          else
-            GEOJSON_FILE=$(find data/raw/field_boundaries -name "*.geojson" -type f | head -n 1)
-          fi
-
-          if [ -z "$GEOJSON_FILE" ] || [ ! -f "$GEOJSON_FILE" ]; then
-            echo "status=no_data" >> $GITHUB_OUTPUT
-            echo "⚠️  No test data found in data/raw/field_boundaries"
-            # List directory contents for debugging
-            ls -R data/raw/ || echo "data/raw not found"
-            exit 0
-          fi
-
-          echo "Found test data: $GEOJSON_FILE"
-
-          # Generate map
-          mkdir -p test_artifacts
-          python scripts/generate_test_map.py "$GEOJSON_FILE" test_artifacts/test_data_map.html
-
-          if [ -f test_artifacts/test_data_map.html ]; then
-            echo "status=success" >> $GITHUB_OUTPUT
-            echo "map_path=test_artifacts/test_data_map.html" >> $GITHUB_OUTPUT
-            echo "✅ Map generated successfully"
-          else
-            echo "status=failed" >> $GITHUB_OUTPUT
-            echo "❌ Map generation failed"
-          fi
-
-      - name: Upload test data map as artifact
-        if: steps.generate-map.outputs.status == 'success'
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-data-map-py${{ matrix.python-version }}
-          path: test_artifacts/test_data_map.html
-          retention-days: 7
-
-      - name: Create or update PR comment with map
-        uses: actions/github-script@v7
-        env:
-          PYTHON_VERSION: ${{ matrix.python-version }}
-          MAP_STATUS: ${{ steps.generate-map.outputs.status }}
-          TEST_STATUS: ${{ steps.pytest.outcome }}
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const fs = require('fs');
-            const pythonVersion = process.env.PYTHON_VERSION;
-            const mapStatus = process.env.MAP_STATUS;
-            const testStatus = process.env.TEST_STATUS;
-
-            // Comment marker for identifying our comment
-            const commentMarker = `<!-- test-data-preview-py${pythonVersion} -->`;
-
-            let commentBody;
-
-            if (testStatus !== 'success') {
-              // Tests failed
-              commentBody = `${commentMarker}
-            ## ❌ Test Data Preview (Python ${pythonVersion})
-
-            **Tests Failed** - Unable to generate test data visualization.
-
-            Please check the test logs for details.
-
-            ---
-            *Last updated: ${new Date().toISOString()}*
-            `;
-            } else if (mapStatus === 'no_data') {
-              // No test data found
-              commentBody = `${commentMarker}
-            ## ⚠️ Test Data Preview (Python ${pythonVersion})
-
-            **No Test Data Found** - Tests passed but no field boundary data was generated.
-
-            This may be expected if tests don't download actual data.
-
-            ---
-            *Last updated: ${new Date().toISOString()}*
-            `;
-            } else if (mapStatus === 'success') {
-              // Map generated successfully
-              const runId = context.runId;
-              const mapUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${runId}`;
-
-              commentBody = `${commentMarker}
-            ## ✅ Test Data Preview (Python ${pythonVersion})
-
-            **Tests Passed** - Field boundary data downloaded and visualized successfully!
-
-            ### 🗺️ Interactive Map
-
-            📦 **Download the interactive map:**
-            1. Go to the [workflow run artifacts](${mapUrl})
-            2. Download **test-data-map-py${pythonVersion}**
-            3. Extract and open **test_data_map.html** in your browser
-
-            ### 🌾 Features
-
-            - **Base Maps**: Choose from OpenStreetMap, Satellite, Terrain, or Topo
-            - **Field Selection**: Dropdown to zoom to specific fields
-            - **Field Details**: Click any field to see metadata (ID, state, county, crop, acreage)
-            - **Self-Contained**: No server required, works offline
-
-            ### 📊 Test Summary
-
-            - **Python Version**: ${pythonVersion}
-            - **Test Status**: ✅ All tests passed
-            - **Data Source**: USDA Crop Sequence Boundaries (Source Cooperative)
-            - **Map Generated**: Yes
-
-            ---
-            *Last updated: ${new Date().toISOString()}*
-            *This comment auto-updates on each CI/CD run*
-            `;
-            } else {
-              // Map generation failed
-              commentBody = `${commentMarker}
-            ## ⚠️ Test Data Preview (Python ${pythonVersion})
-
-            **Map Generation Failed** - Tests passed but map generation encountered an error.
-
-            Check the workflow logs for details.
-
-            ---
-            *Last updated: ${new Date().toISOString()}*
-            `;
-            }
-
-            // Find existing comment
-            const { data: comments } = await github.rest.issues.listComments({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number,
-            });
-
-            const existingComment = comments.find(comment =>
-              comment.body.includes(commentMarker)
-            );
-
-            if (existingComment) {
-              // Update existing comment
-              await github.rest.issues.updateComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                comment_id: existingComment.id,
-                body: commentBody
-              });
-              console.log('Updated existing comment');
-            } else {
-              // Create new comment
-              await github.rest.issues.createComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: context.issue.number,
-                body: commentBody
-              });
-              console.log('Created new comment');
-            }
-
-      - name: Fail if tests failed
-        if: steps.pytest.outcome != 'success'
-        run: exit 1
-
-  # Job 4: Build (runs after lint and test pass)
-  build:
-    needs: [format, lint, test]
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: read
-
-    steps:
-      - name: Check out formatted code
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ needs.format.outputs.formatted_sha }}
-          fetch-depth: 0
-
-      - name: Set up Python 3.13
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.13'
-
-      - name: Install Poetry
-        uses: snok/install-poetry@v1
-        with:
-          version: latest
-          virtualenvs-create: true
-          virtualenvs-in-project: true
-
-      - name: Install dependencies
-        run: poetry install --no-interaction
-
-      - name: Build package
-        run: poetry build
-
-      - name: Check if PR and has artifact label
-        id: check-upload
-        run: |
-          LABELS=$(gh pr view ${{ github.event.pull_request.number }} --json labels --jq '.labels[].name')
-          if echo "$LABELS" | grep -q "generate-build-artifact"; then
-            echo "should_upload=true" >> $GITHUB_OUTPUT
-          else
-            echo "should_upload=false" >> $GITHUB_OUTPUT
-          fi
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload build artifacts
-        if: steps.check-upload.outputs.should_upload == 'true'
-        uses: actions/upload-artifact@v4
-        with:
-          name: dist-packages
-          path: dist/
-          retention-days: 7
-
-      - name: Build summary
-        run: |
-          echo "✅ Build completed successfully"
-          if [ "${{ steps.check-upload.outputs.should_upload }}" == "true" ]; then
-            echo "📦 Artifacts uploaded (generate-build-artifact label present)"
-          else
-            echo "ℹ️  Artifacts not stored (add 'generate-build-artifact' label to store)"
-          fi
+  crewai-review:
+    name: CrewAI / Review
+    needs:
+      [
+        validate-environment,
+        core-ci,
+        validate,
+        test-docs-links,
+        test-crewai,
+        test-website,
+        test-agri-toolkit,
+        build-agri-toolkit,
+        test-build,
+        deploy-preview,
+        deploy-production,
+        deploy,
+      ]
+    if: |
+      always() &&
+      github.event_name == 'pull_request' &&
+      !github.event.pull_request.draft &&
+      github.actor != 'dependabot[bot]' &&
+      github.actor != 'renovate[bot]'
+    uses: ./.github/workflows/crewai-review-reusable.yml
+    with:
+      pr_number: ${{ github.event.pull_request.number }}
+      commit_sha: ${{ needs.validate.outputs.final-commit-sha || github.event.pull_request.head.sha || github.sha }}
+      core_ci_result: ${{ needs.validate.outputs.core_ci_result || needs.core-ci.result || 'unknown' }}
+    secrets:
+      NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+      NVIDIA_NIM_API_KEY: ${{ secrets.NVIDIA_NIM_API_KEY }}
+      OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
