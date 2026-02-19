@@ -242,84 +242,840 @@ flowchart TD
 
 #### USDA NASS — National Agricultural Statistics Service
 
-- **What it provides**: Crop yields, acreage planted, prices received, livestock counts — the authoritative source for US agricultural statistics
-- **Data type**: Tabular (CSV, JSON via API)
-- **Key dataset**: QuickStats — covers all states, most crops, going back to 1850 in some cases
-- **Access**: Web portal at [quickstats.nass.usda.gov](https://quickstats.nass.usda.gov/) or API (free key required, takes 1-2 business days)
-- **Real-world use**: A grain elevator uses county-level corn yield forecasts to price forward contracts and manage storage capacity
+The National Agricultural Statistics Service is the official source for US agricultural production data. NASS conducts hundreds of surveys annually to track crop yields, acreage, prices, and livestock inventories at national, state, and county levels.
+
+**What It Provides:**
+
+NASS QuickStats is the primary delivery system, offering:
+
+- **Crop production statistics**: Yield (bu/acre), acres planted, acres harvested, total production
+- **Economic data**: Prices received by farmers, value of production, input costs
+- **Livestock inventories**: Cattle, hogs, poultry counts by state and county
+- **Time series**: Historical data back to 1850 for major crops like corn and wheat
+
+**Data Type:** Tabular — rows and columns in CSV, JSON, or database format
+
+**Geographic Levels:**
+
+| Level                 | Example                  | Use Case                         |
+| --------------------- | ------------------------ | -------------------------------- |
+| National              | US total corn production | Policy analysis, national trends |
+| State                 | Iowa corn yield          | State-level forecasting          |
+| County                | Polk County, IA          | Local grain elevator planning    |
+| Agricultural District | Northwest Iowa           | Regional market analysis         |
+
+**Access Methods:**
+
+1. **Web Portal**: [quickstats.nass.usda.gov](https://quickstats.nass.usda.gov/) — interactive query builder, point-and-click downloads
+2. **REST API**: Programmatic access with free API key (1-2 business day approval)
+3. **Bulk Downloads**: Pre-built datasets via USDA Data.gov
+
+**Real-World Application:**
+
+A grain elevator manager in central Iowa uses NASS county-level corn yield forecasts to:
+
+- Predict incoming grain volume by county for the harvest season
+- Plan storage capacity and staffing
+- Set forward contract prices 3-6 months ahead
+- Identify counties with surplus production for logistics optimization
+
+```mermaid
+flowchart LR
+    accTitle: NASS QuickStats Data Flow
+    accDescr: How NASS collects farm survey data and delivers it through QuickStats API to end users
+
+    survey[📊 Farm Surveys] --> nass[NASS Processing]
+    admin[Administrative Records] --> nass
+
+    nass --> quickstats[QuickStats Database]
+
+    quickstats --> web[Web Portal]
+    quickstats --> api[REST API]
+    quickstats --> bulk[Bulk Download]
+
+    web --> user[End Users]
+    api --> user
+    bulk --> user
+
+    style survey fill:#e8f5e9
+    style nass fill:#e1f5ff
+    style quickstats fill:#fff9c4
+    style user fill:#f3e5f5
+```
+
+**Common Commodity Codes:**
+
+| Code | Commodity     | Code | Commodity      |
+| ---- | ------------- | ---- | -------------- |
+| 0015 | Corn, Grain   | 0081 | Soybeans       |
+| 0111 | Wheat, Winter | 0041 | Cotton, Upland |
+| 0031 | Rice          | 0002 | Barley         |
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+### Teaching Tips (3 minutes)
+
+- "NASS is the gold standard — if you're working with US ag data, you'll use NASS at some point"
+- Show the web portal live: "Type 'corn' and 'Iowa' and 'yield' — see how intuitive it is"
+- The Mermaid diagram shows the data pipeline: "Surveys come in, QuickStats organizes it, you pull it via API"
+
+### Industry Context
+
+- "At Climate Corp, we pulled NASS county yields every month to calibrate our yield forecast models"
+- "Grain traders watch NASS crop production reports — markets move on release days"
+- "The API is free but needs approval — remind students to register this week if they want to use it"
+
+### Common Student Questions
+
+- **"Why county-level only?"** — Privacy. NASS can't disclose individual farm data.
+- **"How accurate is it?"** — Very. NASS uses statistical sampling with 95% confidence intervals.
+- **"Can I get real-time data?"** — No. Final numbers come months after harvest. Use USDA WASDE for in-season forecasts.
+
+### Link to Other Data Sources
+
+- "NASS also produces the Cropland Data Layer (CDL) — we'll talk about that in a few minutes"
+- "Field boundaries (CSB) are algorithmically derived from CDL — everything connects"
+
+</details>
 
 ---
 
 #### USDA NRCS — Natural Resources Conservation Service
 
-- **What it provides**: SSURGO (Soil Survey Geographic Database) — the most detailed soil data available in the US, mapped at approximately 1:12,000 scale
-- **Data type**: Vector polygons (soil map units) + tabular attributes
-- **Key soil attributes**: organic matter (`om_pct`), pH (`ph_water`), drainage class (`drainagecl`), available water capacity (`awc`), texture (sand/silt/clay)
-- **Also provides**: Cropland Data Layer (CDL) — an annual 30-meter raster showing crop types across the entire contiguous US
-- **Access**: [websoilsurvey.nrcs.usda.gov](https://websoilsurvey.nrcs.usda.gov/) for SSURGO; [nassgeodata.gmu.edu/CropScape](https://nassgeodata.gmu.edu/CropScape/) for CDL
-- **Real-world use**: An agronomist overlays soil drainage class on field boundaries to prescribe variable-rate tile drainage installation
+The Natural Resources Conservation Service provides comprehensive soil survey data for every county in the United States. SSURGO (Soil Survey Geographic Database) is the foundation for understanding field-level soil variability and agronomic potential.
+
+**What It Provides:**
+
+**SSURGO Soil Data:**
+
+- **Spatial layer**: Vector polygons representing soil map units at 1:12,000 to 1:24,000 scale
+- **Tabular attributes**: 50+ measured soil properties per map unit
+- **Depth profiles**: Data for each soil horizon (typically 0-6 feet depth)
+
+**Key Soil Properties for Agriculture:**
+
+| Property                 | Symbol         | Units       | Why It Matters                                |
+| ------------------------ | -------------- | ----------- | --------------------------------------------- |
+| Organic Matter           | `om_pct`       | %           | Nutrient supply, water retention, soil health |
+| pH                       | `ph_water`     | pH units    | Nutrient availability — corn needs 6.0-7.0    |
+| Available Water Capacity | `awc`          | in/in       | Drought tolerance, irrigation needs           |
+| Drainage Class           | `drainagecl`   | categorical | Tile drainage planning, wet spots             |
+| Texture                  | sand/silt/clay | %           | Workability, compaction risk                  |
+
+**Data Type:** Vector + Tabular — soil polygons (GeoJSON/Shapefile) joined to attribute tables (CSV)
+
+**Cropland Data Layer (CDL):**
+
+NRCS also produces the CDL — an annual 30-meter raster classification showing what crop is grown where across the entire contiguous US.
+
+- **Resolution**: 30 meters (matches Landsat)
+- **Coverage**: All of contiguous US updated annually
+- **Classes**: 100+ crop types and land cover categories
+- **Accuracy**: ~85% overall (higher for major crops like corn and soybeans)
+
+**Access Methods:**
+
+1. **Web Soil Survey**: [websoilsurvey.nrcs.usda.gov](https://websoilsurvey.nrcs.usda.gov/) — interactive mapping, county downloads
+2. **Bulk Downloads**: [nrcs.app.box.com/v/soils](https://nrcs.app.box.com/v/soils) — entire states as shapefiles
+3. **CropScape for CDL**: [nassgeodata.gmu.edu/CropScape](https://nassgeodata.gmu.edu/CropScape/) — viewer and downloads
+
+**Real-World Application:**
+
+An agronomist consulting for a 640-acre Iowa corn field uses SSURGO to:
+
+1. Overlay soil drainage class polygons on the field boundary
+2. Identify 120 acres of "somewhat poorly drained" soils in the northwest corner
+3. Create a variable-rate tile drainage prescription: 30-foot spacing in poorly drained zones, 60-foot spacing elsewhere
+4. Estimate ROI: $450/acre drainage cost vs. 15-20 bu/acre yield increase over 5 years
+
+```mermaid
+flowchart TD
+    accTitle: SSURGO Data Structure Hierarchy
+    accDescr: How SSURGO organizes soil data from survey area down to individual soil horizons
+
+    survey[📍 Survey Area<br/>Polk County IA] --> mapunit[Soil Map Unit<br/>Clarion loam 2-5% slopes]
+
+    mapunit --> comp1[85% Clarion loam]
+    mapunit --> comp2[10% Nicollet loam]
+    mapunit --> comp3[5% Webster clay loam]
+
+    comp1 --> h1[Ap Horizon 0-7 in]
+    comp1 --> h2[A Horizon 7-14 in]
+    comp1 --> h3[Bw Horizon 14-30 in]
+
+    style survey fill:#e1f5ff
+    style mapunit fill:#e8f5e9
+    style comp1 fill:#fff9c4
+    style h1 fill:#f3e5f5
+```
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+### Teaching Tips (3-4 minutes)
+
+- "SSURGO is complex — you don't need to memorize the hierarchy. The key: soil map units are polygons, and each polygon has attributes."
+- Walk the Mermaid diagram: "One survey area → many map units → each map unit has dominant + minor soil components → each component has horizons"
+- "For most analyses, you'll use the dominant component's topsoil (0-12 inch) properties"
+
+### Real-World Context
+
+- "SSURGO is updated annually but soil changes slowly — a 2018 survey is still valid for most ag uses"
+- "At Bayer, we joined SSURGO to every field in our platform — 10+ million fields. It's the soil data standard."
+- "The CDL (Cropland Data Layer) is also NRCS — it's how we verify what crop was actually planted each year"
+
+### Why Map Units Are Complex
+
+- "A map unit isn't a single soil — it's a combination. 'Clarion loam 2-5% slopes' might be 85% Clarion, 10% Nicollet, 5% Webster"
+- "Use area-weighted averaging when joining to fields: if 60% of your field is Map Unit A and 40% is Map Unit B, weight the properties proportionally"
+
+### CDL Quick Note
+
+- "CDL is a raster — every pixel has a crop code. We'll talk about it more in the CDL section, but know NRCS produces both SSURGO and CDL"
+
+### Link to Assignments
+
+- "Assignment 1 doesn't include soil data yet — that's coming in future modules. But you'll join SSURGO to your fields in Class 06"
+
+</details>
 
 ---
 
-#### USDA FSA — Crop Sequence Boundaries (our toolkit source)
+#### USDA FSA / NASS — Crop Sequence Boundaries (CSB)
 
-- **What it provides**: Field-level boundaries derived from 8 years of Cropland Data Layer history — algorithmically delineated to match actual farm field patterns across the contiguous US
-- **Data type**: Vector (GeoJSON, Shapefile, GeoParquet)
-- **Key attributes**: `field_id`, `region`, `state`, `county`, `area_acres`, `crop_2023`, `geometry`
-- **Access**: ✅ **Our agri-toolkit downloads these** — this is what you're acquiring for Assignment 1
-- **Coverage**: 16+ million field boundaries across the contiguous US
-- **Why it matters**: Field boundaries are your unit of analysis — soil data, weather, and imagery all get joined to them spatially
+Crop Sequence Boundaries represent the actual field boundaries used in farming operations across the US. Unlike legal land parcels (which serve administrative purposes), CSB boundaries are derived from satellite imagery and reflect the real fields that farmers plant, cultivate, and harvest.
+
+**What It Provides:**
+
+Field-level boundary polygons derived from an 8-year time series of Cropland Data Layer (CDL) imagery. The algorithm identifies contiguous areas with similar crop rotation patterns and aligns boundaries to features visible in satellite imagery (roads, tree lines, field edges).
+
+**Data Type:** Vector — GeoJSON, Shapefile, or GeoParquet format
+
+**Coverage:**
+
+- **16+ million field boundaries** across the contiguous United States
+- **Minimum size**: 1 hectare (~2.5 acres)
+- **Typical size**: 40-640 acres (varies by region)
+- **Update frequency**: Annual (released with CDL each year)
+
+**Attributes You Get:**
+
+| Attribute    | Description         | Example           |
+| ------------ | ------------------- | ----------------- |
+| `field_id`   | Unique identifier   | `IA-Polk-001`     |
+| `state`      | State abbreviation  | `IA`              |
+| `county`     | County name         | `Polk`            |
+| `region`     | Agricultural region | `corn_belt`       |
+| `area_acres` | Field size          | `142.5`           |
+| `crop_2023`  | 2023 crop type      | `Corn`            |
+| `geometry`   | Boundary polygon    | (Shapely Polygon) |
+
+**How CSB Differs from CLU:**
+
+Many students ask: "Why not use CLU (Common Land Unit) from FSA?"
+
+| Feature      | CSB (Our Source)        | CLU                        |
+| ------------ | ----------------------- | -------------------------- |
+| Source       | Satellite-derived       | FSA administrative records |
+| Coverage     | All agricultural fields | Only FSA-enrolled farms    |
+| Update       | Annual (with CDL)       | As farmers enroll          |
+| Availability | ✅ Free, public         | ❌ Restricted access       |
+| Crop History | 8 years included        | No history                 |
+
+**Access:**
+
+✅ **Our agri-toolkit downloads CSB** — this is what you're acquiring for Assignment 1. The toolkit queries the Source Cooperative GeoParquet dataset using DuckDB, filtering by region and crop type to get exactly the 200 fields you need.
+
+**Why Field Boundaries Matter:**
+
+Field boundaries are your **spatial unit of analysis** — every other data layer (soil, weather, satellite imagery) gets joined to these boundaries:
+
+- **Soil data** → spatial join to get field-level soil properties
+- **Weather data** → extract time series for each field's centroid
+- **Satellite imagery** → clip NDVI rasters to field polygons
+- **Yield data** → aggregate county yields to field level
+
+```mermaid
+flowchart TD
+    accTitle: How CSB Boundaries Are Created
+    accDescr: The algorithm process for creating crop sequence boundaries from 8 years of satellite imagery
+
+    subgraph input[Input Data 2016-2023]
+        cdl1[CDL 2016]
+        cdl2[CDL 2017]
+        cdl3[CDL 2018]
+        cdl8[CDL 2023]
+    end
+
+    stack[Stack 8 Years] --> identify[Identify Crop<br/>Sequences]
+
+    input --> stack
+
+    identify --> filter[Filter >1 hectare]
+    filter --> roads[Align to Roads<br/>Tree Lines]
+    roads --> dissolve[Dissolve by<br/>2023 Crop]
+    dissolve --> output[📍 16M Field<br/>Boundaries]
+
+    style input fill:#e1f5ff
+    style stack fill:#e8f5e9
+    style output fill:#fff9c4
+```
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+### Teaching Tips (3-4 minutes)
+
+- "CSB is what makes this course possible — without free field boundaries, you'd be digitizing fields by hand for weeks"
+- Show the comparison table: "CLU is restricted. CSB is public. That's why we use it."
+- The creation diagram: "Eight years of CDL get stacked, algorithm finds patterns, dissolves by current crop"
+
+### Real-World Context
+
+- "At Climate Corp, we started with CLU because we had FSA partnerships. When I teach, I use CSB because it's accessible."
+- "Source Cooperative hosts the data as cloud-optimized GeoParquet — that's why downloads are fast. We're not downloading 16 million fields; DuckDB queries the cloud and filters server-side."
+
+### Why 8 Years Matters
+
+- "The 8-year history captures corn-soybean rotation patterns — that's the Midwest standard"
+- "If a field was corn in odd years and soybeans in even years for 8 years, the algorithm knows that's one management unit"
+
+### Common Student Questions
+
+- **"Can I get fields for just my county?"** — Not directly through the toolkit yet. Use DuckDB query to filter by county FIPS.
+- **"Why GeoJSON vs Shapefile?"** — GeoJSON is text-based (works everywhere), Shapefile is binary (needs GIS software). Both work.
+- **"How accurate are the boundaries?"** — They align with 30m CDL pixels, so small fields (<5 acres) may have jagged edges. For our purposes, it's fine.
+
+### Link to Assignment 1
+
+- "This is what you're downloading in Assignment 1 Step 8–9"
+- "Once you have your 200 fields, that's your dataset for the entire course"
+
+</details>
 
 ---
 
-#### NASA POWER — Prediction Of Worldwide Energy Resource
+#### USDA NASS — Cropland Data Layer (CDL)
 
-- **What it provides**: Daily and monthly weather and climate data globally, derived from satellite observations and climate models, from 1981 to present
-- **Data type**: Time series (CSV with `DatetimeIndex`)
-- **Key parameters**: Temperature (T2M), precipitation (PRECTOTCORR), solar radiation (ALLSKY_SFC_SW_DWN), relative humidity (RH2M), wind speed (WS2M)
-- **Access**: [power.larc.nasa.gov](https://power.larc.nasa.gov/) — **no API key required**
-- **Spatial resolution**: 0.5° grid (~55 km) — good for regional analysis, not field-level precision
-- **Real-world use**: Calculate growing degree days (GDD) for a field's location to predict corn silking date across an entire growing season
+The Cropland Data Layer is an annual raster classification showing what crop is grown on every 30-meter pixel across the contiguous United States. It's the foundation for understanding crop distribution patterns and land use change.
+
+**What It Provides:**
+
+An annual satellite-derived classification with over 100 crop and land cover categories, produced by combining:
+
+- **Landsat 8 and Sentinel-2 imagery** during the growing season
+- **FSA program data** as ground truth for training
+- **Machine learning classification** algorithms
+
+**Data Type:** Raster (Imagery) — GeoTIFF files where each pixel value represents a crop code
+
+**Specifications:**
+
+| Specification  | Value                                     |
+| -------------- | ----------------------------------------- |
+| **Resolution** | 30 meters (matches Landsat)               |
+| **Coverage**   | Contiguous US (~8 million km²)            |
+| **Temporal**   | Annual (2008-present)                     |
+| **Accuracy**   | ~85% overall (varies by crop/region)      |
+| **Release**    | January-February following growing season |
+
+**Major Crop Codes:**
+
+| Code | Crop         | Code | Crop                 |
+| ---- | ------------ | ---- | -------------------- |
+| 1    | Corn         | 5    | Soybeans             |
+| 24   | Winter Wheat | 2    | Cotton               |
+| 3    | Rice         | 36   | Alfalfa              |
+| 22   | Fallow/Idle  | 61   | Developed/Open Space |
+
+**Access:**
+
+1. **CropScape Portal**: [nassgeodata.gmu.edu/CropScape](https://nassgeodata.gmu.edu/CropScape/) — interactive viewer, point-and-click download
+2. **Direct Download**: State-level GeoTIFFs from USDA NASS website
+3. **AWS Open Data**: Cloud-optimized access (no full download needed)
+
+**Real-World Application:**
+
+A county extension agent uses CDL to track cover crop adoption:
+
+1. Download CDL for the county for 2018 and 2023
+2. Count pixels classified as "Winter Wheat" (code 24) or "Rye" (code 27) in November imagery
+3. Compare 2018 vs 2023 to measure adoption growth
+4. Present findings to county board to justify cost-share program funding
+
+**Why CDL Matters:**
+
+- **Crop Sequence Boundaries are derived from CDL** — the 8-year CDL stack creates the CSB you're downloading
+- **Verification**: CDL confirms what crop was actually planted vs. what farmers reported
+- **Context**: Overlay CDL on your fields to see surrounding land use (is your field isolated or part of a large ag area?)
+
+```mermaid
+flowchart LR
+    accTitle: CDL Production and Use
+    accDescr: How satellite imagery becomes crop classification and feeds into boundary creation
+
+    satellite[🛰️ Landsat Sentinel-2] --> classify[Machine Learning<br/>Classification]
+    ground[📊 FSA Ground Truth] --> classify
+
+    classify --> cdl[Annual CDL<br/>30m Raster]
+
+    cdl --> csb[Crop Sequence<br/>Boundaries]
+    cdl --> analysis[Crop Area<br/>Statistics]
+    cdl --> verify[Planting<br/>Verification]
+
+    style satellite fill:#e1f5ff
+    style classify fill:#e8f5e9
+    style cdl fill:#fff9c4
+```
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+### Teaching Tips (2-3 minutes)
+
+- "CDL is what creates CSB — that's the connection. Eight years of CDL rasters get stacked to identify field edges"
+- Show CropScape live if possible: "Zoom to your county, see what crops were grown in 2023"
+- The diagram shows the loop: "Satellite → classification → CDL → feeds into CSB algorithm"
+
+### Accuracy Notes
+
+- "85% accuracy sounds low, but it's actually very good for a 100-class problem across the entire US"
+- "Accuracy is higher for major crops: corn is ~95%, soybeans ~90%. Specialty crops are harder."
+
+### Why 30 Meters
+
+- "30m matches Landsat resolution — that's been the standard since 1982"
+- "A 160-acre field is roughly 270 × 270 pixels — plenty of detail to see crop patterns"
+
+### Real-World Context
+
+- "Insurance companies use CDL to verify claimed acreage — if you report 200 acres of corn but CDL shows 150, they'll ask questions"
+- "Commodity traders aggregate CDL by state to estimate total planted acreage before NASS official numbers come out"
+
+</details>
+
+---
+
+#### NASA POWER — Prediction Of Worldwide Energy Resources
+
+NASA POWER provides daily meteorological data specifically designed for agricultural and renewable energy applications. Unlike weather station data (which has gaps), POWER offers complete global coverage derived from NASA satellites and reanalysis models.
+
+**What It Provides:**
+
+Daily and monthly weather parameters from 1981 to present, updated daily with ~1-2 day lag:
+
+**Key Parameters for Agriculture:**
+
+| Parameter         | Code              | Units     | Use Case                                  |
+| ----------------- | ----------------- | --------- | ----------------------------------------- |
+| Temperature (2m)  | T2M_MIN, T2M_MAX  | °C        | Growing degree days, frost risk           |
+| Precipitation     | PRECTOTCORR       | mm/day    | Rainfall tracking, irrigation needs       |
+| Solar Radiation   | ALLSKY_SFC_SW_DWN | MJ/m²/day | Photosynthesis potential, ET calculations |
+| Relative Humidity | RH2M              | %         | Disease risk models                       |
+| Wind Speed        | WS2M              | m/s       | Evapotranspiration, spray drift           |
+
+**Data Type:** Time Series — CSV format with daily observations and `DatetimeIndex` in pandas
+
+**Spatial Resolution:**
+
+- 0.5° × 0.5° grid (~55 km at mid-latitudes, ~30 miles)
+- Each grid cell represents roughly 2,500 km² area
+- **Not field-specific** but suitable for regional climate analysis
+
+**Access:**
+
+1. **Web Interface**: [power.larc.nasa.gov](https://power.larc.nasa.gov/) — click map, select date range, download CSV
+2. **API**: **No API key required** — simplest agricultural weather API available
+3. **Community**: "AG" parameter set includes ag-optimized parameters
+
+**Real-World Application:**
+
+A crop consultant uses NASA POWER to calculate growing degree days (GDD) for a client's 400-acre Iowa corn field:
+
+1. Extract field centroid coordinates: (42.05°N, -93.62°W)
+2. Query NASA POWER for daily T2M_MIN and T2M_MAX from April 15 - September 30, 2023
+3. Calculate daily GDD: `max(0, (T_max + T_min)/2 - 10°C)`
+4. Sum cumulative GDD: 1,350 GDD by August 1 → predicts silking within 5 days
+5. Advise client to scout for corn borers at silking (critical IPM timing)
+
+```mermaid
+flowchart LR
+    accTitle: NASA POWER Data Sources
+    accDescr: How NASA combines satellite observations and reanalysis models to create POWER datasets
+
+    satellite[🛰️ CERES Satellites<br/>Radiation Data] --> merra2[MERRA-2<br/>Reanalysis Model]
+    stations[🌐 Surface Stations] --> merra2
+    radiosondes[☁️ Radiosondes] --> merra2
+
+    merra2 --> power[NASA POWER<br/>Gridded Data]
+
+    power --> ag[AG Community<br/>Agriculture]
+    power --> energy[RE Community<br/>Renewable Energy]
+
+    style satellite fill:#e1f5ff
+    style merra2 fill:#e8f5e9
+    style power fill:#fff9c4
+```
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+### Teaching Tips (3 minutes)
+
+- "NASA POWER is my favorite hidden gem — no API key, global coverage, free, reliable since 1981"
+- "The 55 km resolution sounds coarse, but for regional weather it's fine. Corn doesn't care about yard-by-yard temperature differences."
+- Show the web interface: "Click anywhere on Earth, get weather data. That's powerful."
+
+### Why No API Key Matters
+
+- "Most weather APIs require registration and enforce rate limits. NASA POWER is truly open."
+- "For Assignment 1, if students want weather data, NASA POWER is the easiest path"
+
+### GDD Calculation
+
+- "Growing Degree Days (GDD) is the single most important weather metric for corn"
+- Formula: `GDD = max(0, (T_max + T_min)/2 - base_temp)` where base_temp = 10°C (50°F) for corn
+- "Corn needs ~1,400 GDD from planting to maturity. Track cumulative GDD to predict growth stages."
+
+### Real-World Context
+
+- "At Climate Corp, we pulled NASA POWER for millions of fields daily — it held up perfectly"
+- "The MERRA-2 reanalysis model is what NASA uses. It's battle-tested."
+
+### Limitations to Mention
+
+- "Not field-scale precision — if you need that, use NOAA stations and interpolate"
+- "Model-based, not actual observations — but validated against stations globally"
+
+### Comparison to NOAA
+
+- "NASA POWER: global grid, no gaps, no API key. NOAA: actual stations, higher precision locally, requires token."
+- "Use both: POWER for broad coverage, NOAA to validate at specific locations"
+
+</details>
 
 ---
 
 #### NOAA NCEI — National Centers for Environmental Information
 
-- **What it provides**: Historical climate records and weather station observations — the longest continuous records in the US
-- **Data type**: Time series
-- **Key dataset**: Global Summary of the Day (GSOD) — daily observations from 9,000+ stations worldwide
-- **Access**: [ncei.noaa.gov](https://www.ncei.noaa.gov/) — web portal and API (free token required)
-- **Complements NASA POWER**: Station observations are more precise locally; POWER fills in where stations are sparse
-- **Real-world use**: Validate climate model precipitation estimates against the nearest NOAA weather station
+NOAA provides the longest continuous weather observation record in the United States, with some stations collecting data since the 1760s. Unlike NASA POWER's gridded model data, NOAA provides actual station observations from thermometers, rain gauges, and anemometers at specific locations.
+
+**What It Provides:**
+
+**Primary Dataset: GHCN-D (Global Historical Climatology Network - Daily)**
+
+- Daily weather observations from 30,000+ US stations (100,000+ globally)
+- Temperature, precipitation, snowfall, wind speed, pressure
+- Historical coverage back to 1763 (varies by station)
+
+**Key Parameters:**
+
+| Parameter       | Code | Units | Agricultural Use                |
+| --------------- | ---- | ----- | ------------------------------- |
+| Max Temperature | TMAX | °C    | Heat stress, GDD calculation    |
+| Min Temperature | TMIN | °C    | Frost risk, GDD calculation     |
+| Precipitation   | PRCP | mm    | Rainfall tracking, drought      |
+| Snowfall        | SNOW | mm    | Winter cover, spring moisture   |
+| Wind Speed      | AWND | m/s   | Evapotranspiration, spray drift |
+
+**Data Type:** Time Series — point observations (station-based) in CSV format
+
+**How NOAA Complements NASA POWER:**
+
+| Feature    | NASA POWER            | NOAA GHCN-D                            |
+| ---------- | --------------------- | -------------------------------------- |
+| Coverage   | Global grid (no gaps) | Station network (sparse in some areas) |
+| Data Type  | Model + satellite     | Actual observations                    |
+| Precision  | Regional (~55 km)     | Point-specific                         |
+| API Access | No key required       | Free token required                    |
+| Best For   | Broad coverage        | Local validation                       |
+
+**Access:**
+
+1. **Web Portal**: [ncei.noaa.gov/cdo-web](https://www.ncei.noaa.gov/cdo-web/) — search by location or station
+2. **API**: Requires free token from [ncei.noaa.gov/cdo-web/token](https://www.ncei.noaa.gov/cdo-web/token)
+3. **Bulk Downloads**: FTP access for large historical datasets
+
+**Real-World Application:**
+
+A researcher validating a crop yield model uses NOAA to ground-truth weather inputs:
+
+1. Model uses NASA POWER grid data for a field in central Illinois
+2. Find nearest NOAA station: Champaign 9SW (15 km away)
+3. Compare POWER vs. station precipitation for the 2023 growing season
+4. Find POWER underestimates local rainfall by 12% — adjust model inputs accordingly
+5. Re-run yield model with station-calibrated weather → improves RMSE by 8%
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+### Teaching Tips (2 minutes)
+
+- "NOAA is actual measurements — thermometers and rain gauges at real locations. NASA POWER is modeled."
+- "For most uses, NASA POWER is easier. For validation and local precision, use NOAA."
+- "The longest record (1760s) is fascinating but sparse. Most agricultural stations start in the 1900s."
+
+### Finding Nearest Station
+
+- "Use the NOAA web portal to find stations near your field — filter by date range and parameters you need"
+- "Some stations have gaps — one year they report temperature, next year they don't. Handle missing data carefully."
+
+### API Token
+
+- "The free token takes ~1 minute to get — just fill out a web form"
+- "Unlike NASS (1-2 days), NOAA token is instant"
+
+### Real-World Context
+
+- "At research institutions, NOAA data is the standard for weather-yield correlation studies — peer reviewers expect it"
+- "Crop insurance uses NOAA data for loss verification — did the drought actually happen according to weather stations?"
+
+</details>
 
 ---
 
-#### Sentinel-2 — European Space Agency (via Microsoft Planetary Computer)
+#### Sentinel-2 — European Space Agency
 
-- **What it provides**: 10-meter multispectral satellite imagery — 13 spectral bands, 5-day global revisit cycle
-- **Data type**: Imagery (`numpy.ndarray` / Cloud-Optimized GeoTIFF)
-- **Key bands for agriculture**:
+Sentinel-2 revolutionized agricultural remote sensing when it launched in 2015. With 10-meter resolution and a 5-day revisit cycle, it enables weekly crop monitoring throughout the growing season — a capability that was commercially unavailable before 2015.
 
-| Band       | Wavelength | Resolution | Agricultural Use                    |
-| ---------- | ---------- | ---------- | ----------------------------------- |
-| B4 (Red)   | 665 nm     | 10 m       | Chlorophyll absorption, crop stress |
-| B8 (NIR)   | 842 nm     | 10 m       | Biomass, NDVI calculation           |
-| B11 (SWIR) | 1610 nm    | 20 m       | Moisture stress, NDMI               |
+**What It Provides:**
 
-- **Access**: [planetarycomputer.microsoft.com](https://planetarycomputer.microsoft.com/) — free, cloud-optimized, no download needed
-- **Why 10m matters**: A typical 160-acre field is roughly 250 × 250 Sentinel-2 pixels — enough to see within-field variability
-- **Real-world use**: Generate weekly NDVI maps during the growing season to detect crop stress before it becomes visible to the eye
+**Two satellites (Sentinel-2A and Sentinel-2B) providing:**
+
+- 13 spectral bands from visible to shortwave infrared (443 nm - 2190 nm)
+- 10m resolution for visible and NIR bands (the ones that matter for agriculture)
+- 5-day global revisit (2-3 days at mid-latitudes with orbital overlap)
+- Free and open data policy (Copernicus program)
+
+**Data Type:** Raster (Imagery) — Cloud-Optimized GeoTIFF or `numpy.ndarray` in Python
+
+**Key Bands for Agriculture:**
+
+| Band        | Wavelength | Resolution | Agricultural Use                          |
+| ----------- | ---------- | ---------- | ----------------------------------------- |
+| B2 (Blue)   | 490 nm     | 10m        | Soil moisture, water clarity              |
+| B3 (Green)  | 560 nm     | 10m        | Vegetation vigor                          |
+| B4 (Red)    | 665 nm     | 10m        | Chlorophyll absorption — NDVI denominator |
+| B8 (NIR)    | 842 nm     | 10m        | Biomass, leaf area — NDVI numerator       |
+| B11 (SWIR1) | 1610 nm    | 20m        | Moisture content, crop stress             |
+| B12 (SWIR2) | 2190 nm    | 20m        | Soil moisture, crop residue               |
+
+**NDVI Calculation:**
+
+```
+NDVI = (NIR - Red) / (NIR + Red) = (B8 - B4) / (B8 + B4)
+```
+
+- Healthy vegetation: NDVI > 0.6
+- Moderate vegetation: NDVI 0.3-0.6
+- Stressed/sparse: NDVI < 0.3
+
+**Why 10m Resolution Matters:**
+
+A typical 160-acre field is roughly **810m × 810m** = approximately **80 × 80 Sentinel-2 pixels** (6,400 pixels total). This is enough spatial detail to:
+
+- Detect within-field variability (productive zones vs. low-yield areas)
+- Identify problem spots (drainage issues, nutrient deficiencies, pest damage)
+- Create variable-rate prescription maps (fertilizer, seeding)
+
+**Access:**
+
+1. **Microsoft Planetary Computer**: [planetarycomputer.microsoft.com](https://planetarycomputer.microsoft.com/) — cloud-optimized, no download, free
+2. **Copernicus Data Space**: [dataspace.copernicus.eu](https://dataspace.copernicus.eu/) — full resolution archives
+3. **AWS Open Data**: S3 bucket `sentinel-s2-l2a` for programmatic access
+
+**Real-World Application:**
+
+An agronomist monitoring 10,000 acres of soybeans in Illinois uses Sentinel-2 to:
+
+1. Query Planetary Computer for June-August 2023 imagery (cloud cover <20%)
+2. Calculate NDVI for each field boundary for every available date (typically 8-12 images per growing season)
+3. Identify fields where NDVI dropped >0.15 between consecutive dates (indicates rapid stress)
+4. Send scouts to those fields within 48 hours — find soybean aphid infestation before it spreads
+5. Apply targeted insecticide to 400 acres instead of blanket-spraying 10,000 acres — saves $18,000 in chemical costs
+
+```mermaid
+flowchart LR
+    accTitle: Sentinel-2 Satellite System
+    accDescr: How two Sentinel-2 satellites provide 5-day global revisit frequency
+
+    S2A[🛰️ Sentinel-2A<br/>Launched 2015] --> combined[Combined Coverage<br/>5-Day Revisit]
+    S2B[🛰️ Sentinel-2B<br/>Launched 2017] --> combined
+
+    combined --> ag[🌾 Agricultural<br/>Monitoring]
+    combined --> forest[🌲 Forestry]
+    combined --> water[💧 Water Quality]
+
+    style S2A fill:#e1f5ff
+    style S2B fill:#e1f5ff
+    style combined fill:#e8f5e9
+    style ag fill:#fff9c4
+```
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+### Teaching Tips (3-4 minutes)
+
+- "2015 was a game-changer — before Sentinel-2, you had to pay for 10m imagery or settle for 30m Landsat"
+- "10 meters means an 80-acre field is 40 × 40 pixels — that's enough to see variability"
+- Walk through the NDVI formula: "Healthy green leaves reflect NIR strongly and absorb red light. The ratio captures that."
+
+### NDVI Interpretation
+
+- "NDVI of 0.8 in July corn? That's a healthy, full-canopy field."
+- "NDVI of 0.3 in the same field? Something's wrong — drought, nutrient deficiency, or disease."
+- "Track NDVI over time: it should rise from planting to peak canopy, then decline as crops mature and senesce"
+
+### Why 5-Day Revisit Matters
+
+- "Weather changes fast. A drought can stress crops in 7-10 days. With 5-day revisit, you catch it in time to act."
+- "Cloud cover is the enemy — some weeks you get no usable imagery. That's why frequent revisit helps."
+
+### Planetary Computer Advantage
+
+- "Microsoft hosts Sentinel-2 on Azure — you don't download 100GB files. Query the cloud, clip to your field, get a 5MB file. That's the cloud-native revolution."
+
+### Real-World Context
+
+- "At Bayer, we processed Sentinel-2 for 10+ million fields every 5 days during growing season — scaled fine"
+- "NDVI time series is the #1 most requested feature from farmers using precision ag platforms"
+
+</details>
 
 ---
 
 #### Landsat 8/9 — USGS
 
-- **What it provides**: 30-meter multispectral and thermal infrared imagery — the world's longest continuous Earth observation record (1972–present)
-- **Data type**: Imagery (`numpy.ndarray` / GeoTIFF)
-- **Key advantage over Sentinel-2**: Thermal band enables crop water stress detection; 50+ year archive enables long-term climate trend analysis
-- **Access**: [earthexplorer.usgs.gov](https://earthexplorer.usgs.gov/) — free, requires account
-- **16-day revisit**: Less frequent than Sentinel-2 but essential for historical analysis
-- **Real-world use**: Compare NDVI for the same field across 40 years to detect long-term soil health trends
+Landsat is the longest-running Earth observation program in history, providing continuous satellite imagery since 1972. While Sentinel-2 offers higher resolution for current monitoring, Landsat's 50-year archive and thermal bands make it irreplaceable for historical analysis and crop water stress detection.
+
+**What It Provides:**
+
+**Landsat 8 (launched 2013) and Landsat 9 (launched 2021) provide:**
+
+- 11 spectral bands from visible to thermal infrared (435 nm - 12,510 nm)
+- 30m resolution for multispectral bands (visible, NIR, SWIR)
+- 100m resolution for thermal infrared bands (unique to Landsat)
+- 15m panchromatic band (for image sharpening)
+- 16-day revisit per satellite (8 days combined)
+
+**Data Type:** Raster (Imagery) — GeoTIFF or Cloud-Optimized GeoTIFF (COG)
+
+**Key Bands for Agriculture:**
+
+| Band              | Wavelength       | Resolution | Agricultural Use                 |
+| ----------------- | ---------------- | ---------- | -------------------------------- |
+| B2 (Blue)         | 452-512 nm       | 30m        | Soil, vegetation differentiation |
+| B3 (Green)        | 533-590 nm       | 30m        | Vegetation vigor                 |
+| B4 (Red)          | 636-673 nm       | 30m        | Chlorophyll absorption — NDVI    |
+| B5 (NIR)          | 851-879 nm       | 30m        | Biomass, leaf area — NDVI        |
+| B6 (SWIR1)        | 1566-1651 nm     | 30m        | Moisture content, drought stress |
+| B7 (SWIR2)        | 2107-2294 nm     | 30m        | Soil moisture, crop residue      |
+| **B10 (Thermal)** | 10,600-11,190 nm | **100m**   | **Crop water stress, ET**        |
+
+**Landsat vs Sentinel-2:**
+
+| Feature                | Sentinel-2                  | Landsat 8/9                         |
+| ---------------------- | --------------------------- | ----------------------------------- |
+| **Resolution**         | 10m (visible/NIR)           | 30m (multispectral)                 |
+| **Revisit**            | 5 days                      | 8 days (combined)                   |
+| **Thermal Band**       | ❌ No                       | ✅ Yes (100m)                       |
+| **Historical Archive** | 2015-present (9 years)      | **1972-present (50+ years)**        |
+| **Swath Width**        | 290 km                      | 185 km                              |
+| **Best For**           | Current detailed monitoring | Historical trends, thermal analysis |
+
+**The 50-Year Archive:**
+
+Landsat's continuous observation record enables:
+
+- **Climate trend analysis**: Compare NDVI for the same location in 1985 vs 2025
+- **Land use change**: Track conversion from grassland to cropland over decades
+- **Soil health trends**: Detect long-term degradation or improvement via vegetation indices
+- **Policy impact**: Measure effects of conservation programs over multi-decade periods
+
+**Access:**
+
+1. **USGS EarthExplorer**: [earthexplorer.usgs.gov](https://earthexplorer.usgs.gov/) — browse and download, free account required
+2. **Microsoft Planetary Computer**: Cloud-optimized Landsat Collection 2, same API as Sentinel-2
+3. **AWS Open Data**: S3 bucket `landsat-pds` for programmatic access
+
+**Real-World Application:**
+
+A soil scientist analyzing long-term soil health for a 320-acre Illinois field uses Landsat to:
+
+1. Download Landsat 5 imagery from July 1985, Landsat 8 from July 2023 (same field location)
+2. Calculate peak growing season NDVI for both years
+3. Find 2023 NDVI is 0.15 lower than 1985 despite improved genetics and management
+4. Hypothesis: soil organic matter decline over 38 years
+5. Ground-truth with soil cores: OM dropped from 4.2% to 2.8%
+6. Recommend cover cropping and reduced tillage to reverse the trend
+
+**Thermal Band Use Case:**
+
+The thermal band (B10) measures land surface temperature, enabling crop water stress detection:
+
+- **Well-watered crops**: Cooler due to evapotranspiration
+- **Water-stressed crops**: Hotter (reduced transpiration)
+- **Crop Water Stress Index (CWSI)**: Calculated from thermal - air temperature difference
+
+```mermaid
+flowchart TB
+    accTitle: Landsat Program Timeline
+    accDescr: Evolution of Landsat satellites from 1972 to present showing continuous 50-year Earth observation record
+
+    L1[Landsat 1<br/>1972-1978] --> L2[Landsat 2-3<br/>1975-1983]
+    L2 --> L5[Landsat 5<br/>1984-2012<br/>28 years!]
+    L5 --> L7[Landsat 7<br/>1999-present<br/>SLC-off 2003]
+    L7 --> L8[🛰️ Landsat 8<br/>2013-present]
+    L8 --> L9[🛰️ Landsat 9<br/>2021-present]
+
+    L9 --> archive[📊 50-Year<br/>Archive<br/>1972-2026]
+
+    style L8 fill:#e8f5e9
+    style L9 fill:#e8f5e9
+    style archive fill:#fff9c4
+```
+
+<details>
+<summary><strong>💬 Speaker Notes</strong></summary>
+
+### Teaching Tips (3 minutes)
+
+- "Landsat is the granddaddy of Earth observation — nothing else has a 50-year continuous record"
+- Show the timeline diagram: "Landsat 5 operated for 28 years — way beyond its design life"
+- "The thermal band is Landsat's superpower — Sentinel-2 doesn't have thermal"
+
+### When to Use Landsat vs Sentinel-2
+
+- **Current season monitoring (high detail)**: Use Sentinel-2 (10m, 5-day revisit)
+- **Historical analysis (trends over decades)**: Use Landsat (only option before 2015)
+- **Crop water stress (thermal)**: Use Landsat (unique capability)
+- **Both available**: Download both and compare — they complement each other
+
+### Thermal Band Explanation
+
+- "Thermal measures surface temperature — hotter pixels are drier crops"
+- "A healthy corn field on a hot day is cooler than bare soil because transpiration cools the leaves"
+- "When corn is water-stressed, transpiration shuts down, temperature rises — the thermal band sees it before you do"
+
+### Historical Context
+
+- "Before Landsat, we had aerial photos — expensive, infrequent, small areas"
+- "Landsat democratized Earth observation — anyone can download 50 years of imagery for any location on Earth, free"
+- "The fact that it's still free and public is remarkable — many countries charge for similar data"
+
+### Real-World Context
+
+- "At NASA Harvest, we used Landsat 30+ year time series to validate smallholder field expansion in Sub-Saharan Africa"
+- "The USGS archive is petabytes — don't download full scenes. Use cloud-native tools to clip to your area of interest."
+
+### Link to CDL
+
+- "CDL is derived from Landsat — the 30m resolution isn't a coincidence"
+- "Landsat provides the raw imagery; CDL is the classified output"
+
+</details>
 
 ---
 
