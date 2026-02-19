@@ -1,0 +1,111 @@
+name: Publish to PyPI
+
+on:
+  workflow_call:
+    inputs:
+      pypi_environment:
+        description: "PyPI environment to publish to (testpypi or pypi)"
+        required: true
+        type: string
+      commit_sha:
+        description: "Specific commit SHA to check out"
+        required: false
+        type: string
+
+permissions:
+  contents: read
+  packages: read
+
+jobs:
+  publish:
+    name: Publish to ${{ inputs.pypi_environment }}
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.pypi_environment }}
+    timeout-minutes: 15
+
+    defaults:
+      run:
+        working-directory: packages/agri-data-toolkit
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.commit_sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: agri-toolkit-build-py3.13
+          path: packages/agri-data-toolkit/dist/
+
+      - name: Verify build artifacts
+        run: |
+          echo "=== Verifying build artifacts ==="
+          if [ ! -d "dist/" ]; then
+            echo "❌ dist/ directory not found"
+            exit 1
+          fi
+          echo "✅ dist/ directory exists"
+          ls -la dist/
+
+          WHEEL_COUNT=$(ls dist/*.whl 2>/dev/null | wc -l)
+          SDIST_COUNT=$(ls dist/*.tar.gz 2>/dev/null | wc -l)
+
+          if [ "$WHEEL_COUNT" -eq 0 ]; then
+            echo "❌ No wheel files found"
+            exit 1
+          fi
+          echo "✅ Found $WHEEL_COUNT wheel file(s)"
+
+          if [ "$SDIST_COUNT" -eq 0 ]; then
+            echo "❌ No source distribution found"
+            exit 1
+          fi
+          echo "✅ Found $SDIST_COUNT source distribution(s)"
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: latest
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+
+      - name: Configure Poetry for PyPI
+        run: |
+          if [ "${{ inputs.pypi_environment }}" == "testpypi" ]; then
+            echo "Configuring for Test PyPI..."
+            poetry config repositories.testpypi https://test.pypi.org/legacy/
+            poetry config pypi-token.testpypi ${{ secrets.PYPI_TOKEN }}
+          else
+            echo "Configuring for production PyPI..."
+            poetry config pypi-token.pypi ${{ secrets.PYPI_TOKEN }}
+          fi
+
+      - name: Publish package
+        run: |
+          echo "Publishing to ${{ inputs.pypi_environment }}..."
+          poetry publish --repository ${{ inputs.pypi_environment }} --no-interaction
+          echo "✅ Package published successfully"
+
+      - name: Publish summary
+        if: always()
+        run: |
+          echo "## 📦 PyPI Publishing (${{ inputs.pypi_environment }})" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ job.status }}" == "success" ]; then
+            echo "✅ Package published successfully" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### Package Details" >> $GITHUB_STEP_SUMMARY
+            ls -1 dist/*.whl dist/*.tar.gz 2>/dev/null | head -5 | while read file; do
+              echo "- \`$(basename $file)\`" >> $GITHUB_STEP_SUMMARY
+            done
+          else
+            echo "❌ Publishing failed" >> $GITHUB_STEP_SUMMARY
+          fi
