@@ -198,6 +198,21 @@ flowchart LR
 
 ---
 
+### ⏸️ Pause & Process — The Four Data Types
+
+> **What We Did:** Introduced the four fundamental agricultural data types — vector, tabular, imagery, and time series — and mapped each to a Python type.
+
+> **Why It Matters:** This framing is the backbone of your entire course. Every data source you encounter will be one of these four types, and your final dashboard combines all four.
+
+> **What You Should See:** You should be able to name all four types and explain them in plain English. The Mermaid diagram shows how they converge in your final dashboard.
+
+> **Common Errors:**
+>
+> - Confusing "raster" with "photo" — remember: every pixel is a number, NDVI is arithmetic
+> - Thinking DatetimeIndex is scary — it's just a date instead of a number as your row index
+
+---
+
 ### US Agricultural Data Sources Tour
 
 The US has an exceptional public agricultural data infrastructure. Three federal agencies — USDA, NASA, and NOAA — provide most of what you'll need for row crop analysis, all free of charge.
@@ -346,6 +361,21 @@ flowchart TD
 
 ---
 
+### ⏸️ Pause & Process — Data Sources Tour
+
+> **What We Did:** Toured all eight major US agricultural data sources — NASS, NRCS, FSA CSB, NASA POWER, NOAA, Sentinel-2, Landsat, and CDL — and saw how they map to the four data types.
+
+> **Why It Matters:** Your final project dashboard needs data from multiple sources. Knowing what's available and where helps you plan what to include.
+
+> **What You Should See:** You should be able to name at least 5 of the 8 data sources and explain what each provides. The summary table is your reference.
+
+> **Common Errors:**
+>
+> - Forgetting which agency provides which data — NASS is stats, NRCS is soil, FSA is boundaries
+> - Confusing CSB with CLU — CSB is what our toolkit uses (Crop Sequence Boundaries)
+
+---
+
 ### Your Toolkit: What's Ready and What's Coming
 
 The agri-data-toolkit currently downloads **field boundaries** from the USDA NASS Crop Sequence Boundaries dataset — approximately 200 row crop field polygons distributed across the US (Corn Belt, Great Plains, and Southeast). These are the GeoJSON files you're acquiring for Assignment 1. Each field has attributes: `field_id`, `region`, `state`, `county`, `area_acres`, `crop_2023`, and a boundary polygon geometry.
@@ -402,6 +432,21 @@ Show me Python code to:
 - "The skill isn't knowing the APIs — it's knowing what to ask for"
 
 </details>
+
+---
+
+### ⏸️ Pause & Process — Toolkit Status
+
+> **What We Did:** Reviewed what's ready in the agri-toolkit (field boundaries ✅) and what's coming soon (soil, weather, satellite).
+
+> **Why It Matters:** Being transparent about toolkit maturity helps you plan your work and know when new features will arrive.
+
+> **What You Should See:** You should know which data sources work now and which are 🔜 coming. The summary table is your reference.
+
+> **Common Errors:**
+>
+> - Assuming all data sources are ready — they're not, and that's okay
+> - Waiting to start because "more data is coming" — start with what you have
 
 ---
 
@@ -514,6 +559,21 @@ Each iteration teaches you something about giving better instructions. The skill
 - Tell students: "Ask AI: 'The Leaflet map loads but shows a gray grid instead of satellite imagery. Switch to the ESRI World Imagery tile layer which doesn't need an API key.'"
 
 </details>
+
+---
+
+### ⏸️ Pause & Process — Workshop Complete
+
+> **What We Did:** Built a field boundary viewer using AI — described what we wanted, AI generated the code, we reviewed and iterated.
+
+> **Why It Matters:** This is the core skill for the course: using AI as a partner to build tools, not doing it all yourself.
+
+> **What You Should See:** You should have a working HTML file showing your fields on a map, or know exactly what to fix to get it working.
+
+> **Common Errors:**
+>
+> - Getting stuck on one problem — remember: iterate, don't perfect
+> - Not having data yet — that's okay, the prompt is ready for when you do
 
 ---
 
