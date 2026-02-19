@@ -4,6 +4,8 @@ on:
   pull_request:
   push:
     branches: [main]
+    tags:
+      - 'v*'
   workflow_dispatch:
 
 concurrency:
@@ -180,18 +182,32 @@ jobs:
       build_artifact: website-build
     secrets: inherit
 
+  publish-pypi:
+    name: Deploy / Publish to PyPI
+    needs: [test-build]
+    if: |
+      github.event_name == 'push' &&
+      startsWith(github.ref, 'refs/tags/v') &&
+      needs.test-build.result == 'success'
+    uses: ./.github/workflows/publish-pypi-reusable.yml
+    with:
+      pypi_environment: pypi
+      commit_sha: ${{ github.sha }}
+    secrets: inherit
+
   # ============================================================================
   # PHASE 3 GATE: Deploy stage completion
   # ============================================================================
 
   deploy:
     name: Deploy
-    needs: [test-build, deploy-preview, deploy-production]
+    needs: [test-build, deploy-preview, deploy-production, publish-pypi]
     if: |
       always() &&
       needs.test-build.result == 'success' &&
       (needs.deploy-preview.result == 'success' || needs.deploy-preview.result == 'skipped') &&
-      (needs.deploy-production.result == 'success' || needs.deploy-production.result == 'skipped')
+      (needs.deploy-production.result == 'success' || needs.deploy-production.result == 'skipped') &&
+      (needs.publish-pypi.result == 'success' || needs.publish-pypi.result == 'skipped')
     runs-on: ubuntu-latest
     steps:
       - name: Stage summary
@@ -200,6 +216,7 @@ jobs:
           echo "" >> "$GITHUB_STEP_SUMMARY"
           echo "- deploy-preview: ${{ needs.deploy-preview.result }}" >> "$GITHUB_STEP_SUMMARY"
           echo "- deploy-production: ${{ needs.deploy-production.result }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- publish-pypi: ${{ needs.publish-pypi.result }}" >> "$GITHUB_STEP_SUMMARY"
 
   # ============================================================================
   # PHASE 4: AI Agents - Code review and analysis after all phases complete
@@ -220,6 +237,7 @@ jobs:
         test-build,
         deploy-preview,
         deploy-production,
+        publish-pypi,
         deploy,
       ]
     if: |
