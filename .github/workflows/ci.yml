@@ -195,19 +195,96 @@ jobs:
       commit_sha: ${{ github.sha }}
     secrets: inherit
 
+  sync-template-repo:
+    name: Deploy / Sync Template Repo
+    needs: [test-build]
+    if: |
+      github.event_name == 'push' &&
+      startsWith(github.ref, 'refs/tags/v') &&
+      needs.test-build.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout source repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Prepare filtered files for template
+        run: |
+          echo "=== Preparing filtered files for template repository ==="
+          mkdir -p /tmp/template-repo
+          
+          # Copy essential root files
+          cp LICENSE /tmp/template-repo/ 2>/dev/null || echo "LICENSE not found"
+          cp README.md /tmp/template-repo/ 2>/dev/null || echo "README.md not found"
+          cp .gitignore /tmp/template-repo/ 2>/dev/null || echo ".gitignore not found"
+          cp .gitattributes /tmp/template-repo/ 2>/dev/null || echo ".gitattributes not found"
+          
+          # Copy essential toolkit package
+          if [ -d "packages/agri-data-toolkit" ]; then
+            cp -r packages/agri-data-toolkit /tmp/template-repo/
+            echo "✅ Copied packages/agri-data-toolkit/"
+          else
+            echo "❌ packages/agri-data-toolkit/ not found"
+            exit 1
+          fi
+          
+          # Copy essential scripts
+          mkdir -p /tmp/template-repo/scripts
+          for script in generate_sample_field_boundaries.py generate_test_map.py; do
+            if [ -f "scripts/$script" ]; then
+              cp "scripts/$script" /tmp/template-repo/scripts/
+              echo "✅ Copied scripts/$script"
+            fi
+          done
+          
+          echo "=== Files prepared ==="
+          find /tmp/template-repo -type f | sort
+
+      - name: Update template repository
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "=== Updating template repository ==="
+          cd /tmp/template-repo
+          git init
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add .
+          git commit -m "Sync template repository with ${{ github.ref_name }}"
+          git remote add origin "https://x-access-token:$GITHUB_TOKEN@github.com/SuperiorByteWorks-LLC/py-agri-data-toolkit.git"
+          git push -f origin main
+          echo "✅ Template repository synced"
+
+      - name: Stage summary
+        if: always()
+        run: |
+          echo "## 📦 Template Repository Sync" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ job.status }}" == "success" ]; then
+            echo "✅ Template repository synced successfully" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "**Repository:** SuperiorByteWorks-LLC/py-agri-data-toolkit" >> $GITHUB_STEP_SUMMARY
+            echo "**Tag:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ Template sync failed" >> $GITHUB_STEP_SUMMARY
+          fi
+
   # ============================================================================
   # PHASE 3 GATE: Deploy stage completion
   # ============================================================================
 
   deploy:
     name: Deploy
-    needs: [test-build, deploy-preview, deploy-production, publish-pypi]
+    needs: [test-build, deploy-preview, deploy-production, publish-pypi, sync-template-repo]
     if: |
       always() &&
       needs.test-build.result == 'success' &&
       (needs.deploy-preview.result == 'success' || needs.deploy-preview.result == 'skipped') &&
       (needs.deploy-production.result == 'success' || needs.deploy-production.result == 'skipped') &&
-      (needs.publish-pypi.result == 'success' || needs.publish-pypi.result == 'skipped')
+      (needs.publish-pypi.result == 'success' || needs.publish-pypi.result == 'skipped') &&
+      (needs.sync-template-repo.result == 'success' || needs.sync-template-repo.result == 'skipped')
     runs-on: ubuntu-latest
     steps:
       - name: Stage summary
@@ -217,6 +294,7 @@ jobs:
           echo "- deploy-preview: ${{ needs.deploy-preview.result }}" >> "$GITHUB_STEP_SUMMARY"
           echo "- deploy-production: ${{ needs.deploy-production.result }}" >> "$GITHUB_STEP_SUMMARY"
           echo "- publish-pypi: ${{ needs.publish-pypi.result }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- sync-template-repo: ${{ needs.sync-template-repo.result }}" >> "$GITHUB_STEP_SUMMARY"
 
   # ============================================================================
   # PHASE 4: AI Agents - Code review and analysis after all phases complete
