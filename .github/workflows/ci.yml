@@ -214,13 +214,13 @@ jobs:
         run: |
           echo "=== Preparing filtered files for template repository ==="
           mkdir -p /tmp/template-repo
-          
+
           # Copy essential root files
           cp LICENSE /tmp/template-repo/ 2>/dev/null || echo "LICENSE not found"
           cp README.md /tmp/template-repo/ 2>/dev/null || echo "README.md not found"
           cp .gitignore /tmp/template-repo/ 2>/dev/null || echo ".gitignore not found"
           cp .gitattributes /tmp/template-repo/ 2>/dev/null || echo ".gitattributes not found"
-          
+
           # Copy essential toolkit package
           if [ -d "packages/agri-data-toolkit" ]; then
             cp -r packages/agri-data-toolkit /tmp/template-repo/
@@ -229,7 +229,7 @@ jobs:
             echo "❌ packages/agri-data-toolkit/ not found"
             exit 1
           fi
-          
+
           # Copy essential scripts
           mkdir -p /tmp/template-repo/scripts
           for script in generate_sample_field_boundaries.py generate_test_map.py; do
@@ -238,7 +238,7 @@ jobs:
               echo "✅ Copied scripts/$script"
             fi
           done
-          
+
           echo "=== Files prepared ==="
           find /tmp/template-repo -type f | sort
 
@@ -316,6 +316,7 @@ jobs:
         deploy-preview,
         deploy-production,
         publish-pypi,
+        sync-template-repo,
         deploy,
       ]
     if: |
