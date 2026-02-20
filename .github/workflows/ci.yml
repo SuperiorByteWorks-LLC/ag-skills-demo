@@ -332,6 +332,4 @@ jobs:
       commit_sha: ${{ needs.validate.outputs.final-commit-sha || github.event.pull_request.head.sha || github.sha }}
       core_ci_result: ${{ needs.validate.outputs.core_ci_result || needs.core-ci.result || 'unknown' }}
     secrets:
-      NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
-      NVIDIA_NIM_API_KEY: ${{ secrets.NVIDIA_NIM_API_KEY }}
       OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
