@@ -18,6 +18,7 @@ permissions:
   pull-requests: write
   deployments: write
   issues: write
+  packages: read
 
 jobs:
   # ============================================================================
