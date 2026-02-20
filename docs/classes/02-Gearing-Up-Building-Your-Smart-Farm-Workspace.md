@@ -2464,6 +2464,7 @@ sequenceDiagram
    ```
 
    (You'll update this later with your actual domain)
+
 7. Click "Create"
 8. Copy your:
    - `GOOGLE_CLIENT_ID`
