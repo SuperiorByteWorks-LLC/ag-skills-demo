@@ -1,0 +1,14 @@
+[project]
+name = "ssurgo-soil"
+version = "1.0.0"
+description = "USDA NRCS SSURGO soil data downloader"
+requires-python = ">=3.10"
+dependencies = [
+    "geopandas>=0.14.0",
+    "pandas>=2.0.0",
+    "requests>=2.28.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
