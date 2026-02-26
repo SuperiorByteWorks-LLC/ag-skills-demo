@@ -1,318 +1,379 @@
+---
+name: eda-compare
+description: Compare groups and categories in agricultural datasets using pandas and scipy. Perform statistical tests, create comparative visualizations, and identify significant differences between groups.
+version: 1.0.0
+author: Boreal Bytes
+tags: [comparison, statistics, groups, pandas, scipy]
+---
+
 # Skill: eda-compare
 
 ## Description
 
-This skill compares groups and categories within agricultural datasets. Perform statistical comparisons between regions, crop types, soil classifications, or any categorical grouping. Create comparative visualizations and calculate statistical significance without writing comparison code.
+Compare groups and categories within agricultural datasets using standard pandas and scipy. Perform statistical comparisons, create comparative visualizations, and calculate statistical significance using real library code.
 
-## Requirements
+## When to Use This Skill
 
-- Python 3.9+
-- pandas
-- scipy
-- matplotlib
-- seaborn
+- **Comparing regions**: Compare yields across different areas
+- **Crop comparisons**: Analyze differences between crop types
+- **Before/after tests**: Measure treatment effects
+- **Group analysis**: Identify significant differences
+- **Statistical testing**: Validate observed differences
 
-## Installation
+## Prerequisites
 
 ```bash
 pip install pandas scipy matplotlib seaborn
 ```
 
-## Usage
-
-### compare_groups
-
-Compare numeric values across different categories.
+## Quick Start
 
 ```python
-from skills.eda_compare import EDACompareSkill
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+from scipy import stats
 
-skill = EDACompareSkill()
-comparison = skill.compare_groups(
-    data_path='data/fields.csv',
-    value_column='field_size',
-    group_column='region',
-    output_path='data/analysis/region_comparison.csv'
-)
+# Load data
+df = pd.read_csv('data/yields.csv')
+
+# Compare yields by crop
+plt.figure(figsize=(10, 6))
+sns.boxplot(data=df, x='crop', y='yield')
+plt.title('Yield by Crop Type')
+plt.savefig('yield_comparison.png')
+plt.close()
+
+# Statistical test
+corn = df[df['crop'] == 'corn']['yield']
+soy = df[df['crop'] == 'soybeans']['yield']
+t_stat, p_value = stats.ttest_ind(corn, soy)
+print(f"T-test p-value: {p_value:.4f}")
 ```
 
-Parameters:
+## Common Tasks
 
-- `data_path` (str): Path to CSV file
-- `value_column` (str): Numeric column to compare
-- `group_column` (str): Categorical column defining groups
-- `output_path` (str): Path to save comparison results
+### Task 1: Compare Groups with Box Plots
 
-Returns:
+**What**: Visualize distributions across categories.
 
-- dict: Statistics for each group including mean, median, std, count
+**When to use**: Compare groups visually, identify outliers.
 
-### statistical_test
-
-Perform statistical significance tests between groups.
+**Code**:
 
 ```python
-results = skill.statistical_test(
-    data_path='data/soil_data.csv',
-    value_column='ph_water',
-    group_column='region',
-    test_type='anova',  # Options: 'anova', 't-test', 'mann-whitney'
-    output_path='data/analysis/significance_test.csv'
-)
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load data
+df = pd.read_csv('data/soil_by_region.csv')
+
+# Create box plot
+plt.figure(figsize=(12, 6))
+sns.boxplot(data=df, x='region', y='ph_water', palette='Set2')
+plt.title('Soil pH by Region', fontsize=14, fontweight='bold')
+plt.xlabel('Region', fontsize=12)
+plt.ylabel('pH Level', fontsize=12)
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.savefig('output/ph_by_region.png', dpi=300)
+plt.close()
+
+print("Created: output/ph_by_region.png")
 ```
 
-Parameters:
+### Task 2: Calculate Group Statistics
 
-- `data_path` (str): Path to CSV file
-- `value_column` (str): Numeric column to test
-- `group_column` (str): Categorical column defining groups
-- `test_type` (str): Statistical test to perform
-- `output_path` (str): Path to save results
+**What**: Compute summary statistics by group.
 
-Returns:
+**When to use**: Quantify differences, create comparison tables.
 
-- dict: Test statistics, p-value, and interpretation
-
-### create_comparison_plot
-
-Generate comparative visualizations (box plots, violin plots, bar charts).
+**Code**:
 
 ```python
-skill.create_comparison_plot(
-    data_path='data/crops.csv',
-    value_column='yield',
-    group_column='crop_type',
-    plot_type='box',  # Options: 'box', 'violin', 'bar'
-    output_path='data/viz/yield_by_crop.png',
-    title='Yield Comparison by Crop Type'
-)
+import pandas as pd
+
+# Load data
+df = pd.read_csv('data/yields.csv')
+
+# Calculate statistics by group
+stats = df.groupby('crop')['yield'].agg([
+    'count', 'mean', 'std', 'min', 'max'
+]).round(2)
+
+print("Yield Statistics by Crop:")
+print(stats)
+
+# Save to CSV
+stats.to_csv('output/yield_stats_by_crop.csv')
+
+# Compare specific metrics
+print("\nMean yields:")
+print(df.groupby('crop')['yield'].mean().sort_values(ascending=False))
 ```
 
-Parameters:
+### Task 3: T-Test for Two Groups
 
-- `data_path` (str): Path to CSV file
-- `value_column` (str): Numeric column to visualize
-- `group_column` (str): Categorical column for grouping
-- `plot_type` (str): Type of plot ('box', 'violin', 'bar')
-- `output_path` (str): Path to save the chart
-- `title` (str): Chart title
+**What**: Test if two groups have significantly different means.
 
-### compare_multiple_metrics
+**When to use**: Compare exactly two groups (e.g., treated vs control).
 
-Compare several metrics across groups simultaneously.
+**Code**:
 
 ```python
-results = skill.compare_multiple_metrics(
-    data_path='data/fields.csv',
-    metric_columns=['size', 'ph_water', 'organic_matter'],
-    group_column='management_zone',
-    output_path='data/analysis/multi_metric_comparison.csv'
-)
-```
+import pandas as pd
+from scipy import stats
 
-Parameters:
+# Load data
+df = pd.read_csv('data/treatment_results.csv')
 
-- `data_path` (str): Path to CSV file
-- `metric_columns` (list[str]): Multiple numeric columns to compare
-- `group_column` (str): Categorical column defining groups
-- `output_path` (str): Path to save results
+# Separate groups
+treated = df[df['treatment'] == 'treated']['yield']
+control = df[df['treatment'] == 'control']['yield']
 
-Returns:
+# Perform t-test
+t_stat, p_value = stats.ttest_ind(treated, control)
 
-- pandas.DataFrame: Comparison table with all metrics by group
+print("T-Test Results:")
+print(f"  Treated group: n={len(treated)}, mean={treated.mean():.2f}")
+print(f"  Control group: n={len(control)}, mean={control.mean():.2f}")
+print(f"  T-statistic: {t_stat:.3f}")
+print(f"  P-value: {p_value:.4f}")
 
-## Examples
-
-### Example 1: Regional Comparison
-
-```python
-from skills.eda_compare import EDACompareSkill
-
-skill = EDACompareSkill()
-
-# Compare field sizes across regions
-comparison = skill.compare_groups(
-    data_path='data/all_fields.csv',
-    value_column='area_acres',
-    group_column='region',
-    output_path='data/analysis/size_by_region.csv'
-)
-
-print("Field Size by Region:")
-for region, stats in comparison.items():
-    print(f"\n{region}:")
-    print(f"  Count: {stats['count']} fields")
-    print(f"  Mean: {stats['mean']:.1f} acres")
-    print(f"  Median: {stats['median']:.1f} acres")
-    print(f"  Std Dev: {stats['std']:.1f} acres")
-```
-
-### Example 2: Statistical Significance Testing
-
-```python
-from skills.eda_compare import EDACompareSkill
-
-skill = EDACompareSkill()
-
-# Test if soil pH differs significantly by region
-test_result = skill.statistical_test(
-    data_path='data/soil_by_region.csv',
-    value_column='ph_water',
-    group_column='region',
-    test_type='anova',
-    output_path='data/analysis/ph_significance.csv'
-)
-
-print(f"Test: {test_result['test_name']}")
-print(f"Statistic: {test_result['statistic']:.3f}")
-print(f"P-value: {test_result['p_value']:.4f}")
-
-if test_result['significant']:
-    print("✓ Significant difference between regions")
+# Interpret
+alpha = 0.05
+if p_value < alpha:
+    print(f"  ✓ Significant difference (p < {alpha})")
+    diff = treated.mean() - control.mean()
+    pct_change = (diff / control.mean()) * 100
+    print(f"  Difference: {diff:.2f} units ({pct_change:+.1f}%)")
 else:
-    print("✗ No significant difference between regions")
-
-print(f"\nInterpretation: {test_result['interpretation']}")
+    print(f"  ✗ No significant difference (p >= {alpha})")
 ```
 
-### Example 3: Crop Type Comparison
+### Task 4: ANOVA for Multiple Groups
+
+**What**: Test if three or more groups have different means.
+
+**When to use**: Compare multiple regions, crops, or treatments.
+
+**Code**:
 
 ```python
-from skills.eda_compare import EDACompareSkill
+import pandas as pd
+from scipy import stats
 
-skill = EDACompareSkill()
+# Load data
+df = pd.read_csv('data/yields_by_region.csv')
 
-# Compare yields across crop types
-skill.create_comparison_plot(
-    data_path='data/yield_data.csv',
-    value_column='yield_bushels',
-    group_column='crop_type',
-    plot_type='box',
-    output_path='data/viz/yield_comparison.png',
-    title='Yield Distribution by Crop Type'
-)
+# Separate groups
+groups = []
+region_names = df['region'].unique()
 
-# Get detailed statistics
-comparison = skill.compare_groups(
-    data_path='data/yield_data.csv',
-    value_column='yield_bushels',
-    group_column='crop_type',
-    output_path='data/analysis/yield_stats.csv'
-)
+for region in region_names:
+    group_data = df[df['region'] == region]['yield']
+    groups.append(group_data)
+    print(f"{region}: n={len(group_data)}, mean={group_data.mean():.2f}")
 
-print("\nYield Statistics by Crop:")
-for crop, stats in comparison.items():
-    print(f"{crop}: {stats['mean']:.1f} ± {stats['std']:.1f} bushels/acre")
-```
+# Perform ANOVA
+f_stat, p_value = stats.f_oneway(*groups)
 
-### Example 4: Multi-Metric Analysis
+print(f"\nANOVA Results:")
+print(f"  F-statistic: {f_stat:.3f}")
+print(f"  P-value: {p_value:.4f}")
 
-```python
-from skills.eda_compare import EDACompareSkill
-
-skill = EDACompareSkill()
-
-# Compare multiple soil properties by drainage class
-results = skill.compare_multiple_metrics(
-    data_path='data/soil_measurements.csv',
-    metric_columns=['ph_water', 'organic_matter', 'clay_content', 'sand_content'],
-    group_column='drainage_class',
-    output_path='data/analysis/soil_by_drainage.csv'
-)
-
-print("Soil Properties by Drainage Class:")
-print(results.to_string())
-
-# Create comprehensive visualization
-for metric in ['ph_water', 'organic_matter']:
-    skill.create_comparison_plot(
-        data_path='data/soil_measurements.csv',
-        value_column=metric,
-        group_column='drainage_class',
-        plot_type='violin',
-        output_path=f'data/viz/{metric}_by_drainage.png',
-        title=f'{metric.replace("_", " ").title()} by Drainage Class'
-    )
-```
-
-### Example 5: Before and After Comparison
-
-```python
-from skills.eda_compare import EDACompareSkill
-
-skill = EDACompareSkill()
-
-# Compare field performance before/after treatment
-comparison = skill.compare_groups(
-    data_path='data/treatment_results.csv',
-    value_column='yield',
-    group_column='treatment_group',  # 'before' or 'after'
-    output_path='data/analysis/treatment_effect.csv'
-)
-
-print("Treatment Effect:")
-for group, stats in comparison.items():
-    print(f"{group}: {stats['mean']:.1f} bushels/acre (n={stats['count']})")
-
-# Test significance
-test = skill.statistical_test(
-    data_path='data/treatment_results.csv',
-    value_column='yield',
-    group_column='treatment_group',
-    test_type='t-test',
-    output_path='data/analysis/treatment_significance.csv'
-)
-
-if test['significant']:
-    improvement = comparison['after']['mean'] - comparison['before']['mean']
-    print(f"\n✓ Significant improvement: +{improvement:.1f} bushels/acre")
+alpha = 0.05
+if p_value < alpha:
+    print(f"  ✓ Significant differences between regions (p < {alpha})")
 else:
-    print("\n✗ No significant difference")
+    print(f"  ✗ No significant differences (p >= {alpha})")
+
+# If significant, do post-hoc analysis
+if p_value < alpha:
+    print("\nPost-hoc pairwise comparisons (t-tests):")
+    for i, region1 in enumerate(region_names):
+        for region2 in region_names[i+1:]:
+            g1 = df[df['region'] == region1]['yield']
+            g2 = df[df['region'] == region2]['yield']
+            _, p = stats.ttest_ind(g1, g2)
+            sig = "*" if p < 0.05 else ""
+            print(f"  {region1} vs {region2}: p={p:.4f} {sig}")
 ```
 
-## Data Source
+### Task 5: Violin Plots for Distribution Comparison
 
-- **Input**: CSV with numeric columns and categorical grouping columns
-- **Output**: Comparison statistics, significance tests, visualizations
-- **Tests Supported**: ANOVA (3+ groups), t-test (2 groups), Mann-Whitney (non-parametric)
+**What**: Compare full distributions across groups.
 
-## Output Files
+**When to use**: See shape of distributions, not just statistics.
 
-- `*_comparison.csv` - Group statistics
-- `*_significance.csv` - Statistical test results
-- `*_comparison.png` - Box plots, violin plots, bar charts
+**Code**:
 
-## Statistical Test Guide
+```python
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
 
-**Choose the right test:**
+# Load data
+df = pd.read_csv('data/soil_data.csv')
 
-- **ANOVA** (Analysis of Variance): Compare 3+ groups
-  - Example: Compare yields across 5 different regions
-- **t-test**: Compare exactly 2 groups
-  - Example: Compare treated vs untreated fields
-- **Mann-Whitney U**: Non-parametric alternative (when data isn't normally distributed)
-  - Example: Compare soil types with skewed distributions
+# Create violin plot
+plt.figure(figsize=(12, 6))
+sns.violinplot(data=df, x='crop_type', y='organic_matter', palette='Set2')
+plt.title('Organic Matter Distribution by Crop Type', fontsize=14, fontweight='bold')
+plt.xlabel('Crop Type', fontsize=12)
+plt.ylabel('Organic Matter (%)', fontsize=12)
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.savefig('output/organic_matter_violin.png', dpi=300)
+plt.close()
 
-**Interpreting results:**
+print("Created: output/organic_matter_violin.png")
+```
 
-- p-value < 0.05: Significant difference exists
-- p-value ≥ 0.05: No significant difference
-- Effect size: How large is the difference (practical significance)
+## Complete Example
 
-## Notes
+### Full Group Comparison Workflow
 
-- Automatically handles unequal group sizes
-- Reports both statistical and practical significance
-- Box plots show median, quartiles, and outliers
-- Violin plots show distribution shape
-- All tests assume independence (different samples per group)
-- Missing values excluded from comparisons
-- Large group differences may be significant even if small
+```python
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+from scipy import stats
+import os
+
+# Ensure output directory
+os.makedirs('output/comparisons', exist_ok=True)
+
+# Load data
+print("Loading data...")
+df = pd.read_csv('data/field_data.csv')
+
+# 1. Group statistics
+print("\n1. Calculating group statistics...")
+crop_stats = df.groupby('crop_type').agg({
+    'yield': ['count', 'mean', 'std', 'min', 'max'],
+    'field_size': 'mean'
+}).round(2)
+
+crop_stats.to_csv('output/comparisons/crop_statistics.csv')
+print("Crop Statistics:")
+print(crop_stats)
+
+# 2. Visualization
+print("\n2. Creating visualizations...")
+
+# Box plot
+plt.figure(figsize=(10, 6))
+sns.boxplot(data=df, x='crop_type', y='yield', palette='Set2')
+plt.title('Yield by Crop Type')
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.savefig('output/comparisons/yield_boxplot.png', dpi=300)
+plt.close()
+
+# Violin plot
+plt.figure(figsize=(10, 6))
+sns.violinplot(data=df, x='crop_type', y='yield', palette='Set2')
+plt.title('Yield Distribution by Crop Type')
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.savefig('output/comparisons/yield_violin.png', dpi=300)
+plt.close()
+
+# 3. Statistical tests
+print("\n3. Performing statistical tests...")
+
+# Get crop types
+crops = df['crop_type'].unique()
+
+if len(crops) == 2:
+    # T-test for 2 groups
+    group1 = df[df['crop_type'] == crops[0]]['yield']
+    group2 = df[df['crop_type'] == crops[1]]['yield']
+    t_stat, p_value = stats.ttest_ind(group1, group2)
+
+    print(f"T-test ({crops[0]} vs {crops[1]}):")
+    print(f"  t-statistic: {t_stat:.3f}")
+    print(f"  p-value: {p_value:.4f}")
+    print(f"  {'Significant' if p_value < 0.05 else 'Not significant'} difference")
+
+elif len(crops) > 2:
+    # ANOVA for 3+ groups
+    groups = [df[df['crop_type'] == crop]['yield'] for crop in crops]
+    f_stat, p_value = stats.f_oneway(*groups)
+
+    print(f"ANOVA ({len(crops)} groups):")
+    print(f"  F-statistic: {f_stat:.3f}")
+    print(f"  p-value: {p_value:.4f}")
+    print(f"  {'Significant' if p_value < 0.05 else 'Not significant'} differences")
+
+# 4. Pairwise comparisons
+print("\n4. Pairwise comparisons:")
+for i, crop1 in enumerate(crops):
+    for crop2 in crops[i+1:]:
+        g1 = df[df['crop_type'] == crop1]['yield']
+        g2 = df[df['crop_type'] == crop2]['yield']
+        _, p = stats.ttest_ind(g1, g2)
+        sig = "***" if p < 0.001 else "**" if p < 0.01 else "*" if p < 0.05 else ""
+        print(f"  {crop1} vs {crop2}: p={p:.4f} {sig}")
+
+print("\n✓ Comparison analysis complete!")
+print("Output saved to: output/comparisons/")
+```
+
+## Statistical Test Selection
+
+### Choose the Right Test
+
+| Comparison    | Test           | Use When                               |
+| ------------- | -------------- | -------------------------------------- |
+| **2 groups**  | t-test         | Exactly 2 groups, normally distributed |
+| **2 groups**  | Mann-Whitney U | Non-normal, ordinal data               |
+| **3+ groups** | ANOVA          | Multiple groups, normal distribution   |
+| **3+ groups** | Kruskal-Wallis | Multiple groups, non-normal            |
+| **Paired**    | Paired t-test  | Before/after, same subjects            |
+
+### Assumptions
+
+**T-test/ANOVA:**
+
+- Data is normally distributed
+- Equal variances (or use Welch's correction)
+- Independent observations
+
+**Mann-Whitney U:**
+
+- Ordinal or continuous data
+- Non-normal distributions
+- Independent groups
+
+## Best Practices
+
+### Statistical Testing
+
+- Check assumptions before choosing test
+- Report effect size, not just p-value
+- Use α = 0.05 unless specified
+- Correct for multiple comparisons if needed
+
+### Visualization
+
+- Box plots for median/IQR
+- Violin plots for distribution shape
+- Strip plots for individual points
+- Error bars for confidence intervals
+
+### Interpretation
+
+- Small p-value ≠ large effect
+- Report confidence intervals
+- Consider practical significance
+- Check for outliers
 
 ## Resources
 
-- [Statistical Hypothesis Testing](https://en.wikipedia.org/wiki/Statistical_hypothesis_testing)
+- [Scipy Statistics](https://docs.scipy.org/doc/scipy/reference/stats.html)
+- [T-Test Guide](https://en.wikipedia.org/wiki/Student%27s_t-test)
 - [ANOVA](https://en.wikipedia.org/wiki/Analysis_of_variance)
-- [T-Test](https://en.wikipedia.org/wiki/Student%27s_t-test)
-- [Mann-Whitney U Test](https://en.wikipedia.org/wiki/Mann%E2%80%93Whitney_U_test)
-- [Box Plot Interpretation](https://en.wikipedia.org/wiki/Box_plot)
+- [Mann-Whitney U](https://en.wikipedia.org/wiki/Mann%E2%80%93Whitney_U_test)

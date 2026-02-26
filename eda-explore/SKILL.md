@@ -1,184 +1,389 @@
+---
+name: eda-explore
+description: Explore and summarize agricultural datasets using pandas. Generate descriptive statistics, identify data types, find missing values, and detect outliers.
+version: 1.0.0
+author: Boreal Bytes
+tags: [eda, exploration, pandas, statistics, analysis]
+---
+
 # Skill: eda-explore
 
 ## Description
 
-This skill provides automated exploratory data analysis (EDA) for agricultural datasets. It generates comprehensive statistical summaries, identifies data distributions, and creates descriptive statistics for any CSV or tabular dataset. Perfect for understanding field data, soil properties, weather records, and crop information without writing code.
+Explore and understand agricultural datasets using standard pandas operations. This skill teaches you how to generate comprehensive data summaries, identify data quality issues, and profile your data using real pandas code.
 
-## Requirements
+## When to Use This Skill
 
-- Python 3.9+
-- pandas
-- numpy
+- **First look at data**: Get a quick overview of what's in your dataset
+- **Data quality check**: Find missing values, duplicates, and outliers
+- **Understanding distributions**: See means, medians, ranges for numeric columns
+- **Data profiling**: Identify categorical vs numeric columns
+- **Pre-analysis**: Before building models or creating visualizations
 
-## Installation
+## Prerequisites
 
 ```bash
 pip install pandas numpy
 ```
 
-## Usage
-
-### analyze
-
-Generate comprehensive statistical summary for a dataset.
+## Quick Start
 
 ```python
-from skills.eda_explore import EDAExploreSkill
+import pandas as pd
+import numpy as np
 
-skill = EDAExploreSkill()
-summary = skill.analyze(
-    data_path='data/field_data.csv',
-    output_path='data/eda_summary.csv'
-)
+# Load your data
+df = pd.read_csv('data/soil_measurements.csv')
+
+# Get comprehensive summary
+print(df.describe())
+print(f"\nShape: {df.shape}")
+print(f"Missing values:\n{df.isnull().sum()}")
 ```
 
-Parameters:
+## Common Tasks
 
-- `data_path` (str): Path to CSV file containing your data
-- `output_path` (str): Path to save summary statistics CSV
+### Task 1: Generate Descriptive Statistics
 
-Returns:
+**What**: Calculate summary statistics for all numeric columns.
 
-- dict: Summary statistics including counts, means, medians, standard deviations, min/max, quartiles, and data types
+**When to use**: To understand central tendencies and spread of data.
 
-### get_column_info
-
-Get detailed information about each column in the dataset.
+**Code**:
 
 ```python
-column_info = skill.get_column_info(
-    data_path='data/field_data.csv'
-)
-print(column_info['numeric_columns'])
-print(column_info['categorical_columns'])
+import pandas as pd
+
+# Load data
+df = pd.read_csv('data/field_data.csv')
+
+# Generate descriptive statistics
+summary = df.describe()
+
+# Save to CSV
+summary.to_csv('output/summary_statistics.csv')
+
+print("Summary Statistics:")
+print(summary)
+
+# Get specific statistics
+print(f"\nDataset shape: {df.shape[0]} rows, {df.shape[1]} columns")
+print(f"Numeric columns: {len(df.select_dtypes(include=[np.number]).columns)}")
+print(f"Categorical columns: {len(df.select_dtypes(include=['object']).columns)}")
 ```
 
-Parameters:
+### Task 2: Check Data Types and Missing Values
 
-- `data_path` (str): Path to CSV file
+**What**: Identify column types and find missing data.
 
-Returns:
+**When to use**: For data quality assessment and cleaning preparation.
 
-- dict: Column types, missing value counts, unique values for categorical columns
-
-### identify_outliers
-
-Find potential outliers in numeric columns.
+**Code**:
 
 ```python
-outliers = skill.identify_outliers(
-    data_path='data/soil_data.csv',
-    columns=['ph_water', 'organic_matter'],
-    method='iqr'  # Options: 'iqr', 'zscore'
-)
+import pandas as pd
+
+# Load data
+df = pd.read_csv('data/weather_data.csv')
+
+# Get data types
+print("Data Types:")
+print(df.dtypes)
+print("\n" + "="*50 + "\n")
+
+# Check for missing values
+missing = df.isnull().sum()
+missing_pct = (missing / len(df) * 100).round(2)
+
+missing_summary = pd.DataFrame({
+    'missing_count': missing,
+    'missing_percent': missing_pct
+})
+
+print("Missing Values:")
+print(missing_summary[missing_summary['missing_count'] > 0])
+
+# Check for duplicates
+duplicates = df.duplicated().sum()
+print(f"\nDuplicate rows: {duplicates}")
+
+# Memory usage
+print(f"\nMemory usage: {df.memory_usage(deep=True).sum() / 1024**2:.2f} MB")
 ```
 
-Parameters:
+### Task 3: Identify Outliers Using IQR
 
-- `data_path` (str): Path to CSV file
-- `columns` (list[str]): Columns to check for outliers
-- `method` (str): Outlier detection method ('iqr' or 'zscore')
+**What**: Find potential outliers using the Interquartile Range method.
 
-Returns:
+**When to use**: To detect unusual values that might be errors or interesting cases.
 
-- dict: Outlier records with values and row indices
-
-## Examples
-
-### Example 1: Basic Exploration
+**Code**:
 
 ```python
-from skills.eda_explore import EDAExploreSkill
+import pandas as pd
 
-# Initialize skill
-skill = EDAExploreSkill()
+def find_outliers_iqr(df, column):
+    """Find outliers using IQR method"""
+    Q1 = df[column].quantile(0.25)
+    Q3 = df[column].quantile(0.75)
+    IQR = Q3 - Q1
 
-# Analyze field data
-summary = skill.analyze(
-    data_path='data/my_fields.csv',
-    output_path='data/exploration/summary.csv'
-)
+    lower_bound = Q1 - 1.5 * IQR
+    upper_bound = Q3 + 1.5 * IQR
 
-print("Dataset Overview:")
-print(f"Total records: {summary['total_records']}")
-print(f"Numeric columns: {summary['numeric_count']}")
-print(f"Categorical columns: {summary['categorical_count']}")
+    outliers = df[(df[column] < lower_bound) | (df[column] > upper_bound)]
+    return outliers
 
-# Show sample statistics
-for col, stats in summary['numeric_stats'].items():
-    print(f"\n{col}:")
-    print(f"  Mean: {stats['mean']:.2f}")
-    print(f"  Median: {stats['median']:.2f}")
-    print(f"  Range: {stats['min']:.2f} - {stats['max']:.2f}")
+# Load data
+df = pd.read_csv('data/soil_data.csv')
+
+# Check multiple columns for outliers
+columns_to_check = ['ph_water', 'organic_matter', 'clay_content']
+
+for col in columns_to_check:
+    if col in df.columns:
+        outliers = find_outliers_iqr(df, col)
+        print(f"{col}: {len(outliers)} outliers")
+
+        if len(outliers) > 0:
+            print(f"  Range: {df[col].min():.2f} - {df[col].max():.2f}")
+            print(f"  Outlier values: {outliers[col].tolist()[:5]}")
+        print()
 ```
 
-### Example 2: Check for Outliers
+### Task 4: Profile Categorical Columns
+
+**What**: Analyze categorical variables (unique values, frequencies).
+
+**When to use**: To understand categorical distributions and imbalances.
+
+**Code**:
 
 ```python
-from skills.eda_explore import EDAExploreSkill
+import pandas as pd
 
-skill = EDAExploreSkill()
+# Load data
+df = pd.read_csv('data/crop_data.csv')
 
-# Find unusual values in soil data
-outliers = skill.identify_outliers(
-    data_path='data/soil_measurements.csv',
-    columns=['ph_water', 'organic_matter', 'clay_content'],
-    method='iqr'
-)
+# Get categorical columns
+categorical_cols = df.select_dtypes(include=['object']).columns
 
-print(f"Found {len(outliers)} potential outliers:")
-for col, records in outliers.items():
-    print(f"\n{col}: {len(records)} outliers")
-    for record in records[:3]:  # Show first 3
-        print(f"  Row {record['row']}: {record['value']:.2f}")
+print("Categorical Column Profiles:")
+print("="*60)
+
+for col in categorical_cols:
+    print(f"\n{col.upper()}:")
+    print(f"  Unique values: {df[col].nunique()}")
+    print(f"  Most common:")
+    print(f"    {df[col].value_counts().head(3).to_string().replace(chr(10), chr(10) + '    ')}")
 ```
 
-### Example 3: Column Information
+### Task 5: Create Comprehensive EDA Report
+
+**What**: Generate a complete data profile report.
+
+**When to use**: For documentation or sharing data quality insights.
+
+**Code**:
 
 ```python
-from skills.eda_explore import EDAExploreSkill
+import pandas as pd
+import numpy as np
+from datetime import datetime
 
-skill = EDAExploreSkill()
+# Load data
+df = pd.read_csv('data/agricultural_data.csv')
 
-# Get column details
-info = skill.get_column_info('data/weather_data.csv')
+# Create report
+report = []
+report.append("="*60)
+report.append("EXPLORATORY DATA ANALYSIS REPORT")
+report.append(f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+report.append("="*60)
+report.append("")
 
-print("Data Structure:")
-print(f"Total columns: {info['total_columns']}")
-print(f"Numeric: {len(info['numeric_columns'])}")
-print(f"Categorical: {len(info['categorical_columns'])}")
+# Basic info
+report.append(f"Dataset Shape: {df.shape[0]} rows × {df.shape[1]} columns")
+report.append(f"Memory Usage: {df.memory_usage(deep=True).sum() / 1024**2:.2f} MB")
+report.append("")
 
-print("\nMissing Values:")
-for col, count in info['missing_values'].items():
-    if count > 0:
-        print(f"  {col}: {count} missing")
+# Column breakdown
+numeric_cols = df.select_dtypes(include=[np.number]).columns.tolist()
+categorical_cols = df.select_dtypes(include=['object']).columns.tolist()
+datetime_cols = df.select_dtypes(include=['datetime64']).columns.tolist()
+
+report.append(f"Column Types:")
+report.append(f"  Numeric: {len(numeric_cols)}")
+report.append(f"  Categorical: {len(categorical_cols)}")
+report.append(f"  Datetime: {len(datetime_cols)}")
+report.append("")
+
+# Missing values
+total_missing = df.isnull().sum().sum()
+report.append(f"Missing Values: {total_missing} total")
+if total_missing > 0:
+    cols_with_missing = df.isnull().sum()[df.isnull().sum() > 0]
+    report.append("  Columns with missing data:")
+    for col, count in cols_with_missing.items():
+        report.append(f"    {col}: {count} ({count/len(df)*100:.1f}%)")
+report.append("")
+
+# Duplicates
+duplicates = df.duplicated().sum()
+report.append(f"Duplicate Rows: {duplicates}")
+report.append("")
+
+# Numeric summary
+if numeric_cols:
+    report.append("NUMERIC COLUMNS SUMMARY:")
+    report.append("-" * 60)
+    for col in numeric_cols[:5]:  # Show first 5
+        stats = df[col].describe()
+        report.append(f"\n{col}:")
+        report.append(f"  Mean: {stats['mean']:.2f}")
+        report.append(f"  Std: {stats['std']:.2f}")
+        report.append(f"  Range: {stats['min']:.2f} - {stats['max']:.2f}")
+
+# Save report
+report_text = "\n".join(report)
+with open('output/eda_report.txt', 'w') as f:
+    f.write(report_text)
+
+print(report_text)
+print("\n✓ Report saved to: output/eda_report.txt")
 ```
 
-## Data Source
+## Complete Example
 
-- **Input**: Any CSV or tabular dataset
-- **Output**: Statistical summaries in CSV format
-- **Compatible With**: Field boundaries, soil data, weather records, crop data
+### Full Data Exploration Workflow
 
-## Output Files
+```python
+import pandas as pd
+import numpy as np
+import os
 
-- `eda_summary.csv` - Complete statistical summary
-- Column statistics (mean, median, std, min, max, quartiles)
-- Data type information
-- Missing value counts
-- Outlier identification
+# Ensure output directory exists
+os.makedirs('output/exploration', exist_ok=True)
 
-## Notes
+# Load data
+print("Loading data...")
+df = pd.read_csv('data/soil_measurements.csv')
 
-- Automatically detects numeric vs categorical columns
-- Handles missing values gracefully
-- Provides IQR (Interquartile Range) outlier detection by default
-- Suitable for datasets of any size (tested up to 100K records)
-- Results are saved as CSV for easy viewing in Excel
-- All numeric calculations use pandas/numpy for accuracy
+# 1. Basic info
+print(f"\nDataset loaded: {df.shape[0]} rows × {df.shape[1]} columns")
+
+# 2. Save column list
+with open('output/exploration/columns.txt', 'w') as f:
+    f.write("Columns:\n")
+    for i, col in enumerate(df.columns, 1):
+        f.write(f"{i}. {col}\n")
+
+# 3. Generate and save descriptive statistics
+print("\nGenerating statistics...")
+desc = df.describe()
+desc.to_csv('output/exploration/descriptive_statistics.csv')
+
+# 4. Check data types
+df.dtypes.to_csv('output/exploration/data_types.csv', header=['dtype'])
+
+# 5. Missing values analysis
+missing = df.isnull().sum()
+missing[missing > 0].to_csv('output/exploration/missing_values.csv', header=['count'])
+
+# 6. Outlier detection (example for ph_water)
+if 'ph_water' in df.columns:
+    Q1 = df['ph_water'].quantile(0.25)
+    Q3 = df['ph_water'].quantile(0.75)
+    IQR = Q3 - Q1
+    outliers = df[(df['ph_water'] < Q1 - 1.5*IQR) | (df['ph_water'] > Q3 + 1.5*IQR)]
+    outliers.to_csv('output/exploration/ph_outliers.csv', index=False)
+    print(f"Found {len(outliers)} pH outliers")
+
+# 7. Categorical summaries
+categorical_cols = df.select_dtypes(include=['object']).columns
+for col in categorical_cols:
+    df[col].value_counts().to_csv(f'output/exploration/{col}_distribution.csv')
+
+print("\n✓ Exploration complete. Results saved to output/exploration/")
+print(f"Files created: {len(os.listdir('output/exploration'))}")
+```
+
+## Key Methods Reference
+
+### Essential Pandas Methods for EDA
+
+| Method                  | Purpose            | Example                     |
+| ----------------------- | ------------------ | --------------------------- |
+| `df.head()`             | First n rows       | `df.head(10)`               |
+| `df.describe()`         | Numeric statistics | `df.describe()`             |
+| `df.info()`             | DataFrame info     | `df.info()`                 |
+| `df.shape`              | Dimensions         | `rows, cols = df.shape`     |
+| `df.dtypes`             | Column types       | `df.dtypes`                 |
+| `df.isnull().sum()`     | Missing counts     | `df.isnull().sum()`         |
+| `df.duplicated().sum()` | Duplicate rows     | `df.duplicated().sum()`     |
+| `df.nunique()`          | Unique values      | `df.nunique()`              |
+| `df.value_counts()`     | Value frequencies  | `df['crop'].value_counts()` |
+| `df.corr()`             | Correlation matrix | `df.corr()`                 |
+| `df.memory_usage()`     | Memory usage       | `df.memory_usage()`         |
+
+## Best Practices
+
+### Memory Management
+
+- Use `df.memory_usage(deep=True)` to check memory
+- Drop unnecessary columns: `df = df[['col1', 'col2']]`
+- Convert types: `df['col'] = df['col'].astype('category')`
+
+### Handling Large Datasets
+
+- Sample first: `df_sample = df.sample(n=10000)`
+- Use chunks: `pd.read_csv('file.csv', chunksize=10000)`
+- Specify dtypes: `pd.read_csv('file.csv', dtype={'id': 'int32'})`
+
+### Data Quality Checks
+
+- Always check for missing values
+- Verify data types match expectations
+- Look for impossible values (negative acres, pH > 14)
+- Check for inconsistent categories
+
+## Common Issues
+
+### Issue: Too much data to display
+
+**Fix**: Use `.head()` or sample:
+
+```python
+print(df.head())  # First 5 rows
+print(df.describe().T)  # Transposed for readability
+```
+
+### Issue: Scientific notation in output
+
+**Fix**: Set display options:
+
+```python
+pd.set_option('display.float_format', '{:.2f}'.format)
+```
+
+### Issue: Dates not parsing
+
+**Fix**: Specify date columns:
+
+```python
+df = pd.read_csv('file.csv', parse_dates=['date_col'])
+```
+
+### Issue: Mixed types warning
+
+**Fix**: Force dtype on load:
+
+```python
+df = pd.read_csv('file.csv', dtype={'col': str})
+```
 
 ## Resources
 
 - [Pandas Documentation](https://pandas.pydata.org/docs/)
+- [Pandas Cheat Sheet](https://pandas.pydata.org/Pandas_Cheat_Sheet.pdf)
 - [Exploratory Data Analysis Guide](https://en.wikipedia.org/wiki/Exploratory_data_analysis)
-- [Descriptive Statistics](https://en.wikipedia.org/wiki/Descriptive_statistics)

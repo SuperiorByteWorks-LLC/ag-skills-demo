@@ -1,442 +1,364 @@
 """Sentinel-2 Imagery Skill.
 
-High-level skill for accessing Sentinel-2 satellite imagery.
-Downloads imagery for field boundaries ONLY (not full scenes).
-Optimized for small machines with field-based AOI queries.
+Functions for downloading and processing Sentinel-2 satellite imagery
+using standard Python libraries (sentinelsat, rasterio).
 
-Output Formats:
-    - GeoTIFF (.tif) with CRS in filename
-    - Cloud-Optimized GeoTIFF (COG) for efficient access
+This module provides helper functions for:
+- Searching and downloading Sentinel-2 data from Copernicus Data Space
+- Calculating NDVI and other vegetation indices
+- Clipping rasters to field boundaries
+- Extracting field-level statistics
 
-Filenames include CRS: sentinel2_field_001_20240615_EPSG4326.tif
+Example:
+    >>> from sentinelsat import SentinelAPI, read_geojson, geojson_to_wkt
+    >>> import rasterio
+    >>> from rasterio.mask import mask
+    >>>
+    >>> # Connect to Copernicus Data Space
+    >>> api = SentinelAPI('user', 'pass', 'https://dataspace.copernicus.eu')
+    >>>
+    >>> # Search for imagery
+    >>> footprint = geojson_to_wkt(read_geojson('fields.geojson'))
+    >>> products = api.query(
+    ...     footprint,
+    ...     date=('20240601', '20240831'),
+    ...     platformname='Sentinel-2',
+    ...     producttype='S2MSI2A',
+    ...     cloudcoverpercentage=(0, 20)
+    ... )
 """
 
 from pathlib import Path
 from typing import Any
 
-import geopandas as gpd
-import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import rasterio
-import requests
 from rasterio.mask import mask
 from rasterio.plot import show
-from shapely.geometry import box, mapping
-
-from agri_toolkit.core.config import Config
+from sentinelsat import SentinelAPI, geojson_to_wkt, read_geojson
 
 
-class Sentinel2ImagerySkill:
-    """Skill for accessing Sentinel-2 satellite imagery for fields.
+def search_imagery(
+    geojson_path: str,
+    start_date: str,
+    end_date: str,
+    username: str,
+    password: str,
+    cloud_cover_max: float = 20.0,
+    api_url: str = "https://dataspace.copernicus.eu",
+) -> pd.DataFrame:
+    """Search for Sentinel-2 imagery covering field boundaries.
 
-    IMPORTANT: Downloads imagery ONLY for field boundaries (AOI queries).
-    NEVER downloads full Sentinel-2 scenes. Optimized for small machines.
+    Uses sentinelsat to query the Copernicus Data Space catalog.
 
-    Data Source:
-        - Copernicus Data Space: https://dataspace.copernicus.eu/
-        - AWS Open Data: s3://sentinel-s2-l2a/
+    Args:
+        geojson_path: Path to GeoJSON file with field boundaries.
+        start_date: Start date in 'YYYYMMDD' format.
+        end_date: End date in 'YYYYMMDD' format.
+        username: Copernicus Data Space username.
+        password: Copernicus Data Space password.
+        cloud_cover_max: Maximum cloud cover percentage (default: 20).
+        api_url: Copernicus Data Space API URL.
 
-    Key Bands:
-        - B4 (Red): 665 nm - Chlorophyll absorption
-        - B8 (NIR): 842 nm - Vegetation biomass
-        - B11 (SWIR): 1610 nm - Moisture content
+    Returns:
+        DataFrame with available products.
 
     Example:
-        >>> skill = Sentinel2ImagerySkill()
-        >>> # Download for field subset ONLY
-        >>> imagery = skill.download_for_fields(
-        ...     fields_geojson='fields_EPSG4326.geojson',
-        ...     start_date='2024-06-01',
-        ...     end_date='2024-08-31',
-        ...     bands=['B4', 'B8'],
+        >>> products = search_imagery(
+        ...     'fields.geojson',
+        ...     '20240601',
+        ...     '20240831',
+        ...     'my_user',
+        ...     'my_pass',
         ...     cloud_cover_max=20
         ... )
+        >>> print(products[['title', 'cloudcoverpercentage']])
     """
+    # Initialize API connection
+    api = SentinelAPI(username, password, api_url)
 
-    # Sentinel-2 bands for agriculture
-    BANDS = {
-        "B2": ("Blue", 490, "Water, soil moisture"),
-        "B3": ("Green", 560, "Vegetation vigor"),
-        "B4": ("Red", 665, "Chlorophyll absorption"),
-        "B5": ("Red Edge 1", 705, "Vegetation stress"),
-        "B6": ("Red Edge 2", 740, "Vegetation stress"),
-        "B7": ("Red Edge 3", 783, "Vegetation stress"),
-        "B8": ("NIR", 842, "Vegetation biomass"),
-        "B8A": ("Narrow NIR", 865, "Vegetation biomass"),
-        "B11": ("SWIR 1", 1610, "Moisture content"),
-        "B12": ("SWIR 2", 2190, "Moisture content"),
-    }
+    # Convert GeoJSON to WKT for search
+    footprint = geojson_to_wkt(read_geojson(geojson_path))
 
-    # Spatial resolution per band
-    RESOLUTION_10M = ["B2", "B3", "B4", "B8"]
-    RESOLUTION_20M = ["B5", "B6", "B7", "B8A", "B11", "B12"]
-    RESOLUTION_60M = ["B1", "B9", "B10"]
+    # Search for products
+    products = api.query(
+        footprint,
+        date=(start_date, end_date),
+        platformname="Sentinel-2",
+        producttype="S2MSI2A",  # Level-2A (atmospherically corrected)
+        cloudcoverpercentage=(0, cloud_cover_max),
+    )
 
-    def __init__(self, config: Config | None = None) -> None:
-        """Initialize the Sentinel-2 imagery skill.
+    # Convert to DataFrame
+    products_df = api.to_dataframe(products)
 
-        Args:
-            config: Optional configuration object.
-        """
-        self.config = config or Config()
-        self.logger = self.config.logger
+    return products_df
 
-    def download_for_fields(
-        self,
-        fields_geojson: str,
-        start_date: str,
-        end_date: str,
-        bands: list[str] | None = None,
-        cloud_cover_max: float = 20.0,
-        output_dir: str | None = None,
-    ) -> pd.DataFrame:
-        """Download Sentinel-2 imagery for field boundaries ONLY.
 
-        Queries Sentinel-2 catalog for scenes covering field AOIs,
-        then downloads ONLY the required bands clipped to field extent.
-        NEVER downloads full scenes.
+def download_product(
+    product_id: str,
+    username: str,
+    password: str,
+    output_dir: str = "data/sentinel2",
+    api_url: str = "https://dataspace.copernicus.eu",
+) -> Path:
+    """Download a Sentinel-2 product.
 
-        Args:
-            fields_geojson: Path to GeoJSON with field boundaries.
-                Must include CRS (e.g., fields_EPSG4326.geojson).
-            start_date: Start date 'YYYY-MM-DD'.
-            end_date: End date 'YYYY-MM-DD'.
-            bands: List of bands to download. Default: ['B4', 'B8'] for NDVI.
-            cloud_cover_max: Maximum cloud cover % (default: 20).
-            output_dir: Output directory. Default: data/raw/sentinel2/
+    Args:
+        product_id: Product UUID from search results.
+        username: Copernicus Data Space username.
+        password: Copernicus Data Space password.
+        output_dir: Directory to save downloaded files.
+        api_url: Copernicus Data Space API URL.
 
-        Returns:
-            DataFrame with metadata for downloaded imagery.
-            Columns: field_id, date, band, file_path, cloud_cover
+    Returns:
+        Path to downloaded file.
 
-        Example:
-            >>> skill = Sentinel2ImagerySkill()
-            >>> # Start with small field subset
-            >>> fields = field_skill.download(count=20)
-            >>> field_skill.export(fields, 'fields_EPSG4326.geojson')
-            >>>
-            >>> # Download imagery for fields ONLY
-            >>> imagery = skill.download_for_fields(
-            ...     fields_geojson='fields_EPSG4326.geojson',
-            ...     start_date='2024-06-01',
-            ...     end_date='2024-08-31',
-            ...     bands=['B4', 'B8'],
-            ...     cloud_cover_max=20
-            ... )
-        """
-        # Load fields
-        fields = gpd.read_file(fields_geojson)
+    Example:
+        >>> path = download_product(
+        ...     'S2A_T33UUV_20240615T105031',
+        ...     'my_user',
+        ...     'my_pass',
+        ...     output_dir='data/sentinel2'
+        ... )
+    """
+    api = SentinelAPI(username, password, api_url)
 
-        # Ensure fields have CRS
-        if fields.crs is None:
-            raise ValueError("Fields must have CRS. Save as fields_EPSG4326.geojson")
+    output_path = Path(output_dir)
+    output_path.mkdir(parents=True, exist_ok=True)
 
-        # Default bands for NDVI
-        bands = bands or ["B4", "B8"]
+    downloaded = api.download(product_id, directory_path=str(output_path))
 
-        # Validate bands
-        invalid_bands = [b for b in bands if b not in self.BANDS]
-        if invalid_bands:
-            raise ValueError(f"Invalid bands: {invalid_bands}")
+    return Path(downloaded["path"])
 
-        # Setup output directory
-        if output_dir is None:
-            output_dir = self.config.raw_data_path / "sentinel2"
-        output_dir = Path(output_dir)
-        output_dir.mkdir(parents=True, exist_ok=True)
 
-        results = []
+def calculate_ndvi(
+    red_band_path: str,
+    nir_band_path: str,
+    output_path: str | None = None,
+) -> str:
+    """Calculate NDVI from Red and NIR bands using rasterio.
 
-        # Get overall AOI from all fields (for catalog search)
-        aoi_bounds = fields.total_bounds
+    NDVI = (NIR - Red) / (NIR + Red)
 
-        # Search for available scenes
-        scenes = self._search_scenes(
-            bbox=aoi_bounds,
-            start_date=start_date,
-            end_date=end_date,
-            cloud_cover_max=cloud_cover_max,
+    Args:
+        red_band_path: Path to Red band (B04) raster.
+        nir_band_path: Path to NIR band (B08) raster.
+        output_path: Output path. If None, auto-generates.
+
+    Returns:
+        Path to output NDVI raster.
+
+    Example:
+        >>> ndvi_path = calculate_ndvi(
+        ...     'data/B04_10m.jp2',
+        ...     'data/B08_10m.jp2',
+        ...     'output/ndvi.tif'
+        ... )
+    """
+    # Read Red band
+    with rasterio.open(red_band_path) as red_src:
+        red = red_src.read(1).astype(float)
+        profile = red_src.profile
+        crs = red_src.crs
+
+    # Read NIR band
+    with rasterio.open(nir_band_path) as nir_src:
+        nir = nir_src.read(1).astype(float)
+
+    # Calculate NDVI
+    ndvi = np.divide(
+        nir - red,
+        nir + red,
+        out=np.zeros_like(nir, dtype=float),
+        where=(nir + red) != 0,
+    )
+
+    # Update profile for output
+    profile.update(
+        dtype=rasterio.float32,
+        count=1,
+        compress="lzw",
+    )
+
+    # Auto-generate output path if not provided
+    if output_path is None:
+        epsg_code = crs.to_epsg() if crs else "4326"
+        output_path = (
+            red_band_path.replace("_B04_", "_NDVI_")
+            .replace(".jp2", f"_EPSG{epsg_code}.tif")
+            .replace(".tif", f"_EPSG{epsg_code}.tif")
         )
 
-        if not scenes:
-            self.logger.warning("No Sentinel-2 scenes found matching criteria")
-            return pd.DataFrame()
+    # Write output
+    with rasterio.open(output_path, "w", **profile) as dst:
+        dst.write(ndvi.astype(rasterio.float32), 1)
 
-        self.logger.info(f"Found {len(scenes)} scenes, downloading for {len(fields)} fields")
+    return output_path
 
-        # For each field, extract imagery from best scene
+
+def clip_to_field(
+    raster_path: str,
+    field_geometry: dict,
+    output_path: str,
+) -> str:
+    """Clip raster to field boundary using rasterio.mask.
+
+    Args:
+        raster_path: Path to input raster.
+        field_geometry: GeoJSON-like geometry dict.
+        output_path: Path for output clipped raster.
+
+    Returns:
+        Path to output raster.
+
+    Example:
+        >>> from field_boundaries import download_fields
+        >>> fields = download_fields(count=1)
+        >>> geom = fields.iloc[0].geometry.__geo_interface__
+        >>> clip_to_field('ndvi.tif', geom, 'field_ndvi.tif')
+    """
+    with rasterio.open(raster_path) as src:
+        # Clip to field geometry
+        out_image, out_transform = mask(src, [field_geometry], crop=True)
+        out_meta = src.meta.copy()
+
+    # Update metadata
+    out_meta.update(
+        {
+            "driver": "GTiff",
+            "height": out_image.shape[1],
+            "width": out_image.shape[2],
+            "transform": out_transform,
+        }
+    )
+
+    # Write output
+    with rasterio.open(output_path, "w", **out_meta) as dst:
+        dst.write(out_image)
+
+    return output_path
+
+
+def extract_field_stats(
+    raster_path: str,
+    fields_geojson: str,
+) -> pd.DataFrame:
+    """Extract zonal statistics for each field.
+
+    Args:
+        raster_path: Path to raster (e.g., NDVI).
+        fields_geojson: Path to field boundaries GeoJSON.
+
+    Returns:
+        DataFrame with statistics per field.
+
+    Example:
+        >>> stats = extract_field_stats('ndvi.tif', 'fields.geojson')
+        >>> print(stats[['field_id', 'mean', 'std']])
+    """
+    import geopandas as gpd
+    from shapely.geometry import mapping
+
+    # Load fields
+    fields = gpd.read_file(fields_geojson)
+
+    results = []
+
+    with rasterio.open(raster_path) as src:
         for idx, field in fields.iterrows():
             field_id = field.get("field_id", f"field_{idx}")
 
-            # Find best scene for this field (lowest cloud cover)
-            best_scene = self._select_best_scene(field.geometry, scenes)
+            # Clip to field
+            geom = [mapping(field.geometry)]
+            out_image, _ = mask(src, geom, crop=True, nodata=np.nan)
 
-            if best_scene is None:
-                self.logger.warning(f"No suitable scene for {field_id}")
-                continue
+            # Calculate statistics
+            data = out_image[0]
+            valid_data = data[~np.isnan(data)]
 
-            # Download each band for this field
-            for band in bands:
-                try:
-                    file_path = self._download_band_for_field(
-                        field=field,
-                        field_id=field_id,
-                        scene=best_scene,
-                        band=band,
-                        output_dir=output_dir,
-                    )
+            if len(valid_data) > 0:
+                results.append(
+                    {
+                        "field_id": field_id,
+                        "mean": float(np.mean(valid_data)),
+                        "std": float(np.std(valid_data)),
+                        "min": float(np.min(valid_data)),
+                        "max": float(np.max(valid_data)),
+                        "median": float(np.median(valid_data)),
+                        "pixel_count": int(len(valid_data)),
+                    }
+                )
 
-                    if file_path:
-                        results.append(
-                            {
-                                "field_id": field_id,
-                                "date": best_scene["date"],
-                                "band": band,
-                                "file_path": str(file_path),
-                                "cloud_cover": best_scene["cloud_cover"],
-                                "scene_id": best_scene["id"],
-                            }
-                        )
+    return pd.DataFrame(results)
 
-                except Exception as e:
-                    self.logger.error(f"Failed to download {band} for {field_id}: {e}")
 
-        df = pd.DataFrame(results)
+def get_band_path(product_dir: Path, band: str, resolution: str = "10m") -> Path | None:
+    """Get path to specific band file in Sentinel-2 product.
 
-        if len(df) > 0:
-            # Save manifest
-            manifest_path = output_dir / f"sentinel2_manifest_EPSG{fields.crs.to_epsg()}.csv"
-            df.to_csv(manifest_path, index=False)
-            self.logger.info(f"Downloaded {len(df)} images. Manifest: {manifest_path}")
+    Args:
+        product_dir: Path to extracted Sentinel-2 product directory.
+        band: Band name (e.g., 'B04', 'B08').
+        resolution: Resolution string (e.g., '10m', '20m', '60m').
 
-        return df
+    Returns:
+        Path to band file or None if not found.
 
-    def _search_scenes(
-        self,
-        bbox: tuple[float, float, float, float],
-        start_date: str,
-        end_date: str,
-        cloud_cover_max: float,
-    ) -> list[dict]:
-        """Search Sentinel-2 catalog for scenes covering bbox.
-
-        Returns list of scenes sorted by cloud cover (lowest first).
-        """
-        # This would query Copernicus Data Space or AWS STAC API
-        # For now, return placeholder
-
-        # In production, this queries:
-        # https://catalogue.dataspace.copernicus.eu/odata/v1/Products
-        # or AWS STAC: https://earth-search.aws.element84.com/v0/
-
-        self.logger.info(f"Searching scenes for bbox: {bbox}")
-
-        # Placeholder - would return actual scene metadata
-        return []
-
-    def _select_best_scene(
-        self,
-        field_geometry: Any,
-        scenes: list[dict],
-    ) -> dict | None:
-        """Select best scene for a field (lowest cloud cover).
-
-        Args:
-            field_geometry: Shapely geometry.
-            scenes: List of scene metadata.
-
-        Returns:
-            Best scene dict or None.
-        """
-        if not scenes:
-            return None
-
-        # Sort by cloud cover
-        sorted_scenes = sorted(scenes, key=lambda s: s.get("cloud_cover", 100))
-
-        # Check intersection (would use actual geometry intersection in production)
-        for scene in sorted_scenes:
-            # Check if field intersects scene
-            return scene
-
+    Example:
+        >>> red_path = get_band_path(Path('data/S2A_...'), 'B04', '10m')
+        >>> nir_path = get_band_path(Path('data/S2A_...'), 'B08', '10m')
+    """
+    # Sentinel-2 SAFE format: GRANULE/*/IMG_DATA/*_B04_10m.jp2
+    img_data = product_dir / "GRANULE"
+    if not img_data.exists():
         return None
 
-    def _download_band_for_field(
-        self,
-        field: Any,
-        field_id: str,
-        scene: dict,
-        band: str,
-        output_dir: Path,
-    ) -> Path | None:
-        """Download single band for a field (clipped to field extent).
+    # Find granule directory
+    granules = list(img_data.glob("*"))
+    if not granules:
+        return None
 
-        Downloads ONLY the required band pixels, not full scene.
-        """
-        # Get field bounds for filename
-        bounds = field.geometry.bounds  # minx, miny, maxx, maxy
+    img_data = granules[0] / "IMG_DATA"
+    if not img_data.exists():
+        return None
 
-        # Build filename with CRS
-        date_str = scene["date"].replace("-", "")
-        epsg_code = "4326"  # Would extract from actual CRS
-        filename = f"sentinel2_{field_id}_{date_str}_{band}_EPSG{epsg_code}.tif"
-        output_path = output_dir / filename
+    # Find band file
+    pattern = f"*_{band}_{resolution}.jp2"
+    band_files = list(img_data.glob(pattern))
 
-        if output_path.exists():
-            self.logger.debug(f"Already exists: {output_path}")
-            return output_path
+    return band_files[0] if band_files else None
 
-        # In production:
-        # 1. Get COG (Cloud-Optimized GeoTIFF) URL for band
-        # 2. Use rasterio with windowed read to download ONLY field extent
-        # 3. Reproject if needed
-        # 4. Save clipped image
 
-        # Placeholder
-        self.logger.info(f"Would download {band} for {field_id} to {output_path}")
+# Sentinel-2 band information
+BAND_INFO = {
+    "B01": {"name": "Coastal aerosol", "wavelength": 443, "resolution": 60},
+    "B02": {"name": "Blue", "wavelength": 490, "resolution": 10},
+    "B03": {"name": "Green", "wavelength": 560, "resolution": 10},
+    "B04": {"name": "Red", "wavelength": 665, "resolution": 10},
+    "B05": {"name": "Red Edge 1", "wavelength": 705, "resolution": 20},
+    "B06": {"name": "Red Edge 2", "wavelength": 740, "resolution": 20},
+    "B07": {"name": "Red Edge 3", "wavelength": 783, "resolution": 20},
+    "B08": {"name": "NIR", "wavelength": 842, "resolution": 10},
+    "B8A": {"name": "Narrow NIR", "wavelength": 865, "resolution": 20},
+    "B09": {"name": "Water vapor", "wavelength": 945, "resolution": 60},
+    "B11": {"name": "SWIR 1", "wavelength": 1610, "resolution": 20},
+    "B12": {"name": "SWIR 2", "wavelength": 2190, "resolution": 20},
+}
 
-        return output_path
 
-    def calculate_ndvi(
-        self,
-        red_band_path: str,
-        nir_band_path: str,
-        output_path: str | None = None,
-    ) -> str:
-        """Calculate NDVI from Red and NIR bands.
+def get_band_info(band: str) -> dict:
+    """Get information about a Sentinel-2 band.
 
-        NDVI = (NIR - Red) / (NIR + Red)
+    Args:
+        band: Band name (e.g., 'B04', 'B08').
 
-        Args:
-            red_band_path: Path to Red band (B4) GeoTIFF.
-            nir_band_path: Path to NIR band (B8) GeoTIFF.
-            output_path: Output path. If None, auto-generates.
+    Returns:
+        Dictionary with band information.
 
-        Returns:
-            Path to NDVI GeoTIFF.
-        """
-        with rasterio.open(red_band_path) as red_src:
-            red = red_src.read(1)
-            profile = red_src.profile
-            crs = red_src.crs
-
-        with rasterio.open(nir_band_path) as nir_src:
-            nir = nir_src.read(1)
-
-        # Calculate NDVI
-        ndvi = np.where((nir + red) > 0, (nir - red) / (nir + red), np.nan)
-
-        # Update profile for output
-        profile.update(
-            dtype=rasterio.float32,
-            count=1,
-            compress="lzw",
-        )
-
-        if output_path is None:
-            # Auto-generate with CRS
-            epsg_code = crs.to_epsg() if crs else "4326"
-            output_path = red_band_path.replace("_B4_", "_NDVI_").replace(
-                ".tif", f"_EPSG{epsg_code}.tif"
-            )
-
-        with rasterio.open(output_path, "w", **profile) as dst:
-            dst.write(ndvi.astype(rasterio.float32), 1)
-
-        self.logger.info(f"NDVI saved to: {output_path}")
-        return output_path
-
-    def plot_imagery(
-        self,
-        image_path: str,
-        title: str = "Sentinel-2 Imagery",
-        figsize: tuple[int, int] = (10, 10),
-        save_path: str | None = None,
-    ) -> None:
-        """Plot satellite imagery.
-
-        Args:
-            image_path: Path to GeoTIFF.
-            title: Plot title.
-            figsize: Figure size.
-            save_path: Optional path to save figure.
-        """
-        fig, ax = plt.subplots(figsize=figsize)
-
-        with rasterio.open(image_path) as src:
-            show(src, ax=ax, title=title)
-
-        ax.set_xlabel("Longitude")
-        ax.set_ylabel("Latitude")
-
-        plt.tight_layout()
-
-        if save_path:
-            plt.savefig(save_path, dpi=300, bbox_inches="tight")
-
-        plt.show()
-
-    def extract_statistics(
-        self,
-        image_path: str,
-        fields_geojson: str,
-    ) -> pd.DataFrame:
-        """Extract zonal statistics for fields.
-
-        Args:
-            image_path: Path to GeoTIFF (e.g., NDVI).
-            fields_geojson: Path to field boundaries.
-
-        Returns:
-            DataFrame with statistics per field.
-        """
-        fields = gpd.read_file(fields_geojson)
-
-        with rasterio.open(image_path) as src:
-            results = []
-
-            for idx, field in fields.iterrows():
-                field_id = field.get("field_id", f"field_{idx}")
-
-                # Clip raster to field
-                out_image, out_transform = mask(src, [mapping(field.geometry)], crop=True)
-
-                # Calculate statistics
-                data = out_image[0]
-                data = data[~np.isnan(data)]  # Remove nodata
-
-                if len(data) > 0:
-                    results.append(
-                        {
-                            "field_id": field_id,
-                            "mean": np.mean(data),
-                            "std": np.std(data),
-                            "min": np.min(data),
-                            "max": np.max(data),
-                            "median": np.median(data),
-                        }
-                    )
-
-        return pd.DataFrame(results)
-
-    def get_available_products(
-        self,
-        bbox: tuple[float, float, float, float],
-        start_date: str,
-        end_date: str,
-    ) -> pd.DataFrame:
-        """Get list of available Sentinel-2 products without downloading.
-
-        Args:
-            bbox: Bounding box (minx, miny, maxx, maxy).
-            start_date: Start date.
-            end_date: End date.
-
-        Returns:
-            DataFrame with available products.
-        """
-        # Query catalog only
-        scenes = self._search_scenes(bbox, start_date, end_date, cloud_cover_max=100)
-
-        return pd.DataFrame(scenes)
+    Example:
+        >>> info = get_band_info('B04')
+        >>> print(f"{info['name']}: {info['wavelength']}nm, {info['resolution']}m")
+        Red: 665nm, 10m
+    """
+    return BAND_INFO.get(band, {"name": "Unknown", "wavelength": 0, "resolution": 0})

@@ -1,212 +1,428 @@
 ---
 name: interactive-web-map
-description: Create interactive single-file HTML web maps for visualizing agricultural data. Use when the user needs to visualize field boundaries, soil data, weather patterns, crop distributions, or satellite imagery in an interactive web map with selectable layers and data tables.
+description: Create interactive HTML web maps for visualizing agricultural field boundaries, soil data, and crop information using folium and geopandas. Use when the user needs a zoomable, clickable map with layer controls, popups, and choropleth styling.
+version: 1.0.0
+author: Boreal Bytes
+tags: [folium, geopandas, geospatial, visualization, html-map, leaflet]
 ---
 
-# Interactive Web Map
-
-## Quick Start
-
-Create an interactive web map from field data:
-
-```python
-from skills.interactive_web_map import InteractiveWebMapSkill
-
-skill = InteractiveWebMapSkill()
-
-# Create map with multiple data sources
-skill.create_map(
-    fields_geojson='data/fields_EPSG4326.geojson',
-    soil_csv='data/soil_EPSG4326.csv',
-    weather_csv='data/weather.csv',
-    cdl_csv='data/cdl_EPSG4326.csv',
-    output_path='data/interactive_map.html'
-)
-```
+# Skill: interactive-web-map
 
 ## Description
 
-Creates a fully self-contained, single-file HTML interactive web map for visualizing agricultural data. The map includes:
+Create interactive web maps from GeoJSON field boundary data using **folium** (Python Leaflet wrapper) and **geopandas**. Produces self-contained HTML files you can open in any browser — no server required.
 
-- Interactive field boundaries on a world map
-- Clickable fields that show data tables
-- Layer toggles for different data sources
-- Zoom and pan controls
-- Popups with field information
-- Data tables that update based on selection
-- Fully portable - works offline
+This skill teaches the standard Python geospatial visualization stack rather than custom code. Every example uses real USDA field boundary data from the `field-boundaries` skill.
 
-## Features
+## When to Use This Skill
 
-- **Single File**: Everything embedded in one HTML file
-- **Interactive**: Click fields to see data, toggle layers
-- **Multi-Source**: Display soil, weather, crops together
-- **Responsive**: Works on desktop and mobile
-- **Offline**: No internet required after initial load
-- **Portable**: Email, share, or archive the HTML file
+- **Visualizing field boundaries**: Render GeoJSON polygons on an interactive map
+- **Choropleth maps**: Color fields by crop type, soil pH, area, or any attribute
+- **Multi-layer maps**: Combine field boundaries with satellite basemaps and markers
+- **Sharing results**: Generate portable HTML files for stakeholders
+- **Quick exploration**: Inspect field geometry and attributes interactively
 
-## Usage
+## Prerequisites
 
-### create_map
-
-Create an interactive web map from multiple data sources.
-
-```python
-skill.create_map(
-    fields_geojson='data/fields_EPSG4326.geojson',
-    soil_csv='data/soil_EPSG4326.csv',
-    weather_csv='data/weather.csv',
-    cdl_csv='data/cdl_EPSG4326.csv',
-    sentinel2_dir='data/sentinel2',
-    output_path='data/interactive_map.html'
-)
+```bash
+# Install UV if not already installed
+curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
-Parameters:
+## Example Data
 
-- `fields_geojson` (str): Path to field boundaries GeoJSON
-- `soil_csv` (str, optional): Path to soil data CSV
-- `weather_csv` (str, optional): Path to weather data CSV
-- `cdl_csv` (str, optional): Path to crop data CSV
-- `sentinel2_dir` (str, optional): Directory with Sentinel-2 imagery
-- `landsat_dir` (str, optional): Directory with Landsat imagery
-- `output_path` (str): Output HTML file path
+This skill uses sample data from the `field-boundaries` skill:
 
-Returns:
-
-- Path: Path to generated HTML file
-
-### create_simple_map
-
-Create a simple map with just field boundaries.
+- `../field-boundaries/examples/sample_2_fields.geojson` — 2 real corn fields from Minnesota
 
 ```python
-skill.create_simple_map(
-    fields_geojson='data/fields_EPSG4326.geojson',
-    output_path='data/simple_map.html'
-)
+import geopandas as gpd
+
+# Load the example fields
+fields = gpd.read_file('../field-boundaries/examples/sample_2_fields.geojson')
+print(fields[['field_id', 'area_acres', 'crop_name']])
+
+# Output:
+#           field_id  area_acres crop_name
+# 0  271623002471299    3.704844      Corn
+# 1  271623001561551    6.408551      Corn
 ```
 
-## Examples
+Sample output is included in the `examples/` directory:
 
-### Example 1: Full Agricultural Data Map
+- `examples/field_boundaries_map.html` — interactive map of the 2 sample fields
+
+## Quick Start
+
+```bash
+# Create an interactive map in one command
+uv run --with folium --with geopandas --with shapely python << 'EOF'
+import folium
+import geopandas as gpd
+
+# Load field boundaries from the field-boundaries skill examples
+fields = gpd.read_file('.skills/field-boundaries/examples/sample_2_fields.geojson')
+
+# Create map centered on the fields
+center = [fields.geometry.centroid.y.mean(), fields.geometry.centroid.x.mean()]
+m = folium.Map(location=center, zoom_start=8, tiles='OpenStreetMap')
+
+# Add field polygons with popups
+for _, row in fields.iterrows():
+    geo = folium.GeoJson(
+        row.geometry.__geo_interface__,
+        style_function=lambda x: {
+            'fillColor': '#3498db',
+            'color': '#2c3e50',
+            'weight': 2,
+            'fillOpacity': 0.4,
+        },
+    )
+    popup_html = f"""
+    <b>Field:</b> {row['field_id']}<br>
+    <b>Crop:</b> {row['crop_name']}<br>
+    <b>Area:</b> {row['area_acres']:.1f} acres
+    """
+    geo.add_child(folium.Popup(popup_html, max_width=250))
+    geo.add_to(m)
+
+# Save as self-contained HTML
+m.save('data/field_map.html')
+print('Map saved to data/field_map.html')
+EOF
+```
+
+## Installation (Isolated Environment)
+
+```bash
+# Create dedicated environment for this skill
+cd .skills/interactive-web-map
+uv venv .venv
+source .venv/bin/activate
+
+# Install dependencies
+uv pip install folium geopandas shapely
+```
+
+## Usage Examples
+
+### Example 1: Basic Field Boundary Map
+
+Load GeoJSON and render all fields with popups showing attributes.
 
 ```python
-from skills.interactive_web_map import InteractiveWebMapSkill
+import folium
+import geopandas as gpd
 
-skill = InteractiveWebMapSkill()
+# Load field boundaries
+fields = gpd.read_file('.skills/field-boundaries/examples/sample_2_fields.geojson')
 
-# Create comprehensive map with all data sources
-map_path = skill.create_map(
-    fields_geojson='data/my_fields_EPSG4326.geojson',
-    soil_csv='data/soil_EPSG4326.csv',
-    weather_csv='data/weather.csv',
-    cdl_csv='data/cdl_EPSG4326.csv',
-    output_path='data/agricultural_dashboard.html'
-)
+# Center map on data extent
+bounds = fields.total_bounds  # [minx, miny, maxx, maxy]
+center_lat = (bounds[1] + bounds[3]) / 2
+center_lon = (bounds[0] + bounds[2]) / 2
 
-print(f"Map created: {map_path}")
-print("Open in browser to explore your data interactively!")
+m = folium.Map(location=[center_lat, center_lon], zoom_start=6)
+
+# Add all fields as a single GeoJson layer with tooltips
+folium.GeoJson(
+    fields,
+    name='Field Boundaries',
+    style_function=lambda x: {
+        'fillColor': '#27ae60',
+        'color': '#1e8449',
+        'weight': 2,
+        'fillOpacity': 0.35,
+    },
+    tooltip=folium.GeoJsonTooltip(
+        fields=['field_id', 'crop_name', 'area_acres'],
+        aliases=['Field ID:', 'Crop:', 'Acres:'],
+        sticky=True,
+    ),
+    popup=folium.GeoJsonPopup(
+        fields=['field_id', 'crop_name', 'area_acres', 'region'],
+        aliases=['Field ID:', 'Crop:', 'Acres:', 'Region:'],
+    ),
+).add_to(m)
+
+# Fit map to data bounds
+m.fit_bounds([[bounds[1], bounds[0]], [bounds[3], bounds[2]]])
+
+# Add layer control
+folium.LayerControl().add_to(m)
+
+m.save('data/field_boundaries_map.html')
 ```
 
-### Example 2: Soil Analysis Map
+### Example 2: Choropleth by Field Area
+
+Color fields by size using a continuous color scale.
 
 ```python
-from skills.interactive_web_map import InteractiveWebMapSkill
+import folium
+import geopandas as gpd
+import branca.colormap as cm
 
-skill = InteractiveWebMapSkill()
+fields = gpd.read_file('data/fields_EPSG4326.geojson')
 
-# Create map focused on soil data
-map_path = skill.create_map(
-    fields_geojson='data/fields_EPSG4326.geojson',
-    soil_csv='data/soil_EPSG4326.csv',
-    output_path='data/soil_analysis_map.html'
+# Create a color scale based on area
+colormap = cm.LinearColormap(
+    colors=['#ffffb2', '#fecc5c', '#fd8d3c', '#e31a1c'],
+    vmin=fields['area_acres'].min(),
+    vmax=fields['area_acres'].max(),
+    caption='Field Area (acres)',
 )
 
-# Open in browser
-import webbrowser
-webbrowser.open(f'file://{map_path}')
+center = [fields.geometry.centroid.y.mean(), fields.geometry.centroid.x.mean()]
+m = folium.Map(location=center, zoom_start=8)
+
+# Style each field by its area
+folium.GeoJson(
+    fields,
+    name='Fields by Area',
+    style_function=lambda x: {
+        'fillColor': colormap(x['properties']['area_acres']),
+        'color': '#333',
+        'weight': 1,
+        'fillOpacity': 0.6,
+    },
+    tooltip=folium.GeoJsonTooltip(
+        fields=['field_id', 'area_acres', 'crop_name'],
+        aliases=['Field:', 'Acres:', 'Crop:'],
+    ),
+).add_to(m)
+
+# Add colormap legend to map
+colormap.add_to(m)
+folium.LayerControl().add_to(m)
+
+m.save('data/fields_by_area.html')
 ```
 
-### Example 3: Multi-Year Crop History
+### Example 3: Multiple Basemaps with Satellite Imagery
+
+Add satellite and terrain tile layers alongside fields.
 
 ```python
-from skills.interactive_web_map import InteractiveWebMapSkill
+import folium
+import geopandas as gpd
 
-skill = InteractiveWebMapSkill()
+fields = gpd.read_file('.skills/field-boundaries/examples/sample_2_fields.geojson')
 
-# Create map with 5 years of crop data
-map_path = skill.create_map(
-    fields_geojson='data/fields_EPSG4326.geojson',
-    cdl_csv='data/cdl_5yr_EPSG4326.csv',
-    output_path='data/crop_rotation_map.html'
-)
+center = [fields.geometry.centroid.y.mean(), fields.geometry.centroid.x.mean()]
+m = folium.Map(location=center, zoom_start=8)
+
+# Add multiple basemap options
+folium.TileLayer('OpenStreetMap', name='Street Map').add_to(m)
+folium.TileLayer(
+    tiles='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    attr='Esri',
+    name='Satellite',
+).add_to(m)
+folium.TileLayer(
+    tiles='https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
+    attr='OpenTopoMap',
+    name='Terrain',
+).add_to(m)
+
+# Add fields on top
+folium.GeoJson(
+    fields,
+    name='Fields',
+    style_function=lambda x: {
+        'fillColor': '#e74c3c',
+        'color': '#c0392b',
+        'weight': 2,
+        'fillOpacity': 0.3,
+    },
+    tooltip=folium.GeoJsonTooltip(
+        fields=['field_id', 'crop_name', 'area_acres'],
+        aliases=['Field:', 'Crop:', 'Acres:'],
+    ),
+).add_to(m)
+
+m.fit_bounds(fields.total_bounds[[1, 0, 3, 2]].reshape(2, 2).tolist())
+folium.LayerControl(collapsed=False).add_to(m)
+
+m.save('data/fields_satellite.html')
 ```
 
-## Output File
+### Example 4: Marker Cluster for Many Fields
 
-**Single HTML file** containing:
+When you have dozens or hundreds of fields, use marker clusters for performance.
 
-- Interactive map (Leaflet.js)
-- All data embedded (GeoJSON, CSV)
-- Styling and JavaScript
-- Responsive layout
+```python
+import folium
+from folium.plugins import MarkerCluster
+import geopandas as gpd
 
-Example: `interactive_map.html` (typically 1-5 MB)
+fields = gpd.read_file('data/fields_EPSG4326.geojson')
 
-## Map Interface
+center = [fields.geometry.centroid.y.mean(), fields.geometry.centroid.x.mean()]
+m = folium.Map(location=center, zoom_start=5)
 
-### Navigation
+# Add field polygons
+folium.GeoJson(
+    fields,
+    name='Boundaries',
+    style_function=lambda x: {
+        'fillColor': '#3498db',
+        'color': '#2980b9',
+        'weight': 1,
+        'fillOpacity': 0.2,
+    },
+).add_to(m)
 
-- **Zoom**: Mouse wheel or +/- buttons
-- **Pan**: Click and drag
-- **Reset**: Home button to see all fields
+# Add centroids as clustered markers
+marker_cluster = MarkerCluster(name='Field Markers').add_to(m)
 
-### Layers
+for _, row in fields.iterrows():
+    centroid = row.geometry.centroid
+    folium.Marker(
+        location=[centroid.y, centroid.x],
+        popup=f"<b>{row['field_id']}</b><br>{row['crop_name']}<br>{row['area_acres']:.1f} ac",
+        icon=folium.Icon(color='green', icon='leaf', prefix='fa'),
+    ).add_to(marker_cluster)
 
-- **Fields**: Toggle field boundaries
-- **Soil**: Toggle soil data (if provided)
-- **Weather**: Toggle weather stations
-- **Crops**: Toggle crop classifications
-- **Imagery**: Toggle satellite layers
+folium.LayerControl().add_to(m)
 
-### Interactions
+m.save('data/fields_clustered.html')
+```
 
-- **Click field**: Show data table for that field
-- **Hover**: Highlight field and show name
-- **Table tabs**: Switch between data sources
-- **Export**: Save data as CSV
+### Example 5: Complete Script — Field Boundaries to HTML
 
-## Data Requirements
+End-to-end script that loads, processes, and maps field data.
 
-### Required
+```bash
+uv run --with folium --with geopandas --with shapely python << 'EOF'
+import folium
+import geopandas as gpd
 
-- `fields_geojson`: GeoJSON with field_id column
+# --- Configuration ---
+INPUT_GEOJSON = '.skills/field-boundaries/examples/sample_2_fields.geojson'
+OUTPUT_HTML = 'data/interactive_map.html'
+MAP_TITLE = 'Agricultural Fields — Minnesota'
 
-### Optional (enhances map)
+# --- Load data ---
+fields = gpd.read_file(INPUT_GEOJSON)
+print(f'Loaded {len(fields)} fields')
+print(fields[['field_id', 'crop_name', 'area_acres']])
 
-- `soil_csv`: Must have field_id column
-- `weather_csv`: Must have field_id column
-- `cdl_csv`: Must have field_id column
-- `sentinel2_dir`: GeoTIFF files with field_id in filename
+# --- Build map ---
+center = [fields.geometry.centroid.y.mean(), fields.geometry.centroid.x.mean()]
+m = folium.Map(location=center, zoom_start=7, tiles='OpenStreetMap')
 
-## Browser Compatibility
+# Street + satellite basemaps
+folium.TileLayer(
+    tiles='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    attr='Esri',
+    name='Satellite',
+).add_to(m)
 
-- Chrome 80+
-- Firefox 75+
-- Safari 13+
-- Edge 80+
+# Crop color palette
+CROP_COLORS = {
+    'Corn': '#f1c40f',
+    'Soybeans': '#27ae60',
+    'Wheat': '#e67e22',
+    'Cotton': '#ecf0f1',
+}
 
-## Notes
+def field_style(feature):
+    crop = feature['properties'].get('crop_name', '')
+    return {
+        'fillColor': CROP_COLORS.get(crop, '#3498db'),
+        'color': '#2c3e50',
+        'weight': 2,
+        'fillOpacity': 0.5,
+    }
 
-- Large datasets (>100 fields) may load slowly
-- Satellite imagery increases file size significantly
-- All data is embedded - file is self-contained
-- No server or internet required after creation
-- Maps work offline once loaded
+# Add fields layer
+folium.GeoJson(
+    fields,
+    name='Fields',
+    style_function=field_style,
+    tooltip=folium.GeoJsonTooltip(
+        fields=['field_id', 'crop_name', 'area_acres'],
+        aliases=['Field ID:', 'Crop:', 'Area (ac):'],
+        sticky=True,
+    ),
+    popup=folium.GeoJsonPopup(
+        fields=['field_id', 'crop_name', 'area_acres', 'region', 'state_fips'],
+        aliases=['Field ID:', 'Crop:', 'Area (ac):', 'Region:', 'State FIPS:'],
+    ),
+).add_to(m)
+
+# Fit bounds and add layer control
+bounds = fields.total_bounds
+m.fit_bounds([[bounds[1], bounds[0]], [bounds[3], bounds[2]]], padding=[20, 20])
+folium.LayerControl(collapsed=False).add_to(m)
+
+# Add title
+title_html = f'''
+<div style="position:fixed;top:10px;left:60px;z-index:9999;
+     background:white;padding:8px 16px;border-radius:4px;
+     box-shadow:0 2px 6px rgba(0,0,0,0.3);font-family:sans-serif;">
+  <b>🌾 {MAP_TITLE}</b>
+</div>
+'''
+m.get_root().html.add_child(folium.Element(title_html))
+
+# --- Save ---
+m.save(OUTPUT_HTML)
+print(f'Map saved to {OUTPUT_HTML}')
+EOF
+```
+
+## Python API Reference
+
+This skill teaches standard library usage rather than wrapping a custom class. The core libraries are:
+
+### folium
+
+| Function                                               | Purpose              |
+| ------------------------------------------------------ | -------------------- |
+| `folium.Map(location, zoom_start, tiles)`              | Create base map      |
+| `folium.GeoJson(data, style_function, tooltip, popup)` | Add GeoJSON layer    |
+| `folium.TileLayer(tiles, attr, name)`                  | Add basemap tiles    |
+| `folium.GeoJsonTooltip(fields, aliases)`               | Hover tooltip        |
+| `folium.GeoJsonPopup(fields, aliases)`                 | Click popup          |
+| `folium.LayerControl()`                                | Layer toggle UI      |
+| `folium.Marker(location, popup, icon)`                 | Point marker         |
+| `folium.plugins.MarkerCluster()`                       | Cluster many markers |
+| `branca.colormap.LinearColormap(colors, vmin, vmax)`   | Color legend         |
+| `m.save(path)`                                         | Export to HTML       |
+| `m.fit_bounds(bounds)`                                 | Zoom to data extent  |
+
+### geopandas (for data loading)
+
+| Function                | Purpose                           |
+| ----------------------- | --------------------------------- |
+| `gpd.read_file(path)`   | Load GeoJSON/Shapefile/GeoParquet |
+| `gdf.to_json()`         | Convert to GeoJSON string         |
+| `gdf.total_bounds`      | Get `[minx, miny, maxx, maxy]`    |
+| `gdf.geometry.centroid` | Get polygon centroids             |
+| `gdf.explore()`         | Quick interactive map (built-in)  |
+
+## Data Source
+
+- **Input**: GeoJSON field boundaries from the `field-boundaries` skill
+- **Format**: GeoJSON polygons with `field_id`, `crop_name`, `area_acres` attributes
+- **CRS**: EPSG:4326 (WGS84)
+- **Example**: `.skills/field-boundaries/examples/sample_2_fields.geojson`
+
+## Output Files
+
+- `*.html` — Self-contained interactive map (open in any browser)
+- Typical size: 50 KB – 5 MB depending on field count and embedded data
+
+## Environment Variables
+
+No special environment variables required. All tile providers used are public and free.
 
 ## Resources
 
-- [Leaflet.js Documentation](https://leafletjs.com/)
-- [GeoJSON Specification](https://geojson.org/)
-- [HTML5 Offline Applications](https://developer.mozilla.org/en-US/docs/Web/HTML/Using_the_application_cache)
+- [Folium Documentation](https://python-visualization.github.io/folium/latest/)
+- [GeoPandas Documentation](https://geopandas.org/)
+- [Leaflet.js](https://leafletjs.com/) (underlying JS library)
+- [Folium Quickstart](https://python-visualization.github.io/folium/latest/getting_started.html)
+- [Branca Colormaps](https://python-visualization.github.io/branca/)

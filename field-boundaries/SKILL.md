@@ -1,138 +1,112 @@
-# Skill: field-boundaries
+---
+name: field-boundaries
+description: Download USDA NASS Crop Sequence Boundaries for agricultural fields. Includes functions for downloading, visualizing, and exporting field boundary data.
+version: 1.0.0
+author: Boreal Bytes
+tags: [usda, nass, boundaries, geospatial, download]
+---
 
-Download and visualize USDA field boundary data for agricultural analysis.
+# Skill: field-boundaries
 
 ## Description
 
-This skill provides access to the USDA NASS Crop Sequence Boundaries dataset, allowing you to download agricultural field boundaries for specific regions and crops. It includes built-in visualization capabilities and summary statistics.
+Download and work with USDA NASS Crop Sequence Boundaries for agricultural analysis. This skill provides functions to download field boundary data for specific regions and crops, with built-in visualization and export capabilities.
 
-## Requirements
+## When to Use This Skill
 
-- Python 3.9+
-- geopandas
-- matplotlib
-- shapely
+- **Getting field boundaries**: Download polygon data for agricultural fields
+- **Regional analysis**: Filter by corn belt, great plains, or southeast
+- **Crop-specific data**: Filter by corn, soybeans, wheat, or cotton
+- **Visualization**: Create maps of downloaded fields
+- **Data export**: Convert to GeoJSON or GeoParquet formats
 
-## Installation
+## Prerequisites
 
 ```bash
-pip install geopandas matplotlib shapely
+# Install UV if not already installed
+curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
-## Usage
+## Example Data
 
-### download
+Sample data is included in the `examples/` directory:
 
-Download field boundaries from USDA Crop Sequence Boundaries.
+- `examples/sample_2_fields.geojson` - 2 real field boundaries from Minnesota
+
+Use these for testing and development:
 
 ```python
-from skills.field_boundaries import FieldBoundariesSkill
+import geopandas as gpd
 
-skill = FieldBoundariesSkill()
-fields = skill.download(
-    count=20,  # Number of fields (keep small: 20-50)
-    regions=['corn_belt'],  # Options: 'corn_belt', 'great_plains', 'southeast'
-    crops=['corn', 'soybeans'],  # Options: 'corn', 'soybeans', 'wheat', 'cotton'
+# Load example data
+fields = gpd.read_file('examples/sample_2_fields.geojson')
+print(fields[['field_id', 'area_acres', 'crop_name']])
+
+# Output:
+#           field_id  area_acres crop_name
+# 0  271623002471299    3.704844      Corn
+# 1  271623001561551    6.408551      Corn
+```
+
+The example data was downloaded from USDA NASS Crop Sequence Boundaries.
+
+## Quick Start
+
+```bash
+# Run in isolated environment
+uv run --with geopandas --with matplotlib --with shapely python << 'EOF'
+from field_boundaries import download_fields, plot_fields, get_summary
+
+# Download 20 fields from corn belt
+fields = download_fields(
+    count=20,
+    regions=['corn_belt'],
+    crops=['corn', 'soybeans'],
     output_path='data/fields_EPSG4326.geojson'
 )
+
+# Get summary
+summary = get_summary(fields)
+print(f"Downloaded {summary['total_fields']} fields")
+EOF
 ```
 
-Parameters:
+## Installation (Isolated Environment)
 
-- `count` (int): Number of fields to download. Keep small (20-50) for efficient local processing.
-- `regions` (list[str]): Regions to sample from. Options: 'corn_belt', 'great_plains', 'southeast'.
-- `crops` (list[str]): Crop types to include. Options: 'corn', 'soybeans', 'wheat', 'cotton'.
-- `output_path` (str): Output file path. Should include CRS (e.g., 'fields_EPSG4326.geojson').
+This skill runs in an isolated environment to avoid dependency conflicts:
 
-Returns:
+```bash
+# Create dedicated environment for this skill
+cd .skills/field-boundaries
+uv venv .venv
+source .venv/bin/activate
 
-- GeoDataFrame: Field boundaries with attributes including field_id, area_acres, region, crop_name.
-
-### plot_fields
-
-Create a visualization of field boundaries on a map.
-
-```python
-skill.plot_fields(
-    fields,
-    title="My Agricultural Fields",
-    color_by="crop_name",  # Color fields by crop type
-    save_path="data/fields_map.png"
-)
+# Install dependencies
+uv pip install -e .
 ```
 
-Parameters:
-
-- `fields` (GeoDataFrame): Field boundaries to visualize.
-- `title` (str): Plot title.
-- `color_by` (str): Column to color by (e.g., 'crop_name', 'region').
-- `save_path` (str): Optional path to save the figure.
-
-### get_summary
-
-Get summary statistics for field boundaries.
-
-```python
-summary = skill.get_summary(fields)
-print(f"Total fields: {summary['total_fields']}")
-print(f"Average size: {summary['avg_field_size']:.1f} acres")
-```
-
-Parameters:
-
-- `fields` (GeoDataFrame): Field boundaries.
-
-Returns:
-
-- dict: Summary statistics including total_fields, total_area_acres, avg_field_size, size_range, regions, crops.
-
-### export
-
-Export fields to file with proper CRS naming.
-
-```python
-skill.export(
-    fields,
-    output_path='data/fields_EPSG4326.geojson',
-    format='geojson'  # Options: 'geojson', 'geoparquet'
-)
-```
-
-Parameters:
-
-- `fields` (GeoDataFrame): Field boundaries.
-- `output_path` (str): Output file path with CRS (e.g., 'fields_EPSG4326.geojson').
-- `format` (str): Export format. Options: 'geojson', 'geoparquet'.
-
-Returns:
-
-- Path: Path to exported file.
-
-## Examples
+## Usage Examples
 
 ### Example 1: Download and Visualize
 
 ```python
-from skills.field_boundaries import FieldBoundariesSkill
+from field_boundaries import download_fields, plot_fields, get_summary
 
-# Initialize skill
-skill = FieldBoundariesSkill()
-
-# Download 20 fields from Corn Belt
-fields = skill.download(
+# Download fields
+fields = download_fields(
     count=20,
     regions=['corn_belt'],
     crops=['corn', 'soybeans'],
-    output_path='data/my_fields_EPSG4326.geojson'
+    output_path='data/my_fields.geojson'
 )
 
 # Get summary
-summary = skill.get_summary(fields)
-print(f"Downloaded {summary['total_fields']} fields")
-print(f"Total area: {summary['total_area_acres']:.1f} acres")
+summary = get_summary(fields)
+print(f"Fields: {summary['total_fields']}")
+print(f"Area: {summary['total_area_acres']:.1f} acres")
 
 # Visualize
-skill.plot_fields(
+plot_fields(
     fields,
     title="Iowa Corn and Soybean Fields",
     color_by='crop_name',
@@ -143,19 +117,76 @@ skill.plot_fields(
 ### Example 2: Filter and Export
 
 ```python
-from skills.field_boundaries import FieldBoundariesSkill
+from field_boundaries import download_fields, filter_by_size, export_fields
 
-skill = FieldBoundariesSkill()
-fields = skill.download(count=50)
+# Download fields
+fields = download_fields(count=50)
 
 # Filter large fields (>100 acres)
-large_fields = skill.filter_by_size(fields, min_acres=100)
+large_fields = filter_by_size(fields, min_acres=100)
 print(f"Large fields: {len(large_fields)}")
 
 # Export in multiple formats
-skill.export(large_fields, 'data/large_fields_EPSG4326.geojson', 'geojson')
-skill.export(large_fields, 'data/large_fields_EPSG4326.parquet', 'geoparquet')
+export_fields(large_fields, 'data/large_fields.geojson', 'geojson')
+export_fields(large_fields, 'data/large_fields.parquet', 'geoparquet')
 ```
+
+## Python API Reference
+
+### `download_fields(count, regions, crops, output_path)`
+
+Download field boundaries from USDA NASS.
+
+**Parameters:**
+
+- `count` (int): Number of fields to download (20-50 recommended)
+- `regions` (list): Regions to sample from ('corn_belt', 'great_plains', 'southeast')
+- `crops` (list): Crop types to include ('corn', 'soybeans', 'wheat', 'cotton')
+- `output_path` (str): Output file path (should include EPSG4326)
+
+**Returns:** GeoDataFrame with field boundaries
+
+### `plot_fields(fields, title, color_by, save_path)`
+
+Create a visualization of field boundaries.
+
+**Parameters:**
+
+- `fields` (GeoDataFrame): Field boundaries to visualize
+- `title` (str): Plot title
+- `color_by` (str): Column to color by ('crop_name', 'region')
+- `save_path` (str): Path to save the figure
+
+### `get_summary(fields)`
+
+Get summary statistics for field boundaries.
+
+**Parameters:**
+
+- `fields` (GeoDataFrame): Field boundaries
+
+**Returns:** Dictionary with statistics (total_fields, total_area_acres, avg_field_size, etc.)
+
+### `filter_by_size(fields, min_acres)`
+
+Filter fields by minimum size.
+
+**Parameters:**
+
+- `fields` (GeoDataFrame): Field boundaries
+- `min_acres` (float): Minimum field size in acres
+
+**Returns:** Filtered GeoDataFrame
+
+### `export_fields(fields, output_path, format)`
+
+Export fields to file.
+
+**Parameters:**
+
+- `fields` (GeoDataFrame): Field boundaries
+- `output_path` (str): Output file path
+- `format` (str): 'geojson' or 'geoparquet'
 
 ## Data Source
 
@@ -167,18 +198,12 @@ skill.export(large_fields, 'data/large_fields_EPSG4326.parquet', 'geoparquet')
 
 ## Output Files
 
-All output files include the CRS in the filename:
+- `*_EPSG4326.geojson` - Field boundaries in GeoJSON format
+- `*_EPSG4326.parquet` - Field boundaries in GeoParquet format (cloud-optimized)
 
-- `fields_EPSG4326.geojson` - Field boundaries in GeoJSON format
-- `fields_EPSG4326.parquet` - Field boundaries in GeoParquet format (cloud-optimized)
+## Environment Variables
 
-## Notes
-
-- Keep field count small (20-50) for efficient local processing
-- All coordinates are in EPSG:4326 (WGS84)
-- Field boundaries are approximate and may not match legal property lines
-- Data is sourced from satellite imagery and may have classification errors
-- NO shapefiles - use GeoJSON or GeoParquet only
+No special environment variables required. The skill uses public USDA data.
 
 ## Resources
 

@@ -1,260 +1,418 @@
+---
+name: eda-correlate
+description: Analyze correlations between variables in agricultural datasets using pandas and scipy. Calculate correlation coefficients, identify significant relationships, and create correlation matrices with heatmaps.
+version: 1.0.0
+author: Boreal Bytes
+tags: [correlation, statistics, pandas, scipy, analysis]
+---
+
 # Skill: eda-correlate
 
 ## Description
 
-This skill analyzes correlations between variables in agricultural datasets. It calculates correlation coefficients, identifies significant relationships, and creates correlation matrices with heatmaps. Perfect for discovering which soil properties, field characteristics, and environmental factors are related without statistical coding.
+Analyze correlations between variables in agricultural datasets using standard pandas and scipy. Calculate correlation coefficients, identify significant relationships, and create correlation matrices with heatmaps using real library code.
 
-## Requirements
+## When to Use This Skill
 
-- Python 3.9+
-- pandas
-- numpy
-- matplotlib
-- seaborn
+- **Finding relationships**: Discover which variables are related
+- **Feature selection**: Identify redundant variables for modeling
+- **Hypothesis testing**: Validate expected correlations
+- **Data understanding**: Learn which factors move together
+- **Reporting**: Create correlation matrices for publications
 
-## Installation
+## Prerequisites
 
 ```bash
-pip install pandas numpy matplotlib seaborn
+pip install pandas numpy matplotlib seaborn scipy
 ```
 
-## Usage
-
-### analyze_correlations
-
-Calculate correlation matrix for all numeric columns.
+## Quick Start
 
 ```python
-from skills.eda_correlate import EDACorrelateSkill
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
 
-skill = EDACorrelateSkill()
-correlations = skill.analyze_correlations(
-    data_path='data/soil_data.csv',
-    output_path='data/correlation_matrix.csv',
-    method='pearson'  # Options: 'pearson', 'spearman', 'kendall'
-)
+# Load your data
+df = pd.read_csv('data/soil_measurements.csv')
+
+# Calculate correlation matrix for numeric columns
+numeric_cols = ['ph_water', 'organic_matter', 'clay', 'sand']
+corr_matrix = df[numeric_cols].corr()
+
+print(corr_matrix)
+
+# Create heatmap
+plt.figure(figsize=(8, 6))
+sns.heatmap(corr_matrix, annot=True, cmap='coolwarm', center=0)
+plt.title('Soil Properties Correlation Matrix')
+plt.savefig('correlation_heatmap.png', dpi=300)
+plt.close()
 ```
 
-Parameters:
+## Common Tasks
 
-- `data_path` (str): Path to CSV file
-- `output_path` (str): Path to save correlation matrix CSV
-- `method` (str): Correlation method ('pearson', 'spearman', 'kendall')
+### Task 1: Calculate Correlation Matrix
 
-Returns:
+**What**: Compute pairwise correlations between all numeric columns.
 
-- pandas.DataFrame: Correlation matrix with all numeric column pairs
+**When to use**: To see all relationships at once, create a correlation table.
 
-### get_strongest_correlations
-
-Find the strongest correlations in the dataset.
+**Code**:
 
 ```python
-strong_correlations = skill.get_strongest_correlations(
-    data_path='data/field_data.csv',
-    threshold=0.5,  # Only correlations above this absolute value
-    top_n=10  # Return top N correlations
-)
-```
+import pandas as pd
 
-Parameters:
+# Load data
+df = pd.read_csv('data/soil_data.csv')
 
-- `data_path` (str): Path to CSV file
-- `threshold` (float): Minimum absolute correlation to include (0.0-1.0)
-- `top_n` (int): Number of top correlations to return
+# Select numeric columns
+numeric_cols = df.select_dtypes(include=[np.number]).columns
 
-Returns:
+# Calculate correlation matrix
+corr_matrix = df[numeric_cols].corr()
 
-- list: Strongest correlations with variable pairs and coefficients
-
-### analyze_pair
-
-Analyze correlation between two specific variables.
-
-```python
-result = skill.analyze_pair(
-    data_path='data/soil_data.csv',
-    var1='ph_water',
-    var2='organic_matter',
-    create_plot=True,
-    output_path='data/ph_om_correlation.png'
-)
-```
-
-Parameters:
-
-- `data_path` (str): Path to CSV file
-- `var1` (str): First variable name
-- `var2` (str): Second variable name
-- `create_plot` (bool): Whether to create scatter plot with trend line
-- `output_path` (str): Path to save plot (if create_plot=True)
-
-Returns:
-
-- dict: Correlation coefficient, p-value, and interpretation
-
-## Examples
-
-### Example 1: Full Correlation Analysis
-
-```python
-from skills.eda_correlate import EDACorrelateSkill
-
-# Initialize skill
-skill = EDACorrelateSkill()
-
-# Analyze all correlations in soil data
-correlations = skill.analyze_correlations(
-    data_path='data/soil_properties.csv',
-    output_path='data/analysis/correlation_matrix.csv',
-    method='pearson'
-)
+# Save to CSV
+corr_matrix.to_csv('output/correlation_matrix.csv')
 
 print("Correlation Matrix:")
-print(correlations)
-
-# Show strongest relationships
-strong = skill.get_strongest_correlations(
-    data_path='data/soil_properties.csv',
-    threshold=0.3,
-    top_n=5
-)
-
-print("\nTop 5 Strongest Correlations:")
-for item in strong:
-    print(f"{item['var1']} ↔ {item['var2']}: {item['correlation']:.3f}")
+print(corr_matrix.round(3))
 ```
 
-### Example 2: Investigate Specific Relationship
+### Task 2: Find Strongest Correlations
+
+**What**: Identify the strongest relationships in your data.
+
+**When to use**: To focus on the most important variable relationships.
+
+**Code**:
 
 ```python
-from skills.eda_correlate import EDACorrelateSkill
+import pandas as pd
+import numpy as np
 
-skill = EDACorrelateSkill()
+# Load data
+df = pd.read_csv('data/soil_data.csv')
 
-# Analyze specific relationship with visualization
-result = skill.analyze_pair(
-    data_path='data/fields_complete.csv',
-    var1='ph_water',
-    var2='organic_matter',
-    create_plot=True,
-    output_path='data/analysis/ph_om_scatter.png'
-)
+# Calculate correlation matrix
+numeric_cols = df.select_dtypes(include=[np.number]).columns
+corr_matrix = df[numeric_cols].corr()
 
-print(f"Correlation: {result['correlation']:.3f}")
-print(f"P-value: {result['p_value']:.4f}")
-print(f"Interpretation: {result['strength']} {result['direction']} relationship")
+# Find strongest correlations (exclude self-correlations)
+# Stack and reset to get pairs
+corr_pairs = corr_matrix.stack().reset_index()
+corr_pairs.columns = ['var1', 'var2', 'correlation']
 
-if result['significant']:
-    print("✓ Statistically significant")
+# Remove self-correlations and duplicates
+corr_pairs = corr_pairs[corr_pairs['var1'] != corr_pairs['var2']]
+corr_pairs = corr_pairs[corr_pairs['var1'] < corr_pairs['var2']]
+
+# Sort by absolute correlation
+corr_pairs['abs_corr'] = corr_pairs['correlation'].abs()
+corr_pairs = corr_pairs.sort_values('abs_corr', ascending=False)
+
+print("Top 5 Strongest Correlations:")
+print(corr_pairs.head(5)[['var1', 'var2', 'correlation']].to_string(index=False))
+```
+
+### Task 3: Test Statistical Significance
+
+**What**: Determine if correlations are statistically significant.
+
+**When to use**: To avoid false positives, ensure relationships are real.
+
+**Code**:
+
+```python
+import pandas as pd
+from scipy.stats import pearsonr
+
+# Load data
+df = pd.read_csv('data/soil_data.csv')
+
+# Test correlation between two variables
+var1 = 'ph_water'
+var2 = 'organic_matter'
+
+# Remove missing values
+valid_data = df[[var1, var2]].dropna()
+
+# Calculate correlation and p-value
+corr, p_value = pearsonr(valid_data[var1], valid_data[var2])
+
+print(f"Correlation between {var1} and {var2}:")
+print(f"  Coefficient: {corr:.3f}")
+print(f"  P-value: {p_value:.4f}")
+
+# Interpret significance
+alpha = 0.05
+if p_value < alpha:
+    print(f"  ✓ Significant (p < {alpha})")
 else:
-    print("✗ Not statistically significant")
+    print(f"  ✗ Not significant (p >= {alpha})")
+
+# Interpret strength
+if abs(corr) >= 0.7:
+    strength = "Strong"
+elif abs(corr) >= 0.3:
+    strength = "Moderate"
+else:
+    strength = "Weak"
+
+direction = "positive" if corr > 0 else "negative"
+print(f"  Strength: {strength} {direction}")
 ```
 
-### Example 3: Interpret Correlation Results
+### Task 4: Create Correlation Heatmap
+
+**What**: Visualize correlations as a color-coded matrix.
+
+**When to use**: For presentations, reports, quick visual assessment.
+
+**Code**:
 
 ```python
-from skills.eda_correlate import EDACorrelateSkill
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
 
-skill = EDACorrelateSkill()
+# Load data
+df = pd.read_csv('data/soil_data.csv')
 
-# Get all strong correlations
-results = skill.get_strongest_correlations(
-    data_path='data/agricultural_data.csv',
-    threshold=0.5,
-    top_n=10
+# Select numeric columns
+numeric_cols = ['ph_water', 'organic_matter', 'clay', 'sand', 'silt']
+
+# Calculate correlation matrix
+corr_matrix = df[numeric_cols].corr()
+
+# Create heatmap
+plt.figure(figsize=(10, 8))
+sns.heatmap(
+    corr_matrix,
+    annot=True,              # Show correlation values
+    fmt='.2f',              # Format to 2 decimals
+    cmap='coolwarm',        # Color scheme
+    center=0,               # Center colormap at 0
+    square=True,            # Square cells
+    linewidths=0.5,         # Grid lines
+    cbar_kws={"shrink": 0.8}  # Colorbar size
 )
 
-print("Key Findings:")
-for r in results:
-    var1, var2 = r['var1'], r['var2']
-    corr = r['correlation']
+plt.title('Soil Properties Correlation Matrix', fontsize=14, fontweight='bold')
+plt.tight_layout()
+plt.savefig('output/correlation_heatmap.png', dpi=300, bbox_inches='tight')
+plt.close()
 
-    # Interpret strength
-    if abs(corr) >= 0.7:
-        strength = "Strong"
-    elif abs(corr) >= 0.4:
-        strength = "Moderate"
-    else:
-        strength = "Weak"
-
-    direction = "positive" if corr > 0 else "negative"
-
-    print(f"\n{var1} ↔ {var2}:")
-    print(f"  Correlation: {corr:.3f}")
-    print(f"  Strength: {strength} {direction}")
-    print(f"  Meaning: When {var1} increases, {var2} tends to {'increase' if corr > 0 else 'decrease'}")
+print("Saved: output/correlation_heatmap.png")
 ```
 
-### Example 4: Compare Multiple Datasets
+### Task 5: Compare Correlation Methods
+
+**What**: Compare Pearson, Spearman, and Kendall correlations.
+
+**When to use**: When relationships might be non-linear or ranked.
+
+**Code**:
 
 ```python
-from skills.eda_correlate import EDACorrelateSkill
+import pandas as pd
+from scipy.stats import pearsonr, spearmanr, kendalltau
 
-skill = EDACorrelateSkill()
+# Load data
+df = pd.read_csv('data/soil_data.csv')
 
-# Analyze correlations in different regions
-regions = ['corn_belt', 'great_plains', 'southeast']
+var1 = 'ph_water'
+var2 = 'organic_matter'
 
-for region in regions:
-    print(f"\n=== {region.upper()} ===")
+# Remove missing values
+valid_data = df[[var1, var2]].dropna()
+x = valid_data[var1]
+y = valid_data[var2]
 
-    correlations = skill.analyze_correlations(
-        data_path=f'data/{region}_soil.csv',
-        output_path=f'data/analysis/{region}_correlations.csv'
-    )
+# Calculate different correlation methods
+pearson_corr, pearson_p = pearsonr(x, y)
+spearman_corr, spearman_p = spearmanr(x, y)
+kendall_corr, kendall_p = kendalltau(x, y)
 
-    strong = skill.get_strongest_correlations(
-        data_path=f'data/{region}_soil.csv',
-        threshold=0.4,
-        top_n=3
-    )
+print(f"Correlations between {var1} and {var2}:")
+print(f"  Pearson (linear):     {pearson_corr:.3f} (p={pearson_p:.4f})")
+print(f"  Spearman (rank):      {spearman_corr:.3f} (p={spearman_p:.4f})")
+print(f"  Kendall (concordance): {kendall_corr:.3f} (p={kendall_p:.4f})")
 
-    for item in strong:
-        print(f"{item['var1']} ↔ {item['var2']}: {item['correlation']:.3f}")
+# When to use which:
+# - Pearson: Linear relationships, normally distributed
+# - Spearman: Monotonic relationships, ranked data, outliers present
+# - Kendall: Ordinal data, small samples, many tied ranks
 ```
 
-## Data Source
+## Complete Example
 
-- **Input**: CSV files with numeric columns
-- **Output**: Correlation matrix CSV + optional scatter plots
-- **Methods**: Pearson (linear), Spearman (rank-based), Kendall (ordinal)
+### Full Correlation Analysis Workflow
 
-## Output Files
+```python
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from scipy.stats import pearsonr
+import os
 
-- `correlation_matrix.csv` - Full correlation matrix
-- `*_correlation.png` - Scatter plots with trend lines (when created)
+# Ensure output directory exists
+os.makedirs('output/correlations', exist_ok=True)
+
+# Load data
+print("Loading data...")
+df = pd.read_csv('data/agricultural_data.csv')
+
+# Select numeric columns
+numeric_cols = ['field_size', 'ph_water', 'organic_matter', 'clay', 'sand', 'yield']
+print(f"Analyzing {len(numeric_cols)} variables: {', '.join(numeric_cols)}")
+
+# 1. Calculate full correlation matrix
+print("\n1. Calculating correlation matrix...")
+corr_matrix = df[numeric_cols].corr()
+corr_matrix.to_csv('output/correlations/correlation_matrix.csv')
+print("Saved: correlation_matrix.csv")
+
+# 2. Find strongest correlations
+print("\n2. Finding strongest correlations...")
+# Get upper triangle (avoid duplicates)
+mask = np.triu(np.ones_like(corr_matrix, dtype=bool), k=1)
+correlations = corr_matrix.where(mask).stack().reset_index()
+correlations.columns = ['var1', 'var2', 'correlation']
+correlations = correlations.sort_values('correlation', key=abs, ascending=False)
+
+correlations.to_csv('output/correlations/strongest_correlations.csv', index=False)
+print("Top 5 correlations:")
+for idx, row in correlations.head(5).iterrows():
+    print(f"  {row['var1']} ↔ {row['var2']}: {row['correlation']:.3f}")
+
+# 3. Create heatmap
+print("\n3. Creating heatmap...")
+plt.figure(figsize=(10, 8))
+sns.heatmap(corr_matrix, annot=True, cmap='coolwarm', center=0, square=True)
+plt.title('Agricultural Data Correlations')
+plt.tight_layout()
+plt.savefig('output/correlations/correlation_heatmap.png', dpi=300)
+plt.close()
+print("Saved: correlation_heatmap.png")
+
+# 4. Test significance of top correlation
+print("\n4. Testing statistical significance...")
+top_corr = correlations.iloc[0]
+var1, var2 = top_corr['var1'], top_corr['var2']
+
+valid_data = df[[var1, var2]].dropna()
+corr, p_value = pearsonr(valid_data[var1], valid_data[var2])
+
+print(f"Top correlation: {var1} ↔ {var2}")
+print(f"  r = {corr:.3f}")
+print(f"  p = {p_value:.4f}")
+print(f"  {'Significant' if p_value < 0.05 else 'Not significant'} (α = 0.05)")
+
+# 5. Create scatter plot of top correlation
+print("\n5. Creating scatter plot...")
+plt.figure(figsize=(10, 6))
+plt.scatter(df[var1], df[var2], alpha=0.6)
+plt.xlabel(var1)
+plt.ylabel(var2)
+plt.title(f'{var1} vs {var2}\nr = {corr:.3f}, p = {p_value:.4f}')
+
+# Add trend line
+z = np.polyfit(df[var1].dropna(), df[var2].dropna(), 1)
+p = np.poly1d(z)
+plt.plot(df[var1], p(df[var1]), "r--", alpha=0.8)
+
+plt.savefig(f'output/correlations/{var1}_vs_{var2}.png', dpi=300)
+plt.close()
+print(f"Saved: {var1}_vs_{var2}.png")
+
+print("\n✓ Correlation analysis complete!")
+```
 
 ## Correlation Interpretation Guide
 
-**Strength:**
+### Strength Guidelines
 
-- 0.0 - 0.3: Weak correlation
-- 0.3 - 0.7: Moderate correlation
-- 0.7 - 1.0: Strong correlation
+| Absolute Value | Strength    | Interpretation              |
+| -------------- | ----------- | --------------------------- |
+| 0.00 - 0.19    | Very weak   | Little to no relationship   |
+| 0.20 - 0.39    | Weak        | Small relationship          |
+| 0.40 - 0.59    | Moderate    | Clear relationship          |
+| 0.60 - 0.79    | Strong      | Major relationship          |
+| 0.80 - 1.00    | Very strong | Nearly perfect relationship |
 
-**Direction:**
+### Statistical Significance
 
-- Positive (+): Both variables increase together
-- Negative (-): One increases, other decreases
+- **p < 0.05**: Statistically significant (95% confidence)
+- **p < 0.01**: Highly significant (99% confidence)
+- **p ≥ 0.05**: Not statistically significant
 
-**Significance:**
+**Note**: Large correlations can be significant even with small p-values. Always check both effect size (correlation) and significance (p-value).
 
-- p-value < 0.05: Statistically significant
-- p-value ≥ 0.05: Not statistically significant
+### Correlation vs Causation
 
-## Notes
+**Remember**: Correlation ≠ Causation
 
-- Pearson correlation assumes linear relationships (most common)
-- Spearman correlation works for monotonic relationships (rank-based)
-- Kendall correlation for ordinal data or small samples
-- Automatically excludes non-numeric columns
-- Handles missing values via pairwise deletion
-- Statistical significance tested automatically
-- Correlation does not imply causation
+- Correlation shows variables move together
+- Does NOT prove one causes the other
+- May be due to: direct causation, reverse causation, confounding variable, or coincidence
+
+### Which Correlation Method?
+
+| Method       | Use When                 | Assumptions                                  |
+| ------------ | ------------------------ | -------------------------------------------- |
+| **Pearson**  | Linear relationships     | Normal distribution, no outliers             |
+| **Spearman** | Monotonic, ranked data   | Ordinal data, non-linear, robust to outliers |
+| **Kendall**  | Small samples, many ties | Ordinal data, preferred for small n          |
+
+## Best Practices
+
+### Data Preparation
+
+- Remove missing values before calculating correlations
+- Check for outliers (can skew Pearson correlations)
+- Ensure numeric data types
+- Consider log transformation for skewed data
+
+### Visualization
+
+- Always center heatmap at 0 (coolwarm colormap)
+- Annotate with correlation values
+- Square cells for clarity
+- Include statistical significance indicators
+
+### Interpretation
+
+- Report both correlation and p-value
+- Consider effect size, not just significance
+- Look for patterns in correlation matrices
+- Verify unexpected correlations make sense
+
+### Common Issues
+
+#### Issue: Perfect correlations (1.0 or -1.0)
+
+**Cause**: Duplicate or derived variables
+**Fix**: Remove redundant columns
+
+#### Issue: Very weak correlations
+
+**Consider**: May still be significant with large n
+**Don't**: Dismiss small effects without context
+
+#### Issue: Missing values causing errors
+
+**Fix**: Use `.dropna()` before correlation
+
+```python
+corr = df[['col1', 'col2']].dropna().corr()
+```
 
 ## Resources
 
-- [Correlation Coefficient](https://en.wikipedia.org/wiki/Pearson_correlation_coefficient)
-- [Correlation vs Causation](https://en.wikipedia.org/wiki/Correlation_does_not_imply_causation)
+- [Pandas Correlation](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.corr.html)
+- [Scipy Pearson](https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.pearsonr.html)
+- [Correlation Coefficient Guide](https://en.wikipedia.org/wiki/Pearson_correlation_coefficient)
 - [Interpreting Correlations](https://www.statisticssolutions.com/correlation-pearson-kendall-spearman/)
