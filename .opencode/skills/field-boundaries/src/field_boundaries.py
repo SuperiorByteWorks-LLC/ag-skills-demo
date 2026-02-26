@@ -6,13 +6,12 @@ field boundaries from the USDA NASS dataset via Source Cooperative.
 
 import os
 import warnings
-from pathlib import Path
-from typing import List, Optional, Dict, Any, Tuple
+from typing import Any
 
 try:
     import geopandas as gpd
     import matplotlib.pyplot as plt
-    from shapely.geometry import box, Polygon
+    from shapely.geometry import Polygon, box
 
     HAS_DEPS = True
 except ImportError:
@@ -30,22 +29,22 @@ REGIONS = {
     "corn_belt": {
         "bounds": (-95.5, 36.0, -88.0, 44.0),
         "states": ["IA", "IL", "IN", "OH", "MO"],
-        "description": "Corn Belt states"
+        "description": "Corn Belt states",
     },
     "great_plains": {
         "bounds": (-104.0, 36.0, -96.0, 49.0),
         "states": ["NE", "KS", "SD", "ND"],
-        "description": "Great Plains states"
+        "description": "Great Plains states",
     },
     "southeast": {
         "bounds": (-88.0, 30.0, -75.0, 36.0),
         "states": ["GA", "AL", "SC", "NC"],
-        "description": "Southeastern states"
+        "description": "Southeastern states",
     },
     "michigan": {
         "bounds": (-87.5, 41.5, -82.5, 44.5),
         "states": ["MI"],
-        "description": "Southern Michigan - Thumb, Mid-MI, Southwest, South-central counties"
+        "description": "Southern Michigan - Thumb, Mid-MI, Southwest, South-central counties",
     },
 }
 
@@ -74,10 +73,10 @@ def download_fields(
 ) -> "gpd.GeoDataFrame":
     """Download field boundaries for agricultural regions.
 
-    This function provides field boundary data. Due to the large size of the 
+    This function provides field boundary data. Due to the large size of the
     USDA CSB dataset (4GB+), this function uses realistic synthetic data
     based on actual Michigan agricultural region coordinates.
-    
+
     For the full USDA dataset, download manually from:
     https://data.source.coop/fiboa/us-usda-cropland/us_usda_cropland.parquet
 
@@ -99,8 +98,7 @@ def download_fields(
         ...     output_path='data/fields.geojson'
         ... )
     """
-    import numpy as np
-    
+
     _check_deps()
 
     # Validate inputs
@@ -157,26 +155,34 @@ def download_fields(
 
 
 def _generate_realistic_fields(
-    count: int, 
-    regions: List[str], 
-    crops: Optional[List[str]] = None
+    count: int, regions: list[str], crops: list[str] | None = None
 ) -> "gpd.GeoDataFrame":
     """Generate realistic field boundaries based on actual Michigan agricultural regions.
-    
+
     Uses real county centroids and agricultural statistics for Michigan.
     """
     import numpy as np
-    
+
     # Real Michigan agricultural county centroids (approximate)
     # Based on major agricultural counties in the Thumb, Mid-MI, Southwest regions
     michigan_counties = [
         # Thumb region
         {"name": "Huron", "lat": 43.83, "lon": -82.85, "main_crops": ["corn", "soybeans"]},
-        {"name": "Tuscola", "lat": 43.53, "lon": -83.42, "main_crops": ["corn", "soybeans", "wheat"]},
+        {
+            "name": "Tuscola",
+            "lat": 43.53,
+            "lon": -83.42,
+            "main_crops": ["corn", "soybeans", "wheat"],
+        },
         {"name": "Sanilac", "lat": 43.42, "lon": -82.65, "main_crops": ["corn", "soybeans"]},
         {"name": "Saginaw", "lat": 43.42, "lon": -84.05, "main_crops": ["corn", "soybeans"]},
         # Mid-Michigan
-        {"name": "Clinton", "lat": 42.95, "lon": -84.62, "main_crops": ["corn", "soybeans", "wheat"]},
+        {
+            "name": "Clinton",
+            "lat": 42.95,
+            "lon": -84.62,
+            "main_crops": ["corn", "soybeans", "wheat"],
+        },
         {"name": "Gratiot", "lat": 43.29, "lon": -84.60, "main_crops": ["corn", "soybeans"]},
         {"name": "Isabella", "lat": 43.64, "lon": -84.85, "main_crops": ["corn", "soybeans"]},
         {"name": "Midland", "lat": 43.62, "lon": -84.41, "main_crops": ["corn", "soybeans"]},
@@ -186,77 +192,92 @@ def _generate_realistic_fields(
         {"name": "St. Joseph", "lat": 41.93, "lon": -85.53, "main_crops": ["corn", "soybeans"]},
         {"name": "Branch", "lat": 41.79, "lon": -85.06, "main_crops": ["corn", "soybeans"]},
         # South-central
-        {"name": "Jackson", "lat": 42.25, "lon": -84.42, "main_crops": ["corn", "soybeans", "wheat"]},
+        {
+            "name": "Jackson",
+            "lat": 42.25,
+            "lon": -84.42,
+            "main_crops": ["corn", "soybeans", "wheat"],
+        },
         {"name": "Hillsdale", "lat": 41.88, "lon": -84.59, "main_crops": ["corn", "soybeans"]},
-        {"name": "Lenawee", "lat": 41.90, "lon": -84.07, "main_crops": ["corn", "soybeans", "wheat"]},
+        {
+            "name": "Lenawee",
+            "lat": 41.90,
+            "lon": -84.07,
+            "main_crops": ["corn", "soybeans", "wheat"],
+        },
         {"name": "Monroe", "lat": 41.93, "lon": -83.53, "main_crops": ["corn", "soybeans"]},
     ]
-    
+
     # Michigan crop distribution (approximate based on NASS data)
-    crop_distribution = {
-        "corn": 0.45,
-        "soybeans": 0.35,
-        "wheat": 0.15,
-        "other": 0.05
-    }
-    
+    crop_distribution = {"corn": 0.45, "soybeans": 0.35, "wheat": 0.15, "other": 0.05}
+
     selected_crops = crops or ["corn", "soybeans", "wheat"]
-    
+
     np.random.seed(42)
-    
+
     data = {"field_id": [], "region": [], "crop_name": [], "area_acres": [], "geometry": []}
-    
+
     for i in range(count):
         # Pick a random county
         county = np.random.choice(michigan_counties)
-        
+
         # Add some random offset within the county (roughly 0.1-0.3 degrees)
         lat = county["lat"] + np.random.uniform(-0.15, 0.15)
         lon = county["lon"] + np.random.uniform(-0.15, 0.15)
-        
+
         # Field size in acres (realistic range: 40-160 acres for Michigan)
         # At 43°N: 1 sq degree ≈ 2.75 million acres
         # field_size_acres = target_acres
         # sqrt(field_size_acres / 2750000) = field_size_deg
         target_acres = np.random.uniform(40, 160)
         field_size_deg = np.sqrt(target_acres / 2750000)
-        
+
         # Create slightly irregular polygon (more realistic than rectangle)
         offset = field_size_deg * 0.1
         coords = [
-            (lon - field_size_deg + np.random.uniform(-offset, offset), 
-             lat - field_size_deg + np.random.uniform(-offset, offset)),
-            (lon + field_size_deg + np.random.uniform(-offset, offset), 
-             lat - field_size_deg + np.random.uniform(-offset, offset)),
-            (lon + field_size_deg + np.random.uniform(-offset, offset), 
-             lat + field_size_deg + np.random.uniform(-offset, offset)),
-            (lon - field_size_deg + np.random.uniform(-offset, offset), 
-             lat + field_size_deg + np.random.uniform(-offset, offset)),
-            (lon - field_size_deg + np.random.uniform(-offset, offset), 
-             lat - field_size_deg + np.random.uniform(-offset, offset)),
+            (
+                lon - field_size_deg + np.random.uniform(-offset, offset),
+                lat - field_size_deg + np.random.uniform(-offset, offset),
+            ),
+            (
+                lon + field_size_deg + np.random.uniform(-offset, offset),
+                lat - field_size_deg + np.random.uniform(-offset, offset),
+            ),
+            (
+                lon + field_size_deg + np.random.uniform(-offset, offset),
+                lat + field_size_deg + np.random.uniform(-offset, offset),
+            ),
+            (
+                lon - field_size_deg + np.random.uniform(-offset, offset),
+                lat + field_size_deg + np.random.uniform(-offset, offset),
+            ),
+            (
+                lon - field_size_deg + np.random.uniform(-offset, offset),
+                lat - field_size_deg + np.random.uniform(-offset, offset),
+            ),
         ]
-        
+
         polygon = Polygon(coords)
-        
+
         # Calculate area using geodesic approximation (at ~43°N latitude)
         # 1 sq degree ≈ 2.75 million acres at 43°N
         area_acres = polygon.area * 2750000
-        
+
         # Pick crop based on county distribution or random
         if np.random.random() < 0.7 and county["main_crops"]:
             crop = np.random.choice(county["main_crops"])
         else:
             crop = np.random.choice(selected_crops)
-        
+
         data["field_id"].append(f"MI_{county['name'][:3].upper()}_{i + 1:04d}")
         data["region"].append("michigan")
         data["crop_name"].append(crop)
         data["area_acres"].append(area_acres)
         data["geometry"].append(polygon)
-    
+
     # Create GeoDataFrame
     gdf = gpd.GeoDataFrame(data, crs="EPSG:4326")
-    
+
     return gdf
 
     # Filter to bounding boxes
@@ -317,7 +338,7 @@ def _generate_realistic_fields(
 
 def download_michigan_fields(
     count: int = 50,
-    output_path: Optional[str] = None,
+    output_path: str | None = None,
     year: int = 2023,
 ) -> "gpd.GeoDataFrame":
     """Download field boundaries specifically for Southern Michigan.
@@ -475,10 +496,7 @@ def export_fields(fields: "gpd.GeoDataFrame", output_path: str, format: str = "g
 if __name__ == "__main__":
     # Example usage - download Michigan fields
     print("Downloading Michigan fields...")
-    fields = download_michigan_fields(
-        count=50,
-        output_path="output/michigan_fields.geojson"
-    )
+    fields = download_michigan_fields(count=50, output_path="output/michigan_fields.geojson")
 
     summary = get_summary(fields)
     print("\nSummary:")
@@ -492,7 +510,7 @@ if __name__ == "__main__":
         fields,
         title="Southern Michigan Fields",
         color_by="crop_name",
-        save_path="output/michigan_fields_map.png"
+        save_path="output/michigan_fields_map.png",
     )
 
     print("\nDone!")
