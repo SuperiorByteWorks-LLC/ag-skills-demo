@@ -207,7 +207,134 @@ These examples serve as:
 | Imagery          | ESA/USGS   | GeoTIFF    | Days/Weeks |
 
 All data is **public domain** or **free for research use**.
+All data is **public domain** or **free for research use**.
 
+## Data Output Standards
+
+### Directory Structure
+
+```
+.skill-name/
+├── data/                    # Gitignored - generated outputs
+│   ├── README.md           # Documents what data is here
+│   ├── fields_2024.geojson
+│   ├── soil_analysis.csv
+│   └── plots/
+│       ├── field_sizes.png
+│       └── ph_distribution.png
+├── scripts/                # Python scripts for generating data
+│   ├── download_fields.py
+│   ├── analyze_soil.py
+│   └── create_plots.py
+├── examples/               # Committed sample data (small, <1MB)
+│   ├── sample_2_fields.geojson
+│   └── sample_output.png
+└── SKILL.md
+```
+
+### Rules
+
+1. **`data/` folder is Gitignored** - Never commit large data files
+2. **Save Python scripts** - Every output must have its generating script in `scripts/`
+3. **Data provenance** - Scripts document how data was created
+4. **Small examples only** - Only `examples/` is committed (≤2 fields)
+5. **Descriptive naming** - `fields_{date}_{region}.geojson`
+
+### .gitignore Template
+
+```gitignore
+# Data outputs - never commit
+data/
+*.geojson
+*.tif
+*.nc
+*.csv
+*.png
+*.jpg
+*.pdf
+
+# Large binary files
+*.parquet
+*.shp
+*.shx
+*.dbf
+
+# Except examples
+!examples/*
+!examples/**/*
+```
+
+### Example Workflow
+
+```python
+# scripts/download_and_analyze.py
+"""Download fields and create analysis outputs.
+
+This script downloads field boundaries and creates:
+- data/fields_2024.geojson
+- data/summary_statistics.csv
+- data/plots/field_sizes.png
+"""
+
+import pandas as pd
+import geopandas as gpd
+from pathlib import Path
+
+# Create output directories
+Path('data/plots').mkdir(parents=True, exist_ok=True)
+
+# Download data
+fields = download_fields(count=20, regions=['corn_belt'])
+fields.to_file('data/fields_2024.geojson')
+
+# Create analysis
+summary = fields.describe()
+summary.to_csv('data/summary_statistics.csv')
+
+# Create plots
+import matplotlib.pyplot as plt
+plt.figure(figsize=(10, 6))
+fields['area_acres'].hist(bins=20)
+plt.title('Field Size Distribution')
+plt.savefig('data/plots/field_sizes.png', dpi=300, bbox_inches='tight')
+plt.close()
+
+print("Created:")
+print("  - data/fields_2024.geojson")
+print("  - data/summary_statistics.csv")
+print("  - data/plots/field_sizes.png")
+```
+
+### Data README Template
+
+Each `data/` folder should have a README:
+
+```markdown
+# Data Outputs
+
+This directory contains generated data. DO NOT COMMIT TO GIT.
+
+## Contents
+
+| File | Script | Description |
+|------|--------|-------------|
+| fields_2024.geojson | download_fields.py | 20 corn belt fields |
+| summary_stats.csv | analyze_fields.py | Statistical summary |
+| plots/*.png | visualize.py | Generated plots |
+
+## Regeneration
+
+To recreate this data:
+
+```bash
+cd scripts
+python download_fields.py
+python analyze_fields.py
+python visualize.py
+```
+```
+
+## Best Practices
 ## Best Practices
 
 ### For Data Download Skills:
