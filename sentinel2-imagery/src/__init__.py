@@ -362,3 +362,50 @@ def get_band_info(band: str) -> dict:
         Red: 665nm, 10m
     """
     return BAND_INFO.get(band, {"name": "Unknown", "wavelength": 0, "resolution": 0})
+
+
+# Import helper functions from sentinel_helpers
+try:
+    from .sentinel_helpers import (
+        classify_ndvi,
+        compute_ndvi,
+        compute_ndvi_from_files,
+        create_ndvi_timeseries,
+        extract_field_ndvi,
+        get_ndvi_summary,
+        plot_ndvi_map,
+        plot_ndvi_with_fields,
+    )
+
+    # Add to __all__
+    __all__ = [
+        "search_imagery",
+        "download_product",
+        "calculate_ndvi",
+        "clip_to_field",
+        "extract_field_stats",
+        "get_band_path",
+        "get_band_info",
+        "BAND_INFO",
+        # Helper functions
+        "compute_ndvi",
+        "compute_ndvi_from_files",
+        "plot_ndvi_map",
+        "plot_ndvi_with_fields",
+        "extract_field_ndvi",
+        "create_ndvi_timeseries",
+        "classify_ndvi",
+        "get_ndvi_summary",
+    ]
+except ImportError:
+    # sentinel_helpers.py not available, use existing functions only
+    __all__ = [
+        "search_imagery",
+        "download_product",
+        "calculate_ndvi",
+        "clip_to_field",
+        "extract_field_stats",
+        "get_band_path",
+        "get_band_info",
+        "BAND_INFO",
+    ]

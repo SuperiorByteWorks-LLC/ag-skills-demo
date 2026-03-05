@@ -15,10 +15,9 @@ from typing import Any
 
 import geopandas as gpd
 import matplotlib.pyplot as plt
-from matplotlib.patches import Patch
-
 from agri_toolkit.core.config import Config
 from agri_toolkit.downloaders.field_boundaries import FieldBoundaryDownloader
+from matplotlib.patches import Patch
 
 
 class FieldBoundariesSkill:

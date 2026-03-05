@@ -24,6 +24,27 @@ _Standard-library workflow using `sentinelsat` + `rasterio`._
 4. Read JP2 bands (B04 red, B08 NIR) and compute NDVI
 5. Reproject field boundaries to the raster CRS and compute per-field NDVI stats
 
+## Class 7 NDVI panel mapping (canonical)
+
+When asked for a Class 7 NDVI panel/grid output, route to this canonical
+workflow script:
+
+```bash
+python docs/classes/examples/class7-satellite-and-drone-intelligence/07-complete-workflow/scripts/08_make_visualization_grid.py
+```
+
+Expected final artifact path:
+
+- `docs/classes/examples/class7-satellite-and-drone-intelligence/07-complete-workflow/output/visualization_grid_OSM_21854396.png`
+
+Expected scope for the final panel workflow:
+
+- 2025 growing season (`2025-03-01` to `2025-11-30`)
+- 3x4 grid with explicit `combined NDVI` and `scaled NDVI (0-1)` labeling
+- cloud diagnostics including cloud-masked overlay and cloud-frequency heatmap
+- scaled NDVI is derived directly from the same combined NDVI scene (value
+  stretch only to [0,1], no geometry/projection change)
+
 ## Example AOI (from field-boundaries)
 
 Use the field-boundaries sample data as your AOI source:
@@ -262,6 +283,27 @@ feature_collection = {
 
 footprint = geojson_to_wkt(feature_collection)
 ```
+
+## Reusable Panel Output (Class 7 style)
+
+If the user asks for a panel NDVI visualization, use the reproducible Class 7 panel script:
+
+```bash
+python docs/classes/examples/class7-satellite-and-drone-intelligence/07-complete-workflow/scripts/08_make_visualization_grid.py
+```
+
+This generates a publication-style 3x4 grid for one field with:
+
+- Sentinel red + NIR and Landsat red + NIR context panels
+- RGB composite and Sentinel/Landsat NDVI panels
+- Cloud-masked NDVI with masked-cell annotation
+- Combined NDVI panel and scaled NDVI (0-1) panel
+- Cloud-frequency heatmap panel
+- In-season Sentinel NDVI time series with IQR bounds
+
+Primary output:
+
+- `docs/classes/examples/class7-satellite-and-drone-intelligence/07-complete-workflow/output/visualization_grid_OSM_21854396.png`
 
 ## Troubleshooting
 

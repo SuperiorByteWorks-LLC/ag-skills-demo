@@ -1,287 +1,211 @@
-"""USDA NASS Crop Sequence Boundaries downloader.
+"""Field boundary downloader using real OpenStreetMap polygons.
 
-This module provides functions to download and visualize agricultural
-field boundaries from the USDA NASS dataset.
+This module avoids synthetic polygon generation and fetches real mapped
+agricultural landuse polygons from Overpass API.
 """
 
+from __future__ import annotations
+
 import os
-import warnings
-from pathlib import Path
-from typing import List, Optional, Dict, Any
+from typing import Any
 
-try:
-    import geopandas as gpd
-    import matplotlib.pyplot as plt
-    from shapely.geometry import box
+import requests
+import geopandas as gpd
+import matplotlib.pyplot as plt
+import pandas as pd
+from shapely.geometry import Polygon
 
-    HAS_DEPS = True
-except ImportError:
-    HAS_DEPS = False
-    warnings.warn(
-        "Geospatial dependencies not installed. Run: uv pip install geopandas matplotlib shapely"
-    )
+HAS_DEPS = True
 
 
-# Data source URLs and configuration
-USDA_NASS_URL = "https://www.nass.usda.gov/Research_and_Science/Crop-Sequence-Boundaries/"
-REGIONS = {
-    "corn_belt": {"states": ["IA", "IL", "IN", "OH", "MO"]},
-    "great_plains": {"states": ["NE", "KS", "SD", "ND"]},
-    "southeast": {"states": ["GA", "AL", "SC", "NC"]},
+OVERPASS_URL = "https://overpass-api.de/api/interpreter"
+REGION_BBOX = {
+    "corn_belt": (40.45, -93.95, 40.85, -93.45),
+    "great_plains": (40.55, -98.35, 40.95, -97.85),
+    "southeast": (33.05, -84.45, 33.45, -83.95),
 }
-
 CROPS = ["corn", "soybeans", "wheat", "cotton"]
+
+
+def _overpass_query(bbox: tuple[float, float, float, float]) -> dict[str, Any]:
+    south, west, north, east = bbox
+    query = f"""
+    [out:json][timeout:120];
+    (
+      way["landuse"~"farmland|orchard|vineyard|meadow"]({south},{west},{north},{east});
+    );
+    out geom;
+    """
+    response = requests.post(OVERPASS_URL, data={"data": query}, timeout=180)
+    response.raise_for_status()
+    return response.json()
+
+
+def _to_geodataframe(elements: list[dict[str, Any]], region: str) -> "gpd.GeoDataFrame":
+    records: list[dict[str, Any]] = []
+    for element in elements:
+        if element.get("type") != "way":
+            continue
+        geom = element.get("geometry", [])
+        if len(geom) < 4:
+            continue
+        coords = [(p["lon"], p["lat"]) for p in geom]
+        if coords[0] != coords[-1]:
+            coords.append(coords[0])
+        try:
+            polygon = Polygon(coords)
+            if not polygon.is_valid or polygon.area == 0:
+                continue
+        except Exception:
+            continue
+
+        tags = element.get("tags", {})
+        crop = tags.get("crop") or tags.get("landuse", "Unknown")
+        records.append(
+            {
+                "field_id": f"OSM_{element.get('id')}",
+                "region": region,
+                "crop_name": str(crop),
+                "source": "OpenStreetMap/Overpass",
+                "geometry": polygon,
+            }
+        )
+
+    if not records:
+        empty = pd.DataFrame(columns=["field_id", "region", "crop_name", "source"])  # type: ignore[arg-type]
+        return gpd.GeoDataFrame(empty, geometry=[], crs="EPSG:4326")
+
+    gdf = gpd.GeoDataFrame(records, crs="EPSG:4326")
+    area_proj = gdf.to_crs("EPSG:5070")
+    gdf["area_acres"] = area_proj.geometry.area / 4046.8564224
+    return gdf
 
 
 def download_fields(
     count: int = 20,
-    regions: Optional[List[str]] = None,
-    crops: Optional[List[str]] = None,
-    output_path: Optional[str] = None,
+    regions: list[str] | None = None,
+    crops: list[str] | None = None,
+    output_path: str | None = None,
     year: int = 2023,
 ) -> "gpd.GeoDataFrame":
-    """Download field boundaries from USDA NASS.
+    """Download real field-like polygons from OSM for agricultural analysis.
 
-    This function downloads agricultural field boundaries from the
-    USDA NASS Crop Sequence Boundaries dataset.
-
-    Args:
-        count: Number of fields to download (20-50 recommended)
-        regions: List of regions to sample from ('corn_belt', 'great_plains', 'southeast')
-        crops: List of crop types to include ('corn', 'soybeans', 'wheat', 'cotton')
-        output_path: Path to save the output GeoJSON file
-        year: Year of data to download (default: 2023)
-
-    Returns:
-        GeoDataFrame with field boundaries
-
-    Example:
-        >>> fields = download_fields(
-        ...     count=20,
-        ...     regions=['corn_belt'],
-        ...     crops=['corn', 'soybeans'],
-        ...     output_path='data/fields.geojson'
-        ... )
+    Args mirror previous API for compatibility.
     """
     if not HAS_DEPS:
-        raise ImportError(
-            "Required packages not installed. Run: uv pip install geopandas matplotlib shapely"
-        )
-
-    # Validate inputs
+        raise ImportError("Required packages not installed")
     if count < 1 or count > 1000:
         raise ValueError("count must be between 1 and 1000")
 
-    if regions:
-        invalid_regions = set(regions) - set(REGIONS.keys())
-        if invalid_regions:
-            raise ValueError(
-                f"Invalid regions: {invalid_regions}. Valid options: {list(REGIONS.keys())}"
-            )
+    selected_regions = regions or ["corn_belt"]
+    invalid = set(selected_regions) - set(REGION_BBOX.keys())
+    if invalid:
+        raise ValueError(f"Invalid regions: {invalid}. Valid: {list(REGION_BBOX.keys())}")
+
+    all_frames: list[gpd.GeoDataFrame] = []
+    for region in selected_regions:
+        payload = _overpass_query(REGION_BBOX[region])
+        region_gdf = _to_geodataframe(payload.get("elements", []), region)
+        if not region_gdf.empty:
+            all_frames.append(region_gdf)
+
+    if not all_frames:
+        raise RuntimeError("No real polygons returned by Overpass. Try a different region.")
+
+    gdf = gpd.GeoDataFrame(
+        pd.concat(all_frames, ignore_index=True), geometry="geometry", crs="EPSG:4326"
+    )
 
     if crops:
-        invalid_crops = set(crops) - set(CROPS)
-        if invalid_crops:
-            raise ValueError(f"Invalid crops: {invalid_crops}. Valid options: {CROPS}")
+        crop_terms = [c.lower() for c in crops]
+        mask = gdf["crop_name"].str.lower().apply(lambda val: any(t in val for t in crop_terms))
+        filtered = gdf[mask]
+        if not filtered.empty:
+            gdf = filtered
 
-    # Generate sample field boundaries
-    # In production, this would connect to USDA NASS API
-    import numpy as np
-    from shapely.geometry import Polygon
+    gdf = gdf.sort_values(by="area_acres", ascending=False).head(count).reset_index(drop=True)  # type: ignore[call-overload]
 
-    np.random.seed(42)
-
-    # Generate synthetic data for demonstration
-    # In real implementation, this would fetch from USDA NASS
-    data = {"field_id": [], "region": [], "crop_name": [], "area_acres": [], "geometry": []}
-
-    selected_regions = regions or list(REGIONS.keys())
-    selected_crops = crops or CROPS
-
-    for i in range(count):
-        region = np.random.choice(selected_regions)
-        crop = np.random.choice(selected_crops)
-
-        # Generate random field polygon
-        # Simplified: fields are roughly rectangular
-        center_lat = 41.0 + np.random.uniform(-3, 3)
-        center_lon = -93.0 + np.random.uniform(-5, 5)
-
-        size = np.random.uniform(0.001, 0.01)  # degrees
-
-        coords = [
-            (center_lon - size, center_lat - size),
-            (center_lon + size, center_lat - size),
-            (center_lon + size, center_lat + size),
-            (center_lon - size, center_lat + size),
-            (center_lon - size, center_lat - size),
-        ]
-
-        polygon = Polygon(coords)
-        area_acres = polygon.area * 24710538  # Convert deg² to acres (approx)
-
-        data["field_id"].append(f"FIELD_{i + 1:04d}")
-        data["region"].append(region)
-        data["crop_name"].append(crop)
-        data["area_acres"].append(area_acres)
-        data["geometry"].append(polygon)
-
-    # Create GeoDataFrame
-    gdf = gpd.GeoDataFrame(data, crs="EPSG:4326")
-
-    # Save if output path provided
     if output_path:
-        os.makedirs(os.path.dirname(output_path), exist_ok=True)
+        out_dir = os.path.dirname(output_path)
+        if out_dir:
+            os.makedirs(out_dir, exist_ok=True)
         gdf.to_file(output_path, driver="GeoJSON")
-        print(f"Saved {len(gdf)} fields to {output_path}")
+        print(f"Saved {len(gdf)} real polygons to {output_path}")
 
-    return gdf
+    return gpd.GeoDataFrame(gdf, geometry="geometry", crs="EPSG:4326")
 
 
 def plot_fields(
     fields: "gpd.GeoDataFrame",
     title: str = "Agricultural Fields",
-    color_by: Optional[str] = None,
-    save_path: Optional[str] = None,
+    color_by: str | None = None,
+    save_path: str | None = None,
 ) -> None:
-    """Create a visualization of field boundaries.
-
-    Args:
-        fields: GeoDataFrame with field boundaries
-        title: Plot title
-        color_by: Column to color by ('crop_name', 'region')
-        save_path: Path to save the figure
-    """
     if not HAS_DEPS:
         raise ImportError("Required packages not installed")
-
     fig, ax = plt.subplots(figsize=(12, 8))
-
     if color_by and color_by in fields.columns:
-        fields.plot(
-            column=color_by,
-            ax=ax,
-            legend=True,
-            legend_kwds={"title": color_by.replace("_", " ").title()},
-        )
+        fields.plot(column=color_by, ax=ax, legend=True)
     else:
         fields.plot(ax=ax, color="lightgreen", edgecolor="darkgreen")
-
-    ax.set_title(title, fontsize=14, fontweight="bold")
+    ax.set_title(title)
     ax.set_xlabel("Longitude")
     ax.set_ylabel("Latitude")
-
     if save_path:
-        os.makedirs(os.path.dirname(save_path), exist_ok=True)
+        out_dir = os.path.dirname(save_path)
+        if out_dir:
+            os.makedirs(out_dir, exist_ok=True)
         plt.savefig(save_path, dpi=300, bbox_inches="tight")
-        print(f"Saved map to {save_path}")
     else:
         plt.show()
-
     plt.close()
 
 
-def get_summary(fields: "gpd.GeoDataFrame") -> Dict[str, Any]:
-    """Get summary statistics for field boundaries.
-
-    Args:
-        fields: GeoDataFrame with field boundaries
-
-    Returns:
-        Dictionary with summary statistics
-    """
-    if not HAS_DEPS:
-        raise ImportError("Required packages not installed")
-
+def get_summary(fields: "gpd.GeoDataFrame") -> dict[str, Any]:
     areas = (
-        fields["area_acres"] if "area_acres" in fields.columns else fields.geometry.area * 24710538
+        fields["area_acres"]
+        if "area_acres" in fields.columns
+        else fields.to_crs("EPSG:5070").area / 4046.8564224
     )
-
-    summary = {
+    return {
         "total_fields": len(fields),
-        "total_area_acres": areas.sum(),
-        "avg_field_size": areas.mean(),
-        "median_field_size": areas.median(),
-        "size_range": (areas.min(), areas.max()),
-        "std_field_size": areas.std(),
-        "regions": fields["region"].unique().tolist() if "region" in fields.columns else [],
-        "crops": fields["crop_name"].unique().tolist() if "crop_name" in fields.columns else [],
+        "total_area_acres": float(areas.sum()),
+        "avg_field_size": float(areas.mean()),
+        "median_field_size": float(areas.median()),
+        "size_range": (float(areas.min()), float(areas.max())),
+        "std_field_size": float(areas.std()),
+        "regions": fields["region"].dropna().unique().tolist()
+        if "region" in fields.columns
+        else [],
+        "crops": fields["crop_name"].dropna().unique().tolist()
+        if "crop_name" in fields.columns
+        else [],
     }
-
-    return summary
 
 
 def filter_by_size(
-    fields: "gpd.GeoDataFrame", min_acres: float = 0, max_acres: Optional[float] = None
+    fields: "gpd.GeoDataFrame", min_acres: float = 0, max_acres: float | None = None
 ) -> "gpd.GeoDataFrame":
-    """Filter fields by size.
-
-    Args:
-        fields: GeoDataFrame with field boundaries
-        min_acres: Minimum field size in acres
-        max_acres: Maximum field size in acres
-
-    Returns:
-        Filtered GeoDataFrame
-    """
-    if not HAS_DEPS:
-        raise ImportError("Required packages not installed")
-
-    if "area_acres" in fields.columns:
-        areas = fields["area_acres"]
-    else:
-        areas = fields.geometry.area * 24710538
-
+    areas = (
+        fields["area_acres"]
+        if "area_acres" in fields.columns
+        else fields.to_crs("EPSG:5070").area / 4046.8564224
+    )
     mask = areas >= min_acres
-    if max_acres:
+    if max_acres is not None:
         mask = mask & (areas <= max_acres)
-
-    return fields[mask].copy()
+    return gpd.GeoDataFrame(fields[mask].copy(), geometry="geometry", crs=fields.crs)
 
 
 def export_fields(fields: "gpd.GeoDataFrame", output_path: str, format: str = "geojson") -> str:
-    """Export fields to file.
-
-    Args:
-        fields: GeoDataFrame with field boundaries
-        output_path: Output file path
-        format: 'geojson' or 'geoparquet'
-
-    Returns:
-        Path to exported file
-    """
-    if not HAS_DEPS:
-        raise ImportError("Required packages not installed")
-
-    os.makedirs(os.path.dirname(output_path), exist_ok=True)
-
+    out_dir = os.path.dirname(output_path)
+    if out_dir:
+        os.makedirs(out_dir, exist_ok=True)
     if format.lower() == "geojson":
         fields.to_file(output_path, driver="GeoJSON")
     elif format.lower() == "geoparquet":
         fields.to_parquet(output_path)
     else:
         raise ValueError(f"Unsupported format: {format}")
-
     print(f"Exported {len(fields)} fields to {output_path}")
     return output_path
-
-
-if __name__ == "__main__":
-    # Example usage
-    print("Downloading sample fields...")
-    fields = download_fields(
-        count=10, regions=["corn_belt"], crops=["corn"], output_path="output/sample_fields.geojson"
-    )
-
-    summary = get_summary(fields)
-    print(f"\nSummary:")
-    print(f"  Total fields: {summary['total_fields']}")
-    print(f"  Total area: {summary['total_area_acres']:.1f} acres")
-    print(f"  Average size: {summary['avg_field_size']:.1f} acres")
-
-    print("\nCreating visualization...")
-    plot_fields(
-        fields, title="Sample Fields", color_by="crop_name", save_path="output/sample_map.png"
-    )
-
-    print("\nDone!")
