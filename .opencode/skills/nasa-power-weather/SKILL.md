@@ -19,6 +19,7 @@ This skill teaches agents to:
 - Calculate Growing Degree Days (GDD) for crop development tracking
 - Optionally use `xarray` for multi-dimensional weather analysis
 - Work with coordinates from the `field-boundaries` skill
+- Prepare reporting-ready day-of-year, cumulative GDD, and precipitation-distribution summaries for posters and self-contained HTML reports
 
 ## When to Use This Skill
 

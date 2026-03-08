@@ -5,6 +5,11 @@
 
 # Data outputs - never commit
 data/
+
+# But keep scripts and some example outputs
+!data/scripts/
+!data/EDA/*.md
+!data/EDA/iowa_*.csv
 *.geojson
 *.tif
 *.tiff

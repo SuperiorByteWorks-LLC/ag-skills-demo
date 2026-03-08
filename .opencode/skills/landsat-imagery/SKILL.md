@@ -12,6 +12,8 @@ tags: [landsat, usgs, satellite, ndvi, rasterio, remote-sensing, geospatial]
 
 Search the USGS Landsat archive and download Landsat 8/9 imagery for agricultural field boundaries. This skill teaches standard open-source libraries — `landsatxplore` for scene search/download via the USGS M2M API, and `rasterio` for raster I/O, clipping, and vegetation index calculation. All examples use field boundaries from the `field-boundaries` skill as the area of interest (AOI).
 
+The skill also supports reporting-friendly scene selection and seasonal NDVI summaries so Landsat can participate in static poster outputs and self-contained HTML dashboards alongside Sentinel-2.
+
 ## When to Use This Skill
 
 - **Acquiring Landsat imagery**: Search and download scenes from USGS EarthExplorer

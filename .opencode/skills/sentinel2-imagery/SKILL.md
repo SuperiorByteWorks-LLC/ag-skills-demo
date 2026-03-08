@@ -23,6 +23,7 @@ _Standard-library workflow using `sentinelsat` + `rasterio`._
 3. Download a product ZIP and extract the `.SAFE` directory
 4. Read JP2 bands (B04 red, B08 NIR) and compute NDVI
 5. Reproject field boundaries to the raster CRS and compute per-field NDVI stats
+6. Select best cloud-filtered scenes and prepare reporting-friendly NDVI time-series summaries for poster and HTML outputs
 
 ## Class 7 NDVI panel mapping (canonical)
 

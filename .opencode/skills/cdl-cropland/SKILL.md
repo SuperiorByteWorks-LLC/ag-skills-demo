@@ -12,6 +12,8 @@ tags: [usda, nass, cdl, cropland, raster, geospatial, download]
 
 Download and analyze USDA NASS Cropland Data Layer (CDL) annual crop type rasters. The CDL is a 30-meter resolution raster covering the contiguous US, classifying every pixel into one of 130+ crop and land cover types. This skill clips CDL rasters to field boundaries and extracts per-field crop classifications.
 
+The skill now also supports reporting-oriented outputs that keep the full crop composition for each field-year so downstream dashboards and posters can render 100% stacked crop history charts rather than relying only on dominant crop summaries.
+
 ## When to Use This Skill
 
 - **Crop identification**: Determine what crop was planted in a field for a given year
