@@ -43,6 +43,8 @@
 
 **Poster:** [iowa_field_poster_01.png](./field_cards/iowa_field_poster_01.png)
 
+**Soil Profile Cards:** [Soil Profile](./soil_cards/field_01_single.png) | [Texture RGB](./soil_cards/field_01_texture.png) | [Properties](./soil_cards/field_01_properties.png)
+
 **Management Implications:**
 - pH 6.7 is within optimal range for corn/soybean production
 - Available water storage 37.1 in provides good buffer against short-term drought stress
@@ -73,6 +75,8 @@
 
 **Poster:** [iowa_field_poster_02.png](./field_cards/iowa_field_poster_02.png)
 
+**Soil Profile Cards:** [Texture RGB](./soil_cards/field_02_texture.png) | [Properties](./soil_cards/field_02_properties.png)
+
 **Management Implications:**
 - pH 6.5 is within optimal range for corn/soybean production
 - Available water storage 36.9 in provides good buffer against short-term drought stress
@@ -102,6 +106,8 @@
 ### Field 98706549 (157.6 acres)
 
 **Poster:** [iowa_field_poster_03.png](./field_cards/iowa_field_poster_03.png)
+
+**Soil Profile Cards:** [Texture RGB](./soil_cards/field_03_texture.png) | [Properties](./soil_cards/field_03_properties.png)
 
 **Management Implications:**
 - pH 6.0 is below optimum for corn/soy (6.0–7.0); consider lime application
@@ -135,6 +141,8 @@
 
 **Poster:** [iowa_field_poster_04.png](./field_cards/iowa_field_poster_04.png)
 
+**Soil Profile Cards:** [Texture RGB](./soil_cards/field_04_texture.png) | [Properties](./soil_cards/field_04_properties.png)
+
 **Management Implications:**
 - pH 6.3 is within optimal range for corn/soybean production
 - OM 1.0% is low; prioritize cover crops or reduced tillage to rebuild organic matter
@@ -166,6 +174,8 @@
 
 **Poster:** [iowa_field_poster_05.png](./field_cards/iowa_field_poster_05.png)
 
+**Soil Profile Cards:** [Texture RGB](./soil_cards/field_05_texture.png) | [Properties](./soil_cards/field_05_properties.png)
+
 **Management Implications:**
 - pH 6.4 is within optimal range for corn/soybean production
 - Available water storage 35.4 in provides good buffer against short-term drought stress
@@ -194,6 +204,8 @@
 ### Field 98706550 (152.0 acres)
 
 **Poster:** [iowa_field_poster_06.png](./field_cards/iowa_field_poster_06.png)
+
+**Soil Profile Cards:** [Texture RGB](./soil_cards/field_06_texture.png) | [Properties](./soil_cards/field_06_properties.png)
 
 **Management Implications:**
 - pH 6.1 is within optimal range for corn/soybean production
@@ -225,6 +237,8 @@
 
 **Poster:** [iowa_field_poster_07.png](./field_cards/iowa_field_poster_07.png)
 
+**Soil Profile Cards:** [Texture RGB](./soil_cards/field_07_texture.png) | [Properties](./soil_cards/field_07_properties.png)
+
 **Management Implications:**
 - pH 6.7 is within optimal range for corn/soybean production
 - OM 1.3% is low; prioritize cover crops or reduced tillage to rebuild organic matter
@@ -254,6 +268,8 @@
 ### Field 98713337 (125.9 acres)
 
 **Poster:** [iowa_field_poster_08.png](./field_cards/iowa_field_poster_08.png)
+
+**Soil Profile Cards:** [Texture RGB](./soil_cards/field_08_texture.png) | [Properties](./soil_cards/field_08_properties.png)
 
 **Management Implications:**
 - pH 6.1 is within optimal range for corn/soybean production
@@ -287,6 +303,8 @@
 
 **Poster:** [iowa_field_poster_09.png](./field_cards/iowa_field_poster_09.png)
 
+**Soil Profile Cards:** [Texture RGB](./soil_cards/field_09_texture.png) | [Properties](./soil_cards/field_09_properties.png)
+
 **Management Implications:**
 - pH 6.6 is within optimal range for corn/soybean production
 - OM 1.4% is low; prioritize cover crops or reduced tillage to rebuild organic matter
@@ -317,6 +335,8 @@
 ### Field 98701371 (115.9 acres)
 
 **Poster:** [iowa_field_poster_10.png](./field_cards/iowa_field_poster_10.png)
+
+**Soil Profile Cards:** [Texture RGB](./soil_cards/field_10_texture.png) | [Properties](./soil_cards/field_10_properties.png)
 
 **Management Implications:**
 - pH 6.0 is below optimum for corn/soy (6.0–7.0); consider lime application
@@ -352,6 +372,7 @@
 - Farm Poster: [iowa_farm_report.png](./iowa_farm_report.png)
 - HTML Report: [iowa_farm_report.html](./iowa_farm_report.html)
 - Field Posters: [field_cards/](./field_cards/)
+- Soil Profile Cards: [soil_cards/](./soil_cards/)
 
 ---
 

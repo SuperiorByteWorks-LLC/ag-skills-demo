@@ -149,6 +149,18 @@ def main() -> None:
         md_lines.append(f"**Poster:** [iowa_field_poster_{idx+1:02d}.png](./field_cards/iowa_field_poster_{idx+1:02d}.png)")
         md_lines.append("")
         
+        soil_cards_exist = False
+        soil_card_links = []
+        for card_type, label in [("single", "Soil Profile"), ("texture", "Texture RGB"), ("properties", "Properties")]:
+            card_path = Path(f"data/EDA/soil_cards/field_{idx+1:02d}_{card_type}.png")
+            if card_path.exists():
+                soil_cards_exist = True
+                soil_card_links.append(f"[{label}](./soil_cards/field_{idx+1:02d}_{card_type}.png)")
+        
+        if soil_cards_exist:
+            md_lines.append(f"**Soil Profile Cards:** {' | '.join(soil_card_links)}")
+            md_lines.append("")
+        
         implications = compute_management_implications(row_dict)
         md_lines.append("**Management Implications:**")
         for imp in implications:
@@ -183,6 +195,7 @@ def main() -> None:
     md_lines.append("- Farm Poster: [iowa_farm_report.png](./iowa_farm_report.png)")
     md_lines.append("- HTML Report: [iowa_farm_report.html](./iowa_farm_report.html)")
     md_lines.append("- Field Posters: [field_cards/](./field_cards/)")
+    md_lines.append("- Soil Profile Cards: [soil_cards/](./soil_cards/)")
     md_lines.append("")
     md_lines.append("---")
     md_lines.append("")

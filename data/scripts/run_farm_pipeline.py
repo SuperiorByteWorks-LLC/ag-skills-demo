@@ -66,6 +66,8 @@ def main() -> None:
         ("12_generate_aggregate_poster.py", "Farm portfolio poster"),
         ("13_generate_farm_html.py", "Self-contained HTML report"),
         ("14_generate_farm_markdown.py", "Markdown report"),
+        ("15_generate_ssurgo_cards.py", "SSURGO soil profile cards"),
+        ("16_generate_ssurgo_maps.py", "SSURGO soil maps with basemap"),
     ]
 
     all_ok = True
@@ -91,6 +93,14 @@ def main() -> None:
         if card_dir.exists():
             cards = sorted(card_dir.glob("*.png"))
             print(f"    {card_dir.relative_to(_REPO)}/  ({len(cards)} field posters)")
+        soil_dir = output_dir / "soil_cards"
+        if soil_dir.exists():
+            soil_cards = sorted(soil_dir.glob("*.png"))
+            print(f"    {soil_dir.relative_to(_REPO)}/  ({len(soil_cards)} soil profile cards)")
+        soil_map_dir = output_dir / "soil_maps"
+        if soil_map_dir.exists():
+            soil_maps = sorted(soil_map_dir.glob("*.png"))
+            print(f"    {soil_map_dir.relative_to(_REPO)}/  ({len(soil_maps)} soil maps with basemap)")
     print("=" * 60)
     print()
 

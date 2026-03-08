@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate self-contained single-page HTML farm intelligence report with embedded posters."""
+"""Generate self-contained single-page HTML farm intelligence report with embedded posters and soil profile cards."""
 
 from __future__ import annotations
 
@@ -99,7 +99,22 @@ def _safe(v) -> str:
     return str(v)
 
 
-def _field_card(frow, df_row, field_weather, field_cdl, poster_b64: str, idx: int) -> str:
+def _load_soil_cards(idx: int) -> dict[str, str]:
+    """Load soil profile cards for a field as base64 strings."""
+    soil_dir = Path("data/EDA/soil_cards")
+    cards = {}
+    
+    for card_type in ["single", "texture", "properties"]:
+        card_path = soil_dir / f"field_{idx+1:02d}_{card_type}.png"
+        if card_path.exists():
+            cards[card_type] = _img_to_b64(card_path)
+        else:
+            cards[card_type] = ""
+    
+    return cards
+
+
+def _field_card(frow, df_row, field_weather, field_cdl, poster_b64: str, soil_cards: dict, idx: int) -> str:
     fid = str(frow["field_id"])
     acres = float(frow.get("area_acres", 0))
     row_dict = df_row.to_dict() if hasattr(df_row, "to_dict") else dict(df_row)
@@ -134,6 +149,45 @@ def _field_card(frow, df_row, field_weather, field_cdl, poster_b64: str, idx: in
 
     clean_dict = {k: _safe(v) for k, v in row_dict.items() if not k.endswith("_pct_rank")}
 
+    # Build soil profile thumbnails
+    soil_thumbs = []
+    soil_modals = []
+    
+    card_labels = {
+        "single": "Soil Profile",
+        "texture": "Texture RGB",
+        "properties": "Properties"
+    }
+    
+    for card_type, b64_data in soil_cards.items():
+        if b64_data:
+            modal_id = f"soil-modal-{idx}-{card_type}"
+            soil_thumbs.append(f'''
+                <a href="#{modal_id}" class="soil-thumb">
+                    <img src="data:image/png;base64,{b64_data}" alt="{card_labels[card_type]}">
+                    <span class="soil-label">{card_labels[card_type]}</span>
+                </a>
+            ''')
+            soil_modals.append(f'''
+<div id="{modal_id}" class="modal">
+  <div class="modal-content">
+    <a href="#" class="modal-close">&times; Close</a>
+    <h2>Field {fid[-8:]} — {card_labels[card_type]}</h2>
+    <img src="data:image/png;base64,{b64_data}" style="width:100%;max-width:1200px;" alt="{card_labels[card_type]}">
+  </div>
+</div>
+            ''')
+    
+    soil_section = ""
+    if soil_thumbs:
+        soil_section = f'''
+  <details open><summary><strong>SSURGO Soil Profile Cards (click thumbnails to enlarge)</strong></summary>
+    <div class="soil-gallery">
+      {''.join(soil_thumbs)}
+    </div>
+  </details><hr>
+        '''
+
     return f"""
 <section class="field-card" id="field-{fid[-6:]}">
   <h2>Field {fid[-8:]} <span class="badge">{acres:.1f} ac</span></h2>
@@ -145,6 +199,8 @@ def _field_card(frow, df_row, field_weather, field_cdl, poster_b64: str, idx: in
       <p style="font-size:0.85rem;color:#2563eb;margin-top:0.5rem;">Click to view full poster</p>
     </a>
   </div>
+  
+  {soil_section}
   
   <div class="grid-2">
     <div>
@@ -180,6 +236,7 @@ def _field_card(frow, df_row, field_weather, field_cdl, poster_b64: str, idx: in
     <img src="data:image/png;base64,{poster_b64}" style="width:100%;max-width:1200px;" alt="Full field poster">
   </div>
 </div>
+{''.join(soil_modals)}
 """
 
 
@@ -245,12 +302,15 @@ def main() -> None:
         poster_path = Path("data/EDA/field_cards") / f"iowa_field_poster_{idx+1:02d}.png"
         poster_b64 = _img_to_b64(poster_path) if poster_path.exists() else ""
         
+        # Load soil cards
+        soil_cards = _load_soil_cards(idx)
+        
         fw = weather[weather["field_id"] == fid].copy()
         fw["date"] = pd.to_datetime(fw["date"])
         fc = cdl[cdl["field_id"] == fid].copy()
         df_row_matches = field_df[field_df["field_id"] == fid]
         df_row = df_row_matches.iloc[0] if not df_row_matches.empty else pd.Series(frow)
-        field_cards.append(_field_card(frow, df_row, fw, fc, poster_b64, idx))
+        field_cards.append(_field_card(frow, df_row, fw, fc, poster_b64, soil_cards, idx))
 
     nav = " | ".join(f'<a href="#field-{str(r["field_id"])[-6:]}">{str(r["field_id"])[-6:]}</a>' for _, r in fields.iterrows())
 
@@ -296,13 +356,23 @@ def main() -> None:
     .poster-thumb {{ text-decoration: none; display: inline-block; }}
     .poster-thumb:hover img {{ box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); }}
     
-    .modal {{ display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); overflow: auto; }}
+    /* Soil profile gallery styles */
+    .soil-gallery {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; margin: 1rem 0; padding: 1rem; background: #fafaf9; border-radius: 8px; }}
+    .soil-thumb {{ text-decoration: none; display: flex; flex-direction: column; align-items: center; background: white; padding: 0.75rem; border-radius: 8px; border: 2px solid #e5e7eb; transition: all 0.2s; }}
+    .soil-thumb:hover {{ border-color: #8b5cf6; box-shadow: 0 4px 12px rgba(139, 92, 246, 0.2); }}
+    .soil-thumb img {{ width: 100%; max-width: 120px; height: auto; border-radius: 4px; margin-bottom: 0.5rem; }}
+    .soil-label {{ font-size: 0.8rem; color: #4b5563; font-weight: 600; font-family: sans-serif; }}
+    .soil-thumb:hover .soil-label {{ color: #8b5cf6; }}
+    
+    /* Modal styles with 2026 best practices */
+    .modal {{ display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); overflow: auto; backdrop-filter: blur(4px); }}
     .modal:target {{ display: block; }}
-    .modal-content {{ background: white; margin: 2% auto; padding: 2rem; width: 95%; max-width: 1400px; border-radius: 12px; position: relative; }}
-    .modal-close {{ position: absolute; top: 1rem; right: 1rem; font-size: 1.5rem; color: #64748b; text-decoration: none; background: #f1f5f9; padding: 0.5rem 1rem; border-radius: 6px; }}
+    .modal-content {{ background: white; margin: 2% auto; padding: 2rem; width: 95%; max-width: 1400px; border-radius: 12px; position: relative; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); animation: modalFadeIn 0.3s ease-out; }}
+    @keyframes modalFadeIn {{ from {{ opacity: 0; transform: translateY(-20px); }} to {{ opacity: 1; transform: translateY(0); }} }}
+    .modal-close {{ position: absolute; top: 1rem; right: 1rem; font-size: 1.5rem; color: #64748b; text-decoration: none; background: #f1f5f9; padding: 0.5rem 1rem; border-radius: 6px; font-family: sans-serif; font-weight: 600; transition: all 0.2s; }}
     .modal-close:hover {{ color: #1e293b; background: #e2e8f0; }}
     
-    @media (max-width: 768px) {{ .grid-2, .farm-overview {{ grid-template-columns: 1fr; }} }}
+    @media (max-width: 768px) {{ .grid-2, .farm-overview {{ grid-template-columns: 1fr; }} .soil-gallery {{ grid-template-columns: repeat(2, 1fr); }} }}
   </style>
 </head>
 <body>
