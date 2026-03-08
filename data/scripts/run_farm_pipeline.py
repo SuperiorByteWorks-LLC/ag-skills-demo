@@ -4,7 +4,7 @@ run_farm_pipeline.py — Master pipeline entrypoint.
 
 Usage:
     python data/scripts/run_farm_pipeline.py \\
-        --boundaries data/field-boundaries/iowa_10_fields.geojson \\
+        --boundaries data/growers/iowa-demo-grower/farms/iowa-demo-farm/boundary/field_boundaries.geojson \\
         [--farm-name "Iowa Demo Farm"] \\
         [--force]
 
@@ -13,139 +13,120 @@ boundaries GeoJSON file.  Each step is idempotent and will be skipped if
 inputs, code, and config are unchanged since the last run.
 
 Outputs:
-    data/EDA/field_cards/iowa_field_report_NN.png   — one per field
-    data/EDA/iowa_farm_report.png                   — farm portfolio poster
-    data/EDA/iowa_farm_report.html                  — self-contained HTML report
-    data/reporting/manifests/                       — per-step manifests
+    data/growers/.../fields/.../derived/reports/    — one per field
+    data/growers/.../derived/reports/               — farm poster, HTML, and Markdown
+    data/growers/.../manifests/                     — canonical per-step manifests
 """
 
 from __future__ import annotations
 
 import argparse
-import csv
-import shutil
+import json
+import os
 import subprocess
 import sys
 import time
+from datetime import UTC, datetime
 from pathlib import Path
+from typing import Any, cast
 
+from lib.paths import farm_boundary_path, farm_report_path, grower_manifest_path
 from reporting_bootstrap import ensure_canonical_data_tree
 
 _REPO = Path(__file__).resolve().parents[2]
 _SCRIPTS = Path(__file__).parent
 
 
-def _field_slug_map(inventory_path: Path) -> list[tuple[str, str]]:
-    inventory = inventory_path
-    pairs: list[tuple[str, str]] = []
-    if not inventory.exists():
-        return pairs
-    with inventory.open(encoding="utf-8") as handle:
-        reader = csv.DictReader(handle)
-        for row in reader:
-            fid = str(row.get("field_id", "")).strip()
-            slug = str(row.get("field_slug", "")).strip()
-            if fid and slug:
-                pairs.append((fid, slug))
-    return pairs
+def _load_json(path: Path) -> dict:
+    if not path.exists():
+        return {}
+    return json.loads(path.read_text(encoding="utf-8"))
 
 
-def _sync_outputs_to_canonical(
-    grower_slug: str = "iowa-demo-grower",
-    farm_slug: str = "iowa-demo-farm",
-    boundaries_path: Path = Path("data/field-boundaries/iowa_10_fields.geojson"),
-    weather_path: Path = Path("data/weather/iowa_weather_2021_2025.csv"),
-    inventory_path: Path = Path(".sisyphus/evidence/task-3-field-inventory.csv"),
-) -> None:
-    import geopandas as gpd
-    import pandas as pd
+def _write_json(path: Path, payload: dict) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
 
-    pairs = _field_slug_map(_REPO / inventory_path)
-    if not pairs:
-        return
 
-    farm_root = _REPO / "data" / "growers" / grower_slug / "farms" / farm_slug
-    fields_root = farm_root / "fields"
-    farm_summaries = farm_root / "derived" / "summaries"
-    farm_soil_cards = farm_summaries / "soil_cards"
-    farm_soil_maps = farm_summaries / "soil_maps"
-    farm_summaries.mkdir(parents=True, exist_ok=True)
-    farm_soil_cards.mkdir(parents=True, exist_ok=True)
-    farm_soil_maps.mkdir(parents=True, exist_ok=True)
-
-    legacy_eda = _REPO / "data" / "EDA"
-    for name in ("iowa_farm_report.png", "iowa_farm_report.html", "iowa_farm_report.md"):
-        src = legacy_eda / name
-        if src.exists():
-            shutil.copy2(src, farm_summaries / name)
-
-    farm_compare = legacy_eda / "soil_cards" / "farm_comparison.png"
-    if farm_compare.exists():
-        shutil.copy2(farm_compare, farm_soil_cards / "farm_comparison.png")
-
-    legacy_soil_map_dir = legacy_eda / "soil_maps"
-    if legacy_soil_map_dir.exists():
-        for soil_map_file in sorted(legacy_soil_map_dir.glob("field_*_map.png")):
-            shutil.copy2(soil_map_file, farm_soil_maps / soil_map_file.name)
-
-    resolved_boundaries = _REPO / boundaries_path
-    resolved_weather = _REPO / weather_path
-    boundaries = gpd.read_file(resolved_boundaries) if resolved_boundaries.exists() else None
-    weather = (
-        pd.read_csv(resolved_weather, parse_dates=["date"]) if resolved_weather.exists() else None
+def _init_grower_manifest(grower_slug: str, farm_slug: str, farm_name: str) -> Path:
+    manifest_path = grower_manifest_path(grower_slug)
+    payload = _load_json(manifest_path)
+    raw_farms = payload.get("farms")
+    farms: list[dict[str, Any]] = (
+        [cast(dict[str, Any], item) for item in raw_farms if isinstance(item, dict)]
+        if isinstance(raw_farms, list)
+        else []
     )
-
-    for idx, (field_id, slug) in enumerate(pairs, start=1):
-        field_root = fields_root / slug
-        (field_root / "derived" / "summaries").mkdir(parents=True, exist_ok=True)
-
-        poster_src = legacy_eda / "field_cards" / f"iowa_field_report_{idx:02d}.png"
-        if poster_src.exists():
-            shutil.copy2(poster_src, field_root / "derived" / "summaries" / "field_report.png")
-
-        soil_props = legacy_eda / "soil_cards" / f"field_{idx:02d}_properties.png"
-        if soil_props.exists():
-            shutil.copy2(soil_props, field_root / "derived" / "summaries" / "soil_properties.png")
-        soil_texture = legacy_eda / "soil_cards" / f"field_{idx:02d}_texture.png"
-        if soil_texture.exists():
-            shutil.copy2(soil_texture, field_root / "derived" / "summaries" / "soil_texture.png")
-        feature_map_names = {
-            "component_map": "soil_component_map.png",
-            "organic_matter_map": "soil_organic_matter_map.png",
-            "ph_map": "soil_ph_map.png",
-            "awc_map": "soil_awc_map.png",
-            "clay_map": "soil_clay_map.png",
-            "sand_map": "soil_sand_map.png",
-            "cec_map": "soil_cec_map.png",
+    farm_exists = any(
+        str(item.get("farm_slug")) == farm_slug for item in farms if isinstance(item, dict)
+    )
+    if not farm_exists:
+        farms.append(
+            {
+                "farm_slug": farm_slug,
+                "farm_name": farm_name,
+                "last_run_started": None,
+                "last_run_finished": None,
+                "last_run_status": "unknown",
+            }
+        )
+    now = datetime.now(UTC).isoformat(timespec="seconds").replace("+00:00", "Z")
+    payload.update(
+        {
+            "grower_slug": grower_slug,
+            "manifest_version": 1,
+            "updated_at": now,
+            "farms": farms,
         }
-        for source_slug, target_name in feature_map_names.items():
-            source_path = legacy_eda / "soil_maps" / f"field_{idx:02d}_{source_slug}.png"
-            if source_path.exists():
-                shutil.copy2(source_path, field_root / "derived" / "features" / target_name)
+    )
+    _write_json(manifest_path, payload)
+    return manifest_path
 
-        om_summary_map = legacy_eda / "soil_maps" / f"field_{idx:02d}_organic_matter_map.png"
-        if om_summary_map.exists():
-            shutil.copy2(om_summary_map, field_root / "derived" / "summaries" / "soil_map.png")
 
-        if boundaries is not None:
-            match = boundaries[boundaries["field_id"] == field_id]
-            if not match.empty:
-                match.to_file(field_root / "boundary" / "field_boundary.geojson", driver="GeoJSON")
-
-        cache_src = _REPO / "data" / "soil" / "cache" / f"{field_id}_polygons.geojson"
-        if cache_src.exists():
-            shutil.copy2(cache_src, field_root / "soil" / "ssurgo_soil_types.geojson")
-
-        if weather is not None and "field_id" in weather.columns:
-            field_weather = weather[weather["field_id"] == field_id].copy()
-            if not field_weather.empty:
-                field_weather.to_csv(field_root / "weather" / "daily_weather.csv", index=False)
+def _update_grower_manifest(
+    manifest_path: Path,
+    *,
+    farm_slug: str,
+    run_status: str,
+    active_step: str | None,
+    step_results: list[dict[str, str]],
+    started_at: str | None = None,
+    finished_at: str | None = None,
+) -> None:
+    payload = _load_json(manifest_path)
+    raw_farms = payload.get("farms")
+    farms: list[dict[str, Any]] = (
+        [cast(dict[str, Any], item) for item in raw_farms if isinstance(item, dict)]
+        if isinstance(raw_farms, list)
+        else []
+    )
+    for idx, item in enumerate(farms):
+        if not isinstance(item, dict):
+            continue
+        if str(item.get("farm_slug")) != farm_slug:
+            continue
+        current = dict(item)
+        if started_at is not None:
+            current["last_run_started"] = started_at
+        if finished_at is not None:
+            current["last_run_finished"] = finished_at
+        current["last_run_status"] = run_status
+        current["active_step"] = active_step
+        current["step_results"] = step_results
+        farms[idx] = current
+        break
+    payload["farms"] = farms
+    payload["updated_at"] = datetime.now(UTC).isoformat(timespec="seconds").replace("+00:00", "Z")
+    _write_json(manifest_path, payload)
 
 
 def _run(script: str, extra_env: dict | None = None) -> bool:
     cmd = [sys.executable, str(_SCRIPTS / script)]
     t0 = time.monotonic()
-    result = subprocess.run(cmd, cwd=str(_REPO), capture_output=False)
+    env = os.environ.copy()
+    if extra_env:
+        env.update({str(key): str(value) for key, value in extra_env.items()})
+    result = subprocess.run(cmd, cwd=str(_REPO), capture_output=False, env=env)
     elapsed = time.monotonic() - t0
     status = "ok" if result.returncode == 0 else "FAILED"
     print(f"  {status}  ({elapsed:.1f}s)  {script}")
@@ -156,7 +137,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Farm intelligence reporting pipeline")
     parser.add_argument(
         "--boundaries",
-        default="data/field-boundaries/iowa_10_fields.geojson",
+        default=None,
         help="Path to field boundaries GeoJSON",
     )
     parser.add_argument("--farm-name", default="Iowa Demo Farm")
@@ -169,8 +150,8 @@ def main() -> None:
     )
     parser.add_argument(
         "--weather-csv",
-        default="data/weather/iowa_weather_2021_2025.csv",
-        help="Weather CSV path used for canonical field sync",
+        default=None,
+        help="Optional canonical weather CSV override",
     )
     parser.add_argument("--force", action="store_true", help="Force rerun all steps")
     parser.add_argument(
@@ -195,19 +176,43 @@ def main() -> None:
         print("Structure test complete.")
         return
 
-    boundaries = Path(args.boundaries)
+    boundaries = (
+        Path(args.boundaries)
+        if args.boundaries
+        else farm_boundary_path(args.grower_slug, args.farm_slug)
+    )
     if not boundaries.exists():
         print(f"ERROR: field boundaries not found: {boundaries}")
         sys.exit(1)
 
     print()
     print("=" * 60)
-    print(f"  Farm Intelligence Reporting Pipeline")
+    print("  Farm Intelligence Reporting Pipeline")
     print(f"  Farm: {args.farm_name}")
     print(f"  Boundaries: {boundaries}")
     print("=" * 60)
 
+    run_started = datetime.now(UTC).isoformat(timespec="seconds").replace("+00:00", "Z")
+    grower_manifest = _init_grower_manifest(args.grower_slug, args.farm_slug, args.farm_name)
+    step_results: list[dict[str, str]] = []
+    _update_grower_manifest(
+        grower_manifest,
+        farm_slug=args.farm_slug,
+        run_status="running",
+        active_step="bootstrap",
+        step_results=step_results,
+        started_at=run_started,
+        finished_at=None,
+    )
+
     steps = [
+        ("ingest/download_fields.py", "Canonical field boundaries"),
+        ("ingest/download_soil.py", "SSURGO field soil tables"),
+        ("ingest/download_weather.py", "Weather history tables"),
+        ("ingest/download_cdl.py", "Shared CDL history tables"),
+        ("ingest/download_satellite_imagery.py", "Raw satellite TIFFs"),
+        ("reporting/generate_ndvi_composites.py", "NDVI yearly composites"),
+        ("reporting/generate_ndvi_cards.py", "NDVI cached cards"),
         ("reporting/generate_field_posters.py", "Field posters"),
         ("reporting/generate_aggregate_poster.py", "Farm portfolio poster"),
         ("reporting/generate_ssurgo_cards.py", "SSURGO soil profile cards"),
@@ -217,11 +222,28 @@ def main() -> None:
     ]
 
     all_ok = True
+    extra_env = {"AG_FORCE": "1"} if args.force else None
     for script, label in steps:
+        _update_grower_manifest(
+            grower_manifest,
+            farm_slug=args.farm_slug,
+            run_status="running",
+            active_step=script,
+            step_results=step_results,
+        )
         print(f"\n[{label}]")
-        ok = _run(script)
+        ok = _run(script, extra_env=extra_env)
+        step_results.append({"step": script, "status": "ok" if ok else "failed"})
         if not ok:
             all_ok = False
+            _update_grower_manifest(
+                grower_manifest,
+                farm_slug=args.farm_slug,
+                run_status="failed",
+                active_step=script,
+                step_results=step_results,
+                finished_at=datetime.now(UTC).isoformat(timespec="seconds").replace("+00:00", "Z"),
+            )
             print(f"  Pipeline halted at: {script}")
             print("  Fix the error above and rerun.")
             sys.exit(1)
@@ -229,33 +251,21 @@ def main() -> None:
     print()
     print("=" * 60)
     if all_ok:
-        _sync_outputs_to_canonical(
-            grower_slug=args.grower_slug,
+        _update_grower_manifest(
+            grower_manifest,
             farm_slug=args.farm_slug,
-            boundaries_path=Path(args.boundaries),
-            weather_path=Path(args.weather_csv),
-            inventory_path=Path(args.inventory_csv),
+            run_status="complete",
+            active_step=None,
+            step_results=step_results,
+            finished_at=datetime.now(UTC).isoformat(timespec="seconds").replace("+00:00", "Z"),
         )
         print("  Pipeline complete.")
         print()
         print("  Outputs:")
-        output_dir = _REPO / "data" / "EDA"
-        for f in sorted(output_dir.glob("iowa_farm_report.*")):
-            print(f"    {f.relative_to(_REPO)}")
-        card_dir = output_dir / "field_cards"
-        if card_dir.exists():
-            cards = sorted(card_dir.glob("*.png"))
-            print(f"    {card_dir.relative_to(_REPO)}/  ({len(cards)} field posters)")
-        soil_dir = output_dir / "soil_cards"
-        if soil_dir.exists():
-            soil_cards = sorted(soil_dir.glob("*.png"))
-            print(f"    {soil_dir.relative_to(_REPO)}/  ({len(soil_cards)} soil profile cards)")
-        soil_map_dir = output_dir / "soil_maps"
-        if soil_map_dir.exists():
-            soil_maps = sorted(soil_map_dir.glob("*.png"))
-            print(
-                f"    {soil_map_dir.relative_to(_REPO)}/  ({len(soil_maps)} soil maps with basemap)"
-            )
+        for name in ("iowa_farm_report.png", "iowa_farm_report.html", "iowa_farm_report.md"):
+            output = farm_report_path(args.grower_slug, args.farm_slug, name)
+            if output.exists():
+                print(f"    {output.relative_to(_REPO)}")
     print("=" * 60)
     print()
 

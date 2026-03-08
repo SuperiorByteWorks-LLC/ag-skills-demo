@@ -1,29 +1,25 @@
 #!/usr/bin/env python3
-"""
-02_download_soil.py - Download SSURGO soil data for Iowa fields
+"""Download SSURGO soil data into canonical grower paths."""
 
-Queries the NRCS Soil Data Access API for soil properties at each field location.
-
-Input:  data/field-boundaries/iowa_10_fields.geojson
-Output: data/soil/iowa_10_fields_soil.csv
-"""
-
-import sys
 import os
+import sys
 from pathlib import Path
+
 import geopandas as gpd
 import pandas as pd
 import requests
 
 _SCRIPTS_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(_SCRIPTS_DIR))
+sys.path.insert(0, str(_SCRIPTS_DIR / "lib"))
 
+from paths import farm_boundary_path, farm_table_path, field_soil_full_path, field_soil_summary_path
 from reporting_bootstrap import ensure_skill_path
+from reporting_bootstrap import ensure_canonical_data_tree, field_slug_map_from_inventory
 
 ensure_skill_path("ssurgo-soil")
 
-from ssurgo_soil import download_soil, get_dominant_soil
-
+from ssurgo_soil import download_soil
 
 SDA_URL = "https://sdmdataaccess.sc.egov.usda.gov/Tabular/post.rest"
 
@@ -137,7 +133,7 @@ def _write_summary(soil_data: pd.DataFrame) -> None:
         )
         .assign(ph_constraint="none", erosion_risk="moderate")
     )
-    grouped.to_csv("data/soil/iowa_ssurgo_summary.csv", index=False)
+    raise RuntimeError("_write_summary requires an explicit output path")
 
 
 def main():
@@ -145,30 +141,102 @@ def main():
     print("Step 2: Download SSURGO Soil Data")
     print("=" * 60)
 
-    os.makedirs("data/soil", exist_ok=True)
+    grower_slug = os.environ.get("AG_GROWER_SLUG", "iowa-demo-grower")
+    farm_slug = os.environ.get("AG_FARM_SLUG", "iowa-demo-farm")
+    inventory_path = Path(".sisyphus/evidence/task-3-field-inventory.csv")
+    ensure_canonical_data_tree(
+        grower_slug=grower_slug, farm_slug=farm_slug, inventory_path=inventory_path
+    )
+    field_slug_map = field_slug_map_from_inventory(
+        inventory_path if inventory_path.exists() else None
+    )
 
-    fields = gpd.read_file("data/field-boundaries/iowa_10_fields.geojson")
+    boundaries_path = farm_boundary_path(grower_slug, farm_slug)
+    fields = gpd.read_file(boundaries_path)
     print(f"Loaded {len(fields)} fields")
+
+    farm_full_output = farm_table_path(grower_slug, farm_slug, "iowa_full_ssurgo.csv")
+    farm_summary_output = farm_table_path(grower_slug, farm_slug, "iowa_ssurgo_summary.csv")
+    farm_sample_output = farm_table_path(grower_slug, farm_slug, "iowa_10_fields_soil.csv")
+    farm_sample_output.parent.mkdir(parents=True, exist_ok=True)
+    force = os.environ.get("AG_FORCE") == "1"
+
+    if (
+        farm_full_output.exists()
+        and farm_summary_output.exists()
+        and farm_sample_output.exists()
+        and not force
+    ):
+        soil_data = pd.read_csv(farm_sample_output)
+        grouped = pd.read_csv(farm_summary_output)
+        if field_slug_map:
+            for field_id, field_slug in field_slug_map.items():
+                field_rows = soil_data[soil_data["field_id"].astype(str) == str(field_id)].copy()
+                if not field_rows.empty:
+                    full_target = field_soil_full_path(grower_slug, farm_slug, field_slug)
+                    full_target.parent.mkdir(parents=True, exist_ok=True)
+                    field_rows.to_csv(full_target, index=False)
+                summary_rows = grouped[grouped["field_id"].astype(str) == str(field_id)].copy()
+                if not summary_rows.empty:
+                    summary_target = field_soil_summary_path(grower_slug, farm_slug, field_slug)
+                    summary_target.parent.mkdir(parents=True, exist_ok=True)
+                    summary_rows.to_csv(summary_target, index=False)
+        print(f"skip  SSURGO API fetch (cached): {farm_sample_output}")
+        return soil_data
 
     soil_data = download_soil(
         fields,
         field_id_column="field_id",
         max_depth_cm=30,
-        output_path="data/soil/iowa_10_fields_soil.csv",
+        output_path=str(farm_sample_output),
     )
 
     if soil_data.empty:
         print("  Primary SSURGO download returned no rows; querying SDA fallback summaries...")
         soil_data = _fallback_field_soil(fields)
         if not soil_data.empty:
-            soil_data.to_csv("data/soil/iowa_full_ssurgo.csv", index=False)
-            soil_data.to_csv("data/soil/iowa_10_fields_soil.csv", index=False)
-            _write_summary(soil_data)
+            soil_data.to_csv(farm_full_output, index=False)
+            soil_data.to_csv(farm_sample_output, index=False)
+
+    if not soil_data.empty:
+        soil_data.to_csv(farm_full_output, index=False)
+        soil_data.to_csv(farm_sample_output, index=False)
+        grouped = (
+            soil_data.groupby("field_id", as_index=False)
+            .agg(
+                n_mukeys=("mukey", "nunique"),
+                n_components=("compname", "nunique"),
+                n_horizons=("mukey", "count"),
+                avg_om_pct=("om_r", "mean"),
+                avg_ph=("ph1to1h2o_r", "mean"),
+                total_aws_inches=("awc_r", "sum"),
+                avg_cec=("cec7_r", "mean"),
+                avg_clay_pct=("claytotal_r", "mean"),
+                avg_sand_pct=("sandtotal_r", "mean"),
+                dominant_soil=("compname", "first"),
+                drainage_class=("drainagecl", "first"),
+            )
+            .assign(ph_constraint="none", erosion_risk="moderate")
+        )
+        grouped.to_csv(farm_summary_output, index=False)
+
+        if field_slug_map:
+            for field_id, field_slug in field_slug_map.items():
+                field_rows = soil_data[soil_data["field_id"].astype(str) == str(field_id)].copy()
+                if not field_rows.empty:
+                    full_target = field_soil_full_path(grower_slug, farm_slug, field_slug)
+                    full_target.parent.mkdir(parents=True, exist_ok=True)
+                    field_rows.to_csv(full_target, index=False)
+                summary_rows = grouped[grouped["field_id"].astype(str) == str(field_id)].copy()
+                if not summary_rows.empty:
+                    summary_target = field_soil_summary_path(grower_slug, farm_slug, field_slug)
+                    summary_target.parent.mkdir(parents=True, exist_ok=True)
+                    summary_rows.to_csv(summary_target, index=False)
 
     print(
         f"\n✓ Downloaded {len(soil_data)} soil records for {soil_data['field_id'].nunique()} fields"
     )
-    print(f"  Output: data/soil/iowa_10_fields_soil.csv")
+    print(f"  Output: {farm_sample_output}")
 
     return soil_data
 
