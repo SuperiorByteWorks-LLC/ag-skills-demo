@@ -240,10 +240,17 @@ def main() -> None:
         field_id = frow["field_id"]
         output_path = output_dir / f"iowa_field_report_{idx + 1:02d}.png"
         prior = load_manifest(manifest_dir / f"{STEP_FIELD_POSTER_RENDER}_{field_id}.json")
+        
+        # Check for cached SSURGO polygons
+        cache_path = _REPO / "data" / "soil" / "cache" / f"{field_id}_polygons.geojson"
+        input_paths = [config.field_boundary_path, "data/soil/iowa_full_ssurgo.csv",
+                       "data/weather/iowa_weather_2021_2025.csv", cdl_path]
+        if cache_path.exists():
+            input_paths.append(str(cache_path))
+        
         manifest = build_step_manifest(
             step_name=f"{STEP_FIELD_POSTER_RENDER}_{field_id}",
-            input_paths=[config.field_boundary_path, "data/soil/iowa_full_ssurgo.csv",
-                         "data/weather/iowa_weather_2021_2025.csv", cdl_path],
+            input_paths=input_paths,
             output_paths=[output_path],
             code_paths=[_SCRIPT],
             config=config,
@@ -254,10 +261,30 @@ def main() -> None:
         print(f"run   {field_id}")
         field_gdf = fields.iloc[[idx]].copy()
         detail_df = soil_full[soil_full["field_id"] == field_id].copy() if "field_id" in soil_full.columns else pd.DataFrame()
+        
+        # Load SSURGO polygons if available
+        ssurgo_gdf = gpd.GeoDataFrame(geometry=[], crs="EPSG:4326")
+        if cache_path.exists():
+            try:
+                ssurgo_gdf = gpd.read_file(cache_path)
+                # Merge with soil data for component names
+                if not detail_df.empty and "mukey" in detail_df.columns:
+                    soil_agg = detail_df.groupby("mukey").agg({
+                        "compname": "first",
+                        "comppct_r": "first",
+                        "drainagecl": "first",
+                    }).reset_index()
+                    soil_agg["mukey"] = soil_agg["mukey"].astype(str)
+                    ssurgo_gdf["mukey"] = ssurgo_gdf["mukey"].astype(str)
+                    ssurgo_gdf = ssurgo_gdf.merge(soil_agg, on="mukey", how="left")
+                print(f"    Loaded {len(ssurgo_gdf)} SSURGO polygons")
+            except Exception as e:
+                print(f"    Warning: Could not load SSURGO polygons: {e}")
+        
         _render_field_poster(
             field_id=field_id,
             field_gdf=field_gdf,
-            ssurgo_wgs84=gpd.GeoDataFrame(geometry=[], crs="EPSG:4326"),
+            ssurgo_wgs84=ssurgo_gdf,
             detail_df=detail_df,
             weather=weather,
             cdl=cdl,
