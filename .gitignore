@@ -1,42 +1,7 @@
 # Agricultural Data Skills - Gitignore
 
 # This file ensures generated data outputs are not committed to git.
-# Only examples/ directory should be committed (small sample data).
-
-# Data outputs - never commit
-data/
-
-# But keep scripts and some example outputs
-!data/scripts/
-!data/EDA/*.md
-!data/EDA/iowa_*.csv
-*.geojson
-*.tif
-*.tiff
-*.nc
-*.csv
-*.txt
-*.xlsx
-*.parquet
-*.shp
-*.shx
-*.dbf
-*.prj
-*.sbn
-*.sbx
-*.xml
-
-# Plot outputs
-*.png
-*.jpg
-*.jpeg
-*.pdf
-*.svg
-*.html
-
-# Jupyter notebooks (unless specifically wanted)
-*.ipynb
-.ipynb_checkpoints/
+# Only scripts and documentation should be committed (not large data files).
 
 # Python cache
 __pycache__/
@@ -84,19 +49,106 @@ Thumbs.db
 # Logs
 *.log
 
-# Large binary files
+# ============================================================================
+# Data folder - track structure but not large/binary files
+# ============================================================================
+
+# First, ignore everything in data folder
+data/**
+
+# Then un-ignore specific files and directories we want to track
+
+# Track data root README
+!data/README.md
+
+# Track scripts directory and Python files
+!data/scripts/
+!data/scripts/**/
+!data/scripts/*.py
+
+# Track SQL directory and files
+!data/sql/
+!data/sql/**/
+!data/sql/*.sql
+!data/sql/*.md
+
+# Track EDA directory markdown files (but not binaries)
+!data/EDA/
+!data/EDA/*.md
+
+# Track subdirectory README files
+!data/soil/
+!data/soil/README.md
+!data/weather/
+!data/weather/README.md
+!data/field-boundaries/
+!data/field-boundaries/README.md
+!data/cdl/
+!data/cdl/README.md
+
+# Track specific binary outputs (for LFS)
+# Uncomment the following lines to track specific binary files:
+# !data/cdl/*.tif
+# !data/EDA/*.png
+# !data/EDA/field_cards/
+
+# Binary/large data file patterns (applied everywhere including data/)
+*.geojson
+*.tif
+*.tiff
+*.nc
+*.csv
+*.txt
+*.xlsx
+*.parquet
+*.shp
+*.shx
+*.dbf
+*.prj
+*.sbn
+*.sbx
+*.cpg
+*.qmd
+*.qix
+
+# Plot/image outputs (LFS tracked, not git tracked directly via gitignore)
+# These are handled by .gitattributes for LFS
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.webp
+*.pdf
+*.svg
+*.eps
+*.ps
+
+# Report outputs
+*.html
+*.docx
+*.pptx
+*.odt
+*.ods
+
+# Archive/compressed files
 *.zip
 *.tar
 *.gz
+*.bz2
+*.xz
 *.rar
 *.tgz
 *.tar.gz
+*.tar.bz2
+*.tar.xz
+*.7z
+
+# Jupyter notebooks (unless specifically wanted)
+*.ipynb
+.ipynb_checkpoints/
 
 # Keep examples (explicit allow)
 !examples/*
 !examples/**/*
 !*/examples/*
 !*/examples/**/*
-
-# Keep data/README.md files (documentation only)
-!data/README.md
