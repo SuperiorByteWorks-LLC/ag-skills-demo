@@ -109,10 +109,23 @@ def _sync_outputs_to_canonical(
         soil_texture = legacy_eda / "soil_cards" / f"field_{idx:02d}_texture.png"
         if soil_texture.exists():
             shutil.copy2(soil_texture, field_root / "derived" / "summaries" / "soil_texture.png")
-        soil_map = legacy_eda / "soil_maps" / f"field_{idx:02d}_map.png"
-        if soil_map.exists():
-            shutil.copy2(soil_map, field_root / "derived" / "summaries" / "soil_map.png")
-            shutil.copy2(soil_map, field_root / "derived" / "features" / "soil_map.png")
+        feature_map_names = {
+            "component_map": "soil_component_map.png",
+            "organic_matter_map": "soil_organic_matter_map.png",
+            "ph_map": "soil_ph_map.png",
+            "awc_map": "soil_awc_map.png",
+            "clay_map": "soil_clay_map.png",
+            "sand_map": "soil_sand_map.png",
+            "cec_map": "soil_cec_map.png",
+        }
+        for source_slug, target_name in feature_map_names.items():
+            source_path = legacy_eda / "soil_maps" / f"field_{idx:02d}_{source_slug}.png"
+            if source_path.exists():
+                shutil.copy2(source_path, field_root / "derived" / "features" / target_name)
+
+        om_summary_map = legacy_eda / "soil_maps" / f"field_{idx:02d}_organic_matter_map.png"
+        if om_summary_map.exists():
+            shutil.copy2(om_summary_map, field_root / "derived" / "summaries" / "soil_map.png")
 
         if boundaries is not None:
             match = boundaries[boundaries["field_id"] == field_id]

@@ -25,6 +25,15 @@ _REPO = Path(__file__).resolve().parents[3]
 _OUTPUT_DIR = _REPO / "data" / "EDA" / "soil_maps"
 _CACHE_DIR = _REPO / "data" / "soil" / "cache"
 
+PROPERTY_SPECS = [
+    ("om_r", "Organic Matter", "%", "organic_matter"),
+    ("ph1to1h2o_r", "pH", "", "ph"),
+    ("awc_r", "Available Water Capacity", "cm/cm", "awc"),
+    ("claytotal_r", "Clay", "%", "clay"),
+    ("sandtotal_r", "Sand", "%", "sand"),
+    ("cec7_r", "CEC", "cmol(+)/kg", "cec"),
+]
+
 SDA_URL = "https://sdmdataaccess.sc.egov.usda.gov/Tabular/post.rest"
 
 
@@ -261,14 +270,14 @@ def _classify_natural_breaks(
     return class_ids, labels
 
 
-def render_ssurgo_field_map(
+def _render_map(
     field_gdf: gpd.GeoDataFrame,
-    ssurgo_gdf: gpd.GeoDataFrame,
+    plot_source: gpd.GeoDataFrame,
     output_path: Path,
-    field_id: str = "",
+    title: str,
+    legend_title: str,
+    label_builder,
 ) -> None:
-    """Render per-field SSURGO natural-breaks choropleth over imagery basemap."""
-
     fig, ax = plt.subplots(figsize=(12, 10))
     fig.patch.set_facecolor("#fafaf9")
 
@@ -281,106 +290,132 @@ def render_ssurgo_field_map(
     field_wm = field_gdf.to_crs(epsg=3857)
     use_basemap = _add_basemap(ax, field_wm, zoom=15)
 
-    plot_source = ssurgo_gdf.copy()
-    if "mukey" in plot_source.columns:
-        plot_source["mukey"] = plot_source["mukey"].astype(str)
-        plot_source = plot_source.dissolve(by="mukey", as_index=False)
-
-    if "om_r" in plot_source.columns and pd.Series(plot_source["om_r"]).notna().any():
-        choropleth_col = "om_r"
-        choropleth_label = "Organic Matter"
-        units = "%"
-    elif "comppct_r" in plot_source.columns and pd.Series(plot_source["comppct_r"]).notna().any():
-        choropleth_col = "comppct_r"
-        choropleth_label = "Component Percentage"
-        units = "%"
-    else:
-        plot_source["mukey_rank"] = pd.factorize(plot_source["mukey"].astype(str))[0] + 1
-        choropleth_col = "mukey_rank"
-        choropleth_label = "MUKEY"
-        units = ""
-
-    plot_source = plot_source.dropna(subset=[choropleth_col]).copy()
     if not plot_source.empty:
-        class_ids, class_labels = _classify_natural_breaks(
-            pd.Series(plot_source[choropleth_col]), class_count=3
-        )
-        plot_source["class_id"] = class_ids
         plot_target = plot_source.to_crs(epsg=3857) if use_basemap else plot_source
-
-        colors = plt.get_cmap("YlGn")(np.linspace(0.35, 0.85, max(1, len(class_labels))))
+        colors = plt.get_cmap("YlGn")(
+            np.linspace(0.35, 0.85, max(1, plot_source["class_id"].nunique()))
+        )
         legend_elements: list[object] = [
             Line2D([0], [0], color="darkgreen", linewidth=3, label="Field Boundary")
         ]
-
-        for class_id, label in enumerate(class_labels):
+        for class_id in sorted(plot_source["class_id"].unique()):
             class_slice = plot_target[plot_target["class_id"] == class_id]
             if class_slice.empty:
                 continue
             class_slice.plot(
                 ax=ax,
-                color=colors[class_id],
-                alpha=0.55,
-                edgecolor="darkgreen",
-                linewidth=1.3,
+                color=colors[int(class_id)],
+                alpha=0.62,
+                edgecolor="#166534",
+                linewidth=1.35,
             )
-            label_text = f"{choropleth_label} {label}"
-            if "mukey" in plot_source.columns:
-                slice_ids = (
-                    plot_source.loc[plot_source["class_id"] == class_id, "mukey"]
-                    .astype(str)
-                    .tolist()
-                )
-                if choropleth_col == "comppct_r" and "compname" in plot_source.columns:
-                    comp_names = (
-                        plot_source.loc[plot_source["class_id"] == class_id, ["mukey", "compname"]]
-                        .drop_duplicates()
-                        .apply(lambda r: f"{r['compname']} (MUKEY {r['mukey']})", axis=1)
-                        .tolist()
-                    )
-                    label_text = "; ".join(comp_names[:3])
-                elif slice_ids:
-                    label_text = f"{choropleth_label} {label} | MUKEY {', '.join(slice_ids[:4])}"
             legend_elements.append(
                 Patch(
-                    facecolor=colors[class_id], alpha=0.55, edgecolor="darkgreen", label=label_text
+                    facecolor=colors[int(class_id)],
+                    alpha=0.62,
+                    edgecolor="#166534",
+                    label=label_builder(plot_source[plot_source["class_id"] == class_id]),
                 )
             )
-
         ax.legend(
             handles=legend_elements,
             loc="lower right",
-            fontsize=8,
-            framealpha=0.9,
-            title=f"{choropleth_label} ({units}) Classes",
+            fontsize=7,
+            framealpha=0.92,
+            title=legend_title,
             title_fontsize=9,
         )
     else:
-        ax.text(
-            0.5, 0.5, "No soil property values", transform=ax.transAxes, ha="center", va="center"
-        )
+        ax.text(0.5, 0.5, "No soil data", transform=ax.transAxes, ha="center", va="center")
 
     boundary_target = field_wm if use_basemap else field_gdf
-    boundary_target.plot(ax=ax, color="none", edgecolor="darkgreen", linewidth=3)
-
-    field_short = field_id[-6:] if field_id else "Field"
-    mukey_count = (
-        int(plot_source["mukey"].nunique())
-        if not plot_source.empty and "mukey" in plot_source.columns
-        else 0
-    )
-    ax.set_title(
-        f"Field {field_short} - SSURGO {choropleth_label} (Natural Breaks)\n({mukey_count} MUKEYs)",
-        fontsize=13,
-    )
-
+    boundary_target.plot(ax=ax, color="none", edgecolor="#0f7a20", linewidth=3.0)
+    ax.set_title(title, fontsize=13)
     if not use_basemap:
         ax.set_xlabel("Longitude")
         ax.set_ylabel("Latitude")
-
     plt.tight_layout()
     plt.savefig(output_path, dpi=150, bbox_inches="tight", facecolor=fig.get_facecolor())
     plt.close(fig)
+
+
+def render_ssurgo_component_map(
+    field_gdf: gpd.GeoDataFrame,
+    ssurgo_gdf: gpd.GeoDataFrame,
+    output_path: Path,
+    field_id: str,
+) -> None:
+    plot_source = ssurgo_gdf.copy()
+    if "mukey" in plot_source.columns:
+        plot_source["mukey"] = plot_source["mukey"].astype(str)
+        plot_source = plot_source.dissolve(by="mukey", as_index=False)
+    if not plot_source.empty:
+        plot_source["class_id"] = np.arange(len(plot_source))
+
+    field_short = field_id[-6:] if field_id else "Field"
+    mukey_count = int(plot_source["mukey"].nunique()) if not plot_source.empty else 0
+
+    def _label(part: gpd.GeoDataFrame) -> str:
+        row = part.iloc[0]
+        comp = row.get("compname", "Unknown")
+        comp = comp if isinstance(comp, str) and comp else "Unknown"
+        return f"{comp} (MUKEY {row['mukey']})"
+
+    _render_map(
+        field_gdf=field_gdf,
+        plot_source=plot_source,
+        output_path=output_path,
+        title=f"Field {field_short} - SSURGO Predominant Component\n({mukey_count} MUKEYs)",
+        legend_title="Predominant component",
+        label_builder=_label,
+    )
+
+
+def render_ssurgo_property_map(
+    field_gdf: gpd.GeoDataFrame,
+    ssurgo_gdf: gpd.GeoDataFrame,
+    output_path: Path,
+    field_id: str,
+    property_col: str,
+    property_label: str,
+    property_units: str,
+) -> bool:
+    plot_source = ssurgo_gdf.copy()
+    if "mukey" in plot_source.columns:
+        plot_source["mukey"] = plot_source["mukey"].astype(str)
+        plot_source = plot_source.dissolve(by="mukey", as_index=False)
+    if property_col not in plot_source.columns:
+        return False
+    plot_source = plot_source.dropna(subset=[property_col]).copy()
+    if plot_source.empty:
+        return False
+    class_ids, labels = _classify_natural_breaks(
+        pd.Series(plot_source[property_col]), class_count=3
+    )
+    plot_source["class_id"] = class_ids
+    field_short = field_id[-6:] if field_id else "Field"
+    mukey_count = int(plot_source["mukey"].nunique()) if "mukey" in plot_source.columns else 0
+
+    def _label(part: gpd.GeoDataFrame) -> str:
+        idx = int(part.iloc[0]["class_id"])
+        mukeys = ", ".join(part["mukey"].astype(str).tolist()[:4])
+        suffix = f" | MUKEY {mukeys}" if mukeys else ""
+        return f"{property_label} {labels[idx]}{suffix}"
+
+    legend_title = (
+        f"{property_label} ({property_units}) Classes"
+        if property_units
+        else f"{property_label} Classes"
+    )
+    _render_map(
+        field_gdf=field_gdf,
+        plot_source=plot_source,
+        output_path=output_path,
+        title=f"Field {field_short} - SSURGO {property_label} (Natural Breaks)\n({mukey_count} MUKEYs)",
+        legend_title=legend_title,
+        label_builder=_label,
+    )
+    return True
 
 
 def main() -> None:
@@ -409,9 +444,26 @@ def main() -> None:
 
         field_ssurgo = get_ssurgo_polygons_with_soil_data(field_single, field_id)
 
-        output_path = _OUTPUT_DIR / f"field_{idx:02d}_map.png"
-        render_ssurgo_field_map(field_single, field_ssurgo, output_path, field_id=field_short)
-        print(f"  ✓ Map saved: {output_path.name}")
+        component_output = _OUTPUT_DIR / f"field_{idx:02d}_component_map.png"
+        render_ssurgo_component_map(
+            field_single, field_ssurgo, component_output, field_id=field_short
+        )
+        print(f"  ✓ Component map saved: {component_output.name}")
+
+        created = 0
+        for prop, label, units, slug in PROPERTY_SPECS:
+            output_path = _OUTPUT_DIR / f"field_{idx:02d}_{slug}_map.png"
+            if render_ssurgo_property_map(
+                field_single,
+                field_ssurgo,
+                output_path,
+                field_id=field_short,
+                property_col=prop,
+                property_label=label,
+                property_units=units,
+            ):
+                created += 1
+        print(f"  ✓ Property maps saved: {created}")
 
     print("\n" + "=" * 60)
     print(f"SSURGO soil maps complete → {_OUTPUT_DIR}")
