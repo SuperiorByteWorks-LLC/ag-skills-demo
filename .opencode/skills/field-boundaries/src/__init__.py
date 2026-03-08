@@ -158,11 +158,9 @@ class FieldBoundariesSkill:
             "median_field_size": fields["area_acres"].median(),
             "size_range": (fields["area_acres"].min(), fields["area_acres"].max()),
             "regions": fields["region"].value_counts().to_dict(),
-            "crops": (
-                fields["crop_name"].value_counts().to_dict()
-                if "crop_name" in fields.columns
-                else {}
-            ),
+            "crops": fields["crop_name"].value_counts().to_dict()
+            if "crop_name" in fields.columns
+            else {},
         }
 
     def filter_by_size(

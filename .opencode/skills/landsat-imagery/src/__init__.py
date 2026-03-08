@@ -503,3 +503,32 @@ class LandsatImagerySkill:
         comparison["correlation"] = np.nan  # Would calculate per-field
 
         return comparison
+
+
+# Import helper functions from landsat_helpers
+try:
+    from .landsat_helpers import (
+        compare_sensors,
+        compute_ndvi_landsat,
+        compute_ndvi_landsat_from_files,
+        extract_landsat_field_stats,
+        get_landsat_band_info,
+        plot_landsat_ndvi_map,
+        resample_to_match,
+    )
+
+    # Expose helper functions at module level
+    __all__ = [
+        "LandsatImagerySkill",
+        # Helper functions
+        "compute_ndvi_landsat",
+        "compute_ndvi_landsat_from_files",
+        "resample_to_match",
+        "compare_sensors",
+        "plot_landsat_ndvi_map",
+        "extract_landsat_field_stats",
+        "get_landsat_band_info",
+    ]
+except ImportError:
+    # landsat_helpers.py not available, use existing class only
+    __all__ = ["LandsatImagerySkill"]

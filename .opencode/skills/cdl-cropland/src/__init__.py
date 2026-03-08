@@ -6,15 +6,26 @@ Provides annual crop type classifications for agricultural fields.
 
 from pathlib import Path
 from typing import Any
+import re
 
 import geopandas as gpd
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import rasterio
-from agri_toolkit.core.config import Config
+import requests
 from matplotlib.patches import Patch
+from pyproj import Transformer
 from rasterio.features import rasterize
+
+try:
+    from agri_toolkit.core.config import Config
+except Exception:  # pragma: no cover
+    import logging
+
+    class Config:  # type: ignore[override]
+        def __init__(self) -> None:
+            self.logger = logging.getLogger("cdl-cropland")
 
 
 class CDLCroplandSkill:
@@ -134,6 +145,8 @@ class CDLCroplandSkill:
         195: "Herbaceous Wetlands",
     }
 
+    CDL_VALUE_URL = "https://nassgeodata.gmu.edu/axis2/services/CDLService/GetCDLValue"
+
     def __init__(self, config: Config | None = None) -> None:
         """Initialize the CDL cropland skill.
 
@@ -209,9 +222,30 @@ class CDLCroplandSkill:
         Returns:
             Tuple of (crop_code, crop_name).
         """
-        # This is a placeholder - actual implementation would query CropScape API
-        # or download and read GeoTIFF files
-        return (1, "Corn")  # Placeholder
+        centroid = geometry.centroid
+        transformer = Transformer.from_crs("EPSG:4326", "EPSG:5070", always_xy=True)
+        x, y = transformer.transform(float(centroid.x), float(centroid.y))
+
+        response = requests.get(
+            self.CDL_VALUE_URL,
+            params={"year": int(year), "x": x, "y": y},
+            timeout=60,
+        )
+        response.raise_for_status()
+        text = response.text
+
+        value_match = re.search(r"value:\s*(\d+)", text)
+        crop_code = int(value_match.group(1)) if value_match else 0
+
+        category_match = re.search(r'category:\s*"([^"]+)"', text)
+        crop_name = (
+            category_match.group(1) if category_match else self.CROP_CODES.get(crop_code, "Unknown")
+        )
+
+        if crop_name == "NoData":
+            crop_name = self.CROP_CODES.get(crop_code, "Unknown")
+
+        return crop_code, crop_name
 
     def analyze_rotation(
         self,
