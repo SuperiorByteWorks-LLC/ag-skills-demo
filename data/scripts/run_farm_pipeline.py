@@ -65,6 +65,7 @@ def main() -> None:
         ("11_generate_field_posters.py", "Field posters"),
         ("12_generate_aggregate_poster.py", "Farm portfolio poster"),
         ("13_generate_farm_html.py", "Self-contained HTML report"),
+        ("14_generate_farm_markdown.py", "Markdown report"),
     ]
 
     all_ok = True
