@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import sys
 import json
 from pathlib import Path
@@ -9,8 +10,8 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DATA_ROOT = REPO_ROOT / "data"
-DEFAULT_GROWER = "iowa-demo-grower"
-DEFAULT_FARM = "iowa-demo-farm"
+DEFAULT_GROWER = os.environ.get("AG_GROWER_SLUG", "iowa-demo-grower")
+DEFAULT_FARM = os.environ.get("AG_FARM_SLUG", "iowa-demo-farm")
 
 
 def ensure_skill_path(skill_name: str) -> Path:
@@ -29,8 +30,10 @@ def fields_root(grower_slug: str = DEFAULT_GROWER, farm_slug: str = DEFAULT_FARM
     return farm_root(grower_slug, farm_slug) / "fields"
 
 
-def field_slugs_from_inventory() -> list[str]:
-    inventory = REPO_ROOT / ".sisyphus" / "evidence" / "task-3-field-inventory.csv"
+def field_slugs_from_inventory(inventory_path: Path | None = None) -> list[str]:
+    inventory = inventory_path or (
+        REPO_ROOT / ".sisyphus" / "evidence" / "task-3-field-inventory.csv"
+    )
     if not inventory.exists():
         return []
     rows = inventory.read_text(encoding="utf-8").splitlines()
@@ -146,7 +149,10 @@ def ensure_canonical_field_artifacts(
 
 
 def ensure_canonical_data_tree(
-    grower_slug: str = DEFAULT_GROWER, farm_slug: str = DEFAULT_FARM
+    grower_slug: str = DEFAULT_GROWER,
+    farm_slug: str = DEFAULT_FARM,
+    farm_name: str = "Iowa Demo Farm",
+    inventory_path: Path | None = None,
 ) -> list[str]:
     (DATA_ROOT / "shared" / "cdl" / "metadata").mkdir(parents=True, exist_ok=True)
     (DATA_ROOT / "shared" / "cdl" / "rasters").mkdir(parents=True, exist_ok=True)
@@ -162,7 +168,7 @@ def ensure_canonical_data_tree(
         {
             "grower_slug": grower_slug,
             "farm_slug": farm_slug,
-            "display_name": "Iowa Demo Farm",
+            "display_name": farm_name,
             "state": "IA",
             "country": "US",
             "default_crs": "EPSG:4326",
@@ -170,7 +176,7 @@ def ensure_canonical_data_tree(
         },
     )
 
-    slugs = field_slugs_from_inventory()
+    slugs = field_slugs_from_inventory(inventory_path=inventory_path)
     if not slugs:
         root = fields_root(grower_slug, farm_slug)
         if root.exists():

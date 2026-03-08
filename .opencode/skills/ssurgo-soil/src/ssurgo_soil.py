@@ -46,23 +46,25 @@ SDA_URL = "https://sdmdataaccess.sc.egov.usda.gov/Tabular/post.rest"
 # Additional soil properties for comprehensive analysis
 EXTENDED_COLUMNS = [
     # Horizon properties
-    "hzdept_r",      # Horizon top depth
-    "hzdepb_r",      # Horizon bottom depth
-    "om_r",          # Organic matter
+    "hzdept_r",  # Horizon top depth
+    "hzdepb_r",  # Horizon bottom depth
+    "om_r",  # Organic matter
     "ph1to1h2o_r",  # pH in water
-    "awc_r",         # Available water capacity
-    "claytotal_r",   # Total clay
-    "sandtotal_r",   # Total sand
-    "silttotal_r",   # Total silt
+    "awc_r",  # Available water capacity
+    "claytotal_r",  # Total clay
+    "sandtotal_r",  # Total sand
+    "silttotal_r",  # Total silt
     "dbthirdbar_r",  # Bulk density
-    "cec7_r",        # CEC at pH 7
+    "cec7_r",  # CEC at pH 7
     # Erosion and interpretation
-    "kwfact",        # K-factor (erodibility)
-    "awc_r",         # Available water capacity
+    "kwfact",  # K-factor (erodibility)
+    "awc_r",  # Available water capacity
     # Engineering
-    "hydgrpdcd",     # Hydrologic group
-    "drainagecl",    # Drainage class
+    "hydgrpdcd",  # Hydrologic group
+    "drainagecl",  # Drainage class
 ]
+
+SDA_COLUMNS = EXTENDED_COLUMNS
 
 # Extended numeric columns
 EXTENDED_NUMERIC_COLUMNS = [
@@ -488,9 +490,19 @@ def download_full_ssurgo(
 
     # Convert numeric columns
     numeric_cols = [
-        "comppct_r", "hzdept_r", "hzdepb_r", "om_r", "ph1to1h2o_r",
-        "awc_r", "claytotal_r", "sandtotal_r", "silttotal_r",
-        "dbthirdbar_r", "cec7_r", "kwfact", "kffact"
+        "comppct_r",
+        "hzdept_r",
+        "hzdepb_r",
+        "om_r",
+        "ph1to1h2o_r",
+        "awc_r",
+        "claytotal_r",
+        "sandtotal_r",
+        "silttotal_r",
+        "dbthirdbar_r",
+        "cec7_r",
+        "kwfact",
+        "kffact",
     ]
     for col in numeric_cols:
         if col in result.columns:
@@ -510,11 +522,7 @@ def query_sda_extended(sql: str) -> list[dict]:
 
     SDA_URL = "https://sdmdataaccess.sc.egov.usda.gov/Tabular/post.rest"
 
-    response = requests.post(
-        SDA_URL,
-        data={"query": sql, "format": "JSON"},
-        timeout=120
-    )
+    response = requests.post(SDA_URL, data={"query": sql, "format": "JSON"}, timeout=120)
     response.raise_for_status()
     result = response.json()
 
@@ -523,10 +531,25 @@ def query_sda_extended(sql: str) -> list[dict]:
 
     # Column names from the query (must match SELECT order)
     columns = [
-        "mukey", "muname", "cokey", "compname", "comppct_r", "drainagecl",
-        "majcompflag", "chkey", "hzdept_r", "hzdepb_r",
-        "om_r", "ph1to1h2o_r", "awc_r", "claytotal_r", "sandtotal_r",
-        "silttotal_r", "dbthirdbar_r", "cec7_r", "kwfact"
+        "mukey",
+        "muname",
+        "cokey",
+        "compname",
+        "comppct_r",
+        "drainagecl",
+        "majcompflag",
+        "chkey",
+        "hzdept_r",
+        "hzdepb_r",
+        "om_r",
+        "ph1to1h2o_r",
+        "awc_r",
+        "claytotal_r",
+        "sandtotal_r",
+        "silttotal_r",
+        "dbthirdbar_r",
+        "cec7_r",
+        "kwfact",
     ]
 
     rows = []
@@ -566,22 +589,22 @@ def summarize_ssurgo_by_field(soil_full: pd.DataFrame) -> pd.DataFrame:
 
     summaries = []
 
-    for fid in soil_full['field_id'].unique():
-        field_data = soil_full[soil_full['field_id'] == fid]
+    for fid in soil_full["field_id"].unique():
+        field_data = soil_full[soil_full["field_id"] == fid]
 
         # Basic counts
-        n_mukeys = field_data['mukey'].nunique()
-        n_components = field_data['cokey'].nunique()
+        n_mukeys = field_data["mukey"].nunique()
+        n_components = field_data["cokey"].nunique()
         n_horizons = len(field_data)
 
         # Dominant component (highest comppct_r)
-        dom = field_data.loc[field_data['comppct_r'].idxmax()]
-        dominant_soil = dom['compname']
-        dominant_mukey = dom['mukey']
-        dominant_muname = dom['muname']
+        dom = field_data.loc[field_data["comppct_r"].idxmax()]
+        dominant_soil = dom["compname"]
+        dominant_mukey = dom["mukey"]
+        dominant_muname = dom["muname"]
 
         # Weighted averages by component percentage
-        def weighted_avg(col, weight_col='comppct_r'):
+        def weighted_avg(col, weight_col="comppct_r"):
             valid = field_data[col].notna() & field_data[weight_col].notna()
             if not valid.any():
                 return None
@@ -589,37 +612,38 @@ def summarize_ssurgo_by_field(soil_full: pd.DataFrame) -> pd.DataFrame:
             weights = field_data.loc[valid, weight_col]
             return (vals * weights).sum() / weights.sum()
 
-        avg_om = weighted_avg('om_r')
-        avg_ph = weighted_avg('ph1to1h2o_r')
-        avg_cec = weighted_avg('cec7_r')
-        avg_clay = weighted_avg('claytotal_r')
-        avg_sand = weighted_avg('sandtotal_r')
-        avg_bd = weighted_avg('dbthirdbar_r')
-        avg_kfactor = weighted_avg('kwfact')
+        avg_om = weighted_avg("om_r")
+        avg_ph = weighted_avg("ph1to1h2o_r")
+        avg_cec = weighted_avg("cec7_r")
+        avg_clay = weighted_avg("claytotal_r")
+        avg_sand = weighted_avg("sandtotal_r")
+        avg_bd = weighted_avg("dbthirdbar_r")
+        avg_kfactor = weighted_avg("kwfact")
 
         # Available water storage (sum of horizon depths * AWC)
-        field_data_horizons = field_data[field_data['hzdept_r'].notna()].copy()
+        field_data_horizons = field_data[field_data["hzdept_r"].notna()].copy()
         if not field_data_horizons.empty:
-            field_data_horizons['horizon_thickness'] = (
-                field_data_horizons['hzdepb_r'] - field_data_horizons['hzdept_r']
+            field_data_horizons["horizon_thickness"] = (
+                field_data_horizons["hzdepb_r"] - field_data_horizons["hzdept_r"]
             )
             # Weighted by component pct and horizon thickness
-            field_data_horizons['aws_contribution'] = (
-                field_data_horizons['awc_r'] *
-                field_data_horizons['horizon_thickness'] *
-                field_data_horizons['comppct_r']
+            field_data_horizons["aws_contribution"] = (
+                field_data_horizons["awc_r"]
+                * field_data_horizons["horizon_thickness"]
+                * field_data_horizons["comppct_r"]
             )
-            total_aws = field_data_horizons['aws_contribution'].sum()
+            total_aws = field_data_horizons["aws_contribution"].sum()
             total_depth = (
-                field_data_horizons['horizon_thickness'] *
-                field_data_horizons['comppct_r']
+                field_data_horizons["horizon_thickness"] * field_data_horizons["comppct_r"]
             ).sum()
-            total_aws_in = (total_aws / total_depth * 200) if total_depth > 0 else None  # Normalize to 200cm
+            total_aws_in = (
+                (total_aws / total_depth * 200) if total_depth > 0 else None
+            )  # Normalize to 200cm
         else:
             total_aws_in = None
 
         # Drainage
-        drainage = dom['drainagecl']
+        drainage = dom["drainagecl"]
 
         # pH constraints for corn/soybeans
         ph_constraint = None
@@ -641,26 +665,28 @@ def summarize_ssurgo_by_field(soil_full: pd.DataFrame) -> pd.DataFrame:
             else:
                 erosion_risk = "low"
 
-        summaries.append({
-            'field_id': fid,
-            'n_mukeys': n_mukeys,
-            'n_components': n_components,
-            'n_horizons': n_horizons,
-            'dominant_soil': dominant_soil,
-            'dominant_mukey': dominant_mukey,
-            'dominant_muname': dominant_muname,
-            'drainage_class': drainage,
-            'avg_om_pct': round(avg_om, 2) if avg_om else None,
-            'avg_ph': round(avg_ph, 2) if avg_ph else None,
-            'avg_cec': round(avg_cec, 1) if avg_cec else None,
-            'avg_clay_pct': round(avg_clay, 1) if avg_clay else None,
-            'avg_sand_pct': round(avg_sand, 1) if avg_sand else None,
-            'avg_bulk_density': round(avg_bd, 2) if avg_bd else None,
-            'avg_k_factor': round(avg_kfactor, 3) if avg_kfactor else None,
-            'total_aws_inches': round(total_aws_in, 2) if total_aws_in else None,
-            'ph_constraint': ph_constraint,
-            'erosion_risk': erosion_risk,
-        })
+        summaries.append(
+            {
+                "field_id": fid,
+                "n_mukeys": n_mukeys,
+                "n_components": n_components,
+                "n_horizons": n_horizons,
+                "dominant_soil": dominant_soil,
+                "dominant_mukey": dominant_mukey,
+                "dominant_muname": dominant_muname,
+                "drainage_class": drainage,
+                "avg_om_pct": round(avg_om, 2) if avg_om else None,
+                "avg_ph": round(avg_ph, 2) if avg_ph else None,
+                "avg_cec": round(avg_cec, 1) if avg_cec else None,
+                "avg_clay_pct": round(avg_clay, 1) if avg_clay else None,
+                "avg_sand_pct": round(avg_sand, 1) if avg_sand else None,
+                "avg_bulk_density": round(avg_bd, 2) if avg_bd else None,
+                "avg_k_factor": round(avg_kfactor, 3) if avg_kfactor else None,
+                "total_aws_inches": round(total_aws_in, 2) if total_aws_in else None,
+                "ph_constraint": ph_constraint,
+                "erosion_risk": erosion_risk,
+            }
+        )
 
     return pd.DataFrame(summaries)
 

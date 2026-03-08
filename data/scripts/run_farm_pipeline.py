@@ -35,8 +35,8 @@ _REPO = Path(__file__).resolve().parents[2]
 _SCRIPTS = Path(__file__).parent
 
 
-def _field_slug_map() -> list[tuple[str, str]]:
-    inventory = _REPO / ".sisyphus" / "evidence" / "task-3-field-inventory.csv"
+def _field_slug_map(inventory_path: Path) -> list[tuple[str, str]]:
+    inventory = inventory_path
     pairs: list[tuple[str, str]] = []
     if not inventory.exists():
         return pairs
@@ -51,12 +51,16 @@ def _field_slug_map() -> list[tuple[str, str]]:
 
 
 def _sync_outputs_to_canonical(
-    grower_slug: str = "iowa-demo-grower", farm_slug: str = "iowa-demo-farm"
+    grower_slug: str = "iowa-demo-grower",
+    farm_slug: str = "iowa-demo-farm",
+    boundaries_path: Path = Path("data/field-boundaries/iowa_10_fields.geojson"),
+    weather_path: Path = Path("data/weather/iowa_weather_2021_2025.csv"),
+    inventory_path: Path = Path(".sisyphus/evidence/task-3-field-inventory.csv"),
 ) -> None:
     import geopandas as gpd
     import pandas as pd
 
-    pairs = _field_slug_map()
+    pairs = _field_slug_map(_REPO / inventory_path)
     if not pairs:
         return
 
@@ -71,10 +75,12 @@ def _sync_outputs_to_canonical(
         if src.exists():
             shutil.copy2(src, farm_summaries / name)
 
-    boundaries_path = _REPO / "data" / "field-boundaries" / "iowa_10_fields.geojson"
-    weather_path = _REPO / "data" / "weather" / "iowa_weather_2021_2025.csv"
-    boundaries = gpd.read_file(boundaries_path) if boundaries_path.exists() else None
-    weather = pd.read_csv(weather_path, parse_dates=["date"]) if weather_path.exists() else None
+    resolved_boundaries = _REPO / boundaries_path
+    resolved_weather = _REPO / weather_path
+    boundaries = gpd.read_file(resolved_boundaries) if resolved_boundaries.exists() else None
+    weather = (
+        pd.read_csv(resolved_weather, parse_dates=["date"]) if resolved_weather.exists() else None
+    )
 
     for idx, (field_id, slug) in enumerate(pairs, start=1):
         field_root = fields_root / slug
@@ -127,6 +133,18 @@ def main() -> None:
         help="Path to field boundaries GeoJSON",
     )
     parser.add_argument("--farm-name", default="Iowa Demo Farm")
+    parser.add_argument("--grower-slug", default="iowa-demo-grower")
+    parser.add_argument("--farm-slug", default="iowa-demo-farm")
+    parser.add_argument(
+        "--inventory-csv",
+        default=".sisyphus/evidence/task-3-field-inventory.csv",
+        help="Path to field inventory CSV with field_id,field_slug",
+    )
+    parser.add_argument(
+        "--weather-csv",
+        default="data/weather/iowa_weather_2021_2025.csv",
+        help="Weather CSV path used for canonical field sync",
+    )
     parser.add_argument("--force", action="store_true", help="Force rerun all steps")
     parser.add_argument(
         "--structure-test",
@@ -135,7 +153,12 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    field_slugs = ensure_canonical_data_tree()
+    field_slugs = ensure_canonical_data_tree(
+        grower_slug=args.grower_slug,
+        farm_slug=args.farm_slug,
+        farm_name=args.farm_name,
+        inventory_path=_REPO / args.inventory_csv,
+    )
     if field_slugs:
         print(f"Canonical tree ensured for {len(field_slugs)} fields")
     else:
@@ -179,7 +202,13 @@ def main() -> None:
     print()
     print("=" * 60)
     if all_ok:
-        _sync_outputs_to_canonical()
+        _sync_outputs_to_canonical(
+            grower_slug=args.grower_slug,
+            farm_slug=args.farm_slug,
+            boundaries_path=Path(args.boundaries),
+            weather_path=Path(args.weather_csv),
+            inventory_path=Path(args.inventory_csv),
+        )
         print("  Pipeline complete.")
         print()
         print("  Outputs:")
