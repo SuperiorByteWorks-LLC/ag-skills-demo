@@ -14,7 +14,7 @@ import pandas as pd
 
 matplotlib.use("Agg")
 
-_REPO = Path(__file__).resolve().parents[2]
+_REPO = Path(__file__).resolve().parents[3]
 _SKILLS = _REPO / ".opencode" / "skills"
 
 sys.path.insert(0, str(_SKILLS / "farm-intelligence-reporting" / "src"))
@@ -24,14 +24,25 @@ sys.path.insert(0, str(_SKILLS / "cdl-cropland" / "src"))
 sys.path.insert(0, str(_SKILLS / "nasa-power-weather" / "src"))
 
 from headlands_ring import split_headlands_and_interior, summarize_headlands
-from pipeline import STEP_FIELD_POSTER_RENDER, FieldReportingConfig, build_step_manifest, load_manifest, step_is_stale
+from pipeline import (
+    STEP_FIELD_POSTER_RENDER,
+    FieldReportingConfig,
+    build_step_manifest,
+    load_manifest,
+    step_is_stale,
+)
 from reporting import (
     build_field_reporting_dataset,
     compute_management_implications,
     compute_farm_relative_rankings,
 )
 from cdl_reporting import plot_crop_mix_stacked_100, summarize_crop_history
-from weather_reporting import summarize_weather_variability, plot_gdd_doy_overlay, plot_precip_boxplot, plot_temperature_doy_overlay
+from weather_reporting import (
+    summarize_weather_variability,
+    plot_gdd_doy_overlay,
+    plot_precip_boxplot,
+    plot_temperature_doy_overlay,
+)
 from ssurgo_workflows import (
     plot_headlands_om_overlay,
     plot_soil_profile_depth,
@@ -82,9 +93,18 @@ def _field_identity_card(ax, field_row, hl_summary, crop_summary, wx_row):
             f"Avg temp: {wx_row.get('avg_temp_c', float('nan')):.1f} C",
             f"Avg precip:{wx_row.get('annual_precip_mm', float('nan')):.0f} mm/yr",
         ]
-    ax.text(0.05, 0.95, "\n".join(lines), va="top", fontsize=9.5,
-            transform=ax.transAxes, fontfamily="monospace",
-            bbox=dict(boxstyle="round,pad=0.5", facecolor="#f0f9ff", edgecolor="#2563eb", linewidth=1.2))
+    ax.text(
+        0.05,
+        0.95,
+        "\n".join(lines),
+        va="top",
+        fontsize=9.5,
+        transform=ax.transAxes,
+        fontfamily="monospace",
+        bbox=dict(
+            boxstyle="round,pad=0.5", facecolor="#f0f9ff", edgecolor="#2563eb", linewidth=1.2
+        ),
+    )
     ax.set_title("Field identity and operations", fontsize=11, fontweight="bold", loc="left")
 
 
@@ -97,9 +117,18 @@ def _management_card(ax, row_dict, field_reporting_df, field_id):
             merged.update({k: v for k, v in match.iloc[0].to_dict().items() if v is not None})
     bullets = compute_management_implications(merged)
     text = "\n".join(f"• {b}" for b in bullets)
-    ax.text(0.03, 0.96, text, va="top", ha="left", fontsize=8.5,
-            transform=ax.transAxes,
-            bbox=dict(boxstyle="round,pad=0.5", facecolor="#fefce8", edgecolor="#ca8a04", linewidth=1.0))
+    ax.text(
+        0.03,
+        0.96,
+        text,
+        va="top",
+        ha="left",
+        fontsize=8.5,
+        transform=ax.transAxes,
+        bbox=dict(
+            boxstyle="round,pad=0.5", facecolor="#fefce8", edgecolor="#ca8a04", linewidth=1.0
+        ),
+    )
     ax.set_title("Management implications", fontsize=11, fontweight="bold", loc="left")
 
 
@@ -131,8 +160,9 @@ def _ranking_card(ax, field_reporting_df, field_id):
     ax.set_title("Farm-relative standing", fontsize=11, fontweight="bold", loc="left")
 
 
-def _render_field_poster(field_id, field_gdf, ssurgo_wgs84, detail_df, weather, cdl,
-                         field_reporting_df, output_path):
+def _render_field_poster(
+    field_id, field_gdf, ssurgo_wgs84, detail_df, weather, cdl, field_reporting_df, output_path
+):
     field_row = field_gdf.iloc[0]
     field_wgs84 = field_gdf.to_crs("EPSG:4326")
     field_utm = field_gdf.to_crs(_utm(field_row))
@@ -159,17 +189,26 @@ def _render_field_poster(field_id, field_gdf, ssurgo_wgs84, detail_df, weather, 
     fig.patch.set_facecolor("#fafaf9")
     fig.suptitle(
         f"Field Intelligence Report — {field_id[-8:]}  ·  {float(field_row.get('area_acres', 0)):.1f} ac  ·  Iowa Corn Belt",
-        fontsize=16, fontweight="bold", y=0.993, color="#1e293b", fontfamily="serif",
+        fontsize=16,
+        fontweight="bold",
+        y=0.993,
+        color="#1e293b",
+        fontfamily="serif",
     )
-    gs = fig.add_gridspec(6, 4, hspace=0.42, wspace=0.28,
-                          left=0.04, right=0.97, top=0.975, bottom=0.015)
+    gs = fig.add_gridspec(
+        6, 4, hspace=0.42, wspace=0.28, left=0.04, right=0.97, top=0.975, bottom=0.015
+    )
 
     _field_identity_card(fig.add_subplot(gs[0, 0]), field_row, hl, crop_sum, wx_row)
-    plot_ssurgo_component_map(fig.add_subplot(gs[0, 1]), field_wgs84, ssurgo_wgs84, "Soil components (SSURGO)")
+    plot_ssurgo_component_map(
+        fig.add_subplot(gs[0, 1]), field_wgs84, ssurgo_wgs84, "Soil components (SSURGO)"
+    )
     plot_headlands_om_overlay(fig.add_subplot(gs[0, 2:]), field_utm, ring_utm, ssurgo_wgs84)
 
     for i, (prop, label) in enumerate(PROP_MAPS):
-        plot_ssurgo_property_choropleth(fig.add_subplot(gs[1, i]), field_wgs84, ssurgo_wgs84, prop, label)
+        plot_ssurgo_property_choropleth(
+            fig.add_subplot(gs[1, i]), field_wgs84, ssurgo_wgs84, prop, label
+        )
 
     plot_soil_profile_depth(fig.add_subplot(gs[2, 0]), detail_df, field_id)
     render_soil_horizon_table(fig.add_subplot(gs[2, 1:]), detail_df)
@@ -184,9 +223,16 @@ def _render_field_poster(field_id, field_gdf, ssurgo_wgs84, detail_df, weather, 
         ax_rs = fig.add_subplot(gs[4, 2 + _i])
         ax_rs.axis("off")
         ax_rs.set_title(sensor, fontsize=11, fontweight="bold", loc="left")
-        ax_rs.text(0.5, 0.5, "Run imagery download step\nto populate this panel",
-                   ha="center", va="center", fontsize=8.5, color="#9ca3af",
-                   transform=ax_rs.transAxes)
+        ax_rs.text(
+            0.5,
+            0.5,
+            "Run imagery download step\nto populate this panel",
+            ha="center",
+            va="center",
+            fontsize=8.5,
+            color="#9ca3af",
+            transform=ax_rs.transAxes,
+        )
 
     _management_card(fig.add_subplot(gs[5, 0:2]), merged_row, field_reporting_df, field_id)
     _ranking_card(fig.add_subplot(gs[5, 2:]), field_reporting_df, field_id)
@@ -240,14 +286,18 @@ def main() -> None:
         field_id = frow["field_id"]
         output_path = output_dir / f"iowa_field_report_{idx + 1:02d}.png"
         prior = load_manifest(manifest_dir / f"{STEP_FIELD_POSTER_RENDER}_{field_id}.json")
-        
+
         # Check for cached SSURGO polygons
         cache_path = _REPO / "data" / "soil" / "cache" / f"{field_id}_polygons.geojson"
-        input_paths = [config.field_boundary_path, "data/soil/iowa_full_ssurgo.csv",
-                       "data/weather/iowa_weather_2021_2025.csv", cdl_path]
+        input_paths = [
+            config.field_boundary_path,
+            "data/soil/iowa_full_ssurgo.csv",
+            "data/weather/iowa_weather_2021_2025.csv",
+            cdl_path,
+        ]
         if cache_path.exists():
             input_paths.append(str(cache_path))
-        
+
         manifest = build_step_manifest(
             step_name=f"{STEP_FIELD_POSTER_RENDER}_{field_id}",
             input_paths=input_paths,
@@ -260,8 +310,12 @@ def main() -> None:
             continue
         print(f"run   {field_id}")
         field_gdf = fields.iloc[[idx]].copy()
-        detail_df = soil_full[soil_full["field_id"] == field_id].copy() if "field_id" in soil_full.columns else pd.DataFrame()
-        
+        detail_df = (
+            soil_full[soil_full["field_id"] == field_id].copy()
+            if "field_id" in soil_full.columns
+            else pd.DataFrame()
+        )
+
         # Load SSURGO polygons if available
         ssurgo_gdf = gpd.GeoDataFrame(geometry=[], crs="EPSG:4326")
         if cache_path.exists():
@@ -269,18 +323,24 @@ def main() -> None:
                 ssurgo_gdf = gpd.read_file(cache_path)
                 # Merge with soil data for component names
                 if not detail_df.empty and "mukey" in detail_df.columns:
-                    soil_agg = detail_df.groupby("mukey").agg({
-                        "compname": "first",
-                        "comppct_r": "first",
-                        "drainagecl": "first",
-                    }).reset_index()
+                    soil_agg = (
+                        detail_df.groupby("mukey")
+                        .agg(
+                            {
+                                "compname": "first",
+                                "comppct_r": "first",
+                                "drainagecl": "first",
+                            }
+                        )
+                        .reset_index()
+                    )
                     soil_agg["mukey"] = soil_agg["mukey"].astype(str)
                     ssurgo_gdf["mukey"] = ssurgo_gdf["mukey"].astype(str)
                     ssurgo_gdf = ssurgo_gdf.merge(soil_agg, on="mukey", how="left")
                 print(f"    Loaded {len(ssurgo_gdf)} SSURGO polygons")
             except Exception as e:
                 print(f"    Warning: Could not load SSURGO polygons: {e}")
-        
+
         _render_field_poster(
             field_id=field_id,
             field_gdf=field_gdf,

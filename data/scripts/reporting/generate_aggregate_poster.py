@@ -14,7 +14,7 @@ import pandas as pd
 
 matplotlib.use("Agg")
 
-_REPO = Path(__file__).resolve().parents[2]
+_REPO = Path(__file__).resolve().parents[3]
 _SKILLS = _REPO / ".opencode" / "skills"
 
 sys.path.insert(0, str(_SKILLS / "farm-intelligence-reporting" / "src"))
@@ -23,10 +23,21 @@ sys.path.insert(0, str(_SKILLS / "cdl-cropland" / "src"))
 sys.path.insert(0, str(_SKILLS / "nasa-power-weather" / "src"))
 
 from headlands_ring import split_headlands_and_interior, summarize_headlands
-from pipeline import STEP_FARM_POSTER_RENDER, FieldReportingConfig, build_step_manifest, load_manifest, step_is_stale
+from pipeline import (
+    STEP_FARM_POSTER_RENDER,
+    FieldReportingConfig,
+    build_step_manifest,
+    load_manifest,
+    step_is_stale,
+)
 from reporting import build_field_reporting_dataset, build_farm_reporting_dataset
 from cdl_reporting import plot_crop_mix_stacked_100, summarize_crop_history
-from weather_reporting import summarize_weather_variability, plot_gdd_doy_overlay, plot_precip_boxplot, plot_temperature_doy_overlay
+from weather_reporting import (
+    summarize_weather_variability,
+    plot_gdd_doy_overlay,
+    plot_precip_boxplot,
+    plot_temperature_doy_overlay,
+)
 
 _SCRIPT = Path(__file__)
 
@@ -59,12 +70,19 @@ def _risk_matrix(ax, field_df):
         return
     x = field_df[cap_col].fillna(field_df[cap_col].median()).astype(float)
     y = field_df[risk_col].fillna(field_df[risk_col].median()).astype(float)
-    sz = field_df["area_acres"].fillna(50).astype(float) * 8 if "area_acres" in field_df.columns else 60
+    sz = (
+        field_df["area_acres"].fillna(50).astype(float) * 8
+        if "area_acres" in field_df.columns
+        else 60
+    )
     ax.scatter(x, y, s=sz, alpha=0.7, c="#3b82f6", edgecolors="#1e40af")
     for _, r in field_df.iterrows():
-        ax.annotate(str(r["field_id"])[-5:],
-                    (float(r.get(cap_col, 0) or 0), float(r.get(risk_col, 0) or 0)),
-                    fontsize=7, ha="center")
+        ax.annotate(
+            str(r["field_id"])[-5:],
+            (float(r.get(cap_col, 0) or 0), float(r.get(risk_col, 0) or 0)),
+            fontsize=7,
+            ha="center",
+        )
     ax.set_xlabel("Water holding capacity (total AWS, in)", fontsize=8)
     ax.set_ylabel("Headlands burden (%)", fontsize=8)
     ax.grid(True, alpha=0.25)
@@ -85,8 +103,12 @@ def main() -> None:
     prior = load_manifest(manifest_dir / f"{STEP_FARM_POSTER_RENDER}.json")
     manifest = build_step_manifest(
         step_name=STEP_FARM_POSTER_RENDER,
-        input_paths=[config.field_boundary_path, "data/soil/iowa_ssurgo_summary.csv",
-                     "data/weather/iowa_weather_2021_2025.csv", "data/cdl/iowa_cdl_2021_2024.csv"],
+        input_paths=[
+            config.field_boundary_path,
+            "data/soil/iowa_ssurgo_summary.csv",
+            "data/weather/iowa_weather_2021_2025.csv",
+            "data/cdl/iowa_cdl_2021_2024.csv",
+        ],
         output_paths=[output_path],
         code_paths=[_SCRIPT],
         config=config,
@@ -113,8 +135,11 @@ def main() -> None:
     crop_sum = summarize_crop_history(cdl)
 
     field_df = build_field_reporting_dataset(
-        fields, headlands_summary=headlands_df,
-        soil_summary=soil_summary, weather_summary=wx_summary, cdl_summary=crop_sum,
+        fields,
+        headlands_summary=headlands_df,
+        soil_summary=soil_summary,
+        weather_summary=wx_summary,
+        cdl_summary=crop_sum,
     )
     farm_df = build_farm_reporting_dataset(field_df)
 
@@ -125,20 +150,34 @@ def main() -> None:
     fig.patch.set_facecolor("#fafaf9")
     fig.suptitle(
         f"Farm Intelligence Report — Iowa Demo Farm  ·  {total_ac:.0f} ac  ·  {n_fields} fields",
-        fontsize=16, fontweight="bold", y=0.993, color="#1e293b", fontfamily="serif",
+        fontsize=16,
+        fontweight="bold",
+        y=0.993,
+        color="#1e293b",
+        fontfamily="serif",
     )
-    gs = fig.add_gridspec(5, 4, hspace=0.40, wspace=0.28,
-                          left=0.04, right=0.97, top=0.975, bottom=0.015)
+    gs = fig.add_gridspec(
+        5, 4, hspace=0.40, wspace=0.28, left=0.04, right=0.97, top=0.975, bottom=0.015
+    )
 
     ax_map = fig.add_subplot(gs[0, 0:2])
     fields.boundary.plot(ax=ax_map, color="darkgreen", linewidth=1.5)
     centroids = fields.geometry.centroid
-    sz = fields["area_acres"].fillna(30).astype(float) * 6 if "area_acres" in fields.columns else 100
+    sz = (
+        fields["area_acres"].fillna(30).astype(float) * 6 if "area_acres" in fields.columns else 100
+    )
     ax_map.scatter(centroids.x, centroids.y, s=sz, color="#2563eb", alpha=0.7, zorder=5)
     for _, frow in fields.iterrows():
         c = frow.geometry.centroid
-        ax_map.annotate(str(frow["field_id"])[-5:], (c.x, c.y), fontsize=7, ha="center",
-                        color="white", fontweight="bold", zorder=6)
+        ax_map.annotate(
+            str(frow["field_id"])[-5:],
+            (c.x, c.y),
+            fontsize=7,
+            ha="center",
+            color="white",
+            fontweight="bold",
+            zorder=6,
+        )
     ax_map.set_title("Farm field map", fontsize=11, fontweight="bold", loc="left")
     ax_map.set_axis_off()
 
@@ -151,12 +190,25 @@ def main() -> None:
         f"Total area: {total_ac:.1f} acres",
         f"Avg field:  {float(row.get('avg_area_acres', total_ac / max(n_fields, 1))):.1f} acres",
     ]
-    for col, label in [("avg_avg_om_pct", "Avg OM"), ("avg_avg_ph", "Avg pH"), ("avg_total_aws_inches", "Avg AWS (in)")]:
+    for col, label in [
+        ("avg_avg_om_pct", "Avg OM"),
+        ("avg_avg_ph", "Avg pH"),
+        ("avg_total_aws_inches", "Avg AWS (in)"),
+    ]:
         if col in row.index and pd.notna(row[col]):
             summary_lines.append(f"{label + ':':12s}{float(row[col]):.2f}")
-    ax_summary.text(0.05, 0.95, "\n".join(summary_lines), va="top", fontsize=9.5,
-                    transform=ax_summary.transAxes, fontfamily="monospace",
-                    bbox=dict(boxstyle="round,pad=0.5", facecolor="#f0f9ff", edgecolor="#2563eb", linewidth=1.2))
+    ax_summary.text(
+        0.05,
+        0.95,
+        "\n".join(summary_lines),
+        va="top",
+        fontsize=9.5,
+        transform=ax_summary.transAxes,
+        fontfamily="monospace",
+        bbox=dict(
+            boxstyle="round,pad=0.5", facecolor="#f0f9ff", edgecolor="#2563eb", linewidth=1.2
+        ),
+    )
     ax_summary.set_title("Farm overview", fontsize=11, fontweight="bold", loc="left")
 
     plot_crop_mix_stacked_100(fig.add_subplot(gs[0, 3]), cdl, title="Farm crop composition by year")
@@ -166,17 +218,36 @@ def main() -> None:
     _ranking_bars(fig.add_subplot(gs[1, 2]), field_df, "avg_om_pct", "Avg OM (%)")
     _ranking_bars(fig.add_subplot(gs[1, 3]), field_df, "headlands_pct", "Headlands (%)")
 
-    plot_temperature_doy_overlay(fig.add_subplot(gs[2, 0:2]), weather, title="Farm temperature — all fields, by DOY")
-    plot_gdd_doy_overlay(fig.add_subplot(gs[2, 2:]), weather, title="Farm cumulative GDD — all fields, by DOY")
+    plot_temperature_doy_overlay(
+        fig.add_subplot(gs[2, 0:2]), weather, title="Farm temperature — all fields, by DOY"
+    )
+    plot_gdd_doy_overlay(
+        fig.add_subplot(gs[2, 2:]), weather, title="Farm cumulative GDD — all fields, by DOY"
+    )
 
-    plot_precip_boxplot(fig.add_subplot(gs[3, 0:2]), weather, title="Farm monthly precipitation distribution")
+    plot_precip_boxplot(
+        fig.add_subplot(gs[3, 0:2]), weather, title="Farm monthly precipitation distribution"
+    )
     _risk_matrix(fig.add_subplot(gs[3, 2:]), field_df)
 
     ax_table = fig.add_subplot(gs[4, :])
     ax_table.axis("off")
-    table_cols = [c for c in ["field_id", "area_acres", "headlands_pct", "dominant_soil",
-                               "avg_om_pct", "avg_ph", "total_aws_inches", "drainage_class",
-                               "rotation_sequence", "crop_diversity"] if c in field_df.columns]
+    table_cols = [
+        c
+        for c in [
+            "field_id",
+            "area_acres",
+            "headlands_pct",
+            "dominant_soil",
+            "avg_om_pct",
+            "avg_ph",
+            "total_aws_inches",
+            "drainage_class",
+            "rotation_sequence",
+            "crop_diversity",
+        ]
+        if c in field_df.columns
+    ]
     if table_cols:
         tdf = field_df[table_cols].copy()
         for col in tdf.select_dtypes("float").columns:

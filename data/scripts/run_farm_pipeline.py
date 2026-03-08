@@ -22,13 +22,91 @@ Outputs:
 from __future__ import annotations
 
 import argparse
+import csv
+import shutil
 import subprocess
 import sys
 import time
 from pathlib import Path
 
+from reporting_bootstrap import ensure_canonical_data_tree
+
 _REPO = Path(__file__).resolve().parents[2]
 _SCRIPTS = Path(__file__).parent
+
+
+def _field_slug_map() -> list[tuple[str, str]]:
+    inventory = _REPO / ".sisyphus" / "evidence" / "task-3-field-inventory.csv"
+    pairs: list[tuple[str, str]] = []
+    if not inventory.exists():
+        return pairs
+    with inventory.open(encoding="utf-8") as handle:
+        reader = csv.DictReader(handle)
+        for row in reader:
+            fid = str(row.get("field_id", "")).strip()
+            slug = str(row.get("field_slug", "")).strip()
+            if fid and slug:
+                pairs.append((fid, slug))
+    return pairs
+
+
+def _sync_outputs_to_canonical(
+    grower_slug: str = "iowa-demo-grower", farm_slug: str = "iowa-demo-farm"
+) -> None:
+    import geopandas as gpd
+    import pandas as pd
+
+    pairs = _field_slug_map()
+    if not pairs:
+        return
+
+    farm_root = _REPO / "data" / "growers" / grower_slug / "farms" / farm_slug
+    fields_root = farm_root / "fields"
+    farm_summaries = farm_root / "derived" / "summaries"
+    farm_summaries.mkdir(parents=True, exist_ok=True)
+
+    legacy_eda = _REPO / "data" / "EDA"
+    for name in ("iowa_farm_report.png", "iowa_farm_report.html", "iowa_farm_report.md"):
+        src = legacy_eda / name
+        if src.exists():
+            shutil.copy2(src, farm_summaries / name)
+
+    boundaries_path = _REPO / "data" / "field-boundaries" / "iowa_10_fields.geojson"
+    weather_path = _REPO / "data" / "weather" / "iowa_weather_2021_2025.csv"
+    boundaries = gpd.read_file(boundaries_path) if boundaries_path.exists() else None
+    weather = pd.read_csv(weather_path, parse_dates=["date"]) if weather_path.exists() else None
+
+    for idx, (field_id, slug) in enumerate(pairs, start=1):
+        field_root = fields_root / slug
+        (field_root / "derived" / "summaries").mkdir(parents=True, exist_ok=True)
+
+        poster_src = legacy_eda / "field_cards" / f"iowa_field_report_{idx:02d}.png"
+        if poster_src.exists():
+            shutil.copy2(poster_src, field_root / "derived" / "summaries" / "field_report.png")
+
+        soil_props = legacy_eda / "soil_cards" / f"field_{idx:02d}_properties.png"
+        if soil_props.exists():
+            shutil.copy2(soil_props, field_root / "derived" / "summaries" / "soil_properties.png")
+        soil_texture = legacy_eda / "soil_cards" / f"field_{idx:02d}_texture.png"
+        if soil_texture.exists():
+            shutil.copy2(soil_texture, field_root / "derived" / "summaries" / "soil_texture.png")
+        soil_map = legacy_eda / "soil_maps" / f"field_{idx:02d}_map.png"
+        if soil_map.exists():
+            shutil.copy2(soil_map, field_root / "derived" / "summaries" / "soil_map.png")
+
+        if boundaries is not None:
+            match = boundaries[boundaries["field_id"] == field_id]
+            if not match.empty:
+                match.to_file(field_root / "boundary" / "field_boundary.geojson", driver="GeoJSON")
+
+        cache_src = _REPO / "data" / "soil" / "cache" / f"{field_id}_polygons.geojson"
+        if cache_src.exists():
+            shutil.copy2(cache_src, field_root / "soil" / "ssurgo_soil_types.geojson")
+
+        if weather is not None and "field_id" in weather.columns:
+            field_weather = weather[weather["field_id"] == field_id].copy()
+            if not field_weather.empty:
+                field_weather.to_csv(field_root / "weather" / "daily_weather.csv", index=False)
 
 
 def _run(script: str, extra_env: dict | None = None) -> bool:
@@ -43,11 +121,29 @@ def _run(script: str, extra_env: dict | None = None) -> bool:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Farm intelligence reporting pipeline")
-    parser.add_argument("--boundaries", default="data/field-boundaries/iowa_10_fields.geojson",
-                        help="Path to field boundaries GeoJSON")
+    parser.add_argument(
+        "--boundaries",
+        default="data/field-boundaries/iowa_10_fields.geojson",
+        help="Path to field boundaries GeoJSON",
+    )
     parser.add_argument("--farm-name", default="Iowa Demo Farm")
     parser.add_argument("--force", action="store_true", help="Force rerun all steps")
+    parser.add_argument(
+        "--structure-test",
+        action="store_true",
+        help="Create and verify canonical data tree, then exit",
+    )
     args = parser.parse_args()
+
+    field_slugs = ensure_canonical_data_tree()
+    if field_slugs:
+        print(f"Canonical tree ensured for {len(field_slugs)} fields")
+    else:
+        print("Canonical tree ensured (no field inventory found)")
+
+    if args.structure_test:
+        print("Structure test complete.")
+        return
 
     boundaries = Path(args.boundaries)
     if not boundaries.exists():
@@ -62,12 +158,12 @@ def main() -> None:
     print("=" * 60)
 
     steps = [
-        ("11_generate_field_posters.py", "Field posters"),
-        ("12_generate_aggregate_poster.py", "Farm portfolio poster"),
-        ("13_generate_farm_html.py", "Self-contained HTML report"),
-        ("14_generate_farm_markdown.py", "Markdown report"),
-        ("15_generate_ssurgo_cards.py", "SSURGO soil profile cards"),
-        ("16_generate_ssurgo_maps.py", "SSURGO soil maps with basemap"),
+        ("reporting/generate_field_posters.py", "Field posters"),
+        ("reporting/generate_aggregate_poster.py", "Farm portfolio poster"),
+        ("reporting/generate_farm_html.py", "Self-contained HTML report"),
+        ("reporting/generate_farm_markdown.py", "Markdown report"),
+        ("reporting/generate_ssurgo_cards.py", "SSURGO soil profile cards"),
+        ("reporting/generate_ssurgo_maps.py", "SSURGO soil maps with basemap"),
     ]
 
     all_ok = True
@@ -83,6 +179,7 @@ def main() -> None:
     print()
     print("=" * 60)
     if all_ok:
+        _sync_outputs_to_canonical()
         print("  Pipeline complete.")
         print()
         print("  Outputs:")
@@ -100,7 +197,9 @@ def main() -> None:
         soil_map_dir = output_dir / "soil_maps"
         if soil_map_dir.exists():
             soil_maps = sorted(soil_map_dir.glob("*.png"))
-            print(f"    {soil_map_dir.relative_to(_REPO)}/  ({len(soil_maps)} soil maps with basemap)")
+            print(
+                f"    {soil_map_dir.relative_to(_REPO)}/  ({len(soil_maps)} soil maps with basemap)"
+            )
     print("=" * 60)
     print()
 

@@ -16,7 +16,7 @@ import pandas as pd
 
 matplotlib.use("Agg")
 
-_REPO = Path(__file__).resolve().parents[2]
+_REPO = Path(__file__).resolve().parents[3]
 _SKILLS = _REPO / ".opencode" / "skills"
 
 sys.path.insert(0, str(_SKILLS / "farm-intelligence-reporting" / "src"))
@@ -25,7 +25,13 @@ sys.path.insert(0, str(_SKILLS / "cdl-cropland" / "src"))
 sys.path.insert(0, str(_SKILLS / "nasa-power-weather" / "src"))
 
 from headlands_ring import split_headlands_and_interior, summarize_headlands
-from pipeline import STEP_FARM_HTML_RENDER, FieldReportingConfig, build_step_manifest, load_manifest, step_is_stale
+from pipeline import (
+    STEP_FARM_HTML_RENDER,
+    FieldReportingConfig,
+    build_step_manifest,
+    load_manifest,
+    step_is_stale,
+)
 from reporting import (
     build_field_reporting_dataset,
     build_farm_reporting_dataset,
@@ -33,7 +39,12 @@ from reporting import (
     PANEL_REGISTRY,
 )
 from cdl_reporting import plot_crop_mix_stacked_100, summarize_crop_history
-from weather_reporting import summarize_weather_variability, plot_gdd_doy_overlay, plot_precip_boxplot, plot_temperature_doy_overlay
+from weather_reporting import (
+    summarize_weather_variability,
+    plot_gdd_doy_overlay,
+    plot_precip_boxplot,
+    plot_temperature_doy_overlay,
+)
 
 _SCRIPT = Path(__file__)
 
@@ -83,8 +94,15 @@ def _farm_map_b64(fields: gpd.GeoDataFrame) -> str:
     ax.scatter(centroids.x, centroids.y, s=sz, color="#2563eb", alpha=0.75, zorder=5)
     for _, r in fields.iterrows():
         c = r.geometry.centroid
-        ax.annotate(str(r["field_id"])[-5:], (c.x, c.y), fontsize=7, ha="center",
-                    color="white", fontweight="bold", zorder=6)
+        ax.annotate(
+            str(r["field_id"])[-5:],
+            (c.x, c.y),
+            fontsize=7,
+            ha="center",
+            color="white",
+            fontweight="bold",
+            zorder=6,
+        )
     ax.set_title("Farm field map", fontsize=12, fontweight="bold")
     ax.set_axis_off()
     plt.tight_layout()
@@ -103,18 +121,20 @@ def _load_soil_cards(idx: int) -> dict[str, str]:
     """Load soil profile cards for a field as base64 strings."""
     soil_dir = Path("data/EDA/soil_cards")
     cards = {}
-    
+
     for card_type in ["single", "texture", "properties"]:
-        card_path = soil_dir / f"field_{idx+1:02d}_{card_type}.png"
+        card_path = soil_dir / f"field_{idx + 1:02d}_{card_type}.png"
         if card_path.exists():
             cards[card_type] = _img_to_b64(card_path)
         else:
             cards[card_type] = ""
-    
+
     return cards
 
 
-def _field_card(frow, df_row, field_weather, field_cdl, poster_b64: str, soil_cards: dict, idx: int) -> str:
+def _field_card(
+    frow, df_row, field_weather, field_cdl, poster_b64: str, soil_cards: dict, idx: int
+) -> str:
     fid = str(frow["field_id"])
     acres = float(frow.get("area_acres", 0))
     row_dict = df_row.to_dict() if hasattr(df_row, "to_dict") else dict(df_row)
@@ -122,17 +142,32 @@ def _field_card(frow, df_row, field_weather, field_cdl, poster_b64: str, soil_ca
     bullets_html = "".join(f"<li>{b}</li>" for b in implications)
 
     soil_rows = ""
-    for col, label in [("avg_om_pct", "Avg OM (%)"), ("avg_ph", "Avg pH"),
-                        ("total_aws_inches", "Total AWS (in)"), ("avg_cec", "Avg CEC"),
-                        ("drainage_class", "Drainage class"), ("dominant_soil", "Dominant soil"),
-                        ("n_components", "Soil components"), ("n_horizons", "Horizons sampled"),
-                        ("headlands_pct", "Headlands (%)"), ("headlands_area_acres", "Headlands (ac)")]:
+    for col, label in [
+        ("avg_om_pct", "Avg OM (%)"),
+        ("avg_ph", "Avg pH"),
+        ("total_aws_inches", "Total AWS (in)"),
+        ("avg_cec", "Avg CEC"),
+        ("drainage_class", "Drainage class"),
+        ("dominant_soil", "Dominant soil"),
+        ("n_components", "Soil components"),
+        ("n_horizons", "Horizons sampled"),
+        ("headlands_pct", "Headlands (%)"),
+        ("headlands_area_acres", "Headlands (ac)"),
+    ]:
         soil_rows += f"<tr><td><b>{label}</b></td><td>{_safe(row_dict.get(col))}</td></tr>"
 
     wx_b64 = _weather_b64(field_weather) if not field_weather.empty else ""
     cdl_b64 = _cdl_b64(field_cdl) if not field_cdl.empty else ""
-    wx_img = f'<img src="data:image/png;base64,{wx_b64}" style="width:100%" alt="Weather">' if wx_b64 else "<p>No weather data</p>"
-    cdl_img = f'<img src="data:image/png;base64,{cdl_b64}" style="width:100%" alt="CDL">' if cdl_b64 else "<p>No CDL data</p>"
+    wx_img = (
+        f'<img src="data:image/png;base64,{wx_b64}" style="width:100%" alt="Weather">'
+        if wx_b64
+        else "<p>No weather data</p>"
+    )
+    cdl_img = (
+        f'<img src="data:image/png;base64,{cdl_b64}" style="width:100%" alt="CDL">'
+        if cdl_b64
+        else "<p>No CDL data</p>"
+    )
 
     rank_html = ""
     rank_cols = sorted([k for k in row_dict if k.endswith("_pct_rank")])
@@ -152,13 +187,9 @@ def _field_card(frow, df_row, field_weather, field_cdl, poster_b64: str, soil_ca
     # Build soil profile thumbnails
     soil_thumbs = []
     soil_modals = []
-    
-    card_labels = {
-        "single": "Soil Profile",
-        "texture": "Texture RGB",
-        "properties": "Properties"
-    }
-    
+
+    card_labels = {"single": "Soil Profile", "texture": "Texture RGB", "properties": "Properties"}
+
     for card_type, b64_data in soil_cards.items():
         if b64_data:
             modal_id = f"soil-modal-{idx}-{card_type}"
@@ -177,16 +208,16 @@ def _field_card(frow, df_row, field_weather, field_cdl, poster_b64: str, soil_ca
   </div>
 </div>
             ''')
-    
+
     soil_section = ""
     if soil_thumbs:
-        soil_section = f'''
+        soil_section = f"""
   <details open><summary><strong>SSURGO Soil Profile Cards (click thumbnails to enlarge)</strong></summary>
     <div class="soil-gallery">
-      {''.join(soil_thumbs)}
+      {"".join(soil_thumbs)}
     </div>
   </details><hr>
-        '''
+        """
 
     return f"""
 <section class="field-card" id="field-{fid[-6:]}">
@@ -236,7 +267,7 @@ def _field_card(frow, df_row, field_weather, field_cdl, poster_b64: str, soil_ca
     <img src="data:image/png;base64,{poster_b64}" style="width:100%;max-width:1200px;" alt="Full field poster">
   </div>
 </div>
-{''.join(soil_modals)}
+{"".join(soil_modals)}
 """
 
 
@@ -255,8 +286,12 @@ def main() -> None:
     prior = load_manifest(manifest_dir / f"{STEP_FARM_HTML_RENDER}.json")
     manifest = build_step_manifest(
         step_name=STEP_FARM_HTML_RENDER,
-        input_paths=[config.field_boundary_path, "data/soil/iowa_ssurgo_summary.csv",
-                     "data/weather/iowa_weather_2021_2025.csv", "data/cdl/iowa_cdl_2021_2024.csv"],
+        input_paths=[
+            config.field_boundary_path,
+            "data/soil/iowa_ssurgo_summary.csv",
+            "data/weather/iowa_weather_2021_2025.csv",
+            "data/cdl/iowa_cdl_2021_2024.csv",
+        ],
         output_paths=[output_path],
         code_paths=[_SCRIPT],
         config=config,
@@ -282,8 +317,11 @@ def main() -> None:
     crop_sum = summarize_crop_history(cdl)
 
     field_df = build_field_reporting_dataset(
-        fields, headlands_summary=headlands_df,
-        soil_summary=soil_summary, weather_summary=wx_summary, cdl_summary=crop_sum,
+        fields,
+        headlands_summary=headlands_df,
+        soil_summary=soil_summary,
+        weather_summary=wx_summary,
+        cdl_summary=crop_sum,
     )
     farm_df = build_farm_reporting_dataset(field_df)
 
@@ -299,12 +337,12 @@ def main() -> None:
     for idx, frow in fields.iterrows():
         fid = frow["field_id"]
         print(f"    Loading poster for field {fid[-6:]}...")
-        poster_path = Path("data/EDA/field_cards") / f"iowa_field_poster_{idx+1:02d}.png"
+        poster_path = Path("data/EDA/field_cards") / f"iowa_field_poster_{idx + 1:02d}.png"
         poster_b64 = _img_to_b64(poster_path) if poster_path.exists() else ""
-        
+
         # Load soil cards
         soil_cards = _load_soil_cards(idx)
-        
+
         fw = weather[weather["field_id"] == fid].copy()
         fw["date"] = pd.to_datetime(fw["date"])
         fc = cdl[cdl["field_id"] == fid].copy()
@@ -312,7 +350,10 @@ def main() -> None:
         df_row = df_row_matches.iloc[0] if not df_row_matches.empty else pd.Series(frow)
         field_cards.append(_field_card(frow, df_row, fw, fc, poster_b64, soil_cards, idx))
 
-    nav = " | ".join(f'<a href="#field-{str(r["field_id"])[-6:]}">{str(r["field_id"])[-6:]}</a>' for _, r in fields.iterrows())
+    nav = " | ".join(
+        f'<a href="#field-{str(r["field_id"])[-6:]}">{str(r["field_id"])[-6:]}</a>'
+        for _, r in fields.iterrows()
+    )
 
     html = f"""<!doctype html>
 <html lang="en">
@@ -391,7 +432,7 @@ def main() -> None:
     </div>
   </div>
   <nav class="field-nav">Jump to field: {nav}</nav>
-  <main>{''.join(field_cards)}</main>
+  <main>{"".join(field_cards)}</main>
   <footer>Generated by farm-intelligence-reporting &mdash; self-contained, no external dependencies required at runtime.</footer>
 </body>
 </html>

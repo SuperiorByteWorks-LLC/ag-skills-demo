@@ -10,34 +10,44 @@ Output: data/soil/iowa_10_fields_soil.csv
 
 import sys
 import os
+from pathlib import Path
 import geopandas as gpd
 import pandas as pd
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '.opencode/skills/ssurgo-soil/src'))
+_SCRIPTS_DIR = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(_SCRIPTS_DIR))
+
+from reporting_bootstrap import ensure_skill_path
+
+ensure_skill_path("ssurgo-soil")
 
 from ssurgo_soil import download_soil, get_dominant_soil
+
 
 def main():
     print("=" * 60)
     print("Step 2: Download SSURGO Soil Data")
     print("=" * 60)
-    
-    os.makedirs('data/soil', exist_ok=True)
-    
-    fields = gpd.read_file('data/field-boundaries/iowa_10_fields.geojson')
+
+    os.makedirs("data/soil", exist_ok=True)
+
+    fields = gpd.read_file("data/field-boundaries/iowa_10_fields.geojson")
     print(f"Loaded {len(fields)} fields")
-    
+
     soil_data = download_soil(
         fields,
-        field_id_column='field_id',
+        field_id_column="field_id",
         max_depth_cm=30,
-        output_path='data/soil/iowa_10_fields_soil.csv'
+        output_path="data/soil/iowa_10_fields_soil.csv",
     )
-    
-    print(f"\n✓ Downloaded {len(soil_data)} soil records for {soil_data['field_id'].nunique()} fields")
+
+    print(
+        f"\n✓ Downloaded {len(soil_data)} soil records for {soil_data['field_id'].nunique()} fields"
+    )
     print(f"  Output: data/soil/iowa_10_fields_soil.csv")
-    
+
     return soil_data
+
 
 if __name__ == "__main__":
     main()
