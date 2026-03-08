@@ -15,6 +15,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import requests
+from matplotlib.lines import Line2D
 from matplotlib.patches import Patch
 from shapely import wkt
 
@@ -120,6 +121,14 @@ def get_ssurgo_polygons_with_soil_data(
     if polygons.empty:
         return polygons
 
+    try:
+        target_crs = polygons.crs or field_gdf.crs or "EPSG:4326"
+        clip_target = field_gdf.to_crs(target_crs)
+        polygons = gpd.clip(polygons, clip_target)
+        polygons = polygons[~polygons.geometry.is_empty].copy()
+    except Exception as e:
+        print(f"    Warning: clipping failed, using uncut polygons: {e}")
+
     soil_csv = _REPO / "data" / "soil" / "iowa_full_ssurgo.csv"
     if soil_csv.exists():
         soil_df = pd.read_csv(soil_csv)
@@ -141,7 +150,7 @@ def get_ssurgo_polygons_with_soil_data(
         polygons["mukey"] = polygons["mukey"].astype(str)
         polygons = polygons.merge(soil_agg, on="mukey", how="left")
 
-    return polygons
+    return gpd.GeoDataFrame(polygons, geometry="geometry", crs=polygons.crs)
 
 
 def _add_basemap(ax, field_gdf: gpd.GeoDataFrame, zoom: int = 14):
@@ -150,19 +159,51 @@ def _add_basemap(ax, field_gdf: gpd.GeoDataFrame, zoom: int = 14):
         import contextily as ctx
 
         bounds = field_gdf.total_bounds
-        margin_x = (bounds[2] - bounds[0]) * 0.1
-        margin_y = (bounds[3] - bounds[1]) * 0.1
+        margin_x = (bounds[2] - bounds[0]) * 0.2
+        margin_y = (bounds[3] - bounds[1]) * 0.2
 
         ax.set_xlim(bounds[0] - margin_x, bounds[2] + margin_x)
         ax.set_ylim(bounds[1] - margin_y, bounds[3] + margin_y)
 
-        ctx.add_basemap(
-            ax, crs=field_gdf.crs, source=ctx.providers.CartoDB.Positron, alpha=0.5, zoom=zoom
-        )
+        esri = getattr(ctx.providers, "Esri")
+        imagery = getattr(esri, "WorldImagery")
+        ctx.add_basemap(ax, crs=field_gdf.crs, source=imagery)
         return True
     except Exception as e:
         print(f"    Basemap error: {e}")
         return False
+
+
+def _classify_natural_breaks(
+    values: pd.Series, class_count: int = 3
+) -> tuple[np.ndarray, list[str]]:
+    arr = values.astype(float).to_numpy()
+    unique_values = np.sort(np.unique(arr))
+    bins = max(1, min(class_count, unique_values.size))
+
+    if bins == 1:
+        v = float(arr[0]) if arr.size else 0.0
+        return np.zeros(arr.size, dtype=int), [f"{v:.1f}"]
+
+    if unique_values.size <= bins:
+        edges = np.linspace(arr.min(), arr.max(), bins + 1)
+    else:
+        gaps = np.diff(unique_values)
+        split_idx = np.argsort(gaps)[-(bins - 1) :]
+        split_idx = np.sort(split_idx)
+        mids = [(unique_values[i] + unique_values[i + 1]) / 2.0 for i in split_idx]
+        edges = np.array([arr.min(), *mids, arr.max()], dtype=float)
+
+    edges = np.unique(edges)
+    if edges.size < 2:
+        v = float(arr[0]) if arr.size else 0.0
+        return np.zeros(arr.size, dtype=int), [f"{v:.1f}"]
+
+    class_ids = pd.cut(arr, bins=edges, labels=False, include_lowest=True)
+    class_ids = pd.Series(class_ids).fillna(0).astype(int).to_numpy()
+    labels = [f"{edges[i]:.1f} to {edges[i + 1]:.1f}" for i in range(edges.size - 1)]
+    class_ids = np.clip(class_ids, 0, max(0, len(labels) - 1))
+    return class_ids, labels
 
 
 def render_ssurgo_field_map(
@@ -171,7 +212,7 @@ def render_ssurgo_field_map(
     output_path: Path,
     field_id: str = "",
 ) -> None:
-    """Render layered map: basemap (50%) + SSURGO polygons (80%) + field boundary (100%)."""
+    """Render per-field SSURGO natural-breaks choropleth over imagery basemap."""
 
     fig, ax = plt.subplots(figsize=(12, 10))
     fig.patch.set_facecolor("#fafaf9")
@@ -183,92 +224,80 @@ def render_ssurgo_field_map(
         return
 
     field_wm = field_gdf.to_crs(epsg=3857)
+    use_basemap = _add_basemap(ax, field_wm, zoom=15)
 
-    _add_basemap(ax, field_wm, zoom=15)
+    plot_source = ssurgo_gdf.copy()
+    if "mukey" in plot_source.columns:
+        plot_source["mukey"] = plot_source["mukey"].astype(str)
+        plot_source = plot_source.dissolve(by="mukey", as_index=False)
 
-    if not ssurgo_gdf.empty:
-        ssurgo_wm = ssurgo_gdf.to_crs(epsg=3857)
+    choropleth_col = "om_r" if "om_r" in plot_source.columns else "comppct_r"
+    choropleth_label = "Organic Matter" if choropleth_col == "om_r" else "Component Percentage"
+    units = "%"
 
-        if "compname" in ssurgo_wm.columns:
-            unique_comps = ssurgo_wm["compname"].dropna().unique()
-            if len(unique_comps) > 0:
-                colors = plt.cm.Set3(np.linspace(0, 1, len(unique_comps)))
-                color_map = dict(zip(unique_comps, colors))
+    plot_source = plot_source.dropna(subset=[choropleth_col]).copy()
+    if not plot_source.empty:
+        class_ids, class_labels = _classify_natural_breaks(
+            pd.Series(plot_source[choropleth_col]), class_count=3
+        )
+        plot_source["class_id"] = class_ids
+        plot_target = plot_source.to_crs(epsg=3857) if use_basemap else plot_source
 
-                for comp_name in unique_comps:
-                    comp_data = ssurgo_wm[ssurgo_wm["compname"] == comp_name]
-                    comp_data.plot(
-                        ax=ax,
-                        color=color_map[comp_name],
-                        alpha=0.8,
-                        edgecolor="darkgreen",
-                        linewidth=0.5,
-                    )
+        colors = plt.get_cmap("YlGn")(np.linspace(0.35, 0.85, max(1, len(class_labels))))
+        legend_elements: list[object] = [
+            Line2D([0], [0], color="darkgreen", linewidth=3, label="Field Boundary")
+        ]
 
-                handles = [
-                    Patch(facecolor=color_map[c], edgecolor="darkgreen", alpha=0.8, label=c[:25])
-                    for c in unique_comps
-                ]
-                ax.legend(handles=handles, loc="lower right", fontsize=8, title="Soil Components")
-        else:
-            ssurgo_wm.plot(ax=ax, color="#D2B48C", alpha=0.8, edgecolor="darkgreen", linewidth=0.5)
+        for class_id, label in enumerate(class_labels):
+            class_slice = plot_target[plot_target["class_id"] == class_id]
+            if class_slice.empty:
+                continue
+            class_slice.plot(
+                ax=ax,
+                color=colors[class_id],
+                alpha=0.55,
+                edgecolor="darkgreen",
+                linewidth=1.3,
+            )
+            legend_elements.append(
+                Patch(
+                    facecolor=colors[class_id],
+                    alpha=0.55,
+                    edgecolor="darkgreen",
+                    label=f"{choropleth_label} {label}",
+                )
+            )
 
-    field_wm.boundary.plot(ax=ax, color="red", linewidth=3, label="Field Boundary")
+        ax.legend(
+            handles=legend_elements,
+            loc="lower right",
+            fontsize=8,
+            framealpha=0.9,
+            title=f"{choropleth_label} ({units}) Classes",
+            title_fontsize=9,
+        )
+    else:
+        ax.text(
+            0.5, 0.5, "No soil property values", transform=ax.transAxes, ha="center", va="center"
+        )
 
-    centroid = field_wm.geometry.iloc[0].centroid
-    ax.annotate(
-        field_id[-8:] if field_id else "Field",
-        (centroid.x, centroid.y),
-        fontsize=12,
-        fontweight="bold",
-        color="red",
-        ha="center",
-        bbox=dict(boxstyle="round,pad=0.3", facecolor="white", alpha=0.8, edgecolor="red"),
+    boundary_target = field_wm if use_basemap else field_gdf
+    boundary_target.plot(ax=ax, color="none", edgecolor="darkgreen", linewidth=3)
+
+    field_short = field_id[-6:] if field_id else "Field"
+    mukey_count = (
+        int(plot_source["mukey"].nunique())
+        if not plot_source.empty and "mukey" in plot_source.columns
+        else 0
     )
-
     ax.set_title(
-        f"SSURGO Soil Map: {field_id[-8:] if field_id else 'Field'}",
-        fontsize=14,
-        fontweight="bold",
-        pad=20,
-    )
-    ax.set_xlabel("")
-    ax.set_ylabel("")
-    ax.set_xticks([])
-    ax.set_yticks([])
-
-    bounds = field_wm.total_bounds
-    width_m = bounds[2] - bounds[0]
-    scale_length_m = width_m / 5
-    scale_x = bounds[0] + width_m * 0.05
-    scale_y = bounds[1] + (bounds[3] - bounds[1]) * 0.05
-
-    ax.plot(
-        [scale_x, scale_x + scale_length_m],
-        [scale_y, scale_y],
-        "k-",
-        linewidth=3,
-        solid_capstyle="butt",
-    )
-    ax.text(
-        scale_x + scale_length_m / 2,
-        scale_y + scale_length_m * 0.1,
-        f"{scale_length_m:.0f}m",
-        ha="center",
-        fontsize=9,
+        f"Field {field_short} - SSURGO {choropleth_label} (Natural Breaks)\n({mukey_count} MUKEYs)",
+        fontsize=13,
     )
 
-    arrow_x = bounds[2] - width_m * 0.08
-    arrow_y = bounds[3] - (bounds[3] - bounds[1]) * 0.08
-    ax.annotate(
-        "N",
-        xy=(arrow_x, arrow_y),
-        xytext=(arrow_x, arrow_y - width_m * 0.05),
-        arrowprops=dict(arrowstyle="->", color="black", lw=2),
-        fontsize=14,
-        fontweight="bold",
-        ha="center",
-    )
+    if not use_basemap:
+        ax.set_xlabel("Longitude")
+        ax.set_ylabel("Latitude")
 
     plt.tight_layout()
     plt.savefig(output_path, dpi=150, bbox_inches="tight", facecolor=fig.get_facecolor())
@@ -291,17 +320,17 @@ def main() -> None:
     fields = gpd.read_file(fields_path)
     print(f"Loaded {len(fields)} fields")
 
-    for idx, field_row in fields.iterrows():
-        field_id = str(field_row.get("field_id", f"field_{idx}"))
+    for idx, field_row in enumerate(fields.itertuples(index=False), start=1):
+        field_id = str(getattr(field_row, "field_id", f"field_{idx}"))
         field_short = field_id[-8:] if len(field_id) > 8 else field_id
 
         print(f"\nProcessing field: {field_short}")
 
-        field_single = fields.iloc[[idx]].copy()
+        field_single = fields.iloc[[idx - 1]].copy()
 
         field_ssurgo = get_ssurgo_polygons_with_soil_data(field_single, field_id)
 
-        output_path = _OUTPUT_DIR / f"field_{idx + 1:02d}_map.png"
+        output_path = _OUTPUT_DIR / f"field_{idx:02d}_map.png"
         render_ssurgo_field_map(field_single, field_ssurgo, output_path, field_id=field_short)
         print(f"  ✓ Map saved: {output_path.name}")
 
