@@ -28,6 +28,46 @@ _CACHE_DIR = _REPO / "data" / "soil" / "cache"
 SDA_URL = "https://sdmdataaccess.sc.egov.usda.gov/Tabular/post.rest"
 
 
+def _query_sda_table(sql: str, timeout: int = 120) -> list[list[object]]:
+    resp = requests.post(SDA_URL, data={"query": sql, "format": "JSON"}, timeout=timeout)
+    resp.raise_for_status()
+    return resp.json().get("Table", [])
+
+
+def _fetch_mukey_attributes(mukeys: list[str]) -> pd.DataFrame:
+    if not mukeys:
+        return pd.DataFrame(columns=["mukey", "compname", "comppct_r", "om_r", "ph1to1h2o_r"])
+
+    mukey_sql = ", ".join(f"'{m}'" for m in sorted(set(str(m) for m in mukeys)))
+    sql = f"""
+    SELECT c.mukey, c.compname, c.comppct_r, ch.om_r, ch.ph1to1h2o_r
+    FROM component c
+    LEFT JOIN chorizon ch ON c.cokey = ch.cokey
+    WHERE c.mukey IN ({mukey_sql})
+      AND c.majcompflag = 'Yes'
+      AND (ch.hzdept_r < 30 OR ch.hzdept_r IS NULL)
+    ORDER BY c.mukey, c.comppct_r DESC, ch.hzdept_r ASC
+    """
+    try:
+        rows = _query_sda_table(sql)
+    except Exception as e:
+        print(f"    Warning: MUKEY attribute lookup failed: {e}")
+        return pd.DataFrame(columns=["mukey", "compname", "comppct_r", "om_r", "ph1to1h2o_r"])
+
+    if not rows:
+        return pd.DataFrame(columns=["mukey", "compname", "comppct_r", "om_r", "ph1to1h2o_r"])
+
+    attrs = pd.DataFrame(rows, columns=["mukey", "compname", "comppct_r", "om_r", "ph1to1h2o_r"])
+    attrs["mukey"] = attrs["mukey"].astype(str)
+    for col in ["comppct_r", "om_r", "ph1to1h2o_r"]:
+        attrs[col] = pd.to_numeric(attrs[col], errors="coerce")
+    return (
+        attrs.sort_values(["mukey", "comppct_r"], ascending=[True, False])
+        .groupby("mukey", as_index=False)
+        .agg({"compname": "first", "comppct_r": "first", "om_r": "mean", "ph1to1h2o_r": "mean"})
+    )
+
+
 def download_ssurgo_polygons_for_field(
     field_gdf: gpd.GeoDataFrame, field_id: str
 ) -> gpd.GeoDataFrame:
@@ -150,6 +190,21 @@ def get_ssurgo_polygons_with_soil_data(
         polygons["mukey"] = polygons["mukey"].astype(str)
         polygons = polygons.merge(soil_agg, on="mukey", how="left")
 
+    if "mukey" in polygons.columns:
+        missing_attrs = (
+            "om_r" not in polygons.columns
+            or polygons["om_r"].isna().all()
+            or "compname" not in polygons.columns
+            or polygons["compname"].isna().all()
+        )
+        if missing_attrs:
+            attrs = _fetch_mukey_attributes(polygons["mukey"].astype(str).tolist())
+            if not attrs.empty:
+                for col in ["compname", "comppct_r", "om_r", "ph1to1h2o_r"]:
+                    if col in polygons.columns:
+                        polygons = polygons.drop(columns=[col])
+                polygons = polygons.merge(attrs, on="mukey", how="left")
+
     return gpd.GeoDataFrame(polygons, geometry="geometry", crs=polygons.crs)
 
 
@@ -167,7 +222,7 @@ def _add_basemap(ax, field_gdf: gpd.GeoDataFrame, zoom: int = 14):
 
         esri = getattr(ctx.providers, "Esri")
         imagery = getattr(esri, "WorldImagery")
-        ctx.add_basemap(ax, crs=field_gdf.crs, source=imagery)
+        ctx.add_basemap(ax, crs=field_gdf.crs, source=imagery, alpha=0.5)
         return True
     except Exception as e:
         print(f"    Basemap error: {e}")
@@ -231,9 +286,19 @@ def render_ssurgo_field_map(
         plot_source["mukey"] = plot_source["mukey"].astype(str)
         plot_source = plot_source.dissolve(by="mukey", as_index=False)
 
-    choropleth_col = "om_r" if "om_r" in plot_source.columns else "comppct_r"
-    choropleth_label = "Organic Matter" if choropleth_col == "om_r" else "Component Percentage"
-    units = "%"
+    if "om_r" in plot_source.columns and pd.Series(plot_source["om_r"]).notna().any():
+        choropleth_col = "om_r"
+        choropleth_label = "Organic Matter"
+        units = "%"
+    elif "comppct_r" in plot_source.columns and pd.Series(plot_source["comppct_r"]).notna().any():
+        choropleth_col = "comppct_r"
+        choropleth_label = "Component Percentage"
+        units = "%"
+    else:
+        plot_source["mukey_rank"] = pd.factorize(plot_source["mukey"].astype(str))[0] + 1
+        choropleth_col = "mukey_rank"
+        choropleth_label = "MUKEY"
+        units = ""
 
     plot_source = plot_source.dropna(subset=[choropleth_col]).copy()
     if not plot_source.empty:
@@ -259,12 +324,26 @@ def render_ssurgo_field_map(
                 edgecolor="darkgreen",
                 linewidth=1.3,
             )
+            label_text = f"{choropleth_label} {label}"
+            if "mukey" in plot_source.columns:
+                slice_ids = (
+                    plot_source.loc[plot_source["class_id"] == class_id, "mukey"]
+                    .astype(str)
+                    .tolist()
+                )
+                if choropleth_col == "comppct_r" and "compname" in plot_source.columns:
+                    comp_names = (
+                        plot_source.loc[plot_source["class_id"] == class_id, ["mukey", "compname"]]
+                        .drop_duplicates()
+                        .apply(lambda r: f"{r['compname']} (MUKEY {r['mukey']})", axis=1)
+                        .tolist()
+                    )
+                    label_text = "; ".join(comp_names[:3])
+                elif slice_ids:
+                    label_text = f"{choropleth_label} {label} | MUKEY {', '.join(slice_ids[:4])}"
             legend_elements.append(
                 Patch(
-                    facecolor=colors[class_id],
-                    alpha=0.55,
-                    edgecolor="darkgreen",
-                    label=f"{choropleth_label} {label}",
+                    facecolor=colors[class_id], alpha=0.55, edgecolor="darkgreen", label=label_text
                 )
             )
 

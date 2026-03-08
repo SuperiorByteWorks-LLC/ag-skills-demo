@@ -192,7 +192,7 @@ def _field_card(
         "single": "Soil Profile",
         "texture": "Texture RGB",
         "properties": "Properties",
-        "map": "Soil Map",
+        "map": "Soil Maps",
     }
 
     for card_type, b64_data in soil_cards.items():

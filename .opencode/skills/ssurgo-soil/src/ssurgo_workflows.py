@@ -37,6 +37,38 @@ NUMERIC_SOIL_PROPS = [
 TEXT_SOIL_PROPS = ["mukey", "muname", "compname", "drainagecl"]
 
 
+def fetch_mukey_attributes(mukeys: Iterable[str]) -> pd.DataFrame:
+    mukey_list = sorted({str(m) for m in mukeys if str(m)})
+    if not mukey_list:
+        return pd.DataFrame(columns=["mukey", "compname", "comppct_r", "drainagecl", "om_r"])
+    sql = f"""
+    SELECT c.mukey, c.compname, c.comppct_r, c.drainagecl, ch.om_r
+    FROM component c
+    LEFT JOIN chorizon ch ON c.cokey = ch.cokey
+    WHERE c.mukey IN ({", ".join(repr(m) for m in mukey_list)})
+      AND c.majcompflag = 'Yes'
+      AND (ch.hzdept_r < 30 OR ch.hzdept_r IS NULL)
+    ORDER BY c.mukey, c.comppct_r DESC, ch.hzdept_r ASC
+    """
+    try:
+        resp = requests.post(SDA_URL, data={"query": sql, "format": "JSON"}, timeout=120)
+        resp.raise_for_status()
+        rows = resp.json().get("Table", [])
+    except Exception:
+        rows = []
+    if not rows:
+        return pd.DataFrame(columns=["mukey", "compname", "comppct_r", "drainagecl", "om_r"])
+    df = pd.DataFrame(rows, columns=["mukey", "compname", "comppct_r", "drainagecl", "om_r"])
+    df["mukey"] = df["mukey"].astype(str)
+    for col in ["comppct_r", "om_r"]:
+        df[col] = pd.to_numeric(df[col], errors="coerce")
+    return (
+        df.sort_values(["mukey", "comppct_r"], ascending=[True, False])
+        .groupby("mukey", as_index=False)
+        .agg({"compname": "first", "comppct_r": "first", "drainagecl": "first", "om_r": "mean"})
+    )
+
+
 def query_mupolygons_for_field(field_wkt: str, mukey_list: Iterable[str]) -> gpd.GeoDataFrame:
     mukeys = [str(m) for m in mukey_list]
     if not mukeys:
@@ -286,17 +318,24 @@ def plot_ssurgo_component_map(
 ) -> None:
     field_plot = _add_basemap(ax, field_wgs84) if ctx is not None else field_wgs84.to_crs(epsg=3857)
     if not ssurgo_wgs84.empty and "compname" in ssurgo_wgs84.columns:
-        ssurgo_plot = ssurgo_wgs84.to_crs(epsg=3857) if str(field_plot.crs).endswith("3857") else ssurgo_wgs84
-        colors = plt.cm.Set3(np.linspace(0, 1, max(1, len(ssurgo_plot))))
+        ssurgo_plot = (
+            ssurgo_wgs84.to_crs(epsg=3857) if str(field_plot.crs).endswith("3857") else ssurgo_wgs84
+        )
+        ssurgo_plot = ssurgo_plot.dissolve(by="mukey", as_index=False)
+        colors = plt.get_cmap("YlGn")(np.linspace(0.35, 0.85, max(1, len(ssurgo_plot))))
         handles = []
         for i, row in ssurgo_plot.iterrows():
             c = colors[i % len(colors)]
-            gpd.GeoSeries([row.geometry], crs=ssurgo_plot.crs).plot(ax=ax, color=c, alpha=0.5, edgecolor="darkgreen", linewidth=0.8)
-            comp = row.get("compname", "?")
-            comp = comp if isinstance(comp, str) else "?"
-            handles.append(Patch(facecolor=c, edgecolor="darkgreen", alpha=0.5, label=comp))
+            gpd.GeoSeries([row.geometry], crs=ssurgo_plot.crs).plot(
+                ax=ax, color=c, alpha=0.55, edgecolor="darkgreen", linewidth=1.2
+            )
+            comp = row.get("compname", "Unknown")
+            comp = comp if isinstance(comp, str) and comp else "Unknown"
+            mukey = str(row.get("mukey", "?"))
+            label = f"{comp} (MUKEY {mukey})"
+            handles.append(Patch(facecolor=c, edgecolor="darkgreen", alpha=0.55, label=label))
         if handles:
-            ax.legend(handles=handles, loc="lower right", fontsize=6, title="Component")
+            ax.legend(handles=handles, loc="lower right", fontsize=6, title="Predominant component")
     field_plot.plot(ax=ax, color="none", edgecolor="darkgreen", linewidth=2.2)
     ax.set_title(title, fontsize=10, fontweight="bold")
     ax.set_axis_off()
@@ -312,23 +351,36 @@ def plot_ssurgo_property_choropleth(
 ) -> None:
     field_plot = _add_basemap(ax, field_wgs84) if ctx is not None else field_wgs84.to_crs(epsg=3857)
     if not ssurgo_wgs84.empty and prop in ssurgo_wgs84.columns:
-        ssurgo_plot = ssurgo_wgs84.to_crs(epsg=3857) if str(field_plot.crs).endswith("3857") else ssurgo_wgs84
+        ssurgo_plot = (
+            ssurgo_wgs84.to_crs(epsg=3857) if str(field_plot.crs).endswith("3857") else ssurgo_wgs84
+        )
+        ssurgo_plot = ssurgo_plot.dissolve(by="mukey", as_index=False)
         data = ssurgo_plot.dropna(subset=[prop]).copy()
         if not data.empty:
             class_ids, class_labels = classify_natural_breaks(data[prop])
             if class_labels:
                 data = data.copy()
                 data["_class"] = class_ids
-                colors = plt.cm.YlGn(np.linspace(0.3, 0.85, len(class_labels)))
+                colors = plt.get_cmap("YlGn")(np.linspace(0.35, 0.85, len(class_labels)))
                 handles = []
                 for cid, lbl in enumerate(class_labels):
                     part = data[data["_class"] == cid]
                     if part.empty:
                         continue
-                    part.plot(ax=ax, color=colors[cid], alpha=0.55, edgecolor="darkgreen", linewidth=0.8)
-                    handles.append(Patch(facecolor=colors[cid], edgecolor="darkgreen", alpha=0.55, label=lbl))
+                    part.plot(
+                        ax=ax, color=colors[cid], alpha=0.55, edgecolor="darkgreen", linewidth=1.1
+                    )
+                    mukeys = ", ".join(part["mukey"].astype(str).tolist())
+                    handles.append(
+                        Patch(
+                            facecolor=colors[cid],
+                            edgecolor="darkgreen",
+                            alpha=0.55,
+                            label=f"{lbl} | {mukeys}",
+                        )
+                    )
                 if handles:
-                    ax.legend(handles=handles, loc="lower right", fontsize=6, title=label)
+                    ax.legend(handles=handles, loc="lower right", fontsize=5.5, title=label)
     field_plot.plot(ax=ax, color="none", edgecolor="darkgreen", linewidth=2.2)
     ax.set_title(f"{label} (natural breaks)", fontsize=10, fontweight="bold")
     ax.set_axis_off()
@@ -352,7 +404,9 @@ def plot_headlands_om_overlay(
         ring_3857 = ring_utm
         ssurgo_3857 = ssurgo_wgs84
     if not ssurgo_3857.empty and "om_r" in ssurgo_3857.columns:
-        ssurgo_3857.dropna(subset=["om_r"]).plot(ax=ax, column="om_r", cmap="YlGn", alpha=0.35, edgecolor="darkgreen", legend=False)
+        ssurgo_3857.dropna(subset=["om_r"]).plot(
+            ax=ax, column="om_r", cmap="YlGn", alpha=0.35, edgecolor="darkgreen", legend=False
+        )
     if not ring_3857.empty:
         ring_3857.plot(ax=ax, color="orange", alpha=0.40, edgecolor="darkorange", linewidth=1.5)
     field_3857.plot(ax=ax, color="none", edgecolor="darkgreen", linewidth=2.5)
@@ -374,7 +428,11 @@ def plot_soil_profile_depth(
     detail_df: pd.DataFrame,
     field_id: str,
 ) -> None:
-    data = detail_df[detail_df["field_id"] == field_id].copy() if "field_id" in detail_df.columns else detail_df.copy()
+    data = (
+        detail_df[detail_df["field_id"] == field_id].copy()
+        if "field_id" in detail_df.columns
+        else detail_df.copy()
+    )
     if data.empty:
         ax.text(0.5, 0.5, "No horizon data", ha="center", va="center")
         ax.set_axis_off()
@@ -383,7 +441,15 @@ def plot_soil_profile_depth(
     depths = pd.to_numeric(data["hzdept_r"], errors="coerce").fillna(0).astype(float).values
     if "om_r" in data.columns:
         om_vals = pd.to_numeric(data["om_r"], errors="coerce").fillna(0).astype(float).values
-        ax.barh(depths, om_vals, height=np.diff(np.append(depths, depths[-1] + 20)).clip(min=2), color="#4ade80", alpha=0.8, edgecolor="#166534", label="OM %")
+        ax.barh(
+            depths,
+            om_vals,
+            height=np.diff(np.append(depths, depths[-1] + 20)).clip(min=2),
+            color="#4ade80",
+            alpha=0.8,
+            edgecolor="#166534",
+            label="OM %",
+        )
     ax.set_xlabel("Organic matter (%)")
     ax.set_ylabel("Depth (cm)")
     ax.invert_yaxis()
@@ -394,15 +460,54 @@ def plot_soil_profile_depth(
 
 def render_soil_horizon_table(ax: plt.Axes, detail_df: pd.DataFrame) -> None:
     ax.axis("off")
-    _TABLE_COLS = ["mukey", "compname", "comppct_r", "hzdept_r", "hzdepb_r", "drainagecl", "om_r", "ph1to1h2o_r", "awc_r", "claytotal_r", "sandtotal_r", "cec7_r"]
-    _RENAMES = {"comppct_r": "comp%", "hzdept_r": "top", "hzdepb_r": "bot", "om_r": "OM", "ph1to1h2o_r": "pH", "awc_r": "AWC", "claytotal_r": "clay%", "sandtotal_r": "sand%", "cec7_r": "CEC"}
+    _TABLE_COLS = [
+        "mukey",
+        "compname",
+        "comppct_r",
+        "hzdept_r",
+        "hzdepb_r",
+        "drainagecl",
+        "om_r",
+        "ph1to1h2o_r",
+        "awc_r",
+        "claytotal_r",
+        "sandtotal_r",
+        "cec7_r",
+    ]
+    _RENAMES = {
+        "comppct_r": "comp%",
+        "hzdept_r": "top",
+        "hzdepb_r": "bot",
+        "om_r": "OM",
+        "ph1to1h2o_r": "pH",
+        "awc_r": "AWC",
+        "claytotal_r": "clay%",
+        "sandtotal_r": "sand%",
+        "cec7_r": "CEC",
+    }
     if detail_df.empty:
         ax.text(0.5, 0.5, "No soil data", ha="center", va="center")
         return
     avail = [c for c in _TABLE_COLS if c in detail_df.columns]
     tdf = detail_df[avail].copy().head(20)
-    tdf["drainagecl"] = tdf["drainagecl"].apply(lambda s: "".join(w[0].upper() for w in str(s).split()) if pd.notna(s) else "") if "drainagecl" in tdf.columns else ""
-    for col in ["comppct_r", "hzdept_r", "hzdepb_r", "om_r", "ph1to1h2o_r", "awc_r", "claytotal_r", "sandtotal_r", "cec7_r"]:
+    tdf["drainagecl"] = (
+        tdf["drainagecl"].apply(
+            lambda s: "".join(w[0].upper() for w in str(s).split()) if pd.notna(s) else ""
+        )
+        if "drainagecl" in tdf.columns
+        else ""
+    )
+    for col in [
+        "comppct_r",
+        "hzdept_r",
+        "hzdepb_r",
+        "om_r",
+        "ph1to1h2o_r",
+        "awc_r",
+        "claytotal_r",
+        "sandtotal_r",
+        "cec7_r",
+    ]:
         if col in tdf.columns:
             tdf[col] = pd.to_numeric(tdf[col], errors="coerce").round(2)
     tdf = tdf.rename(columns=_RENAMES).replace([np.nan, "nan", "NaN", "None"], "")
@@ -458,8 +563,12 @@ def compute_ssurgo_heterogeneity(
     detail_df: pd.DataFrame,
 ) -> dict[str, object]:
     result: dict[str, object] = {
-        "mukey_count": int(dissolved_gdf["mukey"].nunique()) if "mukey" in dissolved_gdf.columns else None,
-        "component_count": int(detail_df["compname"].nunique()) if "compname" in detail_df.columns else None,
+        "mukey_count": int(dissolved_gdf["mukey"].nunique())
+        if "mukey" in dissolved_gdf.columns
+        else None,
+        "component_count": int(detail_df["compname"].nunique())
+        if "compname" in detail_df.columns
+        else None,
         "horizon_count": int(len(detail_df)),
     }
     for prop, key in [("om_r", "om_range"), ("ph1to1h2o_r", "ph_range")]:

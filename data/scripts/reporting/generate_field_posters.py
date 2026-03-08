@@ -201,13 +201,15 @@ def _render_field_poster(
 
     _field_identity_card(fig.add_subplot(gs[0, 0]), field_row, hl, crop_sum, wx_row)
     plot_ssurgo_component_map(
-        fig.add_subplot(gs[0, 1]), field_wgs84, ssurgo_wgs84, "Soil components (SSURGO)"
+        fig.add_subplot(gs[0, 1]), field_wgs84, ssurgo_wgs84, "Soil components (SSURGO)", ctx=True
     )
-    plot_headlands_om_overlay(fig.add_subplot(gs[0, 2:]), field_utm, ring_utm, ssurgo_wgs84)
+    plot_headlands_om_overlay(
+        fig.add_subplot(gs[0, 2:]), field_utm, ring_utm, ssurgo_wgs84, ctx=True
+    )
 
     for i, (prop, label) in enumerate(PROP_MAPS):
         plot_ssurgo_property_choropleth(
-            fig.add_subplot(gs[1, i]), field_wgs84, ssurgo_wgs84, prop, label
+            fig.add_subplot(gs[1, i]), field_wgs84, ssurgo_wgs84, prop, label, ctx=True
         )
 
     plot_soil_profile_depth(fig.add_subplot(gs[2, 0]), detail_df, field_id)
@@ -282,9 +284,9 @@ def main() -> None:
         cdl_summary=crop_sum,
     )
 
-    for idx, frow in fields.iterrows():
-        field_id = frow["field_id"]
-        output_path = output_dir / f"iowa_field_report_{idx + 1:02d}.png"
+    for idx_num, frow in enumerate(fields.itertuples(index=False), start=0):
+        field_id = getattr(frow, "field_id")
+        output_path = output_dir / f"iowa_field_report_{idx_num + 1:02d}.png"
         prior = load_manifest(manifest_dir / f"{STEP_FIELD_POSTER_RENDER}_{field_id}.json")
 
         # Check for cached SSURGO polygons
@@ -309,7 +311,7 @@ def main() -> None:
             print(f"skip  {field_id}")
             continue
         print(f"run   {field_id}")
-        field_gdf = fields.iloc[[idx]].copy()
+        field_gdf = fields.iloc[[idx_num]].copy()
         detail_df = (
             soil_full[soil_full["field_id"] == field_id].copy()
             if "field_id" in soil_full.columns
@@ -337,6 +339,15 @@ def main() -> None:
                     soil_agg["mukey"] = soil_agg["mukey"].astype(str)
                     ssurgo_gdf["mukey"] = ssurgo_gdf["mukey"].astype(str)
                     ssurgo_gdf = ssurgo_gdf.merge(soil_agg, on="mukey", how="left")
+                try:
+                    ssurgo_gdf = gpd.GeoDataFrame(
+                        ssurgo_gdf, geometry="geometry", crs=ssurgo_gdf.crs
+                    )
+                    clip_target = field_gdf.to_crs(ssurgo_gdf.crs or field_gdf.crs)
+                    ssurgo_gdf = gpd.clip(ssurgo_gdf, clip_target)
+                    ssurgo_gdf = ssurgo_gdf[~ssurgo_gdf.geometry.is_empty].copy()
+                except Exception:
+                    pass
                 print(f"    Loaded {len(ssurgo_gdf)} SSURGO polygons")
             except Exception as e:
                 print(f"    Warning: Could not load SSURGO polygons: {e}")
