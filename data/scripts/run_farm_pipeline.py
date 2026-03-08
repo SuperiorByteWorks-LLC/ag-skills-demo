@@ -67,13 +67,26 @@ def _sync_outputs_to_canonical(
     farm_root = _REPO / "data" / "growers" / grower_slug / "farms" / farm_slug
     fields_root = farm_root / "fields"
     farm_summaries = farm_root / "derived" / "summaries"
+    farm_soil_cards = farm_summaries / "soil_cards"
+    farm_soil_maps = farm_summaries / "soil_maps"
     farm_summaries.mkdir(parents=True, exist_ok=True)
+    farm_soil_cards.mkdir(parents=True, exist_ok=True)
+    farm_soil_maps.mkdir(parents=True, exist_ok=True)
 
     legacy_eda = _REPO / "data" / "EDA"
     for name in ("iowa_farm_report.png", "iowa_farm_report.html", "iowa_farm_report.md"):
         src = legacy_eda / name
         if src.exists():
             shutil.copy2(src, farm_summaries / name)
+
+    farm_compare = legacy_eda / "soil_cards" / "farm_comparison.png"
+    if farm_compare.exists():
+        shutil.copy2(farm_compare, farm_soil_cards / "farm_comparison.png")
+
+    legacy_soil_map_dir = legacy_eda / "soil_maps"
+    if legacy_soil_map_dir.exists():
+        for soil_map_file in sorted(legacy_soil_map_dir.glob("field_*_map.png")):
+            shutil.copy2(soil_map_file, farm_soil_maps / soil_map_file.name)
 
     resolved_boundaries = _REPO / boundaries_path
     resolved_weather = _REPO / weather_path
@@ -99,6 +112,7 @@ def _sync_outputs_to_canonical(
         soil_map = legacy_eda / "soil_maps" / f"field_{idx:02d}_map.png"
         if soil_map.exists():
             shutil.copy2(soil_map, field_root / "derived" / "summaries" / "soil_map.png")
+            shutil.copy2(soil_map, field_root / "derived" / "features" / "soil_map.png")
 
         if boundaries is not None:
             match = boundaries[boundaries["field_id"] == field_id]
@@ -183,10 +197,10 @@ def main() -> None:
     steps = [
         ("reporting/generate_field_posters.py", "Field posters"),
         ("reporting/generate_aggregate_poster.py", "Farm portfolio poster"),
-        ("reporting/generate_farm_html.py", "Self-contained HTML report"),
-        ("reporting/generate_farm_markdown.py", "Markdown report"),
         ("reporting/generate_ssurgo_cards.py", "SSURGO soil profile cards"),
         ("reporting/generate_ssurgo_maps.py", "SSURGO soil maps with basemap"),
+        ("reporting/generate_farm_html.py", "Self-contained HTML report"),
+        ("reporting/generate_farm_markdown.py", "Markdown report"),
     ]
 
     all_ok = True

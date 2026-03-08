@@ -124,10 +124,10 @@ def _load_soil_cards(idx: int) -> dict[str, str]:
 
     for card_type in ["single", "texture", "properties"]:
         card_path = soil_dir / f"field_{idx + 1:02d}_{card_type}.png"
-        if card_path.exists():
-            cards[card_type] = _img_to_b64(card_path)
-        else:
-            cards[card_type] = ""
+        cards[card_type] = _img_to_b64(card_path) if card_path.exists() else ""
+
+    soil_map_path = Path("data/EDA/soil_maps") / f"field_{idx + 1:02d}_map.png"
+    cards["map"] = _img_to_b64(soil_map_path) if soil_map_path.exists() else ""
 
     return cards
 
@@ -188,7 +188,12 @@ def _field_card(
     soil_thumbs = []
     soil_modals = []
 
-    card_labels = {"single": "Soil Profile", "texture": "Texture RGB", "properties": "Properties"}
+    card_labels = {
+        "single": "Soil Profile",
+        "texture": "Texture RGB",
+        "properties": "Properties",
+        "map": "Soil Map",
+    }
 
     for card_type, b64_data in soil_cards.items():
         if b64_data:
@@ -291,6 +296,10 @@ def main() -> None:
             "data/soil/iowa_ssurgo_summary.csv",
             "data/weather/iowa_weather_2021_2025.csv",
             "data/cdl/iowa_cdl_2021_2024.csv",
+            "data/EDA/iowa_farm_report.png",
+            "data/EDA/soil_cards/farm_comparison.png",
+            "data/EDA/soil_maps/field_01_map.png",
+            "data/EDA/field_cards/iowa_field_report_01.png",
         ],
         output_paths=[output_path],
         code_paths=[_SCRIPT],
@@ -331,24 +340,33 @@ def main() -> None:
     print("  Rendering farm map and crop portfolio charts...")
     farm_map_b64 = _farm_map_b64(fields)
     farm_crop_b64 = _cdl_b64(cdl)
+    farm_poster_path = Path("data/EDA/iowa_farm_report.png")
+    farm_poster_b64 = _img_to_b64(farm_poster_path) if farm_poster_path.exists() else ""
+    farm_soil_compare_path = Path("data/EDA/soil_cards/farm_comparison.png")
+    farm_soil_compare_b64 = (
+        _img_to_b64(farm_soil_compare_path) if farm_soil_compare_path.exists() else ""
+    )
 
     print("  Loading and embedding field posters...")
     field_cards = []
-    for idx, frow in fields.iterrows():
+    for idx_num in range(len(fields)):
+        frow = fields.iloc[idx_num]
         fid = frow["field_id"]
         print(f"    Loading poster for field {fid[-6:]}...")
-        poster_path = Path("data/EDA/field_cards") / f"iowa_field_poster_{idx + 1:02d}.png"
+        poster_path = Path("data/EDA/field_cards") / f"iowa_field_poster_{idx_num + 1:02d}.png"
+        if not poster_path.exists():
+            poster_path = Path("data/EDA/field_cards") / f"iowa_field_report_{idx_num + 1:02d}.png"
         poster_b64 = _img_to_b64(poster_path) if poster_path.exists() else ""
 
         # Load soil cards
-        soil_cards = _load_soil_cards(idx)
+        soil_cards = _load_soil_cards(idx_num)
 
         fw = weather[weather["field_id"] == fid].copy()
         fw["date"] = pd.to_datetime(fw["date"])
         fc = cdl[cdl["field_id"] == fid].copy()
         df_row_matches = field_df[field_df["field_id"] == fid]
         df_row = df_row_matches.iloc[0] if not df_row_matches.empty else pd.Series(frow)
-        field_cards.append(_field_card(frow, df_row, fw, fc, poster_b64, soil_cards, idx))
+        field_cards.append(_field_card(frow, df_row, fw, fc, poster_b64, soil_cards, idx_num))
 
     nav = " | ".join(
         f'<a href="#field-{str(r["field_id"])[-6:]}">{str(r["field_id"])[-6:]}</a>'
@@ -429,6 +447,14 @@ def main() -> None:
     <div>
       <h3>Farm crop portfolio</h3>
       <img src="data:image/png;base64,{farm_crop_b64}" alt="Farm CDL crop composition">
+    </div>
+    <div>
+      <h3>Farm summary poster</h3>
+      {f'<img src="data:image/png;base64,{farm_poster_b64}" alt="Farm summary poster">' if farm_poster_b64 else "<p>Farm summary poster unavailable</p>"}
+    </div>
+    <div>
+      <h3>Farm soil comparison</h3>
+      {f'<img src="data:image/png;base64,{farm_soil_compare_b64}" alt="Farm soil comparison">' if farm_soil_compare_b64 else "<p>Farm soil comparison unavailable</p>"}
     </div>
   </div>
   <nav class="field-nav">Jump to field: {nav}</nav>
