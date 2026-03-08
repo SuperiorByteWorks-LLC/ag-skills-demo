@@ -13,7 +13,6 @@ from pathlib import Path
 import geopandas as gpd
 import pandas as pd
 
-
 REPO_ROOT = Path(__file__).resolve().parents[1]
 DATA_ROOT = REPO_ROOT / "data"
 WORK_BOUNDARIES = DATA_ROOT / "field-boundaries" / "iowa_10_fields.geojson"
@@ -77,11 +76,20 @@ def _ensure_aliases() -> None:
         weather_alias.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(weather_src, weather_alias)
 
-    cdl_src = DATA_ROOT / "cdl" / "iowa_cdl_2023_2024_full_composition.csv"
-    cdl_alias = DATA_ROOT / "cdl" / "iowa_cdl_2021_2024.csv"
-    if cdl_src.exists():
-        cdl_alias.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(cdl_src, cdl_alias)
+    legacy_cdl_root = DATA_ROOT / "cdl"
+    canonical_cdl_tables = DATA_ROOT / "shared" / "cdl" / "derived" / "tables"
+    canonical_cdl_tables.mkdir(parents=True, exist_ok=True)
+    for source_name, target_name in (
+        ("iowa_cdl_2021_2025_full_composition.csv", "iowa_cdl_2021_2025_full_composition.csv"),
+        ("iowa_cdl_2021_2024.csv", "iowa_cdl_2021_2024_full_composition.csv"),
+        ("iowa_crop_rotation.csv", "iowa_crop_rotation.csv"),
+        ("iowa_2023_cdl.csv", "iowa_2023_cdl.csv"),
+        ("iowa_2024_cdl.csv", "iowa_2024_cdl.csv"),
+    ):
+        source_path = legacy_cdl_root / source_name
+        target_path = canonical_cdl_tables / target_name
+        if source_path.exists() and not target_path.exists():
+            shutil.copy2(source_path, target_path)
 
 
 def _ensure_soil_artifacts() -> None:

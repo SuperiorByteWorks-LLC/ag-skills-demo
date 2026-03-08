@@ -2,11 +2,10 @@
 
 from __future__ import annotations
 
+import json
 import os
 import sys
-import json
 from pathlib import Path
-
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DATA_ROOT = REPO_ROOT / "data"
@@ -49,12 +48,35 @@ def field_slugs_from_inventory(inventory_path: Path | None = None) -> list[str]:
     return slugs
 
 
-def _write_json(path: Path, payload: dict) -> None:
+def field_slug_map_from_inventory(inventory_path: Path | None = None) -> dict[str, str]:
+    inventory = inventory_path or (
+        REPO_ROOT / ".sisyphus" / "evidence" / "task-3-field-inventory.csv"
+    )
+    if not inventory.exists():
+        return {}
+    rows = inventory.read_text(encoding="utf-8").splitlines()
+    mapping: dict[str, str] = {}
+    for line in rows[1:]:
+        line = line.strip()
+        if not line:
+            continue
+        parts = line.split(",")
+        if len(parts) != 2:
+            continue
+        mapping[parts[0].strip()] = parts[1].strip()
+    return mapping
+
+
+def _write_json(path: Path, payload: dict, *, overwrite: bool = True) -> None:
+    if path.exists() and not overwrite:
+        return
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
 
 
-def _write_text(path: Path, text: str) -> None:
+def _write_text(path: Path, text: str, *, overwrite: bool = True) -> None:
+    if path.exists() and not overwrite:
+        return
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(text, encoding="utf-8")
 
@@ -72,6 +94,8 @@ def ensure_canonical_field_artifacts(
         "derived/tables",
         "derived/features",
         "derived/summaries",
+        "derived/reports",
+        "manifests",
         "logs",
     ):
         (base / rel).mkdir(parents=True, exist_ok=True)
@@ -94,12 +118,14 @@ def ensure_canonical_field_artifacts(
             "satellite_dir": "satellite/",
             "notes": "Canonical field metadata",
         },
+        overwrite=False,
     )
-    _write_json(base / "boundary" / "field_boundary.geojson", field_geojson)
-    _write_json(base / "soil" / "ssurgo_soil_types.geojson", field_geojson)
+    _write_json(base / "boundary" / "field_boundary.geojson", field_geojson, overwrite=False)
+    _write_json(base / "soil" / "ssurgo_soil_types.geojson", field_geojson, overwrite=False)
     _write_text(
         base / "weather" / "daily_weather.csv",
         "field_id,date,T2M,T2M_MAX,T2M_MIN,PRECTOTCORR,ALLSKY_SFC_SW_DWN,RH2M,WS10M\n",
+        overwrite=False,
     )
 
     _write_json(
@@ -114,6 +140,7 @@ def ensure_canonical_field_artifacts(
             "format": "geojson",
             "crs": "EPSG:4326",
         },
+        overwrite=False,
     )
     _write_json(
         base / "weather" / "metadata.json",
@@ -127,6 +154,7 @@ def ensure_canonical_field_artifacts(
             "format": "csv",
             "crs": "EPSG:4326",
         },
+        overwrite=False,
     )
 
     _write_json(
@@ -136,6 +164,7 @@ def ensure_canonical_field_artifacts(
             "field_slug": field_slug,
             "years": [],
         },
+        overwrite=False,
     )
     _write_json(
         base / "satellite" / "sentinel" / "manifest.json",
@@ -144,8 +173,9 @@ def ensure_canonical_field_artifacts(
             "field_slug": field_slug,
             "years": [],
         },
+        overwrite=False,
     )
-    _write_text(base / "logs" / "pipeline_runs.jsonl", "")
+    _write_text(base / "logs" / "pipeline_runs.jsonl", "", overwrite=False)
 
 
 def ensure_canonical_data_tree(
@@ -156,13 +186,40 @@ def ensure_canonical_data_tree(
 ) -> list[str]:
     (DATA_ROOT / "shared" / "cdl" / "metadata").mkdir(parents=True, exist_ok=True)
     (DATA_ROOT / "shared" / "cdl" / "rasters").mkdir(parents=True, exist_ok=True)
+    (DATA_ROOT / "shared" / "cdl" / "derived").mkdir(parents=True, exist_ok=True)
+    (DATA_ROOT / "shared" / "cdl" / "derived" / "tables").mkdir(parents=True, exist_ok=True)
+    (DATA_ROOT / "shared" / "cdl" / "derived" / "reports").mkdir(parents=True, exist_ok=True)
+    (DATA_ROOT / "shared" / "cdl" / "manifests").mkdir(parents=True, exist_ok=True)
+    (DATA_ROOT / "shared" / "cdl" / "logs").mkdir(parents=True, exist_ok=True)
     (DATA_ROOT / "shared" / "reference" / "crop_codes").mkdir(parents=True, exist_ok=True)
     (DATA_ROOT / "shared" / "reference" / "units").mkdir(parents=True, exist_ok=True)
     (DATA_ROOT / "shared" / "reference" / "schemas").mkdir(parents=True, exist_ok=True)
     (DATA_ROOT / "shared" / "manifests").mkdir(parents=True, exist_ok=True)
+    (DATA_ROOT / "shared" / "logs").mkdir(parents=True, exist_ok=True)
+
+    grower = DATA_ROOT / "growers" / grower_slug
+    grower.mkdir(parents=True, exist_ok=True)
+    (grower / "manifests").mkdir(parents=True, exist_ok=True)
+    (grower / "logs").mkdir(parents=True, exist_ok=True)
+    _write_json(
+        grower / "grower.json",
+        {
+            "grower_slug": grower_slug,
+            "display_name": grower_slug,
+            "notes": "Canonical grower metadata",
+        },
+    )
+    _write_text(grower / "logs" / "pipeline_runs.jsonl", "", overwrite=False)
 
     farm = farm_root(grower_slug, farm_slug)
     farm.mkdir(parents=True, exist_ok=True)
+    (farm / "boundary").mkdir(parents=True, exist_ok=True)
+    (farm / "manifests").mkdir(parents=True, exist_ok=True)
+    (farm / "logs").mkdir(parents=True, exist_ok=True)
+    (farm / "derived" / "reports").mkdir(parents=True, exist_ok=True)
+    (farm / "derived" / "summaries").mkdir(parents=True, exist_ok=True)
+    (farm / "derived" / "dashboards").mkdir(parents=True, exist_ok=True)
+    (farm / "derived" / "tables").mkdir(parents=True, exist_ok=True)
     _write_json(
         farm / "farm.json",
         {
@@ -175,6 +232,7 @@ def ensure_canonical_data_tree(
             "notes": "Canonical farm metadata",
         },
     )
+    _write_text(farm / "logs" / "pipeline_runs.jsonl", "", overwrite=False)
 
     slugs = field_slugs_from_inventory(inventory_path=inventory_path)
     if not slugs:

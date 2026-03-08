@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from pathlib import Path
 
-
 DATA_ROOT = Path(__file__).resolve().parents[2]
 SCRIPTS_ROOT = DATA_ROOT / "scripts"
 GROWERS_ROOT = DATA_ROOT / "growers"
@@ -13,12 +12,40 @@ def grower_dir(grower_slug: str) -> Path:
     return GROWERS_ROOT / grower_slug
 
 
+def grower_manifest_dir(grower_slug: str) -> Path:
+    return grower_dir(grower_slug) / "manifests"
+
+
+def grower_manifest_path(grower_slug: str, filename: str = "pipeline_schedule.json") -> Path:
+    return grower_manifest_dir(grower_slug) / filename
+
+
+def grower_logs_dir(grower_slug: str) -> Path:
+    return grower_dir(grower_slug) / "logs"
+
+
 def farm_dir(grower_slug: str, farm_slug: str) -> Path:
     return grower_dir(grower_slug) / "farms" / farm_slug
 
 
 def farm_manifest_dir(grower_slug: str, farm_slug: str) -> Path:
     return farm_dir(grower_slug, farm_slug) / "manifests"
+
+
+def farm_boundary_dir(grower_slug: str, farm_slug: str) -> Path:
+    return farm_dir(grower_slug, farm_slug) / "boundary"
+
+
+def farm_boundary_path(grower_slug: str, farm_slug: str) -> Path:
+    return farm_boundary_dir(grower_slug, farm_slug) / "field_boundaries.geojson"
+
+
+def farm_logs_dir(grower_slug: str, farm_slug: str) -> Path:
+    return farm_dir(grower_slug, farm_slug) / "logs"
+
+
+def farm_logs_path(grower_slug: str, farm_slug: str) -> Path:
+    return farm_logs_dir(grower_slug, farm_slug) / "pipeline_runs.jsonl"
 
 
 def farm_derived_dir(grower_slug: str, farm_slug: str) -> Path:
@@ -35,6 +62,14 @@ def farm_summaries_dir(grower_slug: str, farm_slug: str) -> Path:
 
 def farm_dashboards_dir(grower_slug: str, farm_slug: str) -> Path:
     return farm_derived_dir(grower_slug, farm_slug) / "dashboards"
+
+
+def farm_tables_dir(grower_slug: str, farm_slug: str) -> Path:
+    return farm_derived_dir(grower_slug, farm_slug) / "tables"
+
+
+def farm_table_path(grower_slug: str, farm_slug: str, filename: str) -> Path:
+    return farm_tables_dir(grower_slug, farm_slug) / filename
 
 
 def field_dir(grower_slug: str, farm_slug: str, field_slug: str) -> Path:
@@ -77,6 +112,10 @@ def field_satellite_dir(grower_slug: str, farm_slug: str, field_slug: str) -> Pa
     return field_dir(grower_slug, farm_slug, field_slug) / "satellite"
 
 
+def field_manifest_dir(grower_slug: str, farm_slug: str, field_slug: str) -> Path:
+    return field_dir(grower_slug, farm_slug, field_slug) / "manifests"
+
+
 def field_derived_dir(grower_slug: str, farm_slug: str, field_slug: str) -> Path:
     return field_dir(grower_slug, farm_slug, field_slug) / "derived"
 
@@ -97,8 +136,32 @@ def field_tables_dir(grower_slug: str, farm_slug: str, field_slug: str) -> Path:
     return field_derived_dir(grower_slug, farm_slug, field_slug) / "tables"
 
 
+def field_logs_dir(grower_slug: str, farm_slug: str, field_slug: str) -> Path:
+    return field_dir(grower_slug, farm_slug, field_slug) / "logs"
+
+
 def field_logs_path(grower_slug: str, farm_slug: str, field_slug: str) -> Path:
-    return field_dir(grower_slug, farm_slug, field_slug) / "logs" / "pipeline_runs.jsonl"
+    return field_logs_dir(grower_slug, farm_slug, field_slug) / "pipeline_runs.jsonl"
+
+
+def field_feature_path(grower_slug: str, farm_slug: str, field_slug: str, filename: str) -> Path:
+    return field_features_dir(grower_slug, farm_slug, field_slug) / filename
+
+
+def field_summary_path(grower_slug: str, farm_slug: str, field_slug: str, filename: str) -> Path:
+    return field_summaries_dir(grower_slug, farm_slug, field_slug) / filename
+
+
+def field_report_path(grower_slug: str, farm_slug: str, field_slug: str, filename: str) -> Path:
+    return field_reports_dir(grower_slug, farm_slug, field_slug) / filename
+
+
+def farm_report_path(grower_slug: str, farm_slug: str, filename: str) -> Path:
+    return farm_reports_dir(grower_slug, farm_slug) / filename
+
+
+def farm_summary_path(grower_slug: str, farm_slug: str, filename: str) -> Path:
+    return farm_summaries_dir(grower_slug, farm_slug) / filename
 
 
 def shared_cdl_dir() -> Path:
@@ -113,6 +176,37 @@ def shared_cdl_derived_dir() -> Path:
     return shared_cdl_dir() / "derived"
 
 
+def shared_cdl_tables_dir() -> Path:
+    return shared_cdl_derived_dir() / "tables"
+
+
+def shared_cdl_reports_dir() -> Path:
+    return shared_cdl_derived_dir() / "reports"
+
+
+def shared_cdl_year_table_path(year: int) -> Path:
+    return shared_cdl_tables_dir() / f"iowa_{year}_cdl.csv"
+
+
+def shared_cdl_rotation_path() -> Path:
+    return shared_cdl_tables_dir() / "iowa_crop_rotation.csv"
+
+
+def shared_cdl_full_composition_path(start_year: int = 2021, end_year: int = 2025) -> Path:
+    return shared_cdl_tables_dir() / f"iowa_cdl_{start_year}_{end_year}_full_composition.csv"
+
+
+def shared_cdl_preferred_full_composition_path(
+    preferred_ranges: tuple[tuple[int, int], ...] = ((2021, 2025), (2020, 2024), (2021, 2024)),
+) -> Path:
+    for start_year, end_year in preferred_ranges:
+        candidate = shared_cdl_full_composition_path(start_year, end_year)
+        if candidate.exists():
+            return candidate
+    first_start, first_end = preferred_ranges[0]
+    return shared_cdl_full_composition_path(first_start, first_end)
+
+
 def shared_cdl_metadata_dir() -> Path:
     return shared_cdl_dir() / "metadata"
 
@@ -121,8 +215,16 @@ def shared_cdl_manifest_dir() -> Path:
     return shared_cdl_dir() / "manifests"
 
 
+def shared_cdl_logs_dir() -> Path:
+    return shared_cdl_dir() / "logs"
+
+
 def shared_manifest_dir() -> Path:
     return SHARED_ROOT / "manifests"
+
+
+def shared_logs_dir() -> Path:
+    return SHARED_ROOT / "logs"
 
 
 def ensure_parent(path: Path) -> Path:
