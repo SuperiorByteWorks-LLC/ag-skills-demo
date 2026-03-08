@@ -64,6 +64,14 @@ htmlcov/
 *.swo
 *~
 
+# Node / pnpm
+node_modules/
+.pnpm-store/
+.pnpm-debug.log
+apps/*/node_modules/
+apps/*/.next/
+apps/*/dist/
+
 # OS files
 .DS_Store
 Thumbs.db
