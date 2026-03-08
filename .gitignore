@@ -1,74 +1,52 @@
-# ===========================
-# Node / pnpm
-# ===========================
-node_modules/
-.pnpm-store/
-.pnpm-debug.log
+# Agricultural Data Skills - Gitignore
 
-# ===========================
-# Environment variables
-# ===========================
-.env
-.env.local
-.env.*.local
+# This file ensures generated data outputs are not committed to git.
+# Only examples/ directory should be committed (small sample data).
 
-# ===========================
-# OS files
-# ===========================
-.DS_Store
-Thumbs.db
-Desktop.ini
-._*
+# Data outputs - never commit
+data/
+*.geojson
+*.tif
+*.tiff
+*.nc
+*.csv
+*.txt
+*.xlsx
+*.parquet
+*.shp
+*.shx
+*.dbf
+*.prj
+*.sbn
+*.sbx
+*.xml
 
-# ===========================
-# IDE / Editor
-# ===========================
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-*.sublime-project
-*.sublime-workspace
+# Plot outputs
+*.png
+*.jpg
+*.jpeg
+*.pdf
+*.svg
+*.html
 
-# ===========================
-# Logs
-# ===========================
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-
-# ===========================
-# Build outputs
-# ===========================
-dist/
-build/
-.next/
-out/
-.wrangler/
-.mf/
-
-# ===========================
-# Jupyter Notebooks
-# ===========================
+# Jupyter notebooks (unless specifically wanted)
+*.ipynb
 .ipynb_checkpoints/
-notebooks/.ipynb_checkpoints/
-notebooks/**/.ipynb_checkpoints/
 
-# ===========================
-# Python
-# ===========================
+# Python cache
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
 .Python
+
+# Virtual environments
 venv/
 env/
 ENV/
 .venv/
+
+# Python dev artifacts
 pip-log.txt
 pip-delete-this-directory.txt
 .pytest_cache/
@@ -79,50 +57,33 @@ htmlcov/
 .ruff_cache/
 .mypy_cache/
 
-# ===========================
-# CrewAI runtime artifacts
-# ===========================
-# CI job-capture output directory
-.crewai-job-output/
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
 
-# Workspace files generated during reviews
-.crewai/workspace/**
-.crewai/*.log
-.crewai/ci_summary.json
-.crewai/full_review.json
-.crewai/*_review.json
+# OS files
+.DS_Store
+Thumbs.db
 
-# Keep workspace directory structure
-!.crewai/workspace/.gitkeep
-!.crewai/workspace/trace/.gitkeep
+# Logs
+*.log
 
-# Memory files ARE tracked (version-controlled review memory)
-# .crewai/memory/memory.json     — tracked
-# .crewai/memory/suppressions.json — tracked
-# .crewai/memory/sql/memory_seed.sql — tracked (text seed)
-
-# Runtime memory DB artifacts should stay local-only
-.crewai/memory/sql/*.sqlite
-.crewai/memory/sql/*.sqlite3
-
-# Local helper tool installs (runtime only)
-.tools/
-
-# ===========================
-# Test / Coverage
-# ===========================
-coverage/
-.nyc_output/
-junit.xml
-test-results/
-
-# ===========================
-# Misc
-# ===========================
+# Large binary files
+*.zip
+*.tar
+*.gz
+*.rar
 *.tgz
 *.tar.gz
-*.zip
-.cache/
-tmp/
-temp/
-data/
+
+# Keep examples (explicit allow)
+!examples/*
+!examples/**/*
+!*/examples/*
+!*/examples/**/*
+
+# Keep data/README.md files (documentation only)
+!data/README.md
