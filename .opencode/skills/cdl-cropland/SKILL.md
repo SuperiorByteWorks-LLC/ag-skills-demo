@@ -124,7 +124,7 @@ for r in results:
 import pandas as pd
 df = pd.DataFrame(results)
 print(df[['field_id', 'year', 'crop_code', 'crop_name', 'dominant_pct']])
-df.to_csv(f'data/cdl_{year}_fields.csv', index=False)
+df.to_csv(f'data/shared/cdl/derived/tables/cdl_{year}_fields.csv', index=False)
 EOF
 ```
 

@@ -37,6 +37,6 @@ Compose field boundaries, headlands, soils, weather, crop history, and remote se
 
 ## Output Conventions
 
-- Canonical reporting datasets live under `data/reporting/`
-- Static posters live under `data/EDA/`
+- Canonical reporting datasets live under `data/growers/<grower>/farms/<farm>/derived/` and `data/shared/`
+- Static posters and report outputs live under `data/growers/<grower>/farms/<farm>/derived/reports/`
 - Self-contained HTML should embed report data so it can be opened without a backing server

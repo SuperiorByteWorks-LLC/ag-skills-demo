@@ -1,11 +1,12 @@
 from __future__ import annotations
 
-import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
 
-def choose_best_landsat_scene(scenes: pd.DataFrame, target_date: str | None = None) -> pd.Series | None:
+def choose_best_landsat_scene(
+    scenes: pd.DataFrame, target_date: str | None = None
+) -> pd.Series | None:
     if scenes.empty:
         return None
     df = scenes.copy()
@@ -57,7 +58,9 @@ def plot_landsat_ndvi_timeseries(ax, stats: pd.DataFrame, title: str = "Landsat 
     df = stats.copy()
     df["date"] = pd.to_datetime(df["date"])
     for field_id, group in df.groupby("field_id"):
-        ax.plot(group["date"], group["mean_ndvi"], marker="o", linewidth=1.3, label=str(field_id)[-6:])
+        ax.plot(
+            group["date"], group["mean_ndvi"], marker="o", linewidth=1.3, label=str(field_id)[-6:]
+        )
     ax.set_title(title, fontsize=12, fontweight="bold")
     ax.set_ylabel("Mean NDVI")
     ax.grid(True, alpha=0.3)

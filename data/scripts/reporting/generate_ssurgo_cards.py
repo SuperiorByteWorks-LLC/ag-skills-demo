@@ -16,13 +16,20 @@ matplotlib.use("Agg")
 
 _REPO = Path(__file__).resolve().parents[3]
 _SKILLS = _REPO / ".opencode" / "skills"
+_SCRIPTS = _REPO / "data" / "scripts"
+_LIB = _REPO / "data" / "scripts" / "lib"
 
 sys.path.insert(0, str(_SKILLS / "farm-intelligence-reporting" / "src"))
+sys.path.insert(0, str(_SCRIPTS))
+sys.path.insert(0, str(_LIB))
 
-from pipeline import FieldReportingConfig, build_step_manifest, load_manifest, step_is_stale
+from paths import farm_boundary_path, farm_summary_path, farm_table_path, field_summary_path
+from reporting_bootstrap import field_slug_map_from_inventory
+
 
 _SCRIPT = Path(__file__)
-_OUTPUT_DIR = _REPO / "data" / "EDA" / "soil_cards"
+_DEFAULT_GROWER = "iowa-demo-grower"
+_DEFAULT_FARM = "iowa-demo-farm"
 
 
 def plot_soil_properties_card(field_data: pd.DataFrame, field_id: str, output_path: Path) -> None:
@@ -299,18 +306,16 @@ def main() -> None:
     print("SSURGO Soil Profile Cards")
     print("=" * 60)
 
-    _OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-
-    # Load field boundaries
-    fields_path = _REPO / "data" / "field-boundaries" / "iowa_10_fields.geojson"
+    fields_path = farm_boundary_path(_DEFAULT_GROWER, _DEFAULT_FARM)
     if not fields_path.exists():
         print(f"ERROR: Fields file not found: {fields_path}")
         sys.exit(1)
 
     fields = gpd.read_file(fields_path)
+    field_slug_map = field_slug_map_from_inventory()
 
     # Load SSURGO data
-    ssurgo_path = _REPO / "data" / "soil" / "iowa_ssurgo_summary.csv"
+    ssurgo_path = farm_table_path(_DEFAULT_GROWER, _DEFAULT_FARM, "iowa_ssurgo_summary.csv")
     if not ssurgo_path.exists():
         print(f"WARNING: SSURGO data not found: {ssurgo_path}")
         print("Skipping soil card generation.")
@@ -332,22 +337,33 @@ def main() -> None:
         all_fields_data[field_id] = field_soil
 
         # Generate cards
-        output_path_1 = _OUTPUT_DIR / f"field_{idx + 1:02d}_properties.png"
+        field_slug = field_slug_map.get(field_id, "")
+        if not field_slug:
+            continue
+        output_path_1 = field_summary_path(
+            _DEFAULT_GROWER, _DEFAULT_FARM, field_slug, "soil_properties.png"
+        )
+        output_path_1.parent.mkdir(parents=True, exist_ok=True)
         plot_soil_properties_card(field_soil, field_short, output_path_1)
-        print(f"  ✓ properties")
+        print("  ✓ properties")
 
-        output_path_2 = _OUTPUT_DIR / f"field_{idx + 1:02d}_texture.png"
+        output_path_2 = field_summary_path(
+            _DEFAULT_GROWER, _DEFAULT_FARM, field_slug, "soil_texture.png"
+        )
         plot_texture_triangle_card(field_soil, field_short, output_path_2)
-        print(f"  ✓ texture")
+        print("  ✓ texture")
 
     # Generate farm-level comparison
     print("\nGenerating farm comparison card...")
-    farm_output = _OUTPUT_DIR / "farm_comparison.png"
+    farm_output = farm_summary_path(
+        _DEFAULT_GROWER, _DEFAULT_FARM, "soil_cards/farm_comparison.png"
+    )
+    farm_output.parent.mkdir(parents=True, exist_ok=True)
     plot_farm_comparison_card(all_fields_data, farm_output)
     print("  ✓ farm_comparison")
 
     print("\n" + "=" * 60)
-    print(f"Soil cards complete → {_OUTPUT_DIR}")
+    print(f"Soil cards complete → {farm_output.parent}")
     print("=" * 60)
 
 

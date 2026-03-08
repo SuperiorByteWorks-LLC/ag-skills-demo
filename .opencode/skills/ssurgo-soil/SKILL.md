@@ -66,7 +66,7 @@ from ssurgo_soil import download_soil, get_dominant_soil
 fields = gpd.read_file('.skills/field-boundaries/examples/sample_2_fields.geojson')
 
 # Download soil data for all fields
-soil = download_soil(fields, output_path='data/soil_data.csv')
+soil = download_soil(fields, output_path='data/growers/demo-grower/farms/demo-farm/derived/tables/soil_data.csv')
 print(f'Downloaded {len(soil)} soil records for {soil["field_id"].nunique()} fields')
 
 # Get dominant soil per field
@@ -93,7 +93,7 @@ uv pip install geopandas pandas requests
 
 **USDA NRCS Soil Data Access (SDA)**
 
-- **API**: https://sdmdataaccess.sc.egov.usda.gov/Tabular/post.rest
+- **API**: <https://sdmdataaccess.sc.egov.usda.gov/Tabular/post.rest>
 - **Database**: SSURGO (Soil Survey Geographic Database)
 - **Coverage**: Most agricultural areas in the US
 - **Resolution**: 1:12,000 to 1:63,360 (detailed field-level)
@@ -139,14 +139,14 @@ import geopandas as gpd
 from ssurgo_soil import download_soil, get_dominant_soil
 
 # Load field boundaries
-fields = gpd.read_file('data/fields_EPSG4326.geojson')
+fields = gpd.read_file('data/growers/demo-grower/farms/demo-farm/boundary/field_boundaries.geojson')
 
 # Download soil data for all fields
 soil = download_soil(
     fields,
     field_id_column='field_id',
     max_depth_cm=30,
-    output_path='data/soil_EPSG4326.csv'
+    output_path='data/growers/demo-grower/farms/demo-farm/derived/tables/soil_EPSG4326.csv'
 )
 
 # Get one row per field (dominant soil)

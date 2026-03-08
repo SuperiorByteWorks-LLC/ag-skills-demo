@@ -62,7 +62,9 @@ def summarize_headlands(field_gdf: gpd.GeoDataFrame, ring_gdf: gpd.GeoDataFrame)
     )
 
 
-def flag_points_in_headlands(points_gdf: gpd.GeoDataFrame, ring_gdf: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
+def flag_points_in_headlands(
+    points_gdf: gpd.GeoDataFrame, ring_gdf: gpd.GeoDataFrame
+) -> gpd.GeoDataFrame:
     if points_gdf.crs != ring_gdf.crs:
         points_gdf = points_gdf.to_crs(ring_gdf.crs)
     result = points_gdf.copy()

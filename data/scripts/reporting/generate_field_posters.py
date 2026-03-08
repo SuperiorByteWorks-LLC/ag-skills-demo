@@ -1,29 +1,46 @@
 #!/usr/bin/env python3
+# pyright: reportMissingImports=false, reportAttributeAccessIssue=false, reportGeneralTypeIssues=false
 """Generate large-format composable field posters."""
 
 from __future__ import annotations
 
 import sys
+import textwrap
 from pathlib import Path
 
 import geopandas as gpd
 import matplotlib
+import matplotlib.image as mpimg
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from matplotlib.patches import Rectangle
 
 matplotlib.use("Agg")
 
 _REPO = Path(__file__).resolve().parents[3]
 _SKILLS = _REPO / ".opencode" / "skills"
+_LIB = _REPO / "data" / "scripts" / "lib"
 
 sys.path.insert(0, str(_SKILLS / "farm-intelligence-reporting" / "src"))
 sys.path.insert(0, str(_SKILLS / "headlands-ring" / "src"))
 sys.path.insert(0, str(_SKILLS / "ssurgo-soil" / "src"))
 sys.path.insert(0, str(_SKILLS / "cdl-cropland" / "src"))
 sys.path.insert(0, str(_SKILLS / "nasa-power-weather" / "src"))
+sys.path.insert(0, str(_LIB))
 
+import reporting as reporting_mod
+from cdl_reporting import summarize_crop_history
 from headlands_ring import split_headlands_and_interior, summarize_headlands
+from paths import (
+    farm_boundary_path,
+    farm_table_path,
+    field_feature_path,
+    field_manifest_dir,
+    field_report_path,
+    field_soil_polygon_path,
+    shared_cdl_preferred_full_composition_path,
+)
 from pipeline import (
     STEP_FIELD_POSTER_RENDER,
     FieldReportingConfig,
@@ -31,29 +48,27 @@ from pipeline import (
     load_manifest,
     step_is_stale,
 )
-from reporting import (
-    build_field_reporting_dataset,
-    compute_management_implications,
-    compute_farm_relative_rankings,
-)
-from cdl_reporting import plot_crop_mix_stacked_100, summarize_crop_history
-from weather_reporting import (
-    summarize_weather_variability,
-    plot_gdd_doy_overlay,
-    plot_precip_boxplot,
-    plot_temperature_doy_overlay,
-)
 from ssurgo_workflows import (
     plot_headlands_om_overlay,
-    plot_soil_profile_depth,
     plot_ssurgo_component_map,
     plot_ssurgo_property_choropleth,
     render_soil_horizon_table,
+)
+from weather_reporting import (
+    plot_gdd_doy_overlay,
+    plot_precip_boxplot,
+    plot_temperature_doy_overlay,
+    summarize_weather_variability,
 )
 
 _SCRIPT = Path(__file__)
 _UTM_WEST = "EPSG:32615"
 _UTM_EAST = "EPSG:32616"
+_DEFAULT_GROWER = "iowa-demo-grower"
+_DEFAULT_FARM = "iowa-demo-farm"
+_FIELD_INVENTORY = _REPO / ".sisyphus" / "evidence" / "task-3-field-inventory.csv"
+_CDL_PRIMARY = shared_cdl_preferred_full_composition_path()
+_CDL_FALLBACK = shared_cdl_preferred_full_composition_path()
 
 PROP_MAPS = [
     ("om_r", "Organic matter (%)"),
@@ -65,6 +80,133 @@ PROP_MAPS = [
 
 def _utm(field_row) -> str:
     return _UTM_WEST if field_row.geometry.centroid.x < -90 else _UTM_EAST
+
+
+def _field_slug_lookup(inventory_path: Path = _FIELD_INVENTORY) -> dict[str, str]:
+    if not inventory_path.exists():
+        return {}
+    inventory = pd.read_csv(inventory_path)
+    if not {"field_id", "field_slug"}.issubset(inventory.columns):
+        return {}
+    return {
+        str(row["field_id"]): str(row["field_slug"])
+        for _, row in inventory[["field_id", "field_slug"]].dropna().iterrows()
+    }
+
+
+def _cdl_csv_path() -> Path:
+    return _CDL_PRIMARY if _CDL_PRIMARY.exists() else _CDL_FALLBACK
+
+
+def _canonical_field_root(field_slug: str | None) -> Path | None:
+    if not field_slug:
+        return None
+    return (
+        _REPO
+        / "data"
+        / "growers"
+        / _DEFAULT_GROWER
+        / "farms"
+        / _DEFAULT_FARM
+        / "fields"
+        / field_slug
+    )
+
+
+def _cached_ndvi_assets(field_slug: str | None) -> dict[str, Path | None]:
+    if field_slug is None:
+        return {
+            "corn": None,
+            "corn_peak_95": None,
+            "soybean": None,
+            "soybean_peak_95": None,
+            "current_season_cumulative": None,
+        }
+    return {
+        "corn": field_feature_path(_DEFAULT_GROWER, _DEFAULT_FARM, field_slug, "ndvi_corn.png"),
+        "corn_peak_95": field_feature_path(
+            _DEFAULT_GROWER, _DEFAULT_FARM, field_slug, "ndvi_corn_peak_95.png"
+        ),
+        "soybean": field_feature_path(
+            _DEFAULT_GROWER, _DEFAULT_FARM, field_slug, "ndvi_soybean.png"
+        ),
+        "soybean_peak_95": field_feature_path(
+            _DEFAULT_GROWER, _DEFAULT_FARM, field_slug, "ndvi_soybean_peak_95.png"
+        ),
+        "current_season_cumulative": field_feature_path(
+            _DEFAULT_GROWER,
+            _DEFAULT_FARM,
+            field_slug,
+            "ndvi_current_season_cumulative.png",
+        ),
+    }
+
+
+def _cached_soil_map_assets(field_slug: str | None) -> dict[str, Path | None]:
+    if field_slug is None:
+        return {
+            "component": None,
+            "organic_matter": None,
+            "ph": None,
+            "awc": None,
+            "cec": None,
+        }
+    return {
+        "component": field_feature_path(
+            _DEFAULT_GROWER, _DEFAULT_FARM, field_slug, "soil_component_map.png"
+        ),
+        "organic_matter": field_feature_path(
+            _DEFAULT_GROWER, _DEFAULT_FARM, field_slug, "soil_organic_matter_map.png"
+        ),
+        "ph": field_feature_path(_DEFAULT_GROWER, _DEFAULT_FARM, field_slug, "soil_ph_map.png"),
+        "awc": field_feature_path(_DEFAULT_GROWER, _DEFAULT_FARM, field_slug, "soil_awc_map.png"),
+        "cec": field_feature_path(_DEFAULT_GROWER, _DEFAULT_FARM, field_slug, "soil_cec_map.png"),
+    }
+
+
+def _ndvi_panel(ax, image_path: Path | None, title: str) -> None:
+    ax.set_title(title, fontsize=10, fontweight="bold", loc="left")
+    if image_path is not None and image_path.exists():
+        ax.imshow(mpimg.imread(image_path))
+        ax.axis("off")
+        return
+    ax.axis("off")
+    ax.text(
+        0.5,
+        0.54,
+        "Cached NDVI card unavailable",
+        ha="center",
+        va="center",
+        fontsize=9,
+        fontweight="bold",
+        color="#475569",
+        transform=ax.transAxes,
+    )
+    ax.text(
+        0.5,
+        0.34,
+        textwrap.fill(
+            "Refresh Sentinel-2/Landsat assets for this field to populate the reusable NDVI panel.",
+            width=28,
+        ),
+        ha="center",
+        va="center",
+        fontsize=8,
+        color="#64748b",
+        transform=ax.transAxes,
+    )
+    ax.add_patch(
+        Rectangle(
+            (0.06, 0.08),
+            0.88,
+            0.78,
+            transform=ax.transAxes,
+            fill=False,
+            edgecolor="#cbd5e1",
+            linewidth=1.2,
+            linestyle="--",
+        )
+    )
 
 
 def _field_identity_card(ax, field_row, hl_summary, crop_summary, wx_row):
@@ -87,6 +229,8 @@ def _field_identity_card(ax, field_row, hl_summary, crop_summary, wx_row):
             f"Rotation: {r.get('rotation_sequence', 'N/A')}",
             f"Diversity:{r.get('crop_diversity', '?')} type(s)  "
             f"Corn {r.get('corn_years', 0)} yr  Soy {r.get('soybean_years', 0)} yr",
+            f"Outlook:  {r.get('predicted_next_crop', 'Unknown')} next  ->  {r.get('predicted_following_crop', 'Unknown')}",
+            f"Confidence:{str(r.get('rotation_confidence', 'unknown')).title()}  Window {r.get('history_start_year', '?')}-{r.get('history_end_year', '?')}",
         ]
     if wx_row:
         lines += [
@@ -115,7 +259,7 @@ def _management_card(ax, row_dict, field_reporting_df, field_id):
         match = field_reporting_df[field_reporting_df["field_id"] == field_id]
         if not match.empty:
             merged.update({k: v for k, v in match.iloc[0].to_dict().items() if v is not None})
-    bullets = compute_management_implications(merged)
+    bullets = reporting_mod.compute_management_implications(merged)
     text = "\n".join(f"• {b}" for b in bullets)
     ax.text(
         0.03,
@@ -160,8 +304,26 @@ def _ranking_card(ax, field_reporting_df, field_id):
     ax.set_title("Farm-relative standing", fontsize=11, fontweight="bold", loc="left")
 
 
+def _soil_map_panel(ax, image_path: Path | None, title: str, fallback_render) -> None:
+    ax.set_title(title, fontsize=10, fontweight="bold", loc="left")
+    if image_path is not None and image_path.exists():
+        ax.imshow(mpimg.imread(image_path))
+        ax.axis("off")
+        return
+    fallback_render(ax)
+
+
 def _render_field_poster(
-    field_id, field_gdf, ssurgo_wgs84, detail_df, weather, cdl, field_reporting_df, output_path
+    field_id,
+    field_index,
+    field_gdf,
+    ssurgo_wgs84,
+    detail_df,
+    weather,
+    cdl,
+    field_reporting_df,
+    field_slug,
+    output_path,
 ):
     field_row = field_gdf.iloc[0]
     field_wgs84 = field_gdf.to_crs("EPSG:4326")
@@ -172,7 +334,7 @@ def _render_field_poster(
     fw = weather[weather["field_id"] == field_id].copy()
     fw["date"] = pd.to_datetime(fw["date"])
     fc = cdl[cdl["field_id"] == field_id].copy()
-    crop_sum = summarize_crop_history(fc)
+    crop_sum = summarize_crop_history(fc, window_years=5)
     wx_row = None
     if not fw.empty:
         ws = summarize_weather_variability(fw)
@@ -199,42 +361,56 @@ def _render_field_poster(
         6, 4, hspace=0.42, wspace=0.28, left=0.04, right=0.97, top=0.975, bottom=0.015
     )
 
+    ndvi_assets = _cached_ndvi_assets(field_slug)
+    soil_map_assets = _cached_soil_map_assets(field_slug)
+
     _field_identity_card(fig.add_subplot(gs[0, 0]), field_row, hl, crop_sum, wx_row)
-    plot_ssurgo_component_map(
-        fig.add_subplot(gs[0, 1]), field_wgs84, ssurgo_wgs84, "Soil components (SSURGO)", ctx=True
+    _soil_map_panel(
+        fig.add_subplot(gs[0, 1]),
+        soil_map_assets["component"],
+        "Soil components (SSURGO)",
+        lambda ax: plot_ssurgo_component_map(
+            ax, field_wgs84, ssurgo_wgs84, "Soil components (SSURGO)", ctx=True
+        ),
     )
     plot_headlands_om_overlay(
         fig.add_subplot(gs[0, 2:]), field_utm, ring_utm, ssurgo_wgs84, ctx=True
     )
 
-    for i, (prop, label) in enumerate(PROP_MAPS):
-        plot_ssurgo_property_choropleth(
-            fig.add_subplot(gs[1, i]), field_wgs84, ssurgo_wgs84, prop, label, ctx=True
+    poster_property_specs = [
+        ("organic_matter", "Organic matter (%)", "om_r"),
+        ("ph", "Soil pH", "ph1to1h2o_r"),
+        ("awc", "Available water capacity", "awc_r"),
+        ("cec", "CEC", "cec7_r"),
+    ]
+    for i, (map_slug, title, prop) in enumerate(poster_property_specs):
+        _soil_map_panel(
+            fig.add_subplot(gs[1, i]),
+            soil_map_assets[map_slug],
+            title,
+            lambda ax, prop=prop, title=title: plot_ssurgo_property_choropleth(
+                ax, field_wgs84, ssurgo_wgs84, prop, title, ctx=True
+            ),
         )
 
-    plot_soil_profile_depth(fig.add_subplot(gs[2, 0]), detail_df, field_id)
-    render_soil_horizon_table(fig.add_subplot(gs[2, 1:]), detail_df)
+    render_soil_horizon_table(fig.add_subplot(gs[2, 0:2]), detail_df)
+    plot_temperature_doy_overlay(
+        fig.add_subplot(gs[2, 2:]), fw, title="Temperature by day-of-year with frost windows"
+    )
 
-    plot_temperature_doy_overlay(fig.add_subplot(gs[3, 0]), fw)
-    plot_gdd_doy_overlay(fig.add_subplot(gs[3, 1]), fw)
-    plot_precip_boxplot(fig.add_subplot(gs[3, 2:]), fw)
+    plot_gdd_doy_overlay(
+        fig.add_subplot(gs[3, 0:2]), fw, title="Cumulative GDD by day-of-year with frost windows"
+    )
+    plot_precip_boxplot(
+        fig.add_subplot(gs[3, 2:]), fw, title="Cumulative precipitation by day-of-year"
+    )
 
-    plot_crop_mix_stacked_100(fig.add_subplot(gs[4, 0:2]), fc, title="CDL crop composition by year")
-
-    for _i, sensor in enumerate(["Sentinel-2 NDVI", "Landsat NDVI"]):
-        ax_rs = fig.add_subplot(gs[4, 2 + _i])
-        ax_rs.axis("off")
-        ax_rs.set_title(sensor, fontsize=11, fontweight="bold", loc="left")
-        ax_rs.text(
-            0.5,
-            0.5,
-            "Run imagery download step\nto populate this panel",
-            ha="center",
-            va="center",
-            fontsize=8.5,
-            color="#9ca3af",
-            transform=ax_rs.transAxes,
-        )
+    _ndvi_panel(fig.add_subplot(gs[4, 0]), ndvi_assets["corn"], "Corn average NDVI")
+    _ndvi_panel(fig.add_subplot(gs[4, 1]), ndvi_assets["corn_peak_95"], "Corn 95th %ile peak NDVI")
+    _ndvi_panel(fig.add_subplot(gs[4, 2]), ndvi_assets["soybean"], "Soybean average NDVI")
+    _ndvi_panel(
+        fig.add_subplot(gs[4, 3]), ndvi_assets["soybean_peak_95"], "Soybean 95th %ile peak NDVI"
+    )
 
     _management_card(fig.add_subplot(gs[5, 0:2]), merged_row, field_reporting_df, field_id)
     _ranking_card(fig.add_subplot(gs[5, 2:]), field_reporting_df, field_id)
@@ -251,18 +427,23 @@ def main() -> None:
 
     config = FieldReportingConfig(
         farm_name="Iowa Demo Farm",
-        field_boundary_path="data/field-boundaries/iowa_10_fields.geojson",
+        field_boundary_path=str(farm_boundary_path(_DEFAULT_GROWER, _DEFAULT_FARM)),
+        grower_slug=_DEFAULT_GROWER,
+        farm_slug=_DEFAULT_FARM,
     )
-    manifest_dir = Path(config.reporting_dir) / "manifests"
-    output_dir = Path("data/EDA/field_cards")
-    output_dir.mkdir(parents=True, exist_ok=True)
 
-    fields = gpd.read_file(config.field_boundary_path)
-    soil_full = pd.read_csv("data/soil/iowa_full_ssurgo.csv")
-    soil_summary = pd.read_csv("data/soil/iowa_ssurgo_summary.csv")
-    weather = pd.read_csv("data/weather/iowa_weather_2021_2025.csv", parse_dates=["date"])
-    cdl_path = "data/cdl/iowa_cdl_2021_2024.csv"
+    fields = gpd.read_file(_REPO / config.field_boundary_path)
+    soil_full = pd.read_csv(farm_table_path(_DEFAULT_GROWER, _DEFAULT_FARM, "iowa_full_ssurgo.csv"))
+    soil_summary = pd.read_csv(
+        farm_table_path(_DEFAULT_GROWER, _DEFAULT_FARM, "iowa_ssurgo_summary.csv")
+    )
+    weather = pd.read_csv(
+        farm_table_path(_DEFAULT_GROWER, _DEFAULT_FARM, "iowa_weather_2021_2025.csv"),
+        parse_dates=["date"],
+    )
+    cdl_path = _cdl_csv_path()
     cdl = pd.read_csv(cdl_path)
+    field_slug_lookup = _field_slug_lookup()
 
     hl_rows = []
     for idx, frow in fields.iterrows():
@@ -274,9 +455,9 @@ def main() -> None:
     headlands_df = pd.DataFrame(hl_rows)
 
     wx_summary = summarize_weather_variability(weather)
-    crop_sum = summarize_crop_history(cdl)
+    crop_sum = summarize_crop_history(cdl, window_years=5)
 
-    field_reporting_df = build_field_reporting_dataset(
+    field_reporting_df = reporting_mod.build_field_reporting_dataset(
         fields,
         headlands_summary=headlands_df,
         soil_summary=soil_summary,
@@ -286,19 +467,37 @@ def main() -> None:
 
     for idx_num, frow in enumerate(fields.itertuples(index=False), start=0):
         field_id = getattr(frow, "field_id")
-        output_path = output_dir / f"iowa_field_report_{idx_num + 1:02d}.png"
+        field_slug = field_slug_lookup.get(str(field_id))
+        if field_slug is None:
+            print(f"skip  {field_id} (no field slug)")
+            continue
+        manifest_dir = field_manifest_dir(_DEFAULT_GROWER, _DEFAULT_FARM, field_slug)
+        output_path = field_report_path(
+            _DEFAULT_GROWER, _DEFAULT_FARM, field_slug, "field_report.png"
+        )
         prior = load_manifest(manifest_dir / f"{STEP_FIELD_POSTER_RENDER}_{field_id}.json")
 
-        # Check for cached SSURGO polygons
-        cache_path = _REPO / "data" / "soil" / "cache" / f"{field_id}_polygons.geojson"
+        cache_path = field_soil_polygon_path(_DEFAULT_GROWER, _DEFAULT_FARM, field_slug)
+        ndvi_asset_paths = [
+            path
+            for path in _cached_ndvi_assets(field_slug).values()
+            if path is not None and path.exists()
+        ]
+        soil_map_asset_paths = [
+            path
+            for path in _cached_soil_map_assets(field_slug).values()
+            if path is not None and path.exists()
+        ]
         input_paths = [
             config.field_boundary_path,
-            "data/soil/iowa_full_ssurgo.csv",
-            "data/weather/iowa_weather_2021_2025.csv",
-            cdl_path,
+            str(farm_table_path(_DEFAULT_GROWER, _DEFAULT_FARM, "iowa_full_ssurgo.csv")),
+            str(farm_table_path(_DEFAULT_GROWER, _DEFAULT_FARM, "iowa_weather_2021_2025.csv")),
+            str(cdl_path.relative_to(_REPO)),
+            *[str(path) for path in ndvi_asset_paths],
+            *[str(path) for path in soil_map_asset_paths],
         ]
         if cache_path.exists():
-            input_paths.append(str(cache_path))
+            input_paths.append(str(cache_path.relative_to(_REPO)))
 
         manifest = build_step_manifest(
             step_name=f"{STEP_FIELD_POSTER_RENDER}_{field_id}",
@@ -354,19 +553,23 @@ def main() -> None:
 
         _render_field_poster(
             field_id=field_id,
+            field_index=idx_num + 1,
             field_gdf=field_gdf,
             ssurgo_wgs84=ssurgo_gdf,
             detail_df=detail_df,
             weather=weather,
             cdl=cdl,
             field_reporting_df=field_reporting_df,
+            field_slug=field_slug_lookup.get(str(field_id)),
             output_path=output_path,
         )
         manifest.status = "complete"
         manifest.write(manifest_dir / f"{STEP_FIELD_POSTER_RENDER}_{field_id}.json")
-        print(f"   saved {output_path}")
+        print(f"   saved {output_path.relative_to(_REPO)}")
 
-    print(f"\n✓ Field posters complete → {output_dir}")
+    print(
+        f"\n✓ Field posters complete → {field_report_path(_DEFAULT_GROWER, _DEFAULT_FARM, field_slug_lookup[next(iter(field_slug_lookup))], 'field_report.png').parent if field_slug_lookup else 'no-field-reports'}"
+    )
 
 
 if __name__ == "__main__":

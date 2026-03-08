@@ -4,9 +4,9 @@ High-level skill for accessing USDA Cropland Data Layer (CDL).
 Provides annual crop type classifications for agricultural fields.
 """
 
+import re
 from pathlib import Path
 from typing import Any
-import re
 
 import geopandas as gpd
 import matplotlib.pyplot as plt

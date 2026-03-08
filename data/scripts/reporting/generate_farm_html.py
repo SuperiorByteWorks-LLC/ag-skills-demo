@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# pyright: reportMissingImports=false, reportAttributeAccessIssue=false, reportGeneralTypeIssues=false
 """Generate self-contained single-page HTML farm intelligence report with embedded posters and soil profile cards."""
 
 from __future__ import annotations
@@ -7,6 +8,7 @@ import base64
 import io
 import json
 import sys
+import textwrap
 from pathlib import Path
 
 import geopandas as gpd
@@ -18,13 +20,26 @@ matplotlib.use("Agg")
 
 _REPO = Path(__file__).resolve().parents[3]
 _SKILLS = _REPO / ".opencode" / "skills"
+_LIB = _REPO / "data" / "scripts" / "lib"
 
 sys.path.insert(0, str(_SKILLS / "farm-intelligence-reporting" / "src"))
 sys.path.insert(0, str(_SKILLS / "headlands-ring" / "src"))
 sys.path.insert(0, str(_SKILLS / "cdl-cropland" / "src"))
 sys.path.insert(0, str(_SKILLS / "nasa-power-weather" / "src"))
+sys.path.insert(0, str(_LIB))
 
+from cdl_reporting import plot_crop_mix_stacked_100, summarize_crop_history
 from headlands_ring import split_headlands_and_interior, summarize_headlands
+from paths import (
+    farm_boundary_path,
+    farm_manifest_dir,
+    farm_report_path,
+    farm_summary_path,
+    farm_table_path,
+    field_report_path,
+    field_summary_path,
+    shared_cdl_preferred_full_composition_path,
+)
 from pipeline import (
     STEP_FARM_HTML_RENDER,
     FieldReportingConfig,
@@ -33,20 +48,23 @@ from pipeline import (
     step_is_stale,
 )
 from reporting import (
-    build_field_reporting_dataset,
     build_farm_reporting_dataset,
+    build_field_reporting_dataset,
     compute_management_implications,
-    PANEL_REGISTRY,
 )
-from cdl_reporting import plot_crop_mix_stacked_100, summarize_crop_history
 from weather_reporting import (
-    summarize_weather_variability,
     plot_gdd_doy_overlay,
     plot_precip_boxplot,
     plot_temperature_doy_overlay,
+    summarize_weather_variability,
 )
 
 _SCRIPT = Path(__file__)
+_DEFAULT_GROWER = "iowa-demo-grower"
+_DEFAULT_FARM = "iowa-demo-farm"
+_FIELD_INVENTORY = _REPO / ".sisyphus" / "evidence" / "task-3-field-inventory.csv"
+_CDL_PRIMARY = shared_cdl_preferred_full_composition_path()
+_CDL_FALLBACK = shared_cdl_preferred_full_composition_path()
 
 
 def _utm(frow) -> str:
@@ -117,23 +135,121 @@ def _safe(v) -> str:
     return str(v)
 
 
-def _load_soil_cards(idx: int) -> dict[str, str]:
+def _field_slug_lookup(inventory_path: Path = _FIELD_INVENTORY) -> dict[str, str]:
+    if not inventory_path.exists():
+        return {}
+    inventory = pd.read_csv(inventory_path)
+    if not {"field_id", "field_slug"}.issubset(inventory.columns):
+        return {}
+    return {
+        str(row["field_id"]): str(row["field_slug"])
+        for _, row in inventory[["field_id", "field_slug"]].dropna().iterrows()
+    }
+
+
+def _canonical_field_root(field_slug: str | None) -> Path | None:
+    if not field_slug:
+        return None
+    return (
+        _REPO
+        / "data"
+        / "growers"
+        / _DEFAULT_GROWER
+        / "farms"
+        / _DEFAULT_FARM
+        / "fields"
+        / field_slug
+    )
+
+
+def _load_ndvi_cards(field_slug: str | None) -> dict[str, str]:
+    field_root = _canonical_field_root(field_slug)
+    if field_root is None:
+        return {
+            "corn": "",
+            "corn_peak_95": "",
+            "soybean": "",
+            "soybean_peak_95": "",
+            "current_season_cumulative": "",
+        }
+    feature_dir = field_root / "derived" / "features"
+    cards: dict[str, str] = {}
+    for key, filename in {
+        "corn": "ndvi_corn.png",
+        "corn_peak_95": "ndvi_corn_peak_95.png",
+        "soybean": "ndvi_soybean.png",
+        "soybean_peak_95": "ndvi_soybean_peak_95.png",
+        "current_season_cumulative": "ndvi_current_season_cumulative.png",
+    }.items():
+        path = feature_dir / filename
+        cards[key] = _img_to_b64(path) if path.exists() else ""
+    return cards
+
+
+def _spotlight_field(fields: gpd.GeoDataFrame) -> tuple[str | None, str | None, dict[str, str]]:
+    field_slug_lookup = _field_slug_lookup()
+    if fields.empty or "field_id" not in fields.columns:
+        return None, None, _load_ndvi_cards(None)
+    has_area = "area_acres" in fields.columns and bool(fields["area_acres"].notna().any())
+    row = fields.loc[fields["area_acres"].astype(float).idxmax()] if has_area else fields.iloc[0]
+    field_id = str(row["field_id"])
+    field_slug = field_slug_lookup.get(field_id)
+    return field_id, field_slug, _load_ndvi_cards(field_slug)
+
+
+def _spotlight_ndvi_html(field_id: str | None, ndvi_cards: dict[str, str]) -> str:
+    title = (
+        f"Remote sensing spotlight - {field_id[-6:]}" if field_id else "Remote sensing spotlight"
+    )
+    blocks = []
+    for key, label in [
+        ("corn", "Corn average NDVI"),
+        ("corn_peak_95", "Corn 95th %ile peak NDVI"),
+        ("soybean", "Soybean average NDVI"),
+        ("soybean_peak_95", "Soybean 95th %ile peak NDVI"),
+        ("current_season_cumulative", "Cumulative NDVI by crop and year"),
+    ]:
+        payload = ndvi_cards.get(key, "")
+        if payload:
+            blocks.append(
+                f'<div><h4>{label}</h4><img src="data:image/png;base64,{payload}" style="width:100%" alt="{label}"></div>'
+            )
+        else:
+            blocks.append(f'<div><h4>{label}</h4><p class="note">Image unavailable</p></div>')
+    return f"""
+  <div class=\"spotlight-section\">
+    <h2>{title}</h2>
+    <div class=\"grid-ndvi\">{"".join(blocks)}</div>
+  </div>
+"""
+
+
+def _cdl_csv_path() -> Path:
+    return _CDL_PRIMARY if _CDL_PRIMARY.exists() else _CDL_FALLBACK
+
+
+def _load_soil_cards(field_slug: str | None) -> dict[str, str]:
     """Load soil profile cards for a field as base64 strings."""
-    soil_dir = Path("data/EDA/soil_cards")
+    if not field_slug:
+        return {"single": "", "texture": "", "properties": "", "map": ""}
     cards = {}
 
-    for card_type in ["single", "texture", "properties"]:
-        card_path = soil_dir / f"field_{idx + 1:02d}_{card_type}.png"
-        cards[card_type] = _img_to_b64(card_path) if card_path.exists() else ""
+    for key, filename in {
+        "single": "soil_properties.png",
+        "properties": "soil_properties.png",
+        "texture": "soil_texture.png",
+    }.items():
+        card_path = field_summary_path(_DEFAULT_GROWER, _DEFAULT_FARM, field_slug, filename)
+        cards[key] = _img_to_b64(card_path) if card_path.exists() else ""
 
-    soil_map_path = Path("data/EDA/soil_maps") / f"field_{idx + 1:02d}_map.png"
+    soil_map_path = field_summary_path(_DEFAULT_GROWER, _DEFAULT_FARM, field_slug, "soil_map.png")
     cards["map"] = _img_to_b64(soil_map_path) if soil_map_path.exists() else ""
 
     return cards
 
 
 def _field_card(
-    frow, df_row, field_weather, field_cdl, poster_b64: str, soil_cards: dict, idx: int
+    frow, df_row, field_weather, poster_b64: str, soil_cards: dict, ndvi_cards: dict, idx: int
 ) -> str:
     fid = str(frow["field_id"])
     acres = float(frow.get("area_acres", 0))
@@ -157,17 +273,29 @@ def _field_card(
         soil_rows += f"<tr><td><b>{label}</b></td><td>{_safe(row_dict.get(col))}</td></tr>"
 
     wx_b64 = _weather_b64(field_weather) if not field_weather.empty else ""
-    cdl_b64 = _cdl_b64(field_cdl) if not field_cdl.empty else ""
     wx_img = (
         f'<img src="data:image/png;base64,{wx_b64}" style="width:100%" alt="Weather">'
         if wx_b64
         else "<p>No weather data</p>"
     )
-    cdl_img = (
-        f'<img src="data:image/png;base64,{cdl_b64}" style="width:100%" alt="CDL">'
-        if cdl_b64
-        else "<p>No CDL data</p>"
-    )
+    ndvi_blocks = []
+    for key, label in [
+        ("corn", "Corn average NDVI"),
+        ("corn_peak_95", "Corn 95th %ile peak NDVI"),
+        ("soybean", "Soybean average NDVI"),
+        ("soybean_peak_95", "Soybean 95th %ile peak NDVI"),
+        ("current_season_cumulative", "Cumulative NDVI by crop and year"),
+    ]:
+        payload = ndvi_cards.get(key, "")
+        if payload:
+            ndvi_blocks.append(
+                f'<div><h4>{label}</h4><img src="data:image/png;base64,{payload}" style="width:100%" alt="{label}"></div>'
+            )
+        else:
+            ndvi_blocks.append(
+                f'<div><h4>{label}</h4><p class="note">{textwrap.fill("Cached NDVI asset unavailable. Refresh the satellite card build for this field.", width=48)}</p></div>'
+            )
+    ndvi_html = f'<div class="grid-ndvi">{"".join(ndvi_blocks)}</div>'
 
     rank_html = ""
     rank_cols = sorted([k for k in row_dict if k.endswith("_pct_rank")])
@@ -251,14 +379,16 @@ def _field_card(
   <details open><summary><strong>Weather context (temperature, GDD, precipitation)</strong></summary>
     {wx_img}
   </details><hr>
-  <details open><summary><strong>Crop history (CDL composition by year)</strong></summary>
-    {cdl_img}
+  <details open><summary><strong>Crop rotation outlook</strong></summary>
+    <p><strong>History:</strong> {_safe(row_dict.get("rotation_sequence"))}</p>
+    <p><strong>Heuristic outlook:</strong> {_safe(row_dict.get("rotation_outlook"))}</p>
+    <p><strong>Confidence:</strong> {_safe(row_dict.get("rotation_confidence"))} &middot; <strong>Window:</strong> {_safe(row_dict.get("history_start_year"))}-{_safe(row_dict.get("history_end_year"))}</p>
   </details><hr>
   <details><summary><strong>Farm-relative standing</strong></summary>
     {rank_html if rank_html else "<p>No ranking data available</p>"}
   </details><hr>
-  <details><summary><strong>Remote sensing NDVI</strong></summary>
-    <p class="note">Run imagery download steps (Sentinel-2, Landsat) to populate NDVI panels.</p>
+  <details open><summary><strong>Remote sensing NDVI</strong></summary>
+    {ndvi_html}
   </details><hr>
   <details><summary><strong>Full field metrics</strong></summary>
     <pre class="raw-data">{json.dumps(clean_dict, indent=2)}</pre>
@@ -283,23 +413,42 @@ def main() -> None:
 
     config = FieldReportingConfig(
         farm_name="Iowa Demo Farm",
-        field_boundary_path="data/field-boundaries/iowa_10_fields.geojson",
+        field_boundary_path=str(farm_boundary_path(_DEFAULT_GROWER, _DEFAULT_FARM)),
+        grower_slug=_DEFAULT_GROWER,
+        farm_slug=_DEFAULT_FARM,
     )
-    manifest_dir = Path(config.reporting_dir) / "manifests"
-    output_path = Path("data/EDA/iowa_farm_report.html")
+    manifest_dir = farm_manifest_dir(_DEFAULT_GROWER, _DEFAULT_FARM)
+    output_path = farm_report_path(_DEFAULT_GROWER, _DEFAULT_FARM, "iowa_farm_report.html")
+    field_slug_lookup = _field_slug_lookup()
+    ndvi_input_paths = []
+    for field_slug in field_slug_lookup.values():
+        field_root = _canonical_field_root(field_slug)
+        if field_root is None:
+            continue
+        for filename in (
+            "ndvi_corn.png",
+            "ndvi_corn_peak_95.png",
+            "ndvi_soybean.png",
+            "ndvi_soybean_peak_95.png",
+            "ndvi_current_season_cumulative.png",
+        ):
+            path = field_root / "derived" / "features" / filename
+            if path.exists():
+                ndvi_input_paths.append(str(path.relative_to(_REPO)))
 
     prior = load_manifest(manifest_dir / f"{STEP_FARM_HTML_RENDER}.json")
     manifest = build_step_manifest(
         step_name=STEP_FARM_HTML_RENDER,
         input_paths=[
             config.field_boundary_path,
-            "data/soil/iowa_ssurgo_summary.csv",
-            "data/weather/iowa_weather_2021_2025.csv",
-            "data/cdl/iowa_cdl_2021_2024.csv",
-            "data/EDA/iowa_farm_report.png",
-            "data/EDA/soil_cards/farm_comparison.png",
-            "data/EDA/soil_maps/field_01_map.png",
-            "data/EDA/field_cards/iowa_field_report_01.png",
+            str(farm_table_path(_DEFAULT_GROWER, _DEFAULT_FARM, "iowa_ssurgo_summary.csv")),
+            str(farm_table_path(_DEFAULT_GROWER, _DEFAULT_FARM, "iowa_weather_2021_2025.csv")),
+            str(_cdl_csv_path().relative_to(_REPO)),
+            str(farm_report_path(_DEFAULT_GROWER, _DEFAULT_FARM, "iowa_farm_report.png")),
+            str(
+                farm_summary_path(_DEFAULT_GROWER, _DEFAULT_FARM, "soil_cards/farm_comparison.png")
+            ),
+            *ndvi_input_paths,
         ],
         output_paths=[output_path],
         code_paths=[_SCRIPT],
@@ -309,11 +458,15 @@ def main() -> None:
         print("skip  HTML (current)")
         return
 
-    fields = gpd.read_file(config.field_boundary_path)
-    soil_summary = pd.read_csv("data/soil/iowa_ssurgo_summary.csv")
-    weather = pd.read_csv("data/weather/iowa_weather_2021_2025.csv", parse_dates=["date"])
-    cdl = pd.read_csv("data/cdl/iowa_cdl_2021_2024.csv")
-
+    fields = gpd.read_file(_REPO / config.field_boundary_path)
+    soil_summary = pd.read_csv(
+        farm_table_path(_DEFAULT_GROWER, _DEFAULT_FARM, "iowa_ssurgo_summary.csv")
+    )
+    weather = pd.read_csv(
+        farm_table_path(_DEFAULT_GROWER, _DEFAULT_FARM, "iowa_weather_2021_2025.csv"),
+        parse_dates=["date"],
+    )
+    cdl = pd.read_csv(_cdl_csv_path())
     hl_rows = []
     for idx, frow in fields.iterrows():
         fgdf = fields.iloc[[idx]].to_crs(_utm(frow))
@@ -323,7 +476,7 @@ def main() -> None:
         hl_rows.append(s)
     headlands_df = pd.DataFrame(hl_rows)
     wx_summary = summarize_weather_variability(weather)
-    crop_sum = summarize_crop_history(cdl)
+    crop_sum = summarize_crop_history(cdl, window_years=5)
 
     field_df = build_field_reporting_dataset(
         fields,
@@ -336,13 +489,16 @@ def main() -> None:
 
     total_ac = float(farm_df.iloc[0].get("total_acres", 0))
     n_fields = int(farm_df.iloc[0].get("field_count", len(fields)))
+    spotlight_field_id, _, spotlight_ndvi_cards = _spotlight_field(fields)
 
     print("  Rendering farm map and crop portfolio charts...")
     farm_map_b64 = _farm_map_b64(fields)
     farm_crop_b64 = _cdl_b64(cdl)
-    farm_poster_path = Path("data/EDA/iowa_farm_report.png")
+    farm_poster_path = farm_report_path(_DEFAULT_GROWER, _DEFAULT_FARM, "iowa_farm_report.png")
     farm_poster_b64 = _img_to_b64(farm_poster_path) if farm_poster_path.exists() else ""
-    farm_soil_compare_path = Path("data/EDA/soil_cards/farm_comparison.png")
+    farm_soil_compare_path = farm_summary_path(
+        _DEFAULT_GROWER, _DEFAULT_FARM, "soil_cards/farm_comparison.png"
+    )
     farm_soil_compare_b64 = (
         _img_to_b64(farm_soil_compare_path) if farm_soil_compare_path.exists() else ""
     )
@@ -353,20 +509,25 @@ def main() -> None:
         frow = fields.iloc[idx_num]
         fid = frow["field_id"]
         print(f"    Loading poster for field {fid[-6:]}...")
-        poster_path = Path("data/EDA/field_cards") / f"iowa_field_poster_{idx_num + 1:02d}.png"
-        if not poster_path.exists():
-            poster_path = Path("data/EDA/field_cards") / f"iowa_field_report_{idx_num + 1:02d}.png"
+        field_slug = field_slug_lookup.get(str(fid))
+        poster_path = (
+            field_report_path(_DEFAULT_GROWER, _DEFAULT_FARM, field_slug, "field_report.png")
+            if field_slug
+            else _REPO / ".missing-field-report.png"
+        )
         poster_b64 = _img_to_b64(poster_path) if poster_path.exists() else ""
 
         # Load soil cards
-        soil_cards = _load_soil_cards(idx_num)
+        soil_cards = _load_soil_cards(field_slug)
 
         fw = weather[weather["field_id"] == fid].copy()
         fw["date"] = pd.to_datetime(fw["date"])
-        fc = cdl[cdl["field_id"] == fid].copy()
         df_row_matches = field_df[field_df["field_id"] == fid]
         df_row = df_row_matches.iloc[0] if not df_row_matches.empty else pd.Series(frow)
-        field_cards.append(_field_card(frow, df_row, fw, fc, poster_b64, soil_cards, idx_num))
+        ndvi_cards = _load_ndvi_cards(field_slug_lookup.get(str(fid)))
+        field_cards.append(
+            _field_card(frow, df_row, fw, poster_b64, soil_cards, ndvi_cards, idx_num)
+        )
 
     nav = " | ".join(
         f'<a href="#field-{str(r["field_id"])[-6:]}">{str(r["field_id"])[-6:]}</a>'
@@ -385,9 +546,11 @@ def main() -> None:
     header {{ padding: 2rem 2.5rem; background: linear-gradient(135deg, #e0f2fe, #fef3c7); border-bottom: 2px solid #bfdbfe; }}
     header h1 {{ margin: 0 0 0.25rem; font-size: 1.75rem; color: #1e3a5f; }}
     header p {{ margin: 0; color: #475569; }}
-    .farm-overview {{ display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; padding: 1.5rem 2.5rem; background: white; border-bottom: 1px solid #e2e8f0; }}
-    .farm-overview h2 {{ grid-column: 1/-1; margin: 0 0 0.5rem; font-size: 1.3rem; color: #1e3a5f; }}
-    .farm-overview img {{ width: 100%; border-radius: 8px; border: 1px solid #e2e8f0; }}
+     .farm-overview {{ display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; padding: 1.5rem 2.5rem; background: white; border-bottom: 1px solid #e2e8f0; }}
+     .farm-overview h2 {{ grid-column: 1/-1; margin: 0 0 0.5rem; font-size: 1.3rem; color: #1e3a5f; }}
+     .farm-overview img {{ width: 100%; border-radius: 8px; border: 1px solid #e2e8f0; }}
+     .spotlight-section {{ padding: 1.5rem 2.5rem; background: white; border-bottom: 1px solid #e2e8f0; }}
+     .spotlight-section h2 {{ margin: 0 0 1rem; font-size: 1.3rem; color: #1e3a5f; }}
     nav.field-nav {{ padding: 0.75rem 2.5rem; background: #1e3a5f; color: white; font-size: 0.85rem; }}
     nav.field-nav a {{ color: #93c5fd; text-decoration: none; margin: 0 0.25rem; }}
     nav.field-nav a:hover {{ color: white; }}
@@ -431,7 +594,11 @@ def main() -> None:
     .modal-close {{ position: absolute; top: 1rem; right: 1rem; font-size: 1.5rem; color: #64748b; text-decoration: none; background: #f1f5f9; padding: 0.5rem 1rem; border-radius: 6px; font-family: sans-serif; font-weight: 600; transition: all 0.2s; }}
     .modal-close:hover {{ color: #1e293b; background: #e2e8f0; }}
     
-    @media (max-width: 768px) {{ .grid-2, .farm-overview {{ grid-template-columns: 1fr; }} .soil-gallery {{ grid-template-columns: repeat(2, 1fr); }} }}
+     .grid-ndvi {{ display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }}
+     .grid-ndvi h4 {{ margin: 0 0 0.4rem; font-size: 0.9rem; color: #475569; }}
+     .grid-ndvi img {{ border: 1px solid #e2e8f0; border-radius: 8px; background: white; }}
+     .spotlight-section .grid-ndvi > div:last-child {{ grid-column: 1 / -1; }}
+     @media (max-width: 768px) {{ .grid-2, .grid-ndvi, .farm-overview {{ grid-template-columns: 1fr; }} .soil-gallery {{ grid-template-columns: repeat(2, 1fr); }} }}
   </style>
 </head>
 <body>
@@ -457,6 +624,7 @@ def main() -> None:
       {f'<img src="data:image/png;base64,{farm_soil_compare_b64}" alt="Farm soil comparison">' if farm_soil_compare_b64 else "<p>Farm soil comparison unavailable</p>"}
     </div>
   </div>
+  {_spotlight_ndvi_html(spotlight_field_id, spotlight_ndvi_cards)}
   <nav class="field-nav">Jump to field: {nav}</nav>
   <main>{"".join(field_cards)}</main>
   <footer>Generated by farm-intelligence-reporting &mdash; self-contained, no external dependencies required at runtime.</footer>

@@ -22,15 +22,26 @@ from shapely import wkt
 matplotlib.use("Agg")
 
 _REPO = Path(__file__).resolve().parents[3]
-_OUTPUT_DIR = _REPO / "data" / "EDA" / "soil_maps"
-_CACHE_DIR = _REPO / "data" / "soil" / "cache"
+_SCRIPTS = _REPO / "data" / "scripts"
+_LIB = _REPO / "data" / "scripts" / "lib"
+sys.path.insert(0, str(_SCRIPTS))
+sys.path.insert(0, str(_LIB))
+
+from paths import farm_boundary_path, farm_table_path, field_feature_path, field_soil_polygon_path
+from reporting_bootstrap import field_slug_map_from_inventory
+
+_DEFAULT_GROWER = "iowa-demo-grower"
+_DEFAULT_FARM = "iowa-demo-farm"
 
 PROPERTY_SPECS = [
+    ("comppct_r", "Dominant Component", "%", "component_pct"),
     ("om_r", "Organic Matter", "%", "organic_matter"),
     ("ph1to1h2o_r", "pH", "", "ph"),
     ("awc_r", "Available Water Capacity", "cm/cm", "awc"),
     ("claytotal_r", "Clay", "%", "clay"),
     ("sandtotal_r", "Sand", "%", "sand"),
+    ("silttotal_r", "Silt", "%", "silt"),
+    ("dbthirdbar_r", "Bulk Density", "g/cm3", "bulk_density"),
     ("cec7_r", "CEC", "cmol(+)/kg", "cec"),
 ]
 
@@ -45,11 +56,28 @@ def _query_sda_table(sql: str, timeout: int = 120) -> list[list[object]]:
 
 def _fetch_mukey_attributes(mukeys: list[str]) -> pd.DataFrame:
     if not mukeys:
-        return pd.DataFrame(columns=["mukey", "compname", "comppct_r", "om_r", "ph1to1h2o_r"])
+        return pd.DataFrame(
+            columns=[
+                "mukey",
+                "compname",
+                "comppct_r",
+                "drainagecl",
+                "om_r",
+                "ph1to1h2o_r",
+                "awc_r",
+                "claytotal_r",
+                "sandtotal_r",
+                "silttotal_r",
+                "dbthirdbar_r",
+                "cec7_r",
+            ]
+        )
 
     mukey_sql = ", ".join(f"'{m}'" for m in sorted(set(str(m) for m in mukeys)))
     sql = f"""
-    SELECT c.mukey, c.compname, c.comppct_r, ch.om_r, ch.ph1to1h2o_r
+    SELECT c.mukey, c.compname, c.comppct_r, c.drainagecl,
+           ch.om_r, ch.ph1to1h2o_r, ch.awc_r, ch.claytotal_r, ch.sandtotal_r,
+           ch.silttotal_r, ch.dbthirdbar_r, ch.cec7_r
     FROM component c
     LEFT JOIN chorizon ch ON c.cokey = ch.cokey
     WHERE c.mukey IN ({mukey_sql})
@@ -61,19 +89,89 @@ def _fetch_mukey_attributes(mukeys: list[str]) -> pd.DataFrame:
         rows = _query_sda_table(sql)
     except Exception as e:
         print(f"    Warning: MUKEY attribute lookup failed: {e}")
-        return pd.DataFrame(columns=["mukey", "compname", "comppct_r", "om_r", "ph1to1h2o_r"])
+        return pd.DataFrame(
+            columns=[
+                "mukey",
+                "compname",
+                "comppct_r",
+                "drainagecl",
+                "om_r",
+                "ph1to1h2o_r",
+                "awc_r",
+                "claytotal_r",
+                "sandtotal_r",
+                "silttotal_r",
+                "dbthirdbar_r",
+                "cec7_r",
+            ]
+        )
 
     if not rows:
-        return pd.DataFrame(columns=["mukey", "compname", "comppct_r", "om_r", "ph1to1h2o_r"])
+        return pd.DataFrame(
+            columns=[
+                "mukey",
+                "compname",
+                "comppct_r",
+                "drainagecl",
+                "om_r",
+                "ph1to1h2o_r",
+                "awc_r",
+                "claytotal_r",
+                "sandtotal_r",
+                "silttotal_r",
+                "dbthirdbar_r",
+                "cec7_r",
+            ]
+        )
 
-    attrs = pd.DataFrame(rows, columns=["mukey", "compname", "comppct_r", "om_r", "ph1to1h2o_r"])
+    attrs = pd.DataFrame(
+        rows,
+        columns=[
+            "mukey",
+            "compname",
+            "comppct_r",
+            "drainagecl",
+            "om_r",
+            "ph1to1h2o_r",
+            "awc_r",
+            "claytotal_r",
+            "sandtotal_r",
+            "silttotal_r",
+            "dbthirdbar_r",
+            "cec7_r",
+        ],
+    )
     attrs["mukey"] = attrs["mukey"].astype(str)
-    for col in ["comppct_r", "om_r", "ph1to1h2o_r"]:
+    for col in [
+        "comppct_r",
+        "om_r",
+        "ph1to1h2o_r",
+        "awc_r",
+        "claytotal_r",
+        "sandtotal_r",
+        "silttotal_r",
+        "dbthirdbar_r",
+        "cec7_r",
+    ]:
         attrs[col] = pd.to_numeric(attrs[col], errors="coerce")
     return (
         attrs.sort_values(["mukey", "comppct_r"], ascending=[True, False])
         .groupby("mukey", as_index=False)
-        .agg({"compname": "first", "comppct_r": "first", "om_r": "mean", "ph1to1h2o_r": "mean"})
+        .agg(
+            {
+                "compname": "first",
+                "comppct_r": "first",
+                "drainagecl": "first",
+                "om_r": "mean",
+                "ph1to1h2o_r": "mean",
+                "awc_r": "mean",
+                "claytotal_r": "mean",
+                "sandtotal_r": "mean",
+                "silttotal_r": "mean",
+                "dbthirdbar_r": "mean",
+                "cec7_r": "mean",
+            }
+        )
     )
 
 
@@ -106,7 +204,7 @@ def download_ssurgo_polygons_for_field(
         return gpd.GeoDataFrame(geometry=[], crs="EPSG:4326")
 
     if not mukeys:
-        print(f"    No SSURGO polygons found for field")
+        print("    No SSURGO polygons found for field")
         return gpd.GeoDataFrame(geometry=[], crs="EPSG:4326")
 
     print(f"    Found {len(mukeys)} map units")
@@ -153,17 +251,21 @@ def get_ssurgo_polygons_with_soil_data(
     field_gdf: gpd.GeoDataFrame, field_id: str
 ) -> gpd.GeoDataFrame:
     """Get SSURGO polygons merged with soil properties."""
-    cache_path = _CACHE_DIR / f"{field_id}_polygons.geojson"
+    field_slug_map = field_slug_map_from_inventory()
+    field_slug = field_slug_map.get(field_id)
+    if not field_slug:
+        return gpd.GeoDataFrame(geometry=[], crs="EPSG:4326")
+    cache_path = field_soil_polygon_path(_DEFAULT_GROWER, _DEFAULT_FARM, field_slug)
 
     if cache_path.exists():
         print(f"    Loading cached polygons from {cache_path}")
         polygons = gpd.read_file(cache_path)
     else:
-        print(f"    Downloading SSURGO polygons from USDA API...")
+        print("    Downloading SSURGO polygons from USDA API...")
         polygons = download_ssurgo_polygons_for_field(field_gdf, field_id)
 
         if not polygons.empty:
-            _CACHE_DIR.mkdir(parents=True, exist_ok=True)
+            cache_path.parent.mkdir(parents=True, exist_ok=True)
             polygons.to_file(cache_path, driver="GeoJSON")
             print(f"    Cached polygons to {cache_path}")
 
@@ -178,7 +280,7 @@ def get_ssurgo_polygons_with_soil_data(
     except Exception as e:
         print(f"    Warning: clipping failed, using uncut polygons: {e}")
 
-    soil_csv = _REPO / "data" / "soil" / "iowa_full_ssurgo.csv"
+    soil_csv = farm_table_path(_DEFAULT_GROWER, _DEFAULT_FARM, "iowa_full_ssurgo.csv")
     if soil_csv.exists():
         soil_df = pd.read_csv(soil_csv)
         soil_agg = (
@@ -190,6 +292,12 @@ def get_ssurgo_polygons_with_soil_data(
                     "drainagecl": "first",
                     "om_r": "mean",
                     "ph1to1h2o_r": "mean",
+                    "awc_r": "mean",
+                    "claytotal_r": "mean",
+                    "sandtotal_r": "mean",
+                    "silttotal_r": "mean",
+                    "dbthirdbar_r": "mean",
+                    "cec7_r": "mean",
                 }
             )
             .reset_index()
@@ -209,7 +317,19 @@ def get_ssurgo_polygons_with_soil_data(
         if missing_attrs:
             attrs = _fetch_mukey_attributes(polygons["mukey"].astype(str).tolist())
             if not attrs.empty:
-                for col in ["compname", "comppct_r", "om_r", "ph1to1h2o_r"]:
+                for col in [
+                    "compname",
+                    "comppct_r",
+                    "drainagecl",
+                    "om_r",
+                    "ph1to1h2o_r",
+                    "awc_r",
+                    "claytotal_r",
+                    "sandtotal_r",
+                    "silttotal_r",
+                    "dbthirdbar_r",
+                    "cec7_r",
+                ]:
                     if col in polygons.columns:
                         polygons = polygons.drop(columns=[col])
                 polygons = polygons.merge(attrs, on="mukey", how="left")
@@ -238,34 +358,26 @@ def _add_basemap(ax, field_gdf: gpd.GeoDataFrame, zoom: int = 14):
         return False
 
 
-def _classify_natural_breaks(
-    values: pd.Series, class_count: int = 3
-) -> tuple[np.ndarray, list[str]]:
-    arr = values.astype(float).to_numpy()
+def _classify_quantiles(values: pd.Series, class_count: int = 4) -> tuple[np.ndarray, list[str]]:
+    arr = pd.to_numeric(values, errors="coerce").dropna().to_numpy(dtype=float)
     unique_values = np.sort(np.unique(arr))
     bins = max(1, min(class_count, unique_values.size))
 
+    if arr.size == 0:
+        return np.array([], dtype=int), []
     if bins == 1:
         v = float(arr[0]) if arr.size else 0.0
-        return np.zeros(arr.size, dtype=int), [f"{v:.1f}"]
+        return np.zeros(arr.size, dtype=int), [f"{v:.2f}"]
 
-    if unique_values.size <= bins:
-        edges = np.linspace(arr.min(), arr.max(), bins + 1)
-    else:
-        gaps = np.diff(unique_values)
-        split_idx = np.argsort(gaps)[-(bins - 1) :]
-        split_idx = np.sort(split_idx)
-        mids = [(unique_values[i] + unique_values[i + 1]) / 2.0 for i in split_idx]
-        edges = np.array([arr.min(), *mids, arr.max()], dtype=float)
-
+    edges = np.quantile(arr, np.linspace(0, 1, bins + 1))
     edges = np.unique(edges)
     if edges.size < 2:
         v = float(arr[0]) if arr.size else 0.0
-        return np.zeros(arr.size, dtype=int), [f"{v:.1f}"]
+        return np.zeros(arr.size, dtype=int), [f"{v:.2f}"]
 
     class_ids = pd.cut(arr, bins=edges, labels=False, include_lowest=True)
     class_ids = pd.Series(class_ids).fillna(0).astype(int).to_numpy()
-    labels = [f"{edges[i]:.1f} to {edges[i + 1]:.1f}" for i in range(edges.size - 1)]
+    labels = [f"Q{i + 1}: {edges[i]:.2f} to {edges[i + 1]:.2f}" for i in range(edges.size - 1)]
     class_ids = np.clip(class_ids, 0, max(0, len(labels) - 1))
     return class_ids, labels
 
@@ -292,9 +404,8 @@ def _render_map(
 
     if not plot_source.empty:
         plot_target = plot_source.to_crs(epsg=3857) if use_basemap else plot_source
-        colors = plt.get_cmap("YlGn")(
-            np.linspace(0.35, 0.85, max(1, plot_source["class_id"].nunique()))
-        )
+        max_class = int(pd.Series(plot_source["class_id"]).max()) if not plot_source.empty else 0
+        colors = plt.get_cmap("YlGn")(np.linspace(0.35, 0.85, max(1, max_class + 1)))
         legend_elements: list[object] = [
             Line2D([0], [0], color="darkgreen", linewidth=3, label="Field Boundary")
         ]
@@ -389,9 +500,7 @@ def render_ssurgo_property_map(
     plot_source = plot_source.dropna(subset=[property_col]).copy()
     if plot_source.empty:
         return False
-    class_ids, labels = _classify_natural_breaks(
-        pd.Series(plot_source[property_col]), class_count=3
-    )
+    class_ids, labels = _classify_quantiles(pd.Series(plot_source[property_col]), class_count=4)
     plot_source["class_id"] = class_ids
     field_short = field_id[-6:] if field_id else "Field"
     mukey_count = int(plot_source["mukey"].nunique()) if "mukey" in plot_source.columns else 0
@@ -411,7 +520,7 @@ def render_ssurgo_property_map(
         field_gdf=field_gdf,
         plot_source=plot_source,
         output_path=output_path,
-        title=f"Field {field_short} - SSURGO {property_label} (Natural Breaks)\n({mukey_count} MUKEYs)",
+        title=f"Field {field_short} - SSURGO {property_label} (Quantiles)\n({mukey_count} MUKEYs)",
         legend_title=legend_title,
         label_builder=_label,
     )
@@ -423,19 +532,21 @@ def main() -> None:
     print("SSURGO Soil Map Generator")
     print("=" * 60)
 
-    _OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    _CACHE_DIR.mkdir(parents=True, exist_ok=True)
-
-    fields_path = _REPO / "data" / "field-boundaries" / "iowa_10_fields.geojson"
+    fields_path = farm_boundary_path(_DEFAULT_GROWER, _DEFAULT_FARM)
     if not fields_path.exists():
         print(f"ERROR: Fields file not found: {fields_path}")
         sys.exit(1)
 
     fields = gpd.read_file(fields_path)
+    field_slug_map = field_slug_map_from_inventory()
     print(f"Loaded {len(fields)} fields")
 
     for idx, field_row in enumerate(fields.itertuples(index=False), start=1):
         field_id = str(getattr(field_row, "field_id", f"field_{idx}"))
+        field_slug = field_slug_map.get(field_id)
+        if not field_slug:
+            print(f"  skip {field_id} (no field slug)")
+            continue
         field_short = field_id[-8:] if len(field_id) > 8 else field_id
 
         print(f"\nProcessing field: {field_short}")
@@ -444,7 +555,10 @@ def main() -> None:
 
         field_ssurgo = get_ssurgo_polygons_with_soil_data(field_single, field_id)
 
-        component_output = _OUTPUT_DIR / f"field_{idx:02d}_component_map.png"
+        component_output = field_feature_path(
+            _DEFAULT_GROWER, _DEFAULT_FARM, field_slug, "soil_component_map.png"
+        )
+        component_output.parent.mkdir(parents=True, exist_ok=True)
         render_ssurgo_component_map(
             field_single, field_ssurgo, component_output, field_id=field_short
         )
@@ -452,7 +566,9 @@ def main() -> None:
 
         created = 0
         for prop, label, units, slug in PROPERTY_SPECS:
-            output_path = _OUTPUT_DIR / f"field_{idx:02d}_{slug}_map.png"
+            output_path = field_feature_path(
+                _DEFAULT_GROWER, _DEFAULT_FARM, field_slug, f"soil_{slug}_map.png"
+            )
             if render_ssurgo_property_map(
                 field_single,
                 field_ssurgo,
@@ -466,7 +582,7 @@ def main() -> None:
         print(f"  ✓ Property maps saved: {created}")
 
     print("\n" + "=" * 60)
-    print(f"SSURGO soil maps complete → {_OUTPUT_DIR}")
+    print("SSURGO soil maps complete → canonical field feature paths")
     print("=" * 60)
 
 

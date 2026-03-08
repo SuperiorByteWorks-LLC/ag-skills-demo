@@ -9,10 +9,10 @@ from __future__ import annotations
 import os
 from typing import Any
 
-import requests
 import geopandas as gpd
 import matplotlib.pyplot as plt
 import pandas as pd
+import requests
 from shapely.geometry import Polygon
 
 HAS_DEPS = True
@@ -41,7 +41,7 @@ def _overpass_query(bbox: tuple[float, float, float, float]) -> dict[str, Any]:
     return response.json()
 
 
-def _to_geodataframe(elements: list[dict[str, Any]], region: str) -> "gpd.GeoDataFrame":
+def _to_geodataframe(elements: list[dict[str, Any]], region: str) -> gpd.GeoDataFrame:
     records: list[dict[str, Any]] = []
     for element in elements:
         if element.get("type") != "way":
@@ -87,7 +87,7 @@ def download_fields(
     crops: list[str] | None = None,
     output_path: str | None = None,
     year: int = 2023,
-) -> "gpd.GeoDataFrame":
+) -> gpd.GeoDataFrame:
     """Download real field-like polygons from OSM for agricultural analysis.
 
     Args mirror previous API for compatibility.
@@ -136,7 +136,7 @@ def download_fields(
 
 
 def plot_fields(
-    fields: "gpd.GeoDataFrame",
+    fields: gpd.GeoDataFrame,
     title: str = "Agricultural Fields",
     color_by: str | None = None,
     save_path: str | None = None,
@@ -161,7 +161,7 @@ def plot_fields(
     plt.close()
 
 
-def get_summary(fields: "gpd.GeoDataFrame") -> dict[str, Any]:
+def get_summary(fields: gpd.GeoDataFrame) -> dict[str, Any]:
     areas = (
         fields["area_acres"]
         if "area_acres" in fields.columns
@@ -184,8 +184,8 @@ def get_summary(fields: "gpd.GeoDataFrame") -> dict[str, Any]:
 
 
 def filter_by_size(
-    fields: "gpd.GeoDataFrame", min_acres: float = 0, max_acres: float | None = None
-) -> "gpd.GeoDataFrame":
+    fields: gpd.GeoDataFrame, min_acres: float = 0, max_acres: float | None = None
+) -> gpd.GeoDataFrame:
     areas = (
         fields["area_acres"]
         if "area_acres" in fields.columns
@@ -197,7 +197,7 @@ def filter_by_size(
     return gpd.GeoDataFrame(fields[mask].copy(), geometry="geometry", crs=fields.crs)
 
 
-def export_fields(fields: "gpd.GeoDataFrame", output_path: str, format: str = "geojson") -> str:
+def export_fields(fields: gpd.GeoDataFrame, output_path: str, format: str = "geojson") -> str:
     out_dir = os.path.dirname(output_path)
     if out_dir:
         os.makedirs(out_dir, exist_ok=True)

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate farm-level portfolio poster."""
+# pyright: reportMissingImports=false, reportAttributeAccessIssue=false, reportGeneralTypeIssues=false
 
 from __future__ import annotations
 
@@ -8,6 +8,7 @@ from pathlib import Path
 
 import geopandas as gpd
 import matplotlib
+import matplotlib.image as mpimg
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -16,13 +17,24 @@ matplotlib.use("Agg")
 
 _REPO = Path(__file__).resolve().parents[3]
 _SKILLS = _REPO / ".opencode" / "skills"
+_LIB = _REPO / "data" / "scripts" / "lib"
 
 sys.path.insert(0, str(_SKILLS / "farm-intelligence-reporting" / "src"))
 sys.path.insert(0, str(_SKILLS / "headlands-ring" / "src"))
 sys.path.insert(0, str(_SKILLS / "cdl-cropland" / "src"))
 sys.path.insert(0, str(_SKILLS / "nasa-power-weather" / "src"))
+sys.path.insert(0, str(_LIB))
 
+from cdl_reporting import plot_crop_mix_stacked_100, summarize_crop_history
 from headlands_ring import split_headlands_and_interior, summarize_headlands
+from paths import (
+    farm_boundary_path,
+    farm_manifest_dir,
+    farm_report_path,
+    farm_table_path,
+    field_feature_path,
+    shared_cdl_preferred_full_composition_path,
+)
 from pipeline import (
     STEP_FARM_POSTER_RENDER,
     FieldReportingConfig,
@@ -30,16 +42,18 @@ from pipeline import (
     load_manifest,
     step_is_stale,
 )
-from reporting import build_field_reporting_dataset, build_farm_reporting_dataset
-from cdl_reporting import plot_crop_mix_stacked_100, summarize_crop_history
+from reporting import build_farm_reporting_dataset, build_field_reporting_dataset
 from weather_reporting import (
-    summarize_weather_variability,
     plot_gdd_doy_overlay,
     plot_precip_boxplot,
     plot_temperature_doy_overlay,
+    summarize_weather_variability,
 )
 
 _SCRIPT = Path(__file__)
+_CDL_PRIMARY = shared_cdl_preferred_full_composition_path()
+_CDL_FALLBACK = shared_cdl_preferred_full_composition_path()
+_FIELD_INVENTORY = _REPO / ".sisyphus" / "evidence" / "task-3-field-inventory.csv"
 
 
 def _utm(frow) -> str:
@@ -88,6 +102,55 @@ def _risk_matrix(ax, field_df):
     ax.grid(True, alpha=0.25)
 
 
+def _cdl_csv_path() -> Path:
+    return _CDL_PRIMARY if _CDL_PRIMARY.exists() else _CDL_FALLBACK
+
+
+def _field_slug_lookup(inventory_path: Path = _FIELD_INVENTORY) -> dict[str, str]:
+    if not inventory_path.exists():
+        return {}
+    inventory = pd.read_csv(inventory_path)
+    if not {"field_id", "field_slug"}.issubset(inventory.columns):
+        return {}
+    return {
+        str(row["field_id"]): str(row["field_slug"])
+        for _, row in inventory[["field_id", "field_slug"]].dropna().iterrows()
+    }
+
+
+def _spotlight_field_slug(fields: gpd.GeoDataFrame) -> tuple[str | None, str | None]:
+    if fields.empty or "field_id" not in fields.columns:
+        return None, None
+    field_slug_lookup = _field_slug_lookup()
+    has_area = "area_acres" in fields.columns and bool(fields["area_acres"].notna().any())
+    if has_area:
+        row = fields.loc[fields["area_acres"].astype(float).idxmax()]
+    else:
+        row = fields.iloc[0]
+    field_id = str(row["field_id"])
+    return field_id, field_slug_lookup.get(field_id)
+
+
+def _image_panel(ax, path: Path | None, title: str, note: str | None = None) -> None:
+    ax.set_title(title, fontsize=9.5, fontweight="bold", loc="left")
+    if path is not None and path.exists():
+        ax.imshow(mpimg.imread(path))
+        ax.axis("off")
+        return
+    ax.set_axis_off()
+    ax.text(
+        0.5,
+        0.5,
+        note or "Image unavailable",
+        ha="center",
+        va="center",
+        fontsize=8,
+        color="#64748b",
+        wrap=True,
+        transform=ax.transAxes,
+    )
+
+
 def main() -> None:
     print("=" * 60)
     print("Farm portfolio poster")
@@ -95,19 +158,53 @@ def main() -> None:
 
     config = FieldReportingConfig(
         farm_name="Iowa Demo Farm",
-        field_boundary_path="data/field-boundaries/iowa_10_fields.geojson",
+        field_boundary_path=str(farm_boundary_path("iowa-demo-grower", "iowa-demo-farm")),
+        grower_slug="iowa-demo-grower",
+        farm_slug="iowa-demo-farm",
     )
-    manifest_dir = Path(config.reporting_dir) / "manifests"
-    output_path = Path("data/EDA/iowa_farm_report.png")
+    manifest_dir = farm_manifest_dir(config.grower_slug, config.farm_slug)
+    output_path = farm_report_path(config.grower_slug, config.farm_slug, "iowa_farm_report.png")
 
     prior = load_manifest(manifest_dir / f"{STEP_FARM_POSTER_RENDER}.json")
+    field_id, spotlight_slug = _spotlight_field_slug(
+        gpd.read_file(_REPO / config.field_boundary_path)
+    )
+    spotlight_inputs: list[str] = []
+    spotlight_assets: dict[str, Path] = {}
+    if spotlight_slug:
+        spotlight_assets = {
+            "corn": field_feature_path(
+                config.grower_slug, config.farm_slug, spotlight_slug, "ndvi_corn.png"
+            ),
+            "corn_peak_95": field_feature_path(
+                config.grower_slug, config.farm_slug, spotlight_slug, "ndvi_corn_peak_95.png"
+            ),
+            "soybean": field_feature_path(
+                config.grower_slug, config.farm_slug, spotlight_slug, "ndvi_soybean.png"
+            ),
+            "soybean_peak_95": field_feature_path(
+                config.grower_slug, config.farm_slug, spotlight_slug, "ndvi_soybean_peak_95.png"
+            ),
+            "cumulative": field_feature_path(
+                config.grower_slug,
+                config.farm_slug,
+                spotlight_slug,
+                "ndvi_current_season_cumulative.png",
+            ),
+        }
+        spotlight_inputs = [
+            str(path.relative_to(_REPO)) for path in spotlight_assets.values() if path.exists()
+        ]
     manifest = build_step_manifest(
         step_name=STEP_FARM_POSTER_RENDER,
         input_paths=[
             config.field_boundary_path,
-            "data/soil/iowa_ssurgo_summary.csv",
-            "data/weather/iowa_weather_2021_2025.csv",
-            "data/cdl/iowa_cdl_2021_2024.csv",
+            str(farm_table_path(config.grower_slug, config.farm_slug, "iowa_ssurgo_summary.csv")),
+            str(
+                farm_table_path(config.grower_slug, config.farm_slug, "iowa_weather_2021_2025.csv")
+            ),
+            str(_cdl_csv_path().relative_to(_REPO)),
+            *spotlight_inputs,
         ],
         output_paths=[output_path],
         code_paths=[_SCRIPT],
@@ -117,10 +214,15 @@ def main() -> None:
         print("skip  farm poster (current)")
         return
 
-    fields = gpd.read_file(config.field_boundary_path)
-    soil_summary = pd.read_csv("data/soil/iowa_ssurgo_summary.csv")
-    weather = pd.read_csv("data/weather/iowa_weather_2021_2025.csv", parse_dates=["date"])
-    cdl = pd.read_csv("data/cdl/iowa_cdl_2021_2024.csv")
+    fields = gpd.read_file(_REPO / config.field_boundary_path)
+    soil_summary = pd.read_csv(
+        farm_table_path(config.grower_slug, config.farm_slug, "iowa_ssurgo_summary.csv")
+    )
+    weather = pd.read_csv(
+        farm_table_path(config.grower_slug, config.farm_slug, "iowa_weather_2021_2025.csv"),
+        parse_dates=["date"],
+    )
+    cdl = pd.read_csv(_cdl_csv_path())
 
     hl_rows = []
     for idx, frow in fields.iterrows():
@@ -132,7 +234,7 @@ def main() -> None:
     headlands_df = pd.DataFrame(hl_rows)
 
     wx_summary = summarize_weather_variability(weather)
-    crop_sum = summarize_crop_history(cdl)
+    crop_sum = summarize_crop_history(cdl, window_years=5)
 
     field_df = build_field_reporting_dataset(
         fields,
@@ -146,7 +248,7 @@ def main() -> None:
     total_ac = float(farm_df.iloc[0].get("total_acres", 0))
     n_fields = int(farm_df.iloc[0].get("field_count", len(fields)))
 
-    fig = plt.figure(figsize=(28, 32))
+    fig = plt.figure(figsize=(28, 38))
     fig.patch.set_facecolor("#fafaf9")
     fig.suptitle(
         f"Farm Intelligence Report — Iowa Demo Farm  ·  {total_ac:.0f} ac  ·  {n_fields} fields",
@@ -157,7 +259,7 @@ def main() -> None:
         fontfamily="serif",
     )
     gs = fig.add_gridspec(
-        5, 4, hspace=0.40, wspace=0.28, left=0.04, right=0.97, top=0.975, bottom=0.015
+        6, 4, hspace=0.40, wspace=0.28, left=0.04, right=0.97, top=0.975, bottom=0.015
     )
 
     ax_map = fig.add_subplot(gs[0, 0:2])
@@ -218,19 +320,59 @@ def main() -> None:
     _ranking_bars(fig.add_subplot(gs[1, 2]), field_df, "avg_om_pct", "Avg OM (%)")
     _ranking_bars(fig.add_subplot(gs[1, 3]), field_df, "headlands_pct", "Headlands (%)")
 
+    spotlight_title = (
+        f"Remote sensing spotlight — {field_id[-6:]}"
+        if field_id and spotlight_slug
+        else "Remote sensing spotlight"
+    )
+    panel = fig.add_subplot(gs[2, :])
+    panel.axis("off")
+    panel.set_title(spotlight_title, fontsize=11, fontweight="bold", loc="left", pad=8)
+    sub = gs[2, :].subgridspec(2, 4, hspace=0.18, wspace=0.2)
+    _image_panel(
+        fig.add_subplot(sub[0, 0]),
+        spotlight_assets.get("corn"),
+        "Corn average NDVI",
+        note="Generate NDVI cards to populate this panel.",
+    )
+    _image_panel(
+        fig.add_subplot(sub[0, 1]),
+        spotlight_assets.get("corn_peak_95"),
+        "Corn 95th %ile peak NDVI",
+        note="Generate NDVI cards to populate this panel.",
+    )
+    _image_panel(
+        fig.add_subplot(sub[0, 2]),
+        spotlight_assets.get("soybean"),
+        "Soybean average NDVI",
+        note="Generate NDVI cards to populate this panel.",
+    )
+    _image_panel(
+        fig.add_subplot(sub[0, 3]),
+        spotlight_assets.get("soybean_peak_95"),
+        "Soybean 95th %ile peak NDVI",
+        note="Generate NDVI cards to populate this panel.",
+    )
+    _image_panel(
+        fig.add_subplot(sub[1, :]),
+        spotlight_assets.get("cumulative"),
+        "Cumulative NDVI by crop and year",
+        note="Generate NDVI cards to populate this panel.",
+    )
+
     plot_temperature_doy_overlay(
-        fig.add_subplot(gs[2, 0:2]), weather, title="Farm temperature — all fields, by DOY"
+        fig.add_subplot(gs[3, 0:2]), weather, title="Farm temperature — all fields, by DOY"
     )
     plot_gdd_doy_overlay(
-        fig.add_subplot(gs[2, 2:]), weather, title="Farm cumulative GDD — all fields, by DOY"
+        fig.add_subplot(gs[3, 2:]), weather, title="Farm cumulative GDD — all fields, by DOY"
     )
 
     plot_precip_boxplot(
-        fig.add_subplot(gs[3, 0:2]), weather, title="Farm monthly precipitation distribution"
+        fig.add_subplot(gs[4, 0:2]), weather, title="Farm monthly precipitation distribution"
     )
-    _risk_matrix(fig.add_subplot(gs[3, 2:]), field_df)
+    _risk_matrix(fig.add_subplot(gs[4, 2:]), field_df)
 
-    ax_table = fig.add_subplot(gs[4, :])
+    ax_table = fig.add_subplot(gs[5, :])
     ax_table.axis("off")
     table_cols = [
         c

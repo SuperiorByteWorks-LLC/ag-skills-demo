@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
+# pyright: reportMissingImports=false, reportAttributeAccessIssue=false, reportGeneralTypeIssues=false
 """Generate markdown farm intelligence report."""
 
 from __future__ import annotations
 
+import os
 import sys
 from pathlib import Path
 
@@ -11,13 +13,23 @@ import pandas as pd
 
 _REPO = Path(__file__).resolve().parents[3]
 _SKILLS = _REPO / ".opencode" / "skills"
+_LIB = _REPO / "data" / "scripts" / "lib"
 
 sys.path.insert(0, str(_SKILLS / "farm-intelligence-reporting" / "src"))
 sys.path.insert(0, str(_SKILLS / "headlands-ring" / "src"))
 sys.path.insert(0, str(_SKILLS / "cdl-cropland" / "src"))
 sys.path.insert(0, str(_SKILLS / "nasa-power-weather" / "src"))
+sys.path.insert(0, str(_LIB))
 
+from cdl_reporting import summarize_crop_history
 from headlands_ring import split_headlands_and_interior, summarize_headlands
+from paths import (
+    farm_boundary_path,
+    farm_manifest_dir,
+    farm_report_path,
+    farm_table_path,
+    shared_cdl_preferred_full_composition_path,
+)
 from pipeline import (
     STEP_FARM_MARKDOWN,
     FieldReportingConfig,
@@ -26,14 +38,18 @@ from pipeline import (
     step_is_stale,
 )
 from reporting import (
-    build_field_reporting_dataset,
     build_farm_reporting_dataset,
+    build_field_reporting_dataset,
     compute_management_implications,
 )
-from cdl_reporting import summarize_crop_history
 from weather_reporting import summarize_weather_variability
 
 _SCRIPT = Path(__file__)
+_DEFAULT_GROWER = "iowa-demo-grower"
+_DEFAULT_FARM = "iowa-demo-farm"
+_FIELD_INVENTORY = _REPO / ".sisyphus" / "evidence" / "task-3-field-inventory.csv"
+_CDL_PRIMARY = shared_cdl_preferred_full_composition_path()
+_CDL_FALLBACK = shared_cdl_preferred_full_composition_path()
 
 
 def _utm(frow) -> str:
@@ -48,6 +64,60 @@ def _safe(val) -> str:
     return str(val)
 
 
+def _as_float(val, default: float = 0.0) -> float:
+    try:
+        if val is None or pd.isna(val):
+            return default
+        return float(val)
+    except (TypeError, ValueError):
+        return default
+
+
+def _field_slug_lookup(inventory_path: Path = _FIELD_INVENTORY) -> dict[str, str]:
+    if not inventory_path.exists():
+        return {}
+    inventory = pd.read_csv(inventory_path)
+    if not {"field_id", "field_slug"}.issubset(inventory.columns):
+        return {}
+    return {
+        str(row["field_id"]): str(row["field_slug"])
+        for _, row in inventory[["field_id", "field_slug"]].dropna().iterrows()
+    }
+
+
+def _ndvi_asset_links(field_slug: str | None) -> list[str]:
+    if not field_slug:
+        return []
+    feature_dir = (
+        _REPO
+        / "data"
+        / "growers"
+        / _DEFAULT_GROWER
+        / "farms"
+        / _DEFAULT_FARM
+        / "fields"
+        / field_slug
+        / "derived"
+        / "features"
+    )
+    links = []
+    for filename, label in [
+        ("ndvi_corn.png", "Corn average NDVI"),
+        ("ndvi_corn_peak_95.png", "Corn 95th %ile peak NDVI"),
+        ("ndvi_soybean.png", "Soybean average NDVI"),
+        ("ndvi_soybean_peak_95.png", "Soybean 95th %ile peak NDVI"),
+        ("ndvi_current_season_cumulative.png", "Cumulative NDVI by crop and year"),
+    ]:
+        path = feature_dir / filename
+        if path.exists():
+            links.append(f"[{label}](../../fields/{field_slug}/derived/features/{filename})")
+    return links
+
+
+def _cdl_csv_path() -> Path:
+    return _CDL_PRIMARY if _CDL_PRIMARY.exists() else _CDL_FALLBACK
+
+
 def main() -> None:
     print("=" * 60)
     print("Farm Markdown Report")
@@ -55,19 +125,47 @@ def main() -> None:
 
     config = FieldReportingConfig(
         farm_name="Iowa Demo Farm",
-        field_boundary_path="data/field-boundaries/iowa_10_fields.geojson",
+        field_boundary_path=str(farm_boundary_path(_DEFAULT_GROWER, _DEFAULT_FARM)),
+        grower_slug=_DEFAULT_GROWER,
+        farm_slug=_DEFAULT_FARM,
     )
-    manifest_dir = Path(config.reporting_dir) / "manifests"
-    output_path = Path("data/EDA/iowa_farm_report.md")
+    manifest_dir = farm_manifest_dir(_DEFAULT_GROWER, _DEFAULT_FARM)
+    output_path = farm_report_path(_DEFAULT_GROWER, _DEFAULT_FARM, "iowa_farm_report.md")
+    field_slug_lookup = _field_slug_lookup()
+    ndvi_input_paths = []
+    for field_slug in field_slug_lookup.values():
+        feature_dir = (
+            _REPO
+            / "data"
+            / "growers"
+            / _DEFAULT_GROWER
+            / "farms"
+            / _DEFAULT_FARM
+            / "fields"
+            / field_slug
+            / "derived"
+            / "features"
+        )
+        for filename in (
+            "ndvi_corn.png",
+            "ndvi_corn_peak_95.png",
+            "ndvi_soybean.png",
+            "ndvi_soybean_peak_95.png",
+            "ndvi_current_season_cumulative.png",
+        ):
+            path = feature_dir / filename
+            if path.exists():
+                ndvi_input_paths.append(str(path.relative_to(_REPO)))
 
     prior = load_manifest(manifest_dir / f"{STEP_FARM_MARKDOWN}.json")
     manifest = build_step_manifest(
         step_name=STEP_FARM_MARKDOWN,
         input_paths=[
             config.field_boundary_path,
-            "data/soil/iowa_ssurgo_summary.csv",
-            "data/weather/iowa_weather_2021_2025.csv",
-            "data/cdl/iowa_cdl_2021_2024.csv",
+            str(farm_table_path(_DEFAULT_GROWER, _DEFAULT_FARM, "iowa_ssurgo_summary.csv")),
+            str(farm_table_path(_DEFAULT_GROWER, _DEFAULT_FARM, "iowa_weather_2021_2025.csv")),
+            str(_cdl_csv_path().relative_to(_REPO)),
+            *ndvi_input_paths,
         ],
         output_paths=[output_path],
         code_paths=[_SCRIPT],
@@ -77,11 +175,15 @@ def main() -> None:
         print("skip  Markdown (current)")
         return
 
-    fields = gpd.read_file(config.field_boundary_path)
-    soil_summary = pd.read_csv("data/soil/iowa_ssurgo_summary.csv")
-    weather = pd.read_csv("data/weather/iowa_weather_2021_2025.csv", parse_dates=["date"])
-    cdl = pd.read_csv("data/cdl/iowa_cdl_2021_2024.csv")
-
+    fields = gpd.read_file(_REPO / config.field_boundary_path)
+    soil_summary = pd.read_csv(
+        farm_table_path(_DEFAULT_GROWER, _DEFAULT_FARM, "iowa_ssurgo_summary.csv")
+    )
+    weather = pd.read_csv(
+        farm_table_path(_DEFAULT_GROWER, _DEFAULT_FARM, "iowa_weather_2021_2025.csv"),
+        parse_dates=["date"],
+    )
+    cdl = pd.read_csv(_cdl_csv_path())
     hl_rows = []
     for idx, frow in fields.iterrows():
         fgdf = fields.iloc[[idx]].to_crs(_utm(frow))
@@ -92,7 +194,7 @@ def main() -> None:
     headlands_df = pd.DataFrame(hl_rows)
 
     wx_summary = summarize_weather_variability(weather)
-    crop_sum = summarize_crop_history(cdl)
+    crop_sum = summarize_crop_history(cdl, window_years=5)
 
     field_df = build_field_reporting_dataset(
         fields,
@@ -109,10 +211,10 @@ def main() -> None:
     md_lines = []
     md_lines.append("# Iowa Farm Intelligence Report")
     md_lines.append("")
-    md_lines.append(f"**Farm:** Iowa Demo Farm")
+    md_lines.append("**Farm:** Iowa Demo Farm")
     md_lines.append(f"**Fields:** {n_fields}")
     md_lines.append(f"**Total Area:** {total_ac:.1f} acres")
-    md_lines.append(f"**Analysis Period:** 2021-2025")
+    md_lines.append("**Analysis Period:** 2021-2025")
     md_lines.append("")
     md_lines.append("---")
     md_lines.append("")
@@ -167,35 +269,50 @@ def main() -> None:
     md_lines.append("## Individual Field Reports")
     md_lines.append("")
 
-    for idx, frow in fields.iterrows():
-        fid = frow["field_id"]
-        acres = float(frow.get("area_acres", 0))
+    for idx_num, (_, frow) in enumerate(fields.iterrows()):
+        fid = str(frow["field_id"])
+        field_slug = field_slug_lookup.get(str(fid), "")
+        acres = _as_float(frow.get("area_acres", 0), 0.0)
         row_match = field_df[field_df["field_id"] == fid]
         row_dict = row_match.iloc[0].to_dict() if not row_match.empty else {}
 
         md_lines.append(f"### Field {fid[-8:]} ({acres:.1f} acres)")
         md_lines.append("")
         md_lines.append(
-            f"**Poster:** [iowa_field_poster_{idx + 1:02d}.png](./field_cards/iowa_field_poster_{idx + 1:02d}.png)"
+            f"**Poster:** [field_report.png](../../fields/{field_slug}/derived/reports/field_report.png)"
         )
         md_lines.append("")
 
         soil_cards_exist = False
         soil_card_links = []
         for card_type, label in [
-            ("single", "Soil Profile"),
+            ("properties", "Soil Properties"),
             ("texture", "Texture RGB"),
-            ("properties", "Properties"),
         ]:
-            card_path = Path(f"data/EDA/soil_cards/field_{idx + 1:02d}_{card_type}.png")
+            card_link = f"../../fields/{field_slug}/derived/summaries/soil_{card_type}.png"
+            card_path = output_path.parent / card_link
             if card_path.exists():
                 soil_cards_exist = True
-                soil_card_links.append(
-                    f"[{label}](./soil_cards/field_{idx + 1:02d}_{card_type}.png)"
-                )
+                soil_card_links.append(f"[{label}]({card_link})")
 
         if soil_cards_exist:
             md_lines.append(f"**Soil Profile Cards:** {' | '.join(soil_card_links)}")
+            md_lines.append("")
+
+        ndvi_links = _ndvi_asset_links(field_slug_lookup.get(str(fid)))
+        if ndvi_links:
+            md_lines.append(f"**NDVI Cards:** {' | '.join(ndvi_links)}")
+            md_lines.append("")
+
+        if row_dict.get("rotation_sequence"):
+            md_lines.append(
+                f"**Crop Rotation History:** {_safe(row_dict.get('rotation_sequence'))}"
+            )
+            md_lines.append("")
+        if row_dict.get("rotation_outlook"):
+            md_lines.append(
+                f"**Heuristic Crop Outlook:** {_safe(row_dict.get('rotation_outlook'))}"
+            )
             md_lines.append("")
 
         implications = compute_management_implications(row_dict)
