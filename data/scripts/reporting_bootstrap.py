@@ -184,6 +184,20 @@ def ensure_canonical_data_tree(
     farm_name: str = "Iowa Demo Farm",
     inventory_path: Path | None = None,
 ) -> list[str]:
+    (DATA_ROOT / "shared" / "weather").mkdir(parents=True, exist_ok=True)
+    (DATA_ROOT / "shared" / "geoadmin" / "l0_countries" / "raw").mkdir(parents=True, exist_ok=True)
+    (DATA_ROOT / "shared" / "geoadmin" / "l1_states" / "raw").mkdir(parents=True, exist_ok=True)
+    (DATA_ROOT / "shared" / "geoadmin" / "l2_counties" / "raw").mkdir(parents=True, exist_ok=True)
+    (DATA_ROOT / "shared" / "corn_maturity" / "tables").mkdir(parents=True, exist_ok=True)
+    (DATA_ROOT / "shared" / "corn_maturity" / "reports").mkdir(parents=True, exist_ok=True)
+    (DATA_ROOT / "shared" / "corn_maturity" / "metadata").mkdir(parents=True, exist_ok=True)
+    (DATA_ROOT / "shared" / "corn_maturity" / "manifests").mkdir(parents=True, exist_ok=True)
+    (DATA_ROOT / "shared" / "corn_maturity" / "logs").mkdir(parents=True, exist_ok=True)
+    (DATA_ROOT / "shared" / "soybean_maturity" / "tables").mkdir(parents=True, exist_ok=True)
+    (DATA_ROOT / "shared" / "soybean_maturity" / "reports").mkdir(parents=True, exist_ok=True)
+    (DATA_ROOT / "shared" / "soybean_maturity" / "metadata").mkdir(parents=True, exist_ok=True)
+    (DATA_ROOT / "shared" / "soybean_maturity" / "manifests").mkdir(parents=True, exist_ok=True)
+    (DATA_ROOT / "shared" / "soybean_maturity" / "logs").mkdir(parents=True, exist_ok=True)
     (DATA_ROOT / "shared" / "cdl" / "metadata").mkdir(parents=True, exist_ok=True)
     (DATA_ROOT / "shared" / "cdl" / "rasters").mkdir(parents=True, exist_ok=True)
     (DATA_ROOT / "shared" / "cdl" / "derived").mkdir(parents=True, exist_ok=True)
@@ -196,6 +210,57 @@ def ensure_canonical_data_tree(
     (DATA_ROOT / "shared" / "reference" / "schemas").mkdir(parents=True, exist_ok=True)
     (DATA_ROOT / "shared" / "manifests").mkdir(parents=True, exist_ok=True)
     (DATA_ROOT / "shared" / "logs").mkdir(parents=True, exist_ok=True)
+    _write_json(
+        DATA_ROOT / "shared" / "geoadmin" / "l0_countries" / "metadata.json",
+        {
+            "dataset_name": "geoadmin_countries",
+            "source": "natural-earth",
+            "spatial_scope": "global",
+            "format": "geojson-or-parquet",
+            "notes": "Shared Level 0 admin root for annual maturity and geoadmin workflows",
+        },
+        overwrite=False,
+    )
+    _write_json(
+        DATA_ROOT / "shared" / "geoadmin" / "l1_states" / "metadata.json",
+        {
+            "dataset_name": "geoadmin_states",
+            "source": "census-tiger-line",
+            "spatial_scope": "usa-state",
+            "format": "geojson-or-parquet",
+            "notes": "Shared Level 1 admin root for annual maturity and geoadmin workflows",
+        },
+        overwrite=False,
+    )
+    _write_json(
+        DATA_ROOT / "shared" / "geoadmin" / "l2_counties" / "metadata.json",
+        {
+            "dataset_name": "geoadmin_counties",
+            "source": "census-tiger-line",
+            "spatial_scope": "usa-county",
+            "format": "geojson-or-parquet",
+            "notes": "Shared county and FIPS root for annual maturity and geoadmin workflows",
+        },
+        overwrite=False,
+    )
+    _write_json(
+        DATA_ROOT / "shared" / "corn_maturity" / "metadata" / "dataset.json",
+        {
+            "dataset_name": "corn_maturity",
+            "status": "planned",
+            "notes": "Annual heuristic corn RM and GDD outputs by FIPS live here",
+        },
+        overwrite=False,
+    )
+    _write_json(
+        DATA_ROOT / "shared" / "soybean_maturity" / "metadata" / "dataset.json",
+        {
+            "dataset_name": "soybean_maturity",
+            "status": "planned",
+            "notes": "Annual heuristic soybean maturity-group outputs by FIPS live here",
+        },
+        overwrite=False,
+    )
 
     grower = DATA_ROOT / "growers" / grower_slug
     grower.mkdir(parents=True, exist_ok=True)

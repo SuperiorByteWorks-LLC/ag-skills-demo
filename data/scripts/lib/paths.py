@@ -227,6 +227,110 @@ def shared_logs_dir() -> Path:
     return SHARED_ROOT / "logs"
 
 
+def shared_reference_dir() -> Path:
+    return SHARED_ROOT / "reference"
+
+
+def shared_weather_dir() -> Path:
+    return SHARED_ROOT / "weather"
+
+
+def shared_weather_source_dir(source_slug: str) -> Path:
+    return shared_weather_dir() / source_slug
+
+
+def shared_weather_year_dir(source_slug: str, year: int) -> Path:
+    return shared_weather_source_dir(source_slug) / str(year)
+
+
+def shared_weather_county_table_path(source_slug: str, year: int, filename: str) -> Path:
+    return shared_weather_year_dir(source_slug, year) / filename
+
+
+def shared_geoadmin_dir() -> Path:
+    return SHARED_ROOT / "geoadmin"
+
+
+def shared_geoadmin_countries_dir() -> Path:
+    return shared_geoadmin_dir() / "l0_countries"
+
+
+def shared_geoadmin_states_dir() -> Path:
+    return shared_geoadmin_dir() / "l1_states"
+
+
+def shared_geoadmin_counties_dir() -> Path:
+    return shared_geoadmin_dir() / "l2_counties"
+
+
+def shared_geoadmin_raw_dir(level_slug: str) -> Path:
+    return shared_geoadmin_dir() / level_slug / "raw"
+
+
+def shared_geoadmin_metadata_path(level_slug: str, filename: str = "metadata.json") -> Path:
+    return shared_geoadmin_dir() / level_slug / filename
+
+
+def shared_corn_maturity_dir() -> Path:
+    return SHARED_ROOT / "corn_maturity"
+
+
+def shared_corn_maturity_tables_dir() -> Path:
+    return shared_corn_maturity_dir() / "tables"
+
+
+def shared_corn_maturity_reports_dir() -> Path:
+    return shared_corn_maturity_dir() / "reports"
+
+
+def shared_corn_maturity_metadata_dir() -> Path:
+    return shared_corn_maturity_dir() / "metadata"
+
+
+def shared_corn_maturity_manifest_dir() -> Path:
+    return shared_corn_maturity_dir() / "manifests"
+
+
+def shared_corn_maturity_logs_dir() -> Path:
+    return shared_corn_maturity_dir() / "logs"
+
+
+def shared_corn_gdd_table_path(year: int) -> Path:
+    return shared_corn_maturity_tables_dir() / f"gdd_by_fips_{year}.parquet"
+
+
+def shared_corn_rm_table_path(year: int) -> Path:
+    return shared_corn_maturity_tables_dir() / f"rm_by_fips_{year}.parquet"
+
+
+def shared_soybean_maturity_dir() -> Path:
+    return SHARED_ROOT / "soybean_maturity"
+
+
+def shared_soybean_maturity_tables_dir() -> Path:
+    return shared_soybean_maturity_dir() / "tables"
+
+
+def shared_soybean_maturity_reports_dir() -> Path:
+    return shared_soybean_maturity_dir() / "reports"
+
+
+def shared_soybean_maturity_metadata_dir() -> Path:
+    return shared_soybean_maturity_dir() / "metadata"
+
+
+def shared_soybean_maturity_manifest_dir() -> Path:
+    return shared_soybean_maturity_dir() / "manifests"
+
+
+def shared_soybean_maturity_logs_dir() -> Path:
+    return shared_soybean_maturity_dir() / "logs"
+
+
+def shared_soybean_mg_table_path(year: int) -> Path:
+    return shared_soybean_maturity_tables_dir() / f"mg_by_fips_{year}.parquet"
+
+
 def ensure_parent(path: Path) -> Path:
     path.parent.mkdir(parents=True, exist_ok=True)
     return path
