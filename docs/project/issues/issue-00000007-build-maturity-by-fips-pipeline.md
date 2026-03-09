@@ -24,14 +24,14 @@ Build a repo-native annual maturity-by-FIPS workflow that adds shared geoadmin d
 
 The feature is complete when:
 
-- [ ] Shared geoadmin assets exist under `data/shared/geoadmin/` with pinned source-vintage metadata
-- [ ] Fields can be mapped to counties/FIPS with an explicit ambiguity report
-- [ ] County/FIPS weather and GDD artifacts exist under canonical shared paths
-- [ ] Annual corn RM outputs exist under `data/shared/corn_maturity/` with heuristic caveats
-- [ ] Annual soybean MG outputs exist under `data/shared/soybean_maturity/` with heuristic caveats
-- [ ] Static maturity map assets render from canonical annual outputs
-- [ ] The annual workflow integrates with `.opencode/skills/` and `data/scripts/`, not a parallel package layout
-- [ ] Re-running the annual workflow without changes skips unchanged work through manifests
+- [x] Shared geoadmin assets exist under `data/shared/geoadmin/` with pinned source-vintage metadata
+- [x] Fields can be mapped to counties/FIPS with an explicit ambiguity report
+- [x] County/FIPS weather and GDD artifacts exist under canonical shared paths
+- [x] Annual corn RM outputs exist under `data/shared/corn_maturity/` with heuristic caveats
+- [x] Annual soybean MG outputs exist under `data/shared/soybean_maturity/` with heuristic caveats
+- [x] Static maturity map assets render from canonical annual outputs
+- [x] The annual workflow integrates with `.opencode/skills/` and `data/scripts/`, not a parallel package layout
+- [x] Re-running the annual workflow without changes skips unchanged work through manifests
 
 Current Wave 1 progress:
 
@@ -46,7 +46,11 @@ Current Wave 1 progress:
 - [x] Demo farm field-to-FIPS mapping and ambiguity outputs generated from canonical county geometry
 - [x] Shared geoadmin and field-FIPS summary metadata rewritten to use repo-relative artifact paths
 - [x] County/FIPS weather transform artifacts generated under canonical shared weather roots
-- [ ] County GDD artifacts generated under canonical shared maturity paths
+- [x] County GDD artifacts generated under canonical shared maturity paths
+- [x] Heuristic corn RM outputs generated under canonical shared corn maturity paths
+- [x] Heuristic soybean MG outputs generated under canonical shared soybean maturity paths
+- [x] Static maturity map assets rendered under canonical report roots
+- [x] Annual runner skips unchanged outputs and records shared manifest state
 
 ---
 
@@ -93,16 +97,22 @@ flowchart LR
 
 ### Investigation log
 
-| Date       | Who   | Finding                                                                                                                                              |
-| ---------- | ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 2026-03-09 | Agent | Existing shared path and bootstrap patterns in `data/scripts/lib/paths.py` and `data/scripts/reporting_bootstrap.py` are the right extension points  |
-| 2026-03-09 | Agent | Existing manifest orchestration in `.opencode/skills/farm-intelligence-reporting/src/pipeline.py` can carry annual maturity step naming              |
-| 2026-03-09 | Agent | Wave 1 verification passed: compileall clean, annual target listing works, and targeted pipeline tests remain green                                  |
-| 2026-03-09 | Agent | `download_geoadmin.py --levels l0_countries` built canonical GeoJSON and Parquet outputs under `data/shared/geoadmin/l0_countries/`                  |
-| 2026-03-09 | Agent | `download_geoadmin.py --levels l1_states l2_counties` built canonical US state, county, and FIPS lookup outputs                                      |
-| 2026-03-09 | Agent | `assign_field_fips.py` mapped all 10 demo farm fields to county FIPS with 0 ambiguity cases                                                          |
-| 2026-03-09 | Agent | Geoadmin metadata and field-FIPS summary outputs now store repo-relative paths for more portable annual reruns                                       |
-| 2026-03-09 | Agent | `aggregate_weather_by_fips.py --year 2025` built canonical county daily weather outputs for 3 covered counties and emitted uncovered-county metadata |
+| Date       | Who   | Finding                                                                                                                                                                    |
+| ---------- | ----- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-03-09 | Agent | Existing shared path and bootstrap patterns in `data/scripts/lib/paths.py` and `data/scripts/reporting_bootstrap.py` are the right extension points                        |
+| 2026-03-09 | Agent | Existing manifest orchestration in `.opencode/skills/farm-intelligence-reporting/src/pipeline.py` can carry annual maturity step naming                                    |
+| 2026-03-09 | Agent | Wave 1 verification passed: compileall clean, annual target listing works, and targeted pipeline tests remain green                                                        |
+| 2026-03-09 | Agent | `download_geoadmin.py --levels l0_countries` built canonical GeoJSON and Parquet outputs under `data/shared/geoadmin/l0_countries/`                                        |
+| 2026-03-09 | Agent | `download_geoadmin.py --levels l1_states l2_counties` built canonical US state, county, and FIPS lookup outputs                                                            |
+| 2026-03-09 | Agent | `assign_field_fips.py` mapped all 10 demo farm fields to county FIPS with 0 ambiguity cases                                                                                |
+| 2026-03-09 | Agent | Geoadmin metadata and field-FIPS summary outputs now store repo-relative paths for more portable annual reruns                                                             |
+| 2026-03-09 | Agent | `aggregate_weather_by_fips.py --year 2025` built canonical county daily weather outputs for 3 covered counties and emitted uncovered-county metadata                       |
+| 2026-03-09 | Agent | `calculate_gdd_by_fips.py --year 2025` produced annual county GDD outputs for the 3 covered counties                                                                       |
+| 2026-03-09 | Agent | `calculate_corn_rm_by_fips.py --year 2025` and `calculate_soybean_mg_by_fips.py --year 2025` produced heuristic crop outputs with metadata caveats                         |
+| 2026-03-09 | Agent | `generate_maturity_maps.py --year 2025` rendered static corn RM and soybean MG county PNG maps                                                                             |
+| 2026-03-09 | Agent | `run_maturity_by_fips.py --year 2025 --force` completed end-to-end, and reruns now skip unchanged steps while recording `data/shared/manifests/maturity_by_fips_2025.json` |
+| 2026-03-09 | Agent | `run_maturity_by_fips.py` now records repo-relative manifest `output_path` values so annual rerun state stays portable across machines and worktrees                       |
+| 2026-03-09 | Agent | `./scripts/ci-local.sh` still reports unrelated repo-baseline failures in `.opencode/skills/csb-field-sampling/SKILL.md` (`MD024`) and TLS validation during link checks   |
 
 ---
 
@@ -129,11 +139,11 @@ flowchart LR
 - [Project maturity board](../kanban/project-maturity-by-fips.md)
 - [Work plan](../../.sisyphus/plans/grm-by-fips-geoadmin.md)
 
-[^1]: U.S. Census Bureau. (2025). "TIGER/Line Shapefiles." _Census Geography Program_. https://www2.census.gov/geo/tiger/
+[^1]: U.S. Census Bureau. (2025). "TIGER/Line Shapefiles." _Census Geography Program_. <https://www2.census.gov/geo/tiger/>
 
-[^2]: Nielsen, R. L. (n.d.). "Relative Maturity Days or Growing Degree Days: Which Is Best for Describing Corn Hybrid Maturity?" _Purdue University_. https://www.agry.purdue.edu/ext/corn/news/timeless/hybridmaturity.html
+[^2]: Nielsen, R. L. (n.d.). "Relative Maturity Days or Growing Degree Days: Which Is Best for Describing Corn Hybrid Maturity?" _Purdue University_. <https://www.agry.purdue.edu/ext/corn/news/timeless/hybridmaturity.html>
 
-[^3]: Coulter, J. (n.d.). "Selecting corn hybrids for grain production." _University of Minnesota Extension_. https://extension.umn.edu/corn-hybrid-selection/selecting-corn-hybrids-grain-production
+[^3]: Coulter, J. (n.d.). "Selecting corn hybrids for grain production." _University of Minnesota Extension_. <https://extension.umn.edu/corn-hybrid-selection/selecting-corn-hybrids-grain-production>
 
 ---
 
