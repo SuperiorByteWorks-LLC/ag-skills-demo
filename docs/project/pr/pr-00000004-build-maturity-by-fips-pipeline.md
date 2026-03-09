@@ -56,6 +56,11 @@ This work starts a new repo-native agricultural maturity pipeline that will prod
 | `data/shared/geoadmin/l1_states/`                                       | Added       | Canonical US state outputs built from TIGER/Line                                           |
 | `data/shared/geoadmin/l2_counties/`                                     | Added       | Canonical US county/FIPS outputs and lookup built from TIGER/Line                          |
 | `data/growers/iowa-demo-grower/farms/iowa-demo-farm/derived/`           | Added       | Demo farm field-to-FIPS summary and ambiguity artifacts with portable summary paths        |
+| `.opencode/skills/maturity-by-fips/src/maturity_by_fips.py`             | Modified    | Added county weather aggregation and coverage-summary helpers                              |
+| `.opencode/skills/maturity-by-fips/src/__init__.py`                     | Modified    | Exported county weather helper functions for script reuse                                  |
+| `data/scripts/ingest/aggregate_weather_by_fips.py`                      | Added       | Aggregates existing field weather into canonical county/FIPS daily weather outputs         |
+| `data/shared/weather/nasa-power/2025/`                                  | Added       | First canonical county weather table and coverage summary built from field weather         |
+| `tests/farm_intelligence/test_pipeline.py`                              | Modified    | Added county weather output-index and aggregation tests                                    |
 
 ### Before and after
 
@@ -77,6 +82,7 @@ Future maturity implementation is constrained to `.opencode/skills/...` and `dat
 An annual entrypoint already resolves the canonical output targets for a requested year.
 A geoadmin ingest script now builds the first canonical shared admin layer into GeoJSON and Parquet outputs.
 The demo farm can now generate a field-to-FIPS mapping summary directly from canonical county geometry.
+The maturity skill and a repo-native ingest script now aggregate field weather into canonical county/FIPS daily weather outputs with explicit uncovered-county policy.
 ```
 
 ---
@@ -92,12 +98,12 @@ python -m pytest tests/farm_intelligence/test_pipeline.py --override-ini=addopts
 
 ### Test coverage
 
-| Test type         | Status      | Notes                                                                                                                                                   |
-| ----------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Unit tests        | ✅ Passing  | Existing targeted pipeline tests still pass (`28 passed`)                                                                                               |
-| Integration tests | ✅ Passing  | `run_maturity_by_fips.py --year 2025 --list-steps` resolves canonical output targets                                                                    |
-| Manual testing    | ✅ Verified | Shared maturity/geoadmin roots scaffold correctly, annual targets resolve, Level 0/1/2 geoadmin outputs build, and the demo farm maps 10 fields to FIPS |
-| Performance       | ⬜ N/A      | Full annual flow not implemented yet                                                                                                                    |
+| Test type         | Status      | Notes                                                                                                                                                                       |
+| ----------------- | ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Unit tests        | ✅ Passing  | Existing targeted pipeline tests plus new county weather aggregation checks pass (`30 passed`)                                                                              |
+| Integration tests | ✅ Passing  | `run_maturity_by_fips.py --year 2025 --list-steps` resolves canonical output targets, including county weather outputs                                                      |
+| Manual testing    | ✅ Verified | Shared maturity/geoadmin roots scaffold correctly, annual targets resolve, geoadmin outputs build, the demo farm maps 10 fields to FIPS, and county weather builds for 2025 |
+| Performance       | ⬜ N/A      | Full annual flow not implemented yet                                                                                                                                        |
 
 Current verification evidence:
 
@@ -109,13 +115,16 @@ Current verification evidence:
 - `python -m compileall data/scripts/ingest/assign_field_fips.py .opencode/skills/geoadmin-admin/src`
 - `python data/scripts/ingest/assign_field_fips.py`
 - `python data/scripts/ingest/download_geoadmin.py --levels l1_states l2_counties` (rerun after metadata portability update)
-- `python -m pytest tests/farm_intelligence/test_pipeline.py --override-ini=addopts=` -> `28 passed`
+- `python data/scripts/ingest/aggregate_weather_by_fips.py --year 2025`
+- `python - <<'PY' ... pd.read_parquet('data/shared/weather/nasa-power/2025/daily_weather_by_fips.parquet') ... PY`
+- `python -m pytest tests/farm_intelligence/test_pipeline.py --override-ini=addopts=` -> `30 passed`
 
 ### Edge cases considered
 
 - Maturity work must not drift into a standalone package layout
 - Annual invocation must not quietly become scheduler infrastructure
 - Shared-data path additions must remain canonical and additive
+- Counties without mapped field weather must remain absent from the county daily table and be surfaced through coverage metadata
 
 ---
 
@@ -145,11 +154,13 @@ git revert [commit-sha]
 - **Geoadmin ingestion:** Shared admin layers are downloaded and standardized through a repo-native ingest script rather than ad hoc manual placement
 - **Field bridge:** Field-to-FIPS mapping is persisted as canonical farm-level summary and table output before county weather or maturity transforms consume it
 - **Metadata portability:** Shared geoadmin metadata now stores repo-relative artifact paths so annual runs stay portable across machines and worktrees
+- **County weather transform:** County weather now derives from the existing field-weather source of truth and lands under `data/shared/weather/{source}/{year}/` instead of creating a parallel weather pipeline
 
 ### Follow-up items
 
 - [x] Extend geoadmin ingestion from countries to US states and counties with FIPS lookup output
-- [ ] Add annual county weather and GDD transforms downstream of canonical field-to-FIPS mapping
+- [x] Add annual county weather transforms downstream of canonical field-to-FIPS mapping
+- [ ] Add annual county GDD transforms downstream of canonical county weather outputs
 - [ ] No ADR required
 
 ---

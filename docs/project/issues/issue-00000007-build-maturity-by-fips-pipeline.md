@@ -45,7 +45,8 @@ Current Wave 1 progress:
 - [x] Canonical TIGER/Line state and county/FIPS outputs built under `data/shared/geoadmin/`
 - [x] Demo farm field-to-FIPS mapping and ambiguity outputs generated from canonical county geometry
 - [x] Shared geoadmin and field-FIPS summary metadata rewritten to use repo-relative artifact paths
-- [ ] County/FIPS weather transform artifacts generated under canonical shared weather roots
+- [x] County/FIPS weather transform artifacts generated under canonical shared weather roots
+- [ ] County GDD artifacts generated under canonical shared maturity paths
 
 ---
 
@@ -92,15 +93,16 @@ flowchart LR
 
 ### Investigation log
 
-| Date       | Who   | Finding                                                                                                                                             |
-| ---------- | ----- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 2026-03-09 | Agent | Existing shared path and bootstrap patterns in `data/scripts/lib/paths.py` and `data/scripts/reporting_bootstrap.py` are the right extension points |
-| 2026-03-09 | Agent | Existing manifest orchestration in `.opencode/skills/farm-intelligence-reporting/src/pipeline.py` can carry annual maturity step naming             |
-| 2026-03-09 | Agent | Wave 1 verification passed: compileall clean, annual target listing works, and targeted pipeline tests remain green                                 |
-| 2026-03-09 | Agent | `download_geoadmin.py --levels l0_countries` built canonical GeoJSON and Parquet outputs under `data/shared/geoadmin/l0_countries/`                 |
-| 2026-03-09 | Agent | `download_geoadmin.py --levels l1_states l2_counties` built canonical US state, county, and FIPS lookup outputs                                     |
-| 2026-03-09 | Agent | `assign_field_fips.py` mapped all 10 demo farm fields to county FIPS with 0 ambiguity cases                                                         |
-| 2026-03-09 | Agent | Geoadmin metadata and field-FIPS summary outputs now store repo-relative paths for more portable annual reruns                                      |
+| Date       | Who   | Finding                                                                                                                                              |
+| ---------- | ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-03-09 | Agent | Existing shared path and bootstrap patterns in `data/scripts/lib/paths.py` and `data/scripts/reporting_bootstrap.py` are the right extension points  |
+| 2026-03-09 | Agent | Existing manifest orchestration in `.opencode/skills/farm-intelligence-reporting/src/pipeline.py` can carry annual maturity step naming              |
+| 2026-03-09 | Agent | Wave 1 verification passed: compileall clean, annual target listing works, and targeted pipeline tests remain green                                  |
+| 2026-03-09 | Agent | `download_geoadmin.py --levels l0_countries` built canonical GeoJSON and Parquet outputs under `data/shared/geoadmin/l0_countries/`                  |
+| 2026-03-09 | Agent | `download_geoadmin.py --levels l1_states l2_counties` built canonical US state, county, and FIPS lookup outputs                                      |
+| 2026-03-09 | Agent | `assign_field_fips.py` mapped all 10 demo farm fields to county FIPS with 0 ambiguity cases                                                          |
+| 2026-03-09 | Agent | Geoadmin metadata and field-FIPS summary outputs now store repo-relative paths for more portable annual reruns                                       |
+| 2026-03-09 | Agent | `aggregate_weather_by_fips.py --year 2025` built canonical county daily weather outputs for 3 covered counties and emitted uncovered-county metadata |
 
 ---
 

@@ -1,7 +1,7 @@
 # Maturity by FIPS — Kanban Board
 
 _Project: annual corn RM + soybean MG pipeline_
-_Agent · Last updated: 2026-03-09 02:48 UTC_
+_Agent · Last updated: 2026-03-09 03:02 UTC_
 
 ---
 
@@ -17,9 +17,9 @@ _Agent · Last updated: 2026-03-09 02:48 UTC_
 kanban
     Backlog
         task1[Render county maturity maps]
-        task2[Add annual county weather and GDD transforms]
+        task2[Add annual county GDD transforms]
     In Progress
-        task3[Wave 1 repo-native maturity foundation]
+        task3[Wave 2 county weather and GDD transforms]
     In Review
         [No items yet]
     Done
@@ -34,31 +34,31 @@ kanban
 
 ## 🚦 Board status
 
-| Column             | Count | WIP Limit | Status                             |
-| ------------------ | ----- | --------- | ---------------------------------- |
-| 📋 **Backlog**     | 2     | —         | Future waves remain queued         |
-| 🔄 **In Progress** | 1     | 1         | 🟢 Under limit                     |
-| 🔍 **In Review**   | 0     | —         | No review items yet                |
-| ✅ **Done**        | 0     | —         | Foundation just started            |
-| 🚫 **Blocked**     | 0     | —         | Clear                              |
-| 🚫 **Won't Do**    | 1     | —         | Scheduler work explicitly deferred |
+| Column             | Count | WIP Limit | Status                                     |
+| ------------------ | ----- | --------- | ------------------------------------------ |
+| 📋 **Backlog**     | 2     | —         | County GDD and map work remain queued      |
+| 🔄 **In Progress** | 1     | 1         | 🟢 Under limit                             |
+| 🔍 **In Review**   | 0     | —         | No review items yet                        |
+| ✅ **Done**        | 1     | —         | County weather transform checkpoint landed |
+| 🚫 **Blocked**     | 0     | —         | Clear                                      |
+| 🚫 **Won't Do**    | 1     | —         | Scheduler work explicitly deferred         |
 
 ---
 
 ## 📋 Backlog
 
-| #   | Item                                         | Priority  | Estimate | Assignee | Notes                                           |
-| --- | -------------------------------------------- | --------- | -------- | -------- | ----------------------------------------------- |
-| 1   | Add annual county weather and GDD transforms | 🔴 High   | L        | Agent    | Next active step after field-to-FIPS checkpoint |
-| 2   | Render county maturity maps                  | 🟡 Medium | M        | Agent    | Depends on crop maturity outputs                |
+| #   | Item                             | Priority  | Estimate | Assignee | Notes                               |
+| --- | -------------------------------- | --------- | -------- | -------- | ----------------------------------- |
+| 1   | Add annual county GDD transforms | 🔴 High   | L        | Agent    | Consumes new county weather outputs |
+| 2   | Render county maturity maps      | 🟡 Medium | M        | Agent    | Depends on crop maturity outputs    |
 
 ---
 
 ## 🔄 In progress
 
-| Item                                   | Assignee | Started    | Expected | Days in column | Aging | Status                                                                                                                          |
-| -------------------------------------- | -------- | ---------- | -------- | -------------- | ----- | ------------------------------------------------------------------------------------------------------------------------------- |
-| Wave 1 repo-native maturity foundation | Agent    | 2026-03-09 | 0 days   | 0              | 🟢    | Canonical paths, shared scaffolding, manifest constants, geoadmin builds, field-to-FIPS mapping, and portable metadata verified |
+| Item                                     | Assignee | Started    | Expected | Days in column | Aging | Status                                                                                                           |
+| ---------------------------------------- | -------- | ---------- | -------- | -------------- | ----- | ---------------------------------------------------------------------------------------------------------------- |
+| Wave 2 county weather and GDD transforms | Agent    | 2026-03-09 | 0 days   | 0              | 🟢    | County daily weather now lands under `data/shared/weather/nasa-power/2025/`; county GDD is the next active slice |
 
 > ⚠️ **WIP limit:** 1 / 1. Finish the current item before pulling another one.
 
@@ -74,9 +74,9 @@ kanban
 
 ## ✅ Done
 
-| Item                               | Assignee | Completed | Cycle time | PR  |
-| ---------------------------------- | -------- | --------- | ---------- | --- |
-| _[No items completed this period]_ |          |           |            |     |
+| Item                                | Assignee | Completed  | Cycle time | PR                                                                  |
+| ----------------------------------- | -------- | ---------- | ---------- | ------------------------------------------------------------------- |
+| County weather transform checkpoint | Agent    | 2026-03-09 | <1 day     | [PR-00000004](../pr/pr-00000004-build-maturity-by-fips-pipeline.md) |
 
 ---
 
@@ -109,12 +109,13 @@ kanban
 - **2026-03-09:** The first shared geoadmin ingest path is working and writes canonical Level 0 country outputs from Natural Earth
 - **2026-03-09:** TIGER/Line state and county layers now build canonically, and the demo farm fields map cleanly to county FIPS with no ambiguities
 - **2026-03-09:** Shared geoadmin metadata and field-FIPS summary files now use repo-relative paths to keep annual reruns portable across worktrees
+- **2026-03-09:** County daily weather now aggregates from the existing field-weather source into `data/shared/weather/nasa-power/2025/`, and uncovered counties remain absent with explicit coverage metadata
 
 ### Upcoming dependencies
 
-- County weather and GDD transforms
-- Commit/push checkpoint for field-to-FIPS bridge code and generated artifacts
-- Begin county weather transforms from the new field-to-FIPS mapping output
+- County GDD transforms
+- Commit/push checkpoint for county weather aggregation code and artifacts
+- Corn RM and soybean MG heuristic layers
 
 ---
 
@@ -126,4 +127,4 @@ kanban
 
 ---
 
-_Next update: after Wave 1 verification · Board owner: Agent_
+_Next update: after county GDD verification · Board owner: Agent_
