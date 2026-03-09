@@ -1,0 +1,15 @@
+diff --git a/.crewai/workspace/changed_files/044_data_EDA_soil_cards_farm_comparison.png.patch.diff b/.crewai/workspace/changed_files/044_data_EDA_soil_cards_farm_comparison.png.patch.diff
+deleted file mode 100644
+index ba7c5c4..0000000
+--- a/.crewai/workspace/changed_files/044_data_EDA_soil_cards_farm_comparison.png.patch.diff
++++ /dev/null
+@@ -1,9 +0,0 @@
+-diff --git a/data/EDA/soil_cards/farm_comparison.png b/data/EDA/soil_cards/farm_comparison.png
+-new file mode 100644
+-index 0000000..29139b3
+---- /dev/null
+-+++ b/data/EDA/soil_cards/farm_comparison.png
+-@@ -0,0 +1,3 @@
+-+version https://git-lfs.github.com/spec/v1
+-+oid sha256:82659cda51db1e4e0f027775408fd51fe8696bdc63e271c01c4f5ff9a6f13b3d
+-+size 148385

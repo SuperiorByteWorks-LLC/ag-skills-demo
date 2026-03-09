@@ -1,28 +1,23 @@
 # CrewAI Review Summary
 
-_PR #local · `6b27a8a` · local/ag-skills-demo · 2026-03-08 15:31:53 UTC_
+_PR #local · `e255ad6` · local/ag-skills-demo · 2026-03-08 23:25:05 UTC_
 
 ---
 
 ## 🧭 Executive summary
-Detected **2** high-priority finding(s) (2 critical, 0 high).
-Top risk: **Quick Review — Commitlint step is now a warning, which previously might have been enforced, potentially allowing for less strict**.
-Immediate focus: complete Priority action items **1-2** before merge, then rerun full review to confirm no critical/high regressions.
+No critical or high findings were detected across current artifacts.
+Focus on medium-priority improvements and preserve current reliability safeguards.
+Rerun `./scripts/ci-local.sh --full-review --step review` after any substantive change.
 
 ## 🎯 Priority action items
-1. 🔴 **[Quick Review] Commitlint step is now a warning, which previously might have been enforced, potentially allowing for less strict**
-   - Why it matters: Commitlint step is now a warning, which previously might have been enforced, potentially allowing for less strict commit formatting. This could impact automated changelog generation or commit history analysis.
-   - Recommended action: Consider this improvement in the next change set.
-2. 🔴 **[Quick Review] Markdownlint step failed, indicating potential issues with the formatting or content of Markdown files**
-   - Why it matters: Markdownlint step failed, indicating potential issues with the formatting or content of Markdown files. This could lead to inconsistencies or broken documentation.
-   - Recommended action: Consider this improvement in the next change set.
+1. ✅ No critical/high findings detected in available artifacts; continue with routine improvements and validation.
 
 ## 📊 Severity rollup
 
 | Crew | Critical | High | Medium | Low | Info |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| Data Engineering | 0 | 0 | 0 | 0 | 1 |
-| **Total** | **0** | **0** | **0** | **0** | **1** |
+| Data Engineering | 0 | 0 | 0 | 0 | 0 |
+| **Total** | **0** | **0** | **0** | **0** | **0** |
 
 ## 🗺️ Workflow guide
 
@@ -33,9 +28,9 @@ Immediate focus: complete Priority action items **1-2** before merge, then rerun
 ## ✅ CI analysis
 **Status**: ✅ success
 **Checks Performed**: local-short-circuit, diff-metadata-loaded, label-routing-ready
-**Summary**: Local run: core-ci marked success; diff stats 599 files (+5973/-2367); mode=standard-review
+**Summary**: Local run: core-ci marked success; diff stats 178 files (+1207/-7808); mode=standard-review
 
-| Quick review | Fast multi-pass quality triage | critical=2, warnings=3, suggestions=14 | Resolve critical items first, then warnings, then suggestions. |
+| Quick review | Fast multi-pass quality triage | critical=0, warnings=1, suggestions=6 | Resolve critical items first, then warnings, then suggestions. |
 
 ## ⚡ Quick review
 **Status**: completed
@@ -44,92 +39,75 @@ Immediate focus: complete Priority action items **1-2** before merge, then rerun
 **Reviewer Calls**: 3
 
 **Reviewer Pass Summaries**:
-- **Diff Reviewer**: The diff shows updates to a lock file and a CI summary report. The CI summary indicates a failure in Markdownlint, a warning in Commitlint, and changes in the execution times for several steps. Additionally, there are code changes related to selecting scenes based on seasons, with a new test case added.
-- **Risk Reviewer**: Local CI run completed with success. There were 599 files changed, with more additions than deletions. The CI execution time has significantly decreased, but several linting steps have changed from passing to failing or warnings.
-- **Actionability Reviewer**: Recent commits focus on enhancing soil data visualization and reporting features, including choropleth maps and deterministic farm data rebuilds, with a detected failure in Markdownlint during local CI checks.
+- **Diff Reviewer**: The diff primarily consists of deletions of patch files related to CI local lock and CI summary files. There are no concrete code or logic defects introduced as the changes are removals of previously existing files.
+- **Risk Reviewer**: The CI run for 'core-ci' was successful locally. There were 178 files changed, with a net deletion of 6701 lines. The review mode was standard.
+- **Actionability Reviewer**: The recent commits focus on integrating county-level weather data, specifically with FIPS codes, and updating documentation. A key aspect is the addition of helper scripts for county weather aggregation and transforms, along with recording checkpoint data for maturity tracking.
 
 <details>
 <summary><b>🧩 Reviewer Task Breakdown (3)</b></summary>
 
 **Diff Reviewer**
-- Summary: The diff shows updates to a lock file and a CI summary report. The CI summary indicates a failure in Markdownlint, a warning in Commitlint, and changes in the execution times for several steps. Additionally, there are code changes related to selecting scenes based on seasons, with a new test case added.
-- Findings: 0 critical, 1 warnings, 5 suggestions, 2 positives
+- Summary: The diff primarily consists of deletions of patch files related to CI local lock and CI summary files. There are no concrete code or logic defects introduced as the changes are removals of previously existing files.
+- Findings: 0 critical, 0 warnings, 2 suggestions, 1 positives
 
 **Risk Reviewer**
-- Summary: Local CI run completed with success. There were 599 files changed, with more additions than deletions. The CI execution time has significantly decreased, but several linting steps have changed from passing to failing or warnings.
-- Findings: 2 critical, 1 warnings, 5 suggestions, 4 positives
+- Summary: The CI run for 'core-ci' was successful locally. There were 178 files changed, with a net deletion of 6701 lines. The review mode was standard.
+- Findings: 0 critical, 0 warnings, 2 suggestions, 3 positives
 
 **Actionability Reviewer**
-- Summary: Recent commits focus on enhancing soil data visualization and reporting features, including choropleth maps and deterministic farm data rebuilds, with a detected failure in Markdownlint during local CI checks.
-- Findings: 0 critical, 1 warnings, 4 suggestions, 1 positives
-
-</details>
-
-<details open>
-<summary><b>🔴 Critical Issues (2)</b></summary>
-
-- 🔴 **Markdownlint step failed, indicating potential issues with the formatting or content of Markdown files**
-  - Markdownlint step failed, indicating potential issues with the formatting or content of Markdown files. This could lead to inconsistencies or broken documentation.
-
-- 🔴 **Commitlint step is now a warning, which previously might have been enforced, potentially allowing for less st…**
-  - Commitlint step is now a warning, which previously might have been enforced, potentially allowing for less strict commit formatting. This could impact automated changelog generation or commit history analysis.
+- Summary: The recent commits focus on integrating county-level weather data, specifically with FIPS codes, and updating documentation. A key aspect is the addition of helper scripts for county weather aggregation and transforms, along with recording checkpoint data for maturity tracking.
+- Findings: 0 critical, 1 warnings, 2 suggestions, 1 positives
 
 </details>
 
 <details>
-<summary><b>🟡 Warnings (3)</b></summary>
+<summary><b>🟡 Warnings (1)</b></summary>
 
-- 🟡 **The Markdownlint step in the CI summary has changed from 'pass' to 'fail'**
-  - The `Markdownlint` step in the CI summary has changed from 'pass' to 'fail'.
-
-- 🟡 **Prettier Format, ESLint, Stylelint, Ruff Lint, and Ruff Format have all seen significant reductions in execut…**
-  - Prettier Format, ESLint, Stylelint, Ruff Lint, and Ruff Format have all seen significant reductions in execution time, which is a positive outcome. However, specific changes in linting rules or configurations could be the reason.
-
-- 🟡 **Markdownlint failed during local CI checks, indicating a potential issue with Markdown file formatting or str…**
-  - Markdownlint failed during local CI checks, indicating a potential issue with Markdown file formatting or structure that needs to be addressed to ensure consistent documentation quality.
+- 🟡 **The test_compute_soybean_mg_uses_centroid_latitude test defines county_lookup and county_gdd dataframes with**
+  - The `test_compute_soybean_mg_uses_centroid_latitude` test defines `county_lookup` and `county_gdd` dataframes with hardcoded values. While this is useful for testing specific scenarios, it could be expanded to include a wider range of `fips` codes and `gdd_total_c` values to ensure greater test coverage across differe…
 
 </details>
 
 <details>
 <summary><b>🔵 Suggestions (6)</b></summary>
 
-- 🔵 **The**
-  - The `.ci-local.lock` file has been updated with a new `pid` and `started` timestamp, and the `cwd` has changed.
+- 🔵 **The diff shows the deletion of**
+  - The diff shows the deletion of `.ci-local.lock` and `.crewai/workspace/ci_results/core-ci/summary.md` patch files. This indicates that these files are no longer being tracked or managed in the same way.
 
-- 🔵 **The Generated timestamp in the CI summary has been updated**
-  - The `Generated` timestamp in the CI summary has been updated.
+- 🔵 **A test function test_compute_soybean_mg_uses_centroid_latitude has been added**
+  - A test function `test_compute_soybean_mg_uses_centroid_latitude` has been added. This test uses `pandas` to create mock data for `county_lookup` and `county_gdd` and asserts expected values for `mg_optimal`, `mg_early`, and `mg_late` from the `compute_soybean_mg` function.
 
-- 🔵 **The durations for Prettier Format, ESLint, Markdownlint, Stylelint, Ruff, and Commitlint steps have**
-  - The durations for `Prettier Format`, `ESLint`, `Markdownlint`, `Stylelint`, `Ruff`, and `Commitlint` steps have changed, with most becoming shorter.
+- 🔵 **The diff indicates the removal of local lock files and summary report files from the CI workspace**
+  - The diff indicates the removal of local lock files and summary report files from the CI workspace. This is likely a cleanup or regeneration process and doesn't directly pose a security or reliability risk unless these logs were intended for auditing.
 
-- 🔵 **The Ruff step has been split into Ruff Lint and Ruff Format, both passing**
-  - The `Ruff` step has been split into `Ruff Lint` and `Ruff Format`, both passing.
+- 🔵 **A new test test_compute_soybean_mg_uses_centroid_latitude has been added, along with the necessary data setup…**
+  - A new test `test_compute_soybean_mg_uses_centroid_latitude` has been added, along with the necessary data setup using pandas DataFrames. This increases test coverage.
 
-- 🔵 **A new test case has been added for the _select_current_season_scenes function, which appears to be working co…**
-  - A new test case has been added for the `_select_current_season_scenes` function, which appears to be working correctly based on the `assert` statement.
+- 🔵 **The introduction of county FIPS transform scripts (feat(weather): add county fips transform script) and aggre…**
+  - The introduction of county FIPS transform scripts (`feat(weather): add county fips transform script`) and aggregation helpers (`feat(maturity): add county weather aggregation helpers`) indicates a move towards more robust and scalable data processing for weather-related agricultural metrics. This is a positive step fo…
 
-- 🔵 **The local CI run was marked as successful**
-  - The local CI run was marked as successful.
+- 🔵 **The documentation updates (docs(maturity): record county weather checkpoint, docs(maturity): sync bridge chec…**
+  - The documentation updates (`docs(maturity): record county weather checkpoint`, `docs(maturity): sync bridge checkpoint records`) are crucial for maintaining project clarity and ensuring that the integration of new features, like county weather data, is well-documented and trackable.
 
 </details>
 
 <details>
 <summary><b>🟢 Positives (4)</b></summary>
 
-- 🟢 **The Ruff Lint and Ruff Format steps are now explicitly reported and both pass, indicating a successful lintin…**
-  - The `Ruff Lint` and `Ruff Format` steps are now explicitly reported and both pass, indicating a successful linting and formatting process for Ruff.
+- 🟢 **A new test case, test_compute_soybean_mg_uses_centroid_latitude, has been added, which improves test coverage…**
+  - A new test case, `test_compute_soybean_mg_uses_centroid_latitude`, has been added, which improves test coverage for the `compute_soybean_mg` function.
   - ✅ **Note**: No action required; preserve this behavior.
 
-- 🟢 **The new test case added for _select_current_season_scenes demonstrates the expected behavior of selecting sce…**
-  - The new test case added for `_select_current_season_scenes` demonstrates the expected behavior of selecting scenes for the current season and appears to be correctly implemented.
+- 🟢 **Successful local CI run indicates no immediate blocking issues**
+  - Successful local CI run indicates no immediate blocking issues.
   - ✅ **Note**: No action required; preserve this behavior.
 
-- 🟢 **The overall CI status is 'success', indicating no show-stopping errors in the core CI pipeline**
-  - The overall CI status is 'success', indicating no show-stopping errors in the core CI pipeline.
+- 🟢 **Addition of a new test case (test_compute_soybean_mg_uses_centroid_latitude) improves the test suite's abilit…**
+  - Addition of a new test case (`test_compute_soybean_mg_uses_centroid_latitude`) improves the test suite's ability to catch regressions in the `compute_soybean_mg` function.
   - ✅ **Note**: No action required; preserve this behavior.
 
-- 🟢 **The execution time for multiple formatting and linting checks has been significantly reduced, improving CI pe…**
-  - The execution time for multiple formatting and linting checks has been significantly reduced, improving CI performance.
+- 🟢 **The test case includes specific assertions for optimal, early, and late maturity values, which are good for v…**
+  - The test case includes specific assertions for optimal, early, and late maturity values, which are good for verifying the correctness of the calculation.
   - ✅ **Note**: No action required; preserve this behavior.
 
 </details>
@@ -141,17 +119,7 @@ Status: Did not run
 
 
 ## 🗄️ Data Engineering review
-**Summary**: The review identified no direct data engineering domain risks in the provided code changes. The most prominent issues are related to broken links in documentation and failing CI steps, which do not directly impact pipeline reliability, data model correctness, or query safety from a data engineering perspective. Therefore, the domain risk is assessed as low.
-
-<details>
-<summary><b>Other Findings (1)</b></summary>
-
-- ℹ️ **Data Engineering baseline guardrail**
-  - No direct high-severity domain risk detected in the current repository state. Reviewed domain focus: schema/query correctness, pipeline reliability, and data model/contract risk. Domain probe files considered: 9.
-  - 💡 **Fix**: Track this domain in subsequent cycles and re-evaluate after substantive changes.
-  - ✅ **Verify**: Re-run complete full review and compare domain trend against prior run.
-
-</details>
+**Summary**: Data Engineering review completed with no actionable findings for this change set.
 
 ## 💡 Router suggestions
 
@@ -159,6 +127,7 @@ Status: Did not run
 - [crewai:data-engineering] recommended: Data engineering artifacts detected
 - [crewai:docs] recommended: Documentation files detected
 - [crewai:marketing] recommended: Marketing/user-facing copy detected
+- [crewai:science] recommended: Scientific/research files detected
 - [crewai:full-review] recommended: high diff complexity detected; broaden specialist depth
 
 ## ✅ Validation report
@@ -178,22 +147,21 @@ Validated 1 artifact(s): 1 valid, 0 invalid
 
 ---
 
-_Generated by CrewAI Router System · 2026-03-08 15:31:53 UTC_
+_Generated by CrewAI Router System · 2026-03-08 23:25:05 UTC_
 ---
 
 ## 💰 Cost and efficiency
 
-- Final total cost: **$0.002895** across **7** calls
-- Final total tokens: **18,845 in / 2,526 out / 21,371 total**
-- Top crew total: **Specialist: Data Engineering** at **$0.001289**
-- Top agent total: **Data Engineering Local specialist** at **$0.001289**
+- Final total cost: **$0.002340** across **6** calls
+- Final total tokens: **15,733 in / 1,917 out / 17,650 total**
+- Top crew total: **Specialist: Data Engineering** at **$0.001204**
+- Top agent total: **Data Engineering Local specialist** at **$0.001204**
 
 | Crew | Agent | Call | Input | Output | Tokens | Cost | Crew running (in/out/tok/$) | Agent running (in/out/tok/$) | Global running (in/out/tok/$) |
 | --- | --- | ---: | ---: | ---: | ---: | ---: | --- | --- | --- |
-| Quick Review | Diff Reviewer | #1 | 890 | 450 | 1,340 | $0.000269 | 890/450/1,340/$0.000269 | 890/450/1,340/$0.000269 | 890/450/1,340/$0.000269 |
-| Quick Review | Diff Reviewer | #2 | 934 | 361 | 1,295 | $0.000238 | 1,824/811/2,635/$0.000507 | 1,824/811/2,635/$0.000507 | 1,824/811/2,635/$0.000507 |
-| Quick Review | Risk Reviewer | #3 | 927 | 411 | 1,338 | $0.000257 | 2,751/1,222/3,973/$0.000764 | 927/411/1,338/$0.000257 | 2,751/1,222/3,973/$0.000764 |
-| Quick Review | Actionability Reviewer | #4 | 1,006 | 450 | 1,456 | $0.000281 | 3,757/1,672/5,429/$0.001044 | 1,006/450/1,456/$0.000281 | 3,757/1,672/5,429/$0.001044 |
-| Quick Review | Actionability Reviewer | #5 | 1,050 | 296 | 1,346 | $0.000223 | 4,807/1,968/6,775/$0.001268 | 2,056/746/2,802/$0.000504 | 4,807/1,968/6,775/$0.001268 |
-| Specialist: Data Engineering | Data Engineering Local specialist | #6 | 12,365 | 132 | 12,497 | $0.001289 | 12,365/132/12,497/$0.001289 | 12,365/132/12,497/$0.001289 | 17,172/2,100/19,272/$0.002557 |
-| Final Summary | Summary synthesizer | #7 | 1,673 | 426 | 2,099 | $0.000338 | 1,673/426/2,099/$0.000338 | 1,673/426/2,099/$0.000338 | 18,845/2,526/21,371/$0.002895 |
+| Quick Review | Diff Reviewer | #1 | 871 | 264 | 1,135 | $0.000193 | 871/264/1,135/$0.000193 | 871/264/1,135/$0.000193 | 871/264/1,135/$0.000193 |
+| Quick Review | Risk Reviewer | #2 | 908 | 265 | 1,173 | $0.000197 | 1,779/529/2,308/$0.000389 | 908/265/1,173/$0.000197 | 1,779/529/2,308/$0.000389 |
+| Quick Review | Actionability Reviewer | #3 | 949 | 450 | 1,399 | $0.000275 | 2,728/979/3,707/$0.000664 | 949/450/1,399/$0.000275 | 2,728/979/3,707/$0.000664 |
+| Quick Review | Actionability Reviewer | #4 | 993 | 354 | 1,347 | $0.000241 | 3,721/1,333/5,054/$0.000905 | 1,942/804/2,746/$0.000516 | 3,721/1,333/5,054/$0.000905 |
+| Specialist: Data Engineering | Data Engineering Local specialist | #5 | 10,602 | 360 | 10,962 | $0.001204 | 10,602/360/10,962/$0.001204 | 10,602/360/10,962/$0.001204 | 14,323/1,693/16,016/$0.002110 |
+| Final Summary | Summary synthesizer | #6 | 1,410 | 224 | 1,634 | $0.000231 | 1,410/224/1,634/$0.000231 | 1,410/224/1,634/$0.000231 | 15,733/1,917/17,650/$0.002340 |

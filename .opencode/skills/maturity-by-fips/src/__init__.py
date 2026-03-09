@@ -6,9 +6,12 @@ from .maturity_by_fips import (
     build_gdd_summary,
     build_soybean_mg_summary,
     build_year_output_index,
+    county_lookup_for_scope,
     compute_corn_rm,
     compute_county_gdd,
     compute_soybean_mg,
+    contiguous_us_counties,
+    lower48_county_lookup,
 )
 
 __all__ = [
@@ -19,6 +22,9 @@ __all__ = [
     "build_gdd_summary",
     "build_soybean_mg_summary",
     "build_year_output_index",
+    "county_lookup_for_scope",
+    "contiguous_us_counties",
+    "lower48_county_lookup",
     "compute_corn_rm",
     "compute_county_gdd",
     "compute_soybean_mg",

@@ -1,0 +1,15 @@
+diff --git a/.crewai/workspace/changed_files/035_data_EDA_field_cards_iowa_field_report_04.png.patch.diff b/.crewai/workspace/changed_files/035_data_EDA_field_cards_iowa_field_report_04.png.patch.diff
+deleted file mode 100644
+index 7dfd411..0000000
+--- a/.crewai/workspace/changed_files/035_data_EDA_field_cards_iowa_field_report_04.png.patch.diff
++++ /dev/null
+@@ -1,9 +0,0 @@
+-diff --git a/data/EDA/field_cards/iowa_field_report_04.png b/data/EDA/field_cards/iowa_field_report_04.png
+-new file mode 100644
+-index 0000000..0bc8170
+---- /dev/null
+-+++ b/data/EDA/field_cards/iowa_field_report_04.png
+-@@ -0,0 +1,3 @@
+-+version https://git-lfs.github.com/spec/v1
+-+oid sha256:e70477409411cabeabc394df4d8d276aca46f9e6b6009422c16935cb8892f445
+-+size 3428033

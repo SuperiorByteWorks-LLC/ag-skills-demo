@@ -26,7 +26,6 @@ sys.path.insert(0, str(_LIB))
 from paths import farm_boundary_path, farm_summary_path, farm_table_path, field_summary_path
 from reporting_bootstrap import field_slug_map_from_inventory
 
-
 _SCRIPT = Path(__file__)
 _DEFAULT_GROWER = "iowa-demo-grower"
 _DEFAULT_FARM = "iowa-demo-farm"

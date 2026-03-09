@@ -1,9 +1,0 @@
-diff --git a/data/EDA/soil_cards/field_03_properties.png b/data/EDA/soil_cards/field_03_properties.png
-new file mode 100644
-index 0000000..26acb8f
---- /dev/null
-+++ b/data/EDA/soil_cards/field_03_properties.png
-@@ -0,0 +1,3 @@
-+version https://git-lfs.github.com/spec/v1
-+oid sha256:168188ca45ba6c0fa964fd77195d3b230d3a6de8a63806d0839231c1bbb509f8
-+size 106190

@@ -1,0 +1,57 @@
+diff --git a/.crewai/workspace/changed_files/012_.gitignore.patch.diff b/.crewai/workspace/changed_files/012_.gitignore.patch.diff
+deleted file mode 100644
+index a2c015b..0000000
+--- a/.crewai/workspace/changed_files/012_.gitignore.patch.diff
++++ /dev/null
+@@ -1,51 +0,0 @@
+-diff --git a/.gitignore b/.gitignore
+-index 9817c44..589e2a2 100644
+---- a/.gitignore
+-+++ b/.gitignore
+-@@ -156,3 +156,46 @@ data/**
+- 
+- # Keep dependency manifests tracked
+- !**/requirements.txt
+-+
+-+# Canonical data tree: allow tracked rebuild artifacts
+-+!data/EDA/
+-+!data/EDA/**/
+-+!data/EDA/*.png
+-+!data/EDA/*.md
+-+!data/EDA/field_cards/*.png
+-+!data/EDA/soil_cards/*.png
+-+!data/EDA/soil_maps/*.png
+-+!data/cdl/
+-+!data/cdl/**/
+-+!data/cdl/*.csv
+-+!data/field-boundaries/
+-+!data/field-boundaries/**/
+-+!data/field-boundaries/*.geojson
+-+!data/growers/
+-+!data/growers/**/
+-+!data/growers/**/*.json
+-+!data/growers/**/*.jsonl
+-+!data/growers/**/*.png
+-+!data/growers/**/*.csv
+-+!data/growers/**/*.geojson
+-+!data/reporting/
+-+!data/reporting/**/
+-+!data/reporting/manifests/*.json
+-+!data/shared/
+-+!data/shared/**/
+-+!data/shared/**/*.json
+-+!data/shared/**/*.csv
+-+!data/shared/**/*.geojson
+-+!data/shared/**/*.png
+-+!data/soil/
+-+!data/soil/**/
+-+!data/soil/*.csv
+-+!data/soil/cache/*.geojson
+-+!data/weather/
+-+!data/weather/**/
+-+!data/weather/*.csv
+-+
+-+# Keep oversized generated artifacts untracked
+-+data/EDA/*.html
+-+data/growers/*/farms/*/derived/summaries/*.html
+-+data/cdl/*.tif

@@ -371,6 +371,108 @@ def test_maturity_output_index_includes_county_weather_paths():
     assert outputs["county_weather_summary"].endswith(
         "data/shared/weather/nasa-power/2025/county_weather_coverage_summary.json"
     )
+    assert outputs["corn_rm_csv"].endswith("data/shared/corn_maturity/tables/rm_by_fips_2025.csv")
+    assert outputs["soybean_mg_csv"].endswith(
+        "data/shared/soybean_maturity/tables/mg_by_fips_2025.csv"
+    )
+
+
+def test_contiguous_us_counties_excludes_non_contiguous_states():
+    import pandas as pd
+
+    counties = pd.DataFrame(
+        [
+            {"fips": "19053", "state_fips": "19", "county_name_full": "Decatur County"},
+            {"fips": "02013", "state_fips": "02", "county_name_full": "Aleutians East Borough"},
+            {"fips": "72001", "state_fips": "72", "county_name_full": "Adjuntas Municipio"},
+        ]
+    )
+
+    result = mbf.contiguous_us_counties(counties)
+    assert list(result["fips"]) == ["19053"]
+
+
+def test_lower48_county_lookup_normalizes_fips_widths():
+    import pandas as pd
+
+    lookup = pd.DataFrame(
+        [
+            {
+                "fips": 19053,
+                "state_fips": 19,
+                "county_fips": 53,
+                "county_name": "Decatur",
+                "county_name_full": "Decatur County",
+                "centroid_lat": 40.7,
+                "centroid_lon": -93.8,
+            },
+            {
+                "fips": 2013,
+                "state_fips": 2,
+                "county_fips": 13,
+                "county_name": "Aleutians East",
+                "county_name_full": "Aleutians East Borough",
+                "centroid_lat": 55.2,
+                "centroid_lon": -161.9,
+            },
+        ]
+    )
+
+    result = mbf.lower48_county_lookup(lookup)
+    assert list(result["fips"]) == ["19053"]
+    assert list(result["county_fips"]) == ["053"]
+    assert list(result["state_fips"]) == ["19"]
+
+
+def test_county_weather_coverage_summary_supports_lower48_scope():
+    import pandas as pd
+
+    county_weather = pd.DataFrame([{"fips": "19053"}, {"fips": "19185"}])
+    county_lookup = pd.DataFrame([{"fips": "19053"}, {"fips": "19185"}, {"fips": "29081"}])
+
+    result = mbf.build_county_weather_coverage_summary(
+        county_weather,
+        county_lookup,
+        weather_source="nasa-power",
+        year=2025,
+        coverage_scope="lower48-centroids",
+        request_failure_count=1,
+    )
+
+    assert result["coverage_scope"] == "lower48-centroids"
+    assert result["county_count_covered"] == 2
+    assert result["county_count_uncovered"] == 1
+    assert result["request_failure_count"] == 1
+
+
+def test_county_lookup_for_scope_filters_to_traditional_corn_belt():
+    import pandas as pd
+
+    lookup = pd.DataFrame(
+        [
+            {
+                "fips": "19053",
+                "state_fips": "19",
+                "county_fips": "053",
+                "county_name": "Decatur",
+                "county_name_full": "Decatur County",
+                "centroid_lat": 40.7,
+                "centroid_lon": -93.8,
+            },
+            {
+                "fips": "06001",
+                "state_fips": "06",
+                "county_fips": "001",
+                "county_name": "Alameda",
+                "county_name_full": "Alameda County",
+                "centroid_lat": 37.6,
+                "centroid_lon": -121.9,
+            },
+        ]
+    )
+
+    result = mbf.county_lookup_for_scope(lookup, "traditional-corn-belt")
+    assert list(result["fips"]) == ["19053"]
 
 
 def test_aggregate_weather_to_counties_groups_by_fips_and_date():

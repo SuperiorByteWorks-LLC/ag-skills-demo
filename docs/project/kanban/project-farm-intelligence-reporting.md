@@ -66,9 +66,9 @@ _Prioritized top-to-bottom. Top items are next to be pulled._
 
 _Items currently being worked on._
 
-| Item                                                        | Assignee | Started    | Expected | Days in column | Aging | Status                                                                                  |
-| ----------------------------------------------------------- | -------- | ---------- | -------- | -------------- | ----- | --------------------------------------------------------------------------------------- |
-| Farm-level poster and HTML remote-sensing spotlight refresh | Agent    | 2026-03-08 | 0 days   | 0              | 🟢    | Canonical farm outputs now surface the new field-level NDVI peak and cumulative visuals |
+| Item                                                    | Assignee | Started    | Expected | Days in column | Aging | Status                                                                                                                   |
+| ------------------------------------------------------- | -------- | ---------- | -------- | -------------- | ----- | ------------------------------------------------------------------------------------------------------------------------ |
+| Field-poster readability and cumulative NDVI refinement | Agent    | 2026-03-08 | 0 days   | 0              | 🟢    | Wrapped first-card text, enlarged poster/chart typography, common-axis cumulative panels, and HTML centroid fix verified |
 
 > ⚠️ **WIP limit:** 1 / 1. Finish current item before pulling the next item.
 
@@ -101,6 +101,7 @@ _Completed this period._
 | Refresh cached NDVI cards with peak layers and crop/year cumulative chart                      | Agent    | 2026-03-08 | 0 days     | [PR-00000003](../pr/pr-00000003-build-farm-intelligence-reporting.md) |
 | Backfill canonical data roots, delete legacy folders, and add grower manifest scheduling state | Agent    | 2026-03-08 | 0 days     | [PR-00000003](../pr/pr-00000003-build-farm-intelligence-reporting.md) |
 | Surface field NDVI peak and cumulative visuals in farm poster and farm HTML                    | Agent    | 2026-03-08 | 0 days     | [PR-00000003](../pr/pr-00000003-build-farm-intelligence-reporting.md) |
+| Finalize field-poster readability and cumulative NDVI metric rendering                         | Agent    | 2026-03-08 | 0 days     | [PR-00000003](../pr/pr-00000003-build-farm-intelligence-reporting.md) |
 
 ---
 
@@ -158,6 +159,8 @@ _Explicitly out of scope for this board period._
 - **2026-03-08:** Cache contract defined: canonical card assets live under `data/growers/.../fields/.../derived/`, manifest stale-check logic lives in `.opencode/skills/farm-intelligence-reporting/src/pipeline.py`, and `data/scripts/lib/manifest.py` is JSON-only helpers
 - **2026-03-08:** Added a raw satellite stage that downloads clipped Sentinel-2 and Landsat TIFFs into canonical per-field `satellite/` folders before NDVI card generation, and preserved those manifests across pipeline reruns
 - **2026-03-08:** Added yearly NDVI composite TIFF generation plus crop-conditioned corn/soybean rollup TIFFs under canonical field outputs; the active task is promoting those inputs into final reusable card PNGs and downstream report embeds
+- **2026-03-08:** Farm poster and farm HTML now surface the new field-level NDVI visuals, and the remaining active task is the final field-poster readability pass plus cumulative NDVI metric cleanup
+- **2026-03-08:** Final readability pass completed: cumulative NDVI now uses crop-masked in-field metrics with consistent subplot axes, the first field-poster card wraps cleanly, titles are larger, and the farm HTML map no longer warns on centroid calculations
 
 ### Carryover from last period
 
@@ -167,7 +170,7 @@ _Explicitly out of scope for this board period._
 
 - Prepare selective commit/push checkpoint for the canonical cleanup, idempotent ingest fast-paths, grower manifest state, and farm-level NDVI spotlight refresh
 - Resolve or document unrelated repo-wide CI failures before the next push checkpoint
-- Re-run integration tests and `./scripts/ci-local.sh` after the refresh phase lands
+- Decide whether to address or defer repo-wide markdown/link issues that still fail `./scripts/ci-local.sh` outside the reporting scope
 
 ### Cache contract summary
 

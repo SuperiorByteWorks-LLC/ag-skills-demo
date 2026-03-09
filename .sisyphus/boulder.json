@@ -1,8 +1,8 @@
 {
-  "active_plan": "/home/clay/dev/ag-skills-demo/.sisyphus/plans/ssurgo-poster-cards-merge.md",
-  "started_at": "2026-03-08T15:59:48.277Z",
+  "active_plan": "/home/clay/dev/ag-skills-demo/.sisyphus/plans/grm-by-fips-geoadmin.md",
+  "started_at": "2026-03-09T02:05:00.000Z",
   "session_ids": ["ses_332ad6305ffeV5ZYz4TZ3z3bPS"],
-  "plan_name": "ssurgo-poster-cards-merge",
+  "plan_name": "grm-by-fips-geoadmin",
   "agent": "atlas",
   "worktree_path": "/home/clay/dev/ag-skills-demo"
 }

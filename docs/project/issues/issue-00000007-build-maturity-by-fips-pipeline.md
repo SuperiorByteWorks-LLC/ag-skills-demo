@@ -97,22 +97,23 @@ flowchart LR
 
 ### Investigation log
 
-| Date       | Who   | Finding                                                                                                                                                                    |
-| ---------- | ----- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 2026-03-09 | Agent | Existing shared path and bootstrap patterns in `data/scripts/lib/paths.py` and `data/scripts/reporting_bootstrap.py` are the right extension points                        |
-| 2026-03-09 | Agent | Existing manifest orchestration in `.opencode/skills/farm-intelligence-reporting/src/pipeline.py` can carry annual maturity step naming                                    |
-| 2026-03-09 | Agent | Wave 1 verification passed: compileall clean, annual target listing works, and targeted pipeline tests remain green                                                        |
-| 2026-03-09 | Agent | `download_geoadmin.py --levels l0_countries` built canonical GeoJSON and Parquet outputs under `data/shared/geoadmin/l0_countries/`                                        |
-| 2026-03-09 | Agent | `download_geoadmin.py --levels l1_states l2_counties` built canonical US state, county, and FIPS lookup outputs                                                            |
-| 2026-03-09 | Agent | `assign_field_fips.py` mapped all 10 demo farm fields to county FIPS with 0 ambiguity cases                                                                                |
-| 2026-03-09 | Agent | Geoadmin metadata and field-FIPS summary outputs now store repo-relative paths for more portable annual reruns                                                             |
-| 2026-03-09 | Agent | `aggregate_weather_by_fips.py --year 2025` built canonical county daily weather outputs for 3 covered counties and emitted uncovered-county metadata                       |
-| 2026-03-09 | Agent | `calculate_gdd_by_fips.py --year 2025` produced annual county GDD outputs for the 3 covered counties                                                                       |
-| 2026-03-09 | Agent | `calculate_corn_rm_by_fips.py --year 2025` and `calculate_soybean_mg_by_fips.py --year 2025` produced heuristic crop outputs with metadata caveats                         |
-| 2026-03-09 | Agent | `generate_maturity_maps.py --year 2025` rendered static corn RM and soybean MG county PNG maps                                                                             |
-| 2026-03-09 | Agent | `run_maturity_by_fips.py --year 2025 --force` completed end-to-end, and reruns now skip unchanged steps while recording `data/shared/manifests/maturity_by_fips_2025.json` |
-| 2026-03-09 | Agent | `run_maturity_by_fips.py` now records repo-relative manifest `output_path` values so annual rerun state stays portable across machines and worktrees                       |
-| 2026-03-09 | Agent | `./scripts/ci-local.sh` still reports unrelated repo-baseline failures in `.opencode/skills/csb-field-sampling/SKILL.md` (`MD024`) and TLS validation during link checks   |
+| Date       | Who   | Finding                                                                                                                                                                              |
+| ---------- | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 2026-03-09 | Agent | Existing shared path and bootstrap patterns in `data/scripts/lib/paths.py` and `data/scripts/reporting_bootstrap.py` are the right extension points                                  |
+| 2026-03-09 | Agent | Existing manifest orchestration in `.opencode/skills/farm-intelligence-reporting/src/pipeline.py` can carry annual maturity step naming                                              |
+| 2026-03-09 | Agent | Wave 1 verification passed: compileall clean, annual target listing works, and targeted pipeline tests remain green                                                                  |
+| 2026-03-09 | Agent | `download_geoadmin.py --levels l0_countries` built canonical GeoJSON and Parquet outputs under `data/shared/geoadmin/l0_countries/`                                                  |
+| 2026-03-09 | Agent | `download_geoadmin.py --levels l1_states l2_counties` built canonical US state, county, and FIPS lookup outputs                                                                      |
+| 2026-03-09 | Agent | `assign_field_fips.py` mapped all 10 demo farm fields to county FIPS with 0 ambiguity cases                                                                                          |
+| 2026-03-09 | Agent | Geoadmin metadata and field-FIPS summary outputs now store repo-relative paths for more portable annual reruns                                                                       |
+| 2026-03-09 | Agent | `aggregate_weather_by_fips.py --year 2025` built canonical county daily weather outputs for 3 covered counties and emitted uncovered-county metadata                                 |
+| 2026-03-09 | Agent | `calculate_gdd_by_fips.py --year 2025` produced annual county GDD outputs for the 3 covered counties                                                                                 |
+| 2026-03-09 | Agent | `calculate_corn_rm_by_fips.py --year 2025` and `calculate_soybean_mg_by_fips.py --year 2025` produced heuristic crop outputs with metadata caveats                                   |
+| 2026-03-09 | Agent | `generate_maturity_maps.py --year 2025` rendered static corn RM and soybean MG county PNG maps                                                                                       |
+| 2026-03-09 | Agent | `run_maturity_by_fips.py --year 2025 --force` completed end-to-end, and reruns now skip unchanged steps while recording `data/shared/manifests/maturity_by_fips_2025.json`           |
+| 2026-03-09 | Agent | `run_maturity_by_fips.py` now records repo-relative manifest `output_path` values so annual rerun state stays portable across machines and worktrees                                 |
+| 2026-03-09 | Agent | `./scripts/ci-local.sh` still reports unrelated repo-baseline failures in `.opencode/skills/csb-field-sampling/SKILL.md` (`MD024`) and TLS validation during link checks             |
+| 2026-03-09 | Agent | County geometry is valid; the maturity map issue came from plotting all U.S. counties, so the renderer now filters to contiguous-U.S. counties and the RM/MG steps emit CSV sidecars |
 
 ---
 

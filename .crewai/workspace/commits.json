@@ -1,10 +1,10 @@
 {
   "commit_count": 5,
   "commit_messages": [
-    "6b27a8a feat(ssurgo-features): export per-field choropleth feature maps",
-    "efe6e02 fix(ssurgo-reporting): restore real soil variation and improve map presentation",
-    "85af4b8 feat(ssurgo-maps): switch to clipped natural-breaks choropleth styling",
-    "cd69fbd fix(reporting): include soil maps and farm summary assets in canonical outputs",
-    "268c7f9 feat(farm-data-rebuild): add single orchestrator skill for deterministic rebuild"
+    "e255ad6 docs(maturity): record county weather checkpoint",
+    "f5fd7b4 chore(weather): record county weather outputs",
+    "1d97d4f feat(weather): add county fips transform script",
+    "6440bed feat(maturity): add county weather aggregation helpers",
+    "bbae2aa docs(maturity): sync bridge checkpoint records"
   ]
 }

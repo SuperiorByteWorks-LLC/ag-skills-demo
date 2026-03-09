@@ -108,11 +108,16 @@ def _farm_map_b64(fields: gpd.GeoDataFrame) -> str:
     fig, ax = plt.subplots(figsize=(10, 7))
     fig.patch.set_facecolor("#fafaf9")
     fields.boundary.plot(ax=ax, color="#166534", linewidth=1.5)
-    centroids = fields.geometry.centroid
+    field_crs = fields.crs or "EPSG:4326"
+    fields_wgs84 = fields.to_crs("EPSG:4326")
+    mean_longitude = float((fields_wgs84.total_bounds[0] + fields_wgs84.total_bounds[2]) / 2)
+    centroid_crs = "EPSG:32615" if mean_longitude < -90 else "EPSG:32616"
+    centroids_projected = fields.to_crs(centroid_crs).geometry.centroid
+    centroids = gpd.GeoSeries(centroids_projected, crs=centroid_crs).to_crs(field_crs)
     sz = fields["area_acres"].fillna(30).astype(float) * 5 if "area_acres" in fields.columns else 60
     ax.scatter(centroids.x, centroids.y, s=sz, color="#2563eb", alpha=0.75, zorder=5)
-    for _, r in fields.iterrows():
-        c = r.geometry.centroid
+    for idx, r in fields.iterrows():
+        c = centroids.iloc[idx]
         ax.annotate(
             str(r["field_id"])[-5:],
             (c.x, c.y),
@@ -356,7 +361,7 @@ def _field_card(
     return f"""
 <section class="field-card" id="field-{fid[-6:]}">
   <h2>Field {fid[-8:]} <span class="badge">{acres:.1f} ac</span></h2>
-  
+
   <div class="poster-preview">
     <h3>Field Poster</h3>
     <a href="#poster-modal-{idx}" class="poster-thumb">
@@ -364,9 +369,9 @@ def _field_card(
       <p style="font-size:0.85rem;color:#2563eb;margin-top:0.5rem;">Click to view full poster</p>
     </a>
   </div>
-  
+
   {soil_section}
-  
+
   <div class="grid-2">
     <div>
       <h3>Soil and operations summary</h3>
@@ -582,11 +587,11 @@ def main() -> None:
     .raw-data {{ background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.75rem; font-size: 0.72rem; overflow-x: auto; max-height: 280px; overflow-y: scroll; }}
     hr {{ border: none; border-top: 1px solid #e2e8f0; margin: 0; }}
     footer {{ padding: 1.5rem 2.5rem; text-align: center; font-size: 0.8rem; color: #94a3b8; font-family: sans-serif; border-top: 1px solid #e2e8f0; }}
-    
+
     .poster-preview {{ margin: 1rem 0; padding: 1rem; background: #f8fafc; border-radius: 8px; text-align: center; }}
     .poster-thumb {{ text-decoration: none; display: inline-block; }}
     .poster-thumb:hover img {{ box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); }}
-    
+
     /* Soil profile gallery styles */
     .soil-gallery {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; margin: 1rem 0; padding: 1rem; background: #fafaf9; border-radius: 8px; }}
     .soil-thumb {{ text-decoration: none; display: flex; flex-direction: column; align-items: center; background: white; padding: 0.75rem; border-radius: 8px; border: 2px solid #e5e7eb; transition: all 0.2s; }}
@@ -594,7 +599,7 @@ def main() -> None:
     .soil-thumb img {{ width: 100%; max-width: 120px; height: auto; border-radius: 4px; margin-bottom: 0.5rem; }}
     .soil-label {{ font-size: 0.8rem; color: #4b5563; font-weight: 600; font-family: sans-serif; }}
     .soil-thumb:hover .soil-label {{ color: #8b5cf6; }}
-    
+
     /* Modal styles with 2026 best practices */
     .modal {{ display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); overflow: auto; backdrop-filter: blur(4px); }}
     .modal:target {{ display: block; }}
@@ -602,7 +607,7 @@ def main() -> None:
     @keyframes modalFadeIn {{ from {{ opacity: 0; transform: translateY(-20px); }} to {{ opacity: 1; transform: translateY(0); }} }}
     .modal-close {{ position: absolute; top: 1rem; right: 1rem; font-size: 1.5rem; color: #64748b; text-decoration: none; background: #f1f5f9; padding: 0.5rem 1rem; border-radius: 6px; font-family: sans-serif; font-weight: 600; transition: all 0.2s; }}
     .modal-close:hover {{ color: #1e293b; background: #e2e8f0; }}
-    
+
      .grid-ndvi {{ display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }}
      .grid-ndvi h4 {{ margin: 0 0 0.4rem; font-size: 0.9rem; color: #475569; }}
      .grid-ndvi img {{ border: 1px solid #e2e8f0; border-radius: 8px; background: white; }}

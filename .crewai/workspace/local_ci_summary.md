@@ -1,6 +1,6 @@
 # Local CI Summary
 
-Generated: 2026-03-08T19:31:56Z
+Generated: 2026-03-09T03:25:07Z
 
 ## ✅ Validate Environment
 
@@ -23,17 +23,17 @@ Generated: 2026-03-08T19:31:56Z
 
 | Step | Status | Duration |
 | --- | --- | --- |
-| Prettier Format | pass | 2s |
-| ESLint | pass | 2s |
-| Markdownlint | fail | 1s |
+| Prettier Format | pass | 3s |
+| ESLint | pass | 1s |
+| Markdownlint | fail | 2s |
 | Stylelint | pass | 1s |
 | Ruff Lint | pass | 0s |
 | Ruff Format | pass | 0s |
-| Commitlint | warn | 1s |
+| Commitlint | warn | 0s |
 | TypeScript | skip | 0s |
-| Link Check | fail | 5s |
+| Link Check | fail | 4s |
 | CrewAI Tests | pass | 3s |
 | Website Build | pass | 0s |
 | Preview Deploy | skip | 0s |
 | Production Deploy | skip | 0s |
-| CrewAI Review | pass | 22s |
+| CrewAI Review | pass | 16s |

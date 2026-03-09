@@ -61,9 +61,9 @@ This work starts a new repo-native agricultural maturity pipeline that will prod
 | `data/scripts/ingest/aggregate_weather_by_fips.py`                      | Added       | Aggregates existing field weather into canonical county/FIPS daily weather outputs                     |
 | `data/shared/weather/nasa-power/2025/`                                  | Added       | First canonical county weather table and coverage summary built from field weather                     |
 | `data/scripts/ingest/calculate_gdd_by_fips.py`                          | Added       | Computes annual county GDD outputs from canonical county weather tables                                |
-| `data/scripts/ingest/calculate_corn_rm_by_fips.py`                      | Added       | Computes heuristic corn RM outputs from annual county GDD tables                                       |
-| `data/scripts/ingest/calculate_soybean_mg_by_fips.py`                   | Added       | Computes heuristic soybean MG outputs from county lookup and annual GDD tables                         |
-| `data/scripts/reporting/generate_maturity_maps.py`                      | Added       | Renders static county PNG maps for corn RM and soybean MG outputs                                      |
+| `data/scripts/ingest/calculate_corn_rm_by_fips.py`                      | Added       | Computes heuristic corn RM outputs from annual county GDD tables and writes inspectable CSV sidecars   |
+| `data/scripts/ingest/calculate_soybean_mg_by_fips.py`                   | Added       | Computes heuristic soybean MG outputs from county lookup and annual GDD tables and writes CSV sidecars |
+| `data/scripts/reporting/generate_maturity_maps.py`                      | Added       | Renders static county PNG maps for corn RM and soybean MG outputs using contiguous-U.S.-only counties  |
 | `data/scripts/run_maturity_by_fips.py`                                  | Modified    | Orchestrates the annual maturity flow with manifest-aware skip behavior and repo-relative output paths |
 | `data/shared/manifests/maturity_by_fips_2025.json`                      | Added       | Records annual rerun state for the 2025 maturity pipeline                                              |
 | `data/shared/corn_maturity/`                                            | Modified    | Added annual county GDD, corn RM metadata, tables, and rendered map output                             |
@@ -91,7 +91,7 @@ An annual entrypoint already resolves the canonical output targets for a request
 A geoadmin ingest script now builds the first canonical shared admin layer into GeoJSON and Parquet outputs.
 The demo farm can now generate a field-to-FIPS mapping summary directly from canonical county geometry.
 The maturity skill and a repo-native ingest script now aggregate field weather into canonical county/FIPS daily weather outputs with explicit uncovered-county policy.
-The annual runner now builds county weather, county GDD, heuristic corn RM, heuristic soybean MG, and static map artifacts, then records skip state in a shared manifest for unchanged reruns.
+The annual runner now builds county weather, county GDD, heuristic corn RM, heuristic soybean MG, inspectable CSV sidecars, and contiguous-U.S. static map artifacts, then records skip state in a shared manifest for unchanged reruns.
 ```
 
 ---
@@ -107,13 +107,13 @@ python -m pytest tests/farm_intelligence/test_pipeline.py --override-ini=addopts
 
 ### Test coverage
 
-| Test type         | Status      | Notes                                                                                                                                                                |
-| ----------------- | ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Unit tests        | ✅ Passing  | Existing targeted pipeline tests plus county weather, GDD, and crop-heuristic checks pass (`33 passed`)                                                              |
-| Integration tests | ✅ Passing  | `run_maturity_by_fips.py --year 2025 --list-steps`, `--force`, and rerun skip behavior all work against canonical annual outputs                                     |
-| Manual testing    | ✅ Verified | Shared maturity/geoadmin roots scaffold correctly, geoadmin and field-FIPS outputs build, county weather/GDD/crop outputs materialize, and both maturity maps render |
-| Local CI          | ⚠️ Mixed    | `./scripts/ci-local.sh` passes format/lint/test/build steps relevant to this slice, but the full repo run still reports unrelated Markdown/link-check failures       |
-| Performance       | ⬜ N/A      | Verified on the demo dataset; no separate performance benchmark was needed for this checkpoint                                                                       |
+| Test type         | Status      | Notes                                                                                                                                                                                           |
+| ----------------- | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Unit tests        | ✅ Passing  | Existing targeted pipeline tests plus county weather, GDD, and crop-heuristic checks pass (`33 passed`)                                                                                         |
+| Integration tests | ✅ Passing  | `run_maturity_by_fips.py --year 2025 --list-steps`, `--force`, and rerun skip behavior all work against canonical annual outputs, including CSV sidecars                                        |
+| Manual testing    | ✅ Verified | Shared maturity/geoadmin roots scaffold correctly, geoadmin and field-FIPS outputs build, county weather/GDD/crop outputs materialize, contiguous-U.S. maps render, and RM/MG CSVs are readable |
+| Local CI          | ⚠️ Mixed    | `./scripts/ci-local.sh` passes format/lint/test/build steps relevant to this slice, but the full repo run still reports unrelated Markdown/link-check failures                                  |
+| Performance       | ⬜ N/A      | Verified on the demo dataset; no separate performance benchmark was needed for this checkpoint                                                                                                  |
 
 Current verification evidence:
 
@@ -133,7 +133,7 @@ Current verification evidence:
 - `python data/scripts/reporting/generate_maturity_maps.py --year 2025`
 - `python data/scripts/run_maturity_by_fips.py --year 2025 --force`
 - `python data/scripts/run_maturity_by_fips.py --year 2025`
-- `python -m pytest tests/farm_intelligence/test_pipeline.py --override-ini=addopts=` -> `33 passed`
+- `python -m pytest tests/farm_intelligence/test_pipeline.py --override-ini=addopts=` -> `34 passed`
 - `./scripts/ci-local.sh` -> maturity-related checks passed; repo-wide failures remain in `.opencode/skills/csb-field-sampling/SKILL.md` (`MD024`) and external TLS validation during link checking
 
 ### Edge cases considered
@@ -175,6 +175,8 @@ git revert [commit-sha]
 - **County weather transform:** County weather now derives from the existing field-weather source of truth and lands under `data/shared/weather/{source}/{year}/` instead of creating a parallel weather pipeline
 - **Annual orchestration:** `run_maturity_by_fips.py` now drives the full annual pipeline and records shared-manifest skip state for unchanged reruns
 - **Manifest portability:** The annual runner manifest now records repo-relative output paths so rerun state stays portable across machines and worktrees
+- **Map extent:** Maturity maps now filter to contiguous-U.S. counties so Alaska, Hawaii, and territories no longer compress the county choropleth extent
+- **Inspection exports:** Corn RM and soybean MG table writers now emit CSV sidecars alongside Parquet outputs for quick inspection
 
 ### Follow-up items
 

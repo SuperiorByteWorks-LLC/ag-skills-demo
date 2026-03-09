@@ -1,0 +1,248 @@
+diff --git a/.crewai/workspace/changed_files/016_.opencode_skills_farm-intelligence-reporting_src_reporting.py.patch.diff b/.crewai/workspace/changed_files/016_.opencode_skills_farm-intelligence-reporting_src_reporting.py.patch.diff
+deleted file mode 100644
+index f78b88d..0000000
+--- a/.crewai/workspace/changed_files/016_.opencode_skills_farm-intelligence-reporting_src_reporting.py.patch.diff
++++ /dev/null
+@@ -1,242 +0,0 @@
+-diff --git a/.opencode/skills/farm-intelligence-reporting/src/reporting.py b/.opencode/skills/farm-intelligence-reporting/src/reporting.py
+-index 0d51b7e..9b5e509 100644
+---- a/.opencode/skills/farm-intelligence-reporting/src/reporting.py
+-+++ b/.opencode/skills/farm-intelligence-reporting/src/reporting.py
+-@@ -154,7 +154,7 @@ def build_field_reporting_dataset(
+-         keep = [c for c in ndvi_summary.columns if c != "field_id"]
+-         df = df.merge(ndvi_summary[["field_id"] + keep], on="field_id", how="left")
+- 
+--    df = compute_farm_relative_rankings(df)
+-+    df = compute_farm_relative_rankings(pd.DataFrame(df))
+-     return df.reset_index(drop=True)
+- 
+- 
+-@@ -178,7 +178,9 @@ def build_farm_reporting_dataset(field_reporting_df: pd.DataFrame) -> pd.DataFra
+-     return pd.DataFrame([summary])
+- 
+- 
+--def build_farm_summary(fields: gpd.GeoDataFrame, field_metrics: pd.DataFrame | None = None) -> pd.DataFrame:
+-+def build_farm_summary(
+-+    fields: gpd.GeoDataFrame, field_metrics: pd.DataFrame | None = None
+-+) -> pd.DataFrame:
+-     total_acres = float(fields["area_acres"].sum()) if "area_acres" in fields.columns else 0.0
+-     summary: dict = {
+-         "field_count": int(len(fields)),
+-@@ -191,6 +193,129 @@ def build_farm_summary(fields: gpd.GeoDataFrame, field_metrics: pd.DataFrame | N
+-     return pd.DataFrame([summary])
+- 
+- 
+-+def rolling_year_window(end_year: int, years: int = 5) -> tuple[int, ...]:
+-+    if years <= 0:
+-+        return tuple()
+-+    start_year = end_year - years + 1
+-+    return tuple(range(start_year, end_year + 1))
+-+
+-+
+-+def summarize_year_coverage(
+-+    year_values: pd.Series | list[int], target_years: tuple[int, ...]
+-+) -> dict[str, object]:
+-+    values = pd.Series(year_values, dtype="object")
+-+    numeric_years = pd.Series(pd.to_numeric(values, errors="coerce"), dtype="float64").dropna()
+-+    observed_years = sorted({int(year) for year in numeric_years.tolist()})
+-+    missing_years = [year for year in target_years if year not in observed_years]
+-+    return {
+-+        "target_years": list(target_years),
+-+        "observed_years": observed_years,
+-+        "missing_years": missing_years,
+-+        "coverage_years": len(observed_years),
+-+        "has_full_coverage": not missing_years,
+-+    }
+-+
+-+
+-+def choose_primary_ndvi_source(
+-+    sentinel_products: pd.DataFrame | None = None,
+-+    landsat_products: pd.DataFrame | None = None,
+-+    target_date: str | None = None,
+-+) -> dict[str, object]:
+-+    candidates: list[dict[str, object]] = []
+-+    target_ts = pd.to_datetime(target_date) if target_date is not None else None
+-+
+-+    def _append_candidates(
+-+        frame: pd.DataFrame | None,
+-+        *,
+-+        source: str,
+-+        date_column: str,
+-+        cloud_column: str,
+-+        source_priority: int,
+-+    ) -> None:
+-+        if frame is None or frame.empty:
+-+            return
+-+        df = frame.copy()
+-+        if date_column in df.columns:
+-+            df[date_column] = pd.to_datetime(df[date_column], errors="coerce")
+-+        else:
+-+            df[date_column] = pd.NaT
+-+        if cloud_column in df.columns:
+-+            df[cloud_column] = pd.to_numeric(df[cloud_column], errors="coerce")
+-+        else:
+-+            df[cloud_column] = np.nan
+-+        if target_ts is not None:
+-+            df["target_distance_days"] = (df[date_column] - target_ts).abs().dt.days
+-+        else:
+-+            df["target_distance_days"] = 0
+-+        sort_cols = [cloud_column, "target_distance_days", date_column]
+-+        ordered = df.sort_values(sort_cols, na_position="last")
+-+        if ordered.empty:
+-+            return
+-+        best = ordered.iloc[0]
+-+        candidates.append(
+-+            {
+-+                "source": source,
+-+                "source_priority": source_priority,
+-+                "cloud_cover": float(best.get(cloud_column, np.nan)),
+-+                "target_distance_days": float(best.get("target_distance_days", 0.0)),
+-+                "scene_date": best.get(date_column),
+-+                "scene": best,
+-+            }
+-+        )
+-+
+-+    _append_candidates(
+-+        sentinel_products,
+-+        source="sentinel",
+-+        date_column="beginposition",
+-+        cloud_column="cloudcoverpercentage",
+-+        source_priority=0,
+-+    )
+-+    _append_candidates(
+-+        landsat_products,
+-+        source="landsat",
+-+        date_column="acquisition_date"
+-+        if landsat_products is not None and "acquisition_date" in landsat_products.columns
+-+        else "date",
+-+        cloud_column="cloud_cover",
+-+        source_priority=1,
+-+    )
+-+
+-+    if not candidates:
+-+        return {"source": "none", "scene": None}
+-+
+-+    def _as_float(value: object, default: float) -> float:
+-+        if isinstance(value, (int, float, np.integer, np.floating, str)):
+-+            try:
+-+                return float(value)
+-+            except ValueError:
+-+                return default
+-+        return default
+-+
+-+    def _as_int(value: object, default: int) -> int:
+-+        if isinstance(value, (int, float, np.integer, np.floating, str)):
+-+            try:
+-+                return int(value)
+-+            except ValueError:
+-+                return default
+-+        return default
+-+
+-+    def _candidate_sort_key(item: dict[str, object]) -> tuple[float, float, int]:
+-+        cloud_cover_value = _as_float(item.get("cloud_cover", np.nan), np.nan)
+-+        target_distance_value = _as_float(item.get("target_distance_days", 0.0), 0.0)
+-+        source_priority_value = _as_int(item.get("source_priority", 99), 99)
+-+        return (
+-+            np.inf if np.isnan(cloud_cover_value) else cloud_cover_value,
+-+            target_distance_value,
+-+            source_priority_value,
+-+        )
+-+
+-+    best = min(
+-+        candidates,
+-+        key=_candidate_sort_key,
+-+    )
+-+    return {"source": best["source"], "scene": best["scene"]}
+-+
+-+
+- # ---------------------------------------------------------------------------
+- # Rankings
+- # ---------------------------------------------------------------------------
+-@@ -240,7 +365,9 @@ def compute_management_implications(field_row: pd.Series | dict) -> list[str]:
+-     if ph is not None and not np.isnan(float(ph)):
+-         ph = float(ph)
+-         if ph < _PH_LOW:
+--            implications.append(f"pH {ph:.1f} is below optimum for corn/soy ({_PH_LOW}–{_PH_HIGH}); consider lime application")
+-+            implications.append(
+-+                f"pH {ph:.1f} is below optimum for corn/soy ({_PH_LOW}–{_PH_HIGH}); consider lime application"
+-+            )
+-         elif ph > _PH_HIGH:
+-             implications.append(f"pH {ph:.1f} is above optimum; monitor for micronutrient tie-up")
+-         else:
+-@@ -250,46 +377,66 @@ def compute_management_implications(field_row: pd.Series | dict) -> list[str]:
+-     if om is not None and not np.isnan(float(om)):
+-         om = float(om)
+-         if om < _OM_LOW:
+--            implications.append(f"OM {om:.1f}% is low; prioritize cover crops or reduced tillage to rebuild organic matter")
+-+            implications.append(
+-+                f"OM {om:.1f}% is low; prioritize cover crops or reduced tillage to rebuild organic matter"
+-+            )
+-         elif om >= _OM_HIGH:
+--            implications.append(f"OM {om:.1f}% is high for the region; strong water-holding and nutrient cycling capacity")
+-+            implications.append(
+-+                f"OM {om:.1f}% is high for the region; strong water-holding and nutrient cycling capacity"
+-+            )
+- 
+-     aws = row.get("total_aws_inches")
+-     if aws is not None and not np.isnan(float(aws)):
+-         aws = float(aws)
+-         if aws < _AWS_LOW:
+--            implications.append(f"Total available water storage {aws:.1f} in is below 4 in; elevated drought sensitivity")
+-+            implications.append(
+-+                f"Total available water storage {aws:.1f} in is below 4 in; elevated drought sensitivity"
+-+            )
+-         else:
+--            implications.append(f"Available water storage {aws:.1f} in provides good buffer against short-term drought stress")
+-+            implications.append(
+-+                f"Available water storage {aws:.1f} in provides good buffer against short-term drought stress"
+-+            )
+- 
+-     drainage = row.get("drainage_class", row.get("drainagecl", ""))
+-     if isinstance(drainage, str) and drainage:
+-         if any(w in drainage.lower() for w in ["poorly", "very poorly"]):
+--            implications.append(f"Drainage class '{drainage}' indicates wet soil conditions and potential trafficability constraints")
+-+            implications.append(
+-+                f"Drainage class '{drainage}' indicates wet soil conditions and potential trafficability constraints"
+-+            )
+-         elif "somewhat poorly" in drainage.lower():
+--            implications.append(f"Drainage class '{drainage}' may benefit from tile drainage review")
+-+            implications.append(
+-+                f"Drainage class '{drainage}' may benefit from tile drainage review"
+-+            )
+- 
+-     headlands_pct = row.get("headlands_pct")
+-     if headlands_pct is not None and not np.isnan(float(headlands_pct)):
+-         hp = float(headlands_pct)
+-         if hp > _HEADLANDS_HIGH:
+--            implications.append(f"Headlands area {hp:.1f}% of field; high turning burden relative to productive acres")
+-+            implications.append(
+-+                f"Headlands area {hp:.1f}% of field; high turning burden relative to productive acres"
+-+            )
+- 
+-     clay = row.get("avg_clay_pct")
+-     if clay is not None and not np.isnan(float(clay)):
+-         clay = float(clay)
+-         if clay > _CLAY_HIGH:
+--            implications.append(f"Clay content {clay:.0f}% is high; monitor compaction risk and spring trafficability")
+-+            implications.append(
+-+                f"Clay content {clay:.0f}% is high; monitor compaction risk and spring trafficability"
+-+            )
+- 
+-     diversity = row.get("crop_diversity")
+-     if diversity is not None and not np.isnan(float(diversity)):
+-         diversity = int(diversity)
+-         if diversity <= _CDL_LOW_DIVERSITY:
+--            implications.append("Crop history shows low rotation diversity; consider diversifying for disease and weed pressure management")
+-+            implications.append(
+-+                "Crop history shows low rotation diversity; consider diversifying for disease and weed pressure management"
+-+            )
+- 
+-     erosion = row.get("erosion_risk")
+-     if isinstance(erosion, str) and "high" in erosion.lower():
+--        implications.append("Erosion risk is rated high; consider contour management or cover cropping on vulnerable slopes")
+-+        implications.append(
+-+            "Erosion risk is rated high; consider contour management or cover cropping on vulnerable slopes"
+-+        )
+- 
+-     if not implications:
+-         implications.append("No major soil or agronomic constraints detected from available data")

@@ -4,6 +4,6 @@
   "diff_strategy": "working-tree-vs-head",
   "base_ref": "HEAD",
   "head_ref": "HEAD",
-  "head_sha": "6b27a8ac84161740f60edce5cf7b28425c74e8bc",
+  "head_sha": "e255ad65ece2fcb66866a691fef52dfcdfcf8765",
   "merge_base": "HEAD"
 }

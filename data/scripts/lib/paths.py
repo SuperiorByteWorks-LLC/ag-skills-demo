@@ -303,6 +303,10 @@ def shared_corn_rm_table_path(year: int) -> Path:
     return shared_corn_maturity_tables_dir() / f"rm_by_fips_{year}.parquet"
 
 
+def shared_corn_rm_csv_path(year: int) -> Path:
+    return shared_corn_maturity_tables_dir() / f"rm_by_fips_{year}.csv"
+
+
 def shared_soybean_maturity_dir() -> Path:
     return SHARED_ROOT / "soybean_maturity"
 
@@ -329,6 +333,10 @@ def shared_soybean_maturity_logs_dir() -> Path:
 
 def shared_soybean_mg_table_path(year: int) -> Path:
     return shared_soybean_maturity_tables_dir() / f"mg_by_fips_{year}.parquet"
+
+
+def shared_soybean_mg_csv_path(year: int) -> Path:
+    return shared_soybean_maturity_tables_dir() / f"mg_by_fips_{year}.csv"
 
 
 def ensure_parent(path: Path) -> Path:

@@ -1,0 +1,17 @@
+diff --git a/.crewai/workspace/changed_files/003_.crewai_workspace_ci_results_test-crewai_summary.md.patch.diff b/.crewai/workspace/changed_files/003_.crewai_workspace_ci_results_test-crewai_summary.md.patch.diff
+deleted file mode 100644
+index 23ac7fb..0000000
+--- a/.crewai/workspace/changed_files/003_.crewai_workspace_ci_results_test-crewai_summary.md.patch.diff
++++ /dev/null
+@@ -1,11 +0,0 @@
+-diff --git a/.crewai/workspace/ci_results/test-crewai/summary.md b/.crewai/workspace/ci_results/test-crewai/summary.md
+-index bd60110..68ff9e3 100644
+---- a/.crewai/workspace/ci_results/test-crewai/summary.md
+-+++ b/.crewai/workspace/ci_results/test-crewai/summary.md
+-@@ -1,4 +1,4 @@
+- # CrewAI tests summary
+- 
+--- status: fail
+--- duration: 10s
+-+- status: pass
+-+- duration: 3s

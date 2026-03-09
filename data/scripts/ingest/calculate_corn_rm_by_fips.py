@@ -31,6 +31,7 @@ def main() -> int:
     from paths import (
         shared_corn_gdd_table_path,
         shared_corn_maturity_metadata_dir,
+        shared_corn_rm_csv_path,
         shared_corn_rm_table_path,
     )
     from reporting_bootstrap import ensure_canonical_data_tree, ensure_skill_path
@@ -50,10 +51,13 @@ def main() -> int:
     )
 
     rm_path = shared_corn_rm_table_path(args.year)
+    rm_csv_path = shared_corn_rm_csv_path(args.year)
     metadata_path = shared_corn_maturity_metadata_dir() / f"rm_by_fips_{args.year}.json"
     rm_path.parent.mkdir(parents=True, exist_ok=True)
+    rm_csv_path.parent.mkdir(parents=True, exist_ok=True)
     metadata_path.parent.mkdir(parents=True, exist_ok=True)
     county_rm.to_parquet(rm_path, index=False)
+    county_rm.to_csv(rm_csv_path, index=False)
     metadata_path.write_text(json.dumps(metadata, indent=2) + "\n", encoding="utf-8")
 
     print(
@@ -64,6 +68,7 @@ def main() -> int:
                 "metadata_path": _repo_relative(metadata_path),
                 "county_count": int(len(county_rm)),
                 "gdd_per_rm_c": float(args.gdd_per_rm_c),
+                "rm_csv_path": _repo_relative(rm_csv_path),
             },
             indent=2,
             sort_keys=True,

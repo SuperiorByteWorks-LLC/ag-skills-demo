@@ -1,7 +1,7 @@
 # Maturity by FIPS — Kanban Board
 
 _Project: annual corn RM + soybean MG pipeline_
-_Agent · Last updated: 2026-03-09 03:40 UTC_
+_Agent · Last updated: 2026-03-09 04:11 UTC_
 
 ---
 
@@ -18,7 +18,7 @@ kanban
     Backlog
         [No items queued]
     In Progress
-        task3[Docs sync, portability polish, and commit checkpoint]
+        task3[Lower-48 map fix and CSV export polish]
     In Review
         [No items yet]
     Done
@@ -56,9 +56,9 @@ kanban
 
 ## 🔄 In progress
 
-| Item                                                 | Assignee | Started    | Expected | Days in column | Aging | Status                                                                                                         |
-| ---------------------------------------------------- | -------- | ---------- | -------- | -------------- | ----- | -------------------------------------------------------------------------------------------------------------- |
-| Docs sync, portability polish, and commit checkpoint | Agent    | 2026-03-09 | 0 days   | 0              | 🟢    | Annual runner is implemented; current work is syncing docs and normalizing manifest output paths before commit |
+| Item                                   | Assignee | Started    | Expected | Days in column | Aging | Status                                                                         |
+| -------------------------------------- | -------- | ---------- | -------- | -------------- | ----- | ------------------------------------------------------------------------------ |
+| Lower-48 map fix and CSV export polish | Agent    | 2026-03-09 | 0 days   | 0              | 🟢    | Fixing contiguous-U.S. map extent and adding easy-inspection RM/MG CSV outputs |
 
 > ⚠️ **WIP limit:** 1 / 1. Finish the current item before pulling another one.
 
@@ -116,10 +116,12 @@ kanban
 - **2026-03-09:** County GDD, heuristic corn RM, heuristic soybean MG, and static map outputs now materialize from the annual runner under canonical shared roots
 - **2026-03-09:** The annual runner now records manifest skip state for all maturity steps and stores repo-relative `output_path` values for portability
 - **2026-03-09:** Local CI rerun confirmed this maturity slice, while unrelated repo-baseline failures remain in markdown lint and external link TLS validation
+- **2026-03-09:** The county geometry is valid; the map extent issue came from rendering all U.S. counties rather than filtering to the contiguous U.S.
+- **2026-03-09:** Corn RM and soybean MG outputs now also land as CSV sidecars in `data/shared/*/tables/` for quick inspection
 
 ### Upcoming dependencies
 
-- Atomic commit/push checkpoint for the completed annual runner slice
+- Atomic commit/push checkpoint for the lower-48 map and CSV export fix
 - Optional heuristic refinement if agronomic calibration work is requested later
 
 ---

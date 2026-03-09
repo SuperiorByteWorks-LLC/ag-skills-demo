@@ -21,6 +21,25 @@ def _paths_module() -> Any:
     return importlib.import_module("paths")
 
 
+_NON_CONTIGUOUS_STATE_FIPS = ("02", "15", "60", "66", "69", "72", "78")
+_TRADITIONAL_CORN_STATE_FIPS = (
+    "05",
+    "17",
+    "18",
+    "19",
+    "20",
+    "21",
+    "26",
+    "27",
+    "29",
+    "31",
+    "38",
+    "39",
+    "46",
+    "55",
+)
+
+
 @dataclass(slots=True)
 class AnnualMaturityConfig:
     year: int
@@ -57,12 +76,20 @@ class AnnualMaturityConfig:
         return _paths_module().shared_corn_rm_table_path(self.year)
 
     @property
+    def corn_rm_csv_path(self) -> Path:
+        return _paths_module().shared_corn_rm_csv_path(self.year)
+
+    @property
     def corn_map_path(self) -> Path:
         return _paths_module().shared_corn_maturity_reports_dir() / f"rm_by_fips_{self.year}.png"
 
     @property
     def soybean_mg_path(self) -> Path:
         return _paths_module().shared_soybean_mg_table_path(self.year)
+
+    @property
+    def soybean_mg_csv_path(self) -> Path:
+        return _paths_module().shared_soybean_mg_csv_path(self.year)
 
     @property
     def soybean_map_path(self) -> Path:
@@ -77,10 +104,41 @@ def build_year_output_index(config: AnnualMaturityConfig) -> dict[str, str]:
         "county_weather_summary": str(config.county_weather_summary_path),
         "corn_gdd": str(config.corn_gdd_path),
         "corn_rm": str(config.corn_rm_path),
+        "corn_rm_csv": str(config.corn_rm_csv_path),
         "corn_map": str(config.corn_map_path),
         "soybean_mg": str(config.soybean_mg_path),
+        "soybean_mg_csv": str(config.soybean_mg_csv_path),
         "soybean_map": str(config.soybean_map_path),
     }
+
+
+def contiguous_us_counties(counties: pd.DataFrame) -> pd.DataFrame:
+    counties_frame = cast(pd.DataFrame, counties.copy())
+    counties_frame["state_fips"] = counties_frame["state_fips"].astype(str).str.zfill(2)
+    filtered = counties_frame[
+        ~counties_frame["state_fips"].isin(list(_NON_CONTIGUOUS_STATE_FIPS))
+    ].copy()
+    return cast(pd.DataFrame, filtered)
+
+
+def lower48_county_lookup(county_lookup: pd.DataFrame) -> pd.DataFrame:
+    lookup = cast(pd.DataFrame, county_lookup.copy())
+    lookup["fips"] = lookup["fips"].astype(str).str.zfill(5)
+    lookup["state_fips"] = lookup["state_fips"].astype(str).str.zfill(2)
+    lookup["county_fips"] = lookup["county_fips"].astype(str).str.zfill(3)
+    return contiguous_us_counties(lookup)
+
+
+def county_lookup_for_scope(county_lookup: pd.DataFrame, county_scope: str) -> pd.DataFrame:
+    lookup = lower48_county_lookup(county_lookup)
+    if county_scope == "lower48":
+        return lookup
+    if county_scope == "traditional-corn-belt":
+        filtered = lookup[lookup["state_fips"].isin(list(_TRADITIONAL_CORN_STATE_FIPS))].copy()
+        return cast(pd.DataFrame, filtered)
+    if county_scope == "field-mapped":
+        return lookup
+    raise ValueError(f"Unsupported county scope: {county_scope}")
 
 
 def aggregate_weather_to_counties(
@@ -180,13 +238,17 @@ def build_county_weather_coverage_summary(
     *,
     weather_source: str,
     year: int,
+    coverage_scope: str = "field-mapped",
+    county_scope: str = "field-mapped",
+    request_failure_count: int = 0,
 ) -> dict[str, object]:
     lookup = cast(pd.DataFrame, county_lookup.copy())
     lookup["fips"] = lookup["fips"].astype(str)
     county_weather_frame = cast(pd.DataFrame, county_weather.copy())
-    county_weather_frame["fips"] = county_weather_frame.get(
-        "fips", pd.Series(dtype="object")
-    ).astype(str)
+    if "fips" in county_weather_frame.columns:
+        county_weather_frame["fips"] = county_weather_frame["fips"].astype(str)
+    else:
+        county_weather_frame["fips"] = pd.Series(dtype="object")
 
     covered = set(county_weather_frame["fips"].unique())
     all_counties = set(lookup["fips"].unique())
@@ -195,10 +257,17 @@ def build_county_weather_coverage_summary(
     return {
         "weather_source": weather_source,
         "year": int(year),
+        "coverage_scope": coverage_scope,
+        "county_scope": county_scope,
         "county_count_total": int(len(all_counties)),
         "county_count_covered": int(len(covered)),
         "county_count_uncovered": int(len(uncovered)),
-        "coverage_policy": "Counties without mapped field weather remain absent from the daily county weather table.",
+        "request_failure_count": int(request_failure_count),
+        "coverage_policy": (
+            "Lower-48 county weather is queried from NASA POWER at county centroids."
+            if coverage_scope == "lower48-centroids"
+            else "Counties without mapped field weather remain absent from the daily county weather table."
+        ),
         "uncovered_fips_sample": uncovered[:25],
     }
 
@@ -299,9 +368,10 @@ def compute_soybean_mg(
     lookup["fips"] = lookup["fips"].astype(str)
     gdd["fips"] = gdd["fips"].astype(str)
     merged = cast(pd.DataFrame, gdd.merge(lookup[["fips", "centroid_lat"]], on="fips", how="left"))
-    merged["mg_optimal"] = (
-        (intercept + latitude_slope * merged["centroid_lat"]).clip(min_mg, max_mg).round(1)
-    )
+    centroid_lat = cast(pd.Series, merged["centroid_lat"])
+    mg_optimal = cast(pd.Series, intercept + latitude_slope * centroid_lat)
+    mg_optimal = cast(pd.Series, mg_optimal.clip(min_mg, max_mg).round(1))
+    merged["mg_optimal"] = mg_optimal
     merged["mg_early"] = (merged["mg_optimal"] - 0.4).clip(min_mg, max_mg).round(1)
     merged["mg_late"] = (merged["mg_optimal"] + 0.4).clip(min_mg, max_mg).round(1)
     merged["mg_band"] = (merged["mg_optimal"] * 2).round().div(2).round(1)

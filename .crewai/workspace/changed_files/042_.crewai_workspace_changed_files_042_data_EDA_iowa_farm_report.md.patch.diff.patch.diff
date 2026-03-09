@@ -1,0 +1,373 @@
+diff --git a/.crewai/workspace/changed_files/042_data_EDA_iowa_farm_report.md.patch.diff b/.crewai/workspace/changed_files/042_data_EDA_iowa_farm_report.md.patch.diff
+deleted file mode 100644
+index 1a40877..0000000
+--- a/.crewai/workspace/changed_files/042_data_EDA_iowa_farm_report.md.patch.diff
++++ /dev/null
+@@ -1,376 +0,0 @@
+-diff --git a/data/EDA/iowa_farm_report.md b/data/EDA/iowa_farm_report.md
+-new file mode 100644
+-index 0000000..40ec648
+---- /dev/null
+-+++ b/data/EDA/iowa_farm_report.md
+-@@ -0,0 +1,439 @@
+-+# Iowa Farm Intelligence Report
+-+
+-+**Farm:** Iowa Demo Farm
+-+**Fields:** 10
+-+**Total Area:** 1572.7 acres
+-+**Analysis Period:** 2021-2025
+-+
+-+---
+-+
+-+## Farm Overview
+-+
+-+| Metric             | Value        |
+-+| ------------------ | ------------ |
+-+| Total Fields       | 10           |
+-+| Total Area         | 1572.7 acres |
+-+| Avg Field Size     | 157.3 acres  |
+-+| Avg Organic Matter | 2.59         |
+-+| Avg pH             | 6.26         |
+-+| Avg Water Storage  | 3.35         |
+-+
+-+---
+-+
+-+## Field Summary Table
+-+
+-+| field_id       | area_acres | headlands_pct | dominant_soil | avg_om_pct | avg_ph | total_aws_inches | drainage_class          | crop_diversity | corn_years | soybean_years |
+-+| -------------- | ---------- | ------------- | ------------- | ---------- | ------ | ---------------- | ----------------------- | -------------- | ---------- | ------------- |
+-+| OSM_1428284928 | 230.32     | 4.94          | Nodaway       | 2.82       | 6.52   | 4.41             | Moderately well drained | 2              | 1          | 4             |
+-+| OSM_1434730614 | 133.98     | 5.88          | Adair         | 2.40       | 6.18   | 2.11             | Somewhat poorly drained | 1              | 0          | 0             |
+-+| OSM_1434730620 | 116.44     | 5.90          | Nodaway       | 2.46       | 6.24   | 2.46             | Moderately well drained | 1              | 0          | 0             |
+-+| OSM_998701371  | 115.89     | 6.27          | Grundy        | 2.35       | 6.18   | 2.33             | Somewhat poorly drained | 2              | 2          | 3             |
+-+| OSM_998706547  | 155.18     | 4.65          | Clarinda      | 2.86       | 6.26   | 3.41             | Poorly drained          | 2              | 1          | 4             |
+-+| OSM_998706549  | 157.63     | 4.45          | Clarinda      | 2.82       | 6.28   | 3.76             | Poorly drained          | 2              | 2          | 3             |
+-+| OSM_998706550  | 151.99     | 4.89          | Grundy        | 2.73       | 6.30   | 2.36             | Somewhat poorly drained | 2              | 2          | 3             |
+-+| OSM_998713335  | 229.97     | 5.57          | Shelby        | 2.53       | 6.21   | 4.80             | Well drained            | 2              | 3          | 2             |
+-+| OSM_998713337  | 125.91     | 7.81          | Shelby        | 2.56       | 6.23   | 4.49             | Well drained            | 2              | 3          | 2             |
+-+| OSM_998713346  | 155.42     | 4.48          | Clarinda      | 2.36       | 6.18   | 3.40             | Poorly drained          | 2              | 3          | 2             |
+-+
+-+---
+-+
+-+## Individual Field Reports
+-+
+-+### Field 28284928 (230.3 acres)
+-+
+-+**Poster:** [iowa_field_poster_01.png](./field_cards/iowa_field_poster_01.png)
+-+
+-+**Soil Profile Cards:** [Texture RGB](./soil_cards/field_01_texture.png) | [Properties](./soil_cards/field_01_properties.png)
+-+
+-+**NDVI Cards:** [Corn average NDVI](./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1428284928/derived/features/ndvi_corn.png) | [Soybean average NDVI](./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1428284928/derived/features/ndvi_soybean.png) | [Current-season cumulative NDVI](./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1428284928/derived/features/ndvi_current_season_cumulative.png)
+-+
+-+**Crop Rotation History:** Corn -> Soybeans -> Soybeans -> Soybeans -> Soybeans
+-+
+-+**Heuristic Crop Outlook:** Heuristic outlook: Soybeans next, then Soybeans, based on the recent rotation pattern.
+-+
+-+**Management Implications:**
+-+
+-+- pH 6.5 is within optimal range for corn/soybean production
+-+- Available water storage 4.4 in provides good buffer against short-term drought stress
+-+
+-+| Property      | Value                   |
+-+| ------------- | ----------------------- |
+-+| Area          | 230.32                  |
+-+| Headlands %   | 4.94                    |
+-+| Total AWS     | 4.41                    |
+-+| Avg OM %      | 2.82                    |
+-+| Avg pH        | 6.52                    |
+-+| Drainage      | Moderately well drained |
+-+| Dominant Soil | Nodaway                 |
+-+
+-+**Farm-Relative Rankings:**
+-+
+-+- area acres: 100th percentile
+-+- headlands pct: 50th percentile
+-+- total aws inches: 80th percentile
+-+- avg om pct: 80th percentile
+-+- avg ph: 100th percentile
+-+- avg cec: 10th percentile
+-+
+-+---
+-+
+-+### Field 34730614 (134.0 acres)
+-+
+-+**Poster:** [iowa_field_poster_02.png](./field_cards/iowa_field_poster_02.png)
+-+
+-+**Soil Profile Cards:** [Texture RGB](./soil_cards/field_02_texture.png) | [Properties](./soil_cards/field_02_properties.png)
+-+
+-+**NDVI Cards:** [Corn average NDVI](./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1434730614/derived/features/ndvi_corn.png) | [Soybean average NDVI](./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1434730614/derived/features/ndvi_soybean.png) | [Current-season cumulative NDVI](./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1434730614/derived/features/ndvi_current_season_cumulative.png)
+-+
+-+**Crop Rotation History:** No Data -> No Data -> No Data -> No Data -> No Data
+-+
+-+**Heuristic Crop Outlook:** Heuristic outlook: No Data next, then No Data, based on the recent rotation pattern.
+-+
+-+**Management Implications:**
+-+
+-+- pH 6.2 is within optimal range for corn/soybean production
+-+- Total available water storage 2.1 in is below 4 in; elevated drought sensitivity
+-+- Drainage class 'Somewhat poorly drained' indicates wet soil conditions and potential trafficability constraints
+-+- Crop history shows low rotation diversity; consider diversifying for disease and weed pressure management
+-+
+-+| Property      | Value                   |
+-+| ------------- | ----------------------- |
+-+| Area          | 133.98                  |
+-+| Headlands %   | 5.88                    |
+-+| Total AWS     | 2.11                    |
+-+| Avg OM %      | 2.40                    |
+-+| Avg pH        | 6.18                    |
+-+| Drainage      | Somewhat poorly drained |
+-+| Dominant Soil | Adair                   |
+-+
+-+**Farm-Relative Rankings:**
+-+
+-+- area acres: 40th percentile
+-+- headlands pct: 70th percentile
+-+- total aws inches: 10th percentile
+-+- avg om pct: 30th percentile
+-+- avg ph: 30th percentile
+-+- avg cec: 100th percentile
+-+
+-+---
+-+
+-+### Field 34730620 (116.4 acres)
+-+
+-+**Poster:** [iowa_field_poster_03.png](./field_cards/iowa_field_poster_03.png)
+-+
+-+**Soil Profile Cards:** [Texture RGB](./soil_cards/field_03_texture.png) | [Properties](./soil_cards/field_03_properties.png)
+-+
+-+**NDVI Cards:** [Corn average NDVI](./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1434730620/derived/features/ndvi_corn.png) | [Soybean average NDVI](./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1434730620/derived/features/ndvi_soybean.png) | [Current-season cumulative NDVI](./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1434730620/derived/features/ndvi_current_season_cumulative.png)
+-+
+-+**Crop Rotation History:** No Data -> No Data -> No Data -> No Data -> No Data
+-+
+-+**Heuristic Crop Outlook:** Heuristic outlook: No Data next, then No Data, based on the recent rotation pattern.
+-+
+-+**Management Implications:**
+-+
+-+- pH 6.2 is within optimal range for corn/soybean production
+-+- Total available water storage 2.5 in is below 4 in; elevated drought sensitivity
+-+- Crop history shows low rotation diversity; consider diversifying for disease and weed pressure management
+-+
+-+| Property      | Value                   |
+-+| ------------- | ----------------------- |
+-+| Area          | 116.44                  |
+-+| Headlands %   | 5.90                    |
+-+| Total AWS     | 2.46                    |
+-+| Avg OM %      | 2.46                    |
+-+| Avg pH        | 6.24                    |
+-+| Drainage      | Moderately well drained |
+-+| Dominant Soil | Nodaway                 |
+-+
+-+**Farm-Relative Rankings:**
+-+
+-+- area acres: 20th percentile
+-+- headlands pct: 80th percentile
+-+- total aws inches: 40th percentile
+-+- avg om pct: 40th percentile
+-+- avg ph: 60th percentile
+-+- avg cec: 80th percentile
+-+
+-+---
+-+
+-+### Field 98701371 (115.9 acres)
+-+
+-+**Poster:** [iowa_field_poster_04.png](./field_cards/iowa_field_poster_04.png)
+-+
+-+**Soil Profile Cards:** [Texture RGB](./soil_cards/field_04_texture.png) | [Properties](./soil_cards/field_04_properties.png)
+-+
+-+**NDVI Cards:** [Corn average NDVI](./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998701371/derived/features/ndvi_corn.png) | [Soybean average NDVI](./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998701371/derived/features/ndvi_soybean.png) | [Current-season cumulative NDVI](./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998701371/derived/features/ndvi_current_season_cumulative.png)
+-+
+-+**Crop Rotation History:** Soybeans -> Corn -> Soybeans -> Corn -> Soybeans
+-+
+-+**Heuristic Crop Outlook:** Heuristic outlook: Corn next, then Soybeans, based on the recent rotation pattern.
+-+
+-+**Management Implications:**
+-+
+-+- pH 6.2 is within optimal range for corn/soybean production
+-+- Total available water storage 2.3 in is below 4 in; elevated drought sensitivity
+-+- Drainage class 'Somewhat poorly drained' indicates wet soil conditions and potential trafficability constraints
+-+
+-+| Property      | Value                   |
+-+| ------------- | ----------------------- |
+-+| Area          | 115.89                  |
+-+| Headlands %   | 6.27                    |
+-+| Total AWS     | 2.33                    |
+-+| Avg OM %      | 2.35                    |
+-+| Avg pH        | 6.18                    |
+-+| Drainage      | Somewhat poorly drained |
+-+| Dominant Soil | Grundy                  |
+-+
+-+**Farm-Relative Rankings:**
+-+
+-+- area acres: 10th percentile
+-+- headlands pct: 90th percentile
+-+- total aws inches: 20th percentile
+-+- avg om pct: 10th percentile
+-+- avg ph: 20th percentile
+-+- avg cec: 60th percentile
+-+
+-+---
+-+
+-+### Field 98706547 (155.2 acres)
+-+
+-+**Poster:** [iowa_field_poster_05.png](./field_cards/iowa_field_poster_05.png)
+-+
+-+**Soil Profile Cards:** [Texture RGB](./soil_cards/field_05_texture.png) | [Properties](./soil_cards/field_05_properties.png)
+-+
+-+**NDVI Cards:** [Corn average NDVI](./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998706547/derived/features/ndvi_corn.png) | [Soybean average NDVI](./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998706547/derived/features/ndvi_soybean.png) | [Current-season cumulative NDVI](./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998706547/derived/features/ndvi_current_season_cumulative.png)
+-+
+-+**Crop Rotation History:** Soybeans -> Soybeans -> Corn -> Soybeans -> Soybeans
+-+
+-+**Heuristic Crop Outlook:** Heuristic outlook: Soybeans next, then Soybeans, based on the recent rotation pattern.
+-+
+-+**Management Implications:**
+-+
+-+- pH 6.3 is within optimal range for corn/soybean production
+-+- Total available water storage 3.4 in is below 4 in; elevated drought sensitivity
+-+- Drainage class 'Poorly drained' indicates wet soil conditions and potential trafficability constraints
+-+
+-+| Property      | Value          |
+-+| ------------- | -------------- |
+-+| Area          | 155.18         |
+-+| Headlands %   | 4.65           |
+-+| Total AWS     | 3.41           |
+-+| Avg OM %      | 2.86           |
+-+| Avg pH        | 6.26           |
+-+| Drainage      | Poorly drained |
+-+| Dominant Soil | Clarinda       |
+-+
+-+**Farm-Relative Rankings:**
+-+
+-+- area acres: 60th percentile
+-+- headlands pct: 30th percentile
+-+- total aws inches: 60th percentile
+-+- avg om pct: 100th percentile
+-+- avg ph: 70th percentile
+-+- avg cec: 40th percentile
+-+
+-+---
+-+
+-+### Field 98706549 (157.6 acres)
+-+
+-+**Poster:** [iowa_field_poster_06.png](./field_cards/iowa_field_poster_06.png)
+-+
+-+**Soil Profile Cards:** [Texture RGB](./soil_cards/field_06_texture.png) | [Properties](./soil_cards/field_06_properties.png)
+-+
+-+**NDVI Cards:** [Corn average NDVI](./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998706549/derived/features/ndvi_corn.png) | [Soybean average NDVI](./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998706549/derived/features/ndvi_soybean.png) | [Current-season cumulative NDVI](./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998706549/derived/features/ndvi_current_season_cumulative.png)
+-+
+-+**Crop Rotation History:** Corn -> Soybeans -> Corn -> Soybeans -> Soybeans
+-+
+-+**Heuristic Crop Outlook:** Heuristic outlook: Corn next, then Soybeans, based on the recent rotation pattern.
+-+
+-+**Management Implications:**
+-+
+-+- pH 6.3 is within optimal range for corn/soybean production
+-+- Total available water storage 3.8 in is below 4 in; elevated drought sensitivity
+-+- Drainage class 'Poorly drained' indicates wet soil conditions and potential trafficability constraints
+-+
+-+| Property      | Value          |
+-+| ------------- | -------------- |
+-+| Area          | 157.63         |
+-+| Headlands %   | 4.45           |
+-+| Total AWS     | 3.76           |
+-+| Avg OM %      | 2.82           |
+-+| Avg pH        | 6.28           |
+-+| Drainage      | Poorly drained |
+-+| Dominant Soil | Clarinda       |
+-+
+-+**Farm-Relative Rankings:**
+-+
+-+- area acres: 80th percentile
+-+- headlands pct: 10th percentile
+-+- total aws inches: 70th percentile
+-+- avg om pct: 90th percentile
+-+- avg ph: 80th percentile
+-+- avg cec: 30th percentile
+-+
+-+---
+-+
+-+### Field 98706550 (152.0 acres)
+-+
+-+**Poster:** [iowa_field_poster_07.png](./field_cards/iowa_field_poster_07.png)
+-+
+-+**Soil Profile Cards:** [Texture RGB](./soil_cards/field_07_texture.png) | [Properties](./soil_cards/field_07_properties.png)
+-+
+-+**NDVI Cards:** [Corn average NDVI](./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998706550/derived/features/ndvi_corn.png) | [Soybean average NDVI](./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998706550/derived/features/ndvi_soybean.png) | [Current-season cumulative NDVI](./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998706550/derived/features/ndvi_current_season_cumulative.png)
+-+
+-+**Crop Rotation History:** Soybeans -> Soybeans -> Corn -> Soybeans -> Corn
+-+
+-+**Heuristic Crop Outlook:** Heuristic outlook: Soybeans next, then Corn, based on the recent rotation pattern.
+-+
+-+**Management Implications:**
+-+
+-+- pH 6.3 is within optimal range for corn/soybean production
+-+- Total available water storage 2.4 in is below 4 in; elevated drought sensitivity
+-+- Drainage class 'Somewhat poorly drained' indicates wet soil conditions and potential trafficability constraints
+-+
+-+| Property      | Value                   |
+-+| ------------- | ----------------------- |
+-+| Area          | 151.99                  |
+-+| Headlands %   | 4.89                    |
+-+| Total AWS     | 2.36                    |
+-+| Avg OM %      | 2.73                    |
+-+| Avg pH        | 6.30                    |
+-+| Drainage      | Somewhat poorly drained |
+-+| Dominant Soil | Grundy                  |
+-+
+-+**Farm-Relative Rankings:**
+-+
+-+- area acres: 50th percentile
+-+- headlands pct: 40th percentile
+-+- total aws inches: 30th percentile
+-+- avg om pct: 70th percentile
+-+- avg ph: 90th percentile
+-+- avg cec: 20th percentile
+-+
+-+---
+-+
+-+### Field 98713335 (230.0 acres)
+-+
+-+**Poster:** [iowa_field_poster_08.png](./field_cards/iowa_field_poster_08.png)
+-+
+-+**Soil Profile Cards:** [Texture RGB](./soil_cards/field_08_texture.png) | [Properties](./soil_cards/field_08_properties.png)
+-+
+-+**NDVI Cards:** [Corn average NDVI](./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998713335/derived/features/ndvi_corn.png) | [Soybean average NDVI](./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998713335/derived/features/ndvi_soybean.png) | [Current-season cumulative NDVI](./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998713335/derived/features/ndvi_current_season_cumulative.png)
+-+
+-+**Crop Rotation History:** Corn -> Soybeans -> Corn -> Soybeans -> Corn
+-+
+-+**Heuristic Crop Outlook:** Heuristic outlook: Soybeans next, then Corn, based on the recent rotation pattern.
+-+
+-+**Management Implications:**
+-+
+-+- pH 6.2 is within optimal range for corn/soybean production
+-+- Available water storage 4.8 in provides good buffer against short-term drought stress
+-+
+-+| Property      | Value        |
+-+| ------------- | ------------ |
+-+| Area          | 229.97       |
+-+| Headlands %   | 5.57         |
+-+| Total AWS     | 4.80         |
+-+| Avg OM %      | 2.53         |
+-+| Avg pH        | 6.21         |
+-+| Drainage      | Well drained |
+-+| Dominant Soil | Shelby       |
+-+
+-+**Farm-Relative Rankings:**
+-+
+-+- area acres: 90th percentile
+-+- headlands pct: 60th percentile
+-+- total aws inches: 100th percentile
+-+- avg om pct: 50th percentile
+-+- avg ph: 40th percentile
+-+- avg cec: 50th percentile
+-+
+-+---
+-+
+-+### Field 98713337 (125.9 acres)
+-+
+-+**Poster:** [iowa_field_poster_09.png](./field_cards/iowa_field_poster_09.png)
+-+
+-+**Soil Profile Cards:** [Texture RGB](./soil_cards/field_09_texture.png) | [Properties](./soil_cards/field_09_properties.png)
+-+
+-+**NDVI Cards:** [Corn average NDVI](./growers/iowa-demo
+...
+[truncated per-file patch]

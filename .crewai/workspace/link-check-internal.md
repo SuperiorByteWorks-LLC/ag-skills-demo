@@ -1,8 +1,8 @@
 # Internal Markdown Link Check
 
-Files scanned: 121
-Links checked: 753
-Broken links: 113
+Files scanned: 131
+Links checked: 854
+Broken links: 118
 
 | Source file | Link target | Error |
 | --- | --- | --- |
@@ -12,46 +12,6 @@ Broken links: 113
 | `apps/README.md` | `../data/sql/` | missing file |
 | `src/README.md` | `../data/sql/` | missing file |
 | `.opencode/skills/nasa-power-weather/SKILL.md` | `../.skills/field-boundaries/` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./field_cards/iowa_field_poster_01.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1428284928/derived/features/ndvi_corn.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1428284928/derived/features/ndvi_soybean.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1428284928/derived/features/ndvi_current_season_cumulative.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./field_cards/iowa_field_poster_02.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1434730614/derived/features/ndvi_corn.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1434730614/derived/features/ndvi_soybean.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1434730614/derived/features/ndvi_current_season_cumulative.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./field_cards/iowa_field_poster_03.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1434730620/derived/features/ndvi_corn.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1434730620/derived/features/ndvi_soybean.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1434730620/derived/features/ndvi_current_season_cumulative.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./field_cards/iowa_field_poster_04.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998701371/derived/features/ndvi_corn.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998701371/derived/features/ndvi_soybean.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998701371/derived/features/ndvi_current_season_cumulative.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./field_cards/iowa_field_poster_05.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998706547/derived/features/ndvi_corn.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998706547/derived/features/ndvi_soybean.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998706547/derived/features/ndvi_current_season_cumulative.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./field_cards/iowa_field_poster_06.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998706549/derived/features/ndvi_corn.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998706549/derived/features/ndvi_soybean.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998706549/derived/features/ndvi_current_season_cumulative.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./field_cards/iowa_field_poster_07.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998706550/derived/features/ndvi_corn.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998706550/derived/features/ndvi_soybean.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998706550/derived/features/ndvi_current_season_cumulative.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./field_cards/iowa_field_poster_08.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998713335/derived/features/ndvi_corn.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998713335/derived/features/ndvi_soybean.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998713335/derived/features/ndvi_current_season_cumulative.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./field_cards/iowa_field_poster_09.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998713337/derived/features/ndvi_corn.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998713337/derived/features/ndvi_soybean.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998713337/derived/features/ndvi_current_season_cumulative.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./field_cards/iowa_field_poster_10.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998713346/derived/features/ndvi_corn.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998713346/derived/features/ndvi_soybean.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998713346/derived/features/ndvi_current_season_cumulative.png` | missing file |
 | `data/growers/iowa-demo-grower/farms/iowa-demo-farm/derived/summaries/iowa_farm_report.md` | `./field_cards/iowa_field_poster_01.png` | missing file |
 | `data/growers/iowa-demo-grower/farms/iowa-demo-farm/derived/summaries/iowa_farm_report.md` | `./soil_cards/field_01_texture.png` | missing file |
 | `data/growers/iowa-demo-grower/farms/iowa-demo-farm/derived/summaries/iowa_farm_report.md` | `./soil_cards/field_01_properties.png` | missing file |
@@ -113,6 +73,51 @@ Broken links: 113
 | `data/growers/iowa-demo-grower/farms/iowa-demo-farm/derived/summaries/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998713346/derived/features/ndvi_soybean.png` | missing file |
 | `data/growers/iowa-demo-grower/farms/iowa-demo-farm/derived/summaries/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998713346/derived/features/ndvi_current_season_cumulative.png` | missing file |
 | `data/growers/iowa-demo-grower/farms/iowa-demo-farm/derived/summaries/iowa_farm_report.md` | `./field_cards/` | missing file |
+| `data/growers/iowa-demo-grower/farms/iowa-demo-farm/derived/reports/iowa_farm_report.md` | `./field_cards/` | missing file |
+| `data/growers/iowa-demo-grower/farms/iowa-demo-farm/derived/reports/iowa_farm_report.md` | `./soil_cards/` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./field_cards/iowa_field_poster_01.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1428284928/derived/features/ndvi_corn.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1428284928/derived/features/ndvi_soybean.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1428284928/derived/features/ndvi_current_season_cumulative.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./field_cards/iowa_field_poster_02.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1434730614/derived/features/ndvi_corn.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1434730614/derived/features/ndvi_soybean.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1434730614/derived/features/ndvi_current_season_cumulative.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./field_cards/iowa_field_poster_03.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1434730620/derived/features/ndvi_corn.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1434730620/derived/features/ndvi_soybean.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1434730620/derived/features/ndvi_current_season_cumulative.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./field_cards/iowa_field_poster_04.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998701371/derived/features/ndvi_corn.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998701371/derived/features/ndvi_soybean.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998701371/derived/features/ndvi_current_season_cumulative.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./field_cards/iowa_field_poster_05.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998706547/derived/features/ndvi_corn.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998706547/derived/features/ndvi_soybean.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998706547/derived/features/ndvi_current_season_cumulative.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./field_cards/iowa_field_poster_06.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998706549/derived/features/ndvi_corn.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998706549/derived/features/ndvi_soybean.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998706549/derived/features/ndvi_current_season_cumulative.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./field_cards/iowa_field_poster_07.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998706550/derived/features/ndvi_corn.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998706550/derived/features/ndvi_soybean.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998706550/derived/features/ndvi_current_season_cumulative.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./field_cards/iowa_field_poster_08.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998713335/derived/features/ndvi_corn.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998713335/derived/features/ndvi_soybean.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998713335/derived/features/ndvi_current_season_cumulative.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./field_cards/iowa_field_poster_09.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998713337/derived/features/ndvi_corn.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998713337/derived/features/ndvi_soybean.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998713337/derived/features/ndvi_current_season_cumulative.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./field_cards/iowa_field_poster_10.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998713346/derived/features/ndvi_corn.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998713346/derived/features/ndvi_soybean.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998713346/derived/features/ndvi_current_season_cumulative.png` | missing file |
+| `docs/project/issues/issue-00000007-build-maturity-by-fips-pipeline.md` | `../../.sisyphus/plans/grm-by-fips-geoadmin.md` | missing file |
+| `docs/project/pr/pr-00000004-build-maturity-by-fips-pipeline.md` | `../../.sisyphus/plans/grm-by-fips-geoadmin.md` | missing file |
+| `docs/project/kanban/project-maturity-by-fips.md` | `../../.sisyphus/plans/grm-by-fips-geoadmin.md` | missing file |
 | `docs/project/kanban/project-cloudflare-pages-deploy.md` | `../../docs/project/pr/pr-00000001-agentic-docs-and-monorepo-modernization.md` | missing file |
 | `docs/project/kanban/project-cloudflare-pages-deploy.md` | `../../docs/project/pr/pr-00000001-agentic-docs-and-monorepo-modernization.md` | missing file |
 | `docs/project/kanban/project-cloudflare-pages-deploy.md` | `../../docs/project/pr/pr-00000001-agentic-docs-and-monorepo-modernization.md` | missing file |

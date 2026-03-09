@@ -1,7 +1,7 @@
 {
   "status": "success",
   "passed": true,
-  "summary": "Local run: core-ci marked success; diff stats 599 files (+5973/-2367); mode=standard-review",
+  "summary": "Local run: core-ci marked success; diff stats 178 files (+1207/-7808); mode=standard-review",
   "critical_errors": [],
   "warnings": [],
   "checks_performed": [
@@ -10,9 +10,9 @@
     "label-routing-ready"
   ],
   "metadata": {
-    "files_changed": 599,
-    "additions": 5973,
-    "deletions": 2367,
+    "files_changed": 178,
+    "additions": 1207,
+    "deletions": 7808,
     "labels": []
   }
 }

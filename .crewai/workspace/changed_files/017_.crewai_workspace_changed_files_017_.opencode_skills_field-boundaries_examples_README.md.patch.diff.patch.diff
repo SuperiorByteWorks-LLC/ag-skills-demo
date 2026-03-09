@@ -1,0 +1,19 @@
+diff --git a/.crewai/workspace/changed_files/017_.opencode_skills_field-boundaries_examples_README.md.patch.diff b/.crewai/workspace/changed_files/017_.opencode_skills_field-boundaries_examples_README.md.patch.diff
+deleted file mode 100644
+index 2a32d67..0000000
+--- a/.crewai/workspace/changed_files/017_.opencode_skills_field-boundaries_examples_README.md.patch.diff
++++ /dev/null
+@@ -1,13 +0,0 @@
+-diff --git a/.opencode/skills/field-boundaries/examples/README.md b/.opencode/skills/field-boundaries/examples/README.md
+-index 2a74908..b9a91d9 100644
+---- a/.opencode/skills/field-boundaries/examples/README.md
+-+++ b/.opencode/skills/field-boundaries/examples/README.md
+-@@ -10,7 +10,7 @@ This directory contains sample field boundary data downloaded from USDA NASS Cro
+- 
+- - **Provider**: USDA National Agricultural Statistics Service (NASS)
+- - **Dataset**: Crop Sequence Boundaries (CSB) 2023
+--- **Access**: Source Cooperative (https://source.coop/fiboa/us-usda-cropland)
+-+- **Access**: Source Cooperative (<https://source.coop/fiboa/us-usda-cropland>)
+- - **Format**: GeoJSON
+- - **CRS**: EPSG:4326 (WGS84)
+- 

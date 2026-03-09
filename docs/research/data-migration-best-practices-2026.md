@@ -17,6 +17,7 @@ Data migration projects have an **83% failure rate** when they exceed budgets, m
 ### Core Principle: Idempotency
 
 Deterministic migrations produce the **same result every time**, regardless of how many times they run. This is essential for agricultural data where reprocessing is common due to:
+
 - Sensor recalibrations requiring data re-ingestion
 - Field boundary corrections from new survey data
 - Climate model updates affecting historical weather interpolations
@@ -36,11 +37,11 @@ class ContentAddressedStorage:
     Deterministic file storage using SHA-256 content hashing.
     Safe for agricultural raster data, soil profiles, and weather files.
     """
-    
+
     def __init__(self, base_path: Path):
         self.base_path = Path(base_path)
         self.base_path.mkdir(parents=True, exist_ok=True)
-    
+
     def compute_hash(self, file_path: Path) -> str:
         """Compute SHA-256 hash for file integrity verification."""
         sha256 = hashlib.sha256()
@@ -48,24 +49,24 @@ class ContentAddressedStorage:
             for chunk in iter(lambda: f.read(8192), b''):
                 sha256.update(chunk)
         return sha256.hexdigest()
-    
+
     def store(self, source_path: Path, metadata: Optional[dict] = None) -> str:
         """
         Store file in content-addressed structure.
         Returns content hash (safe to retry - idempotent).
         """
         file_hash = self.compute_hash(source_path)
-        
+
         # Use first 2 chars as prefix for directory distribution
         dest_dir = self.base_path / file_hash[:2] / file_hash[2:4]
         dest_dir.mkdir(parents=True, exist_ok=True)
-        
+
         dest_path = dest_dir / file_hash
-        
+
         # Only copy if doesn't exist (idempotent)
         if not dest_path.exists():
             shutil.copy2(source_path, dest_path)
-            
+
             # Store metadata alongside content
             if metadata:
                 meta_path = dest_path.with_suffix('.json')
@@ -77,9 +78,9 @@ class ContentAddressedStorage:
                         'size': source_path.stat().st_size,
                         **metadata
                     }, f, indent=2)
-        
+
         return file_hash
-    
+
     def retrieve(self, file_hash: str) -> Optional[Path]:
         """Retrieve file path by content hash."""
         path = self.base_path / file_hash[:2] / file_hash[2:4] / file_hash
@@ -117,26 +118,26 @@ class MigrationRecord(BaseModel):
     files_processed: int = 0
     files_failed: List[str] = []
     checksum: Optional[str] = None  # Of the migration state itself
-    
+
 class MigrationStateManager:
     """
     Manages migration state with atomic writes.
     Critical for long-running agricultural data migrations.
     """
-    
+
     def __init__(self, state_file: Path):
         self.state_file = Path(state_file)
         self.state_file.parent.mkdir(parents=True, exist_ok=True)
         self._state: List[MigrationRecord] = []
         self._load()
-    
+
     def _load(self):
         """Load existing state or initialize empty."""
         if self.state_file.exists():
             with open(self.state_file) as f:
                 data = json.load(f)
                 self._state = [MigrationRecord(**r) for r in data.get('migrations', [])]
-    
+
     def _save(self):
         """Atomic state save using write-then-rename pattern."""
         temp_file = self.state_file.with_suffix('.tmp')
@@ -146,14 +147,14 @@ class MigrationStateManager:
                 'updated_at': datetime.now().isoformat()
             }, f, indent=2, default=str)
         temp_file.replace(self.state_file)
-    
+
     def start_migration(self, migration_id: str, source: str, target: str) -> MigrationRecord:
         """Begin tracking a new migration."""
         # Check if already completed (idempotency)
         existing = self.get_migration(migration_id)
         if existing and existing.status == MigrationStatus.COMPLETED:
             return existing
-        
+
         record = MigrationRecord(
             migration_id=migration_id,
             started_at=datetime.now(),
@@ -164,7 +165,7 @@ class MigrationStateManager:
         self._state.append(record)
         self._save()
         return record
-    
+
     def complete_migration(self, migration_id: str, checksum: str):
         """Mark migration as completed with validation checksum."""
         record = self.get_migration(migration_id)
@@ -173,7 +174,7 @@ class MigrationStateManager:
             record.completed_at = datetime.now()
             record.checksum = checksum
             self._save()
-    
+
     def get_migration(self, migration_id: str) -> Optional[MigrationRecord]:
         """Retrieve migration by ID."""
         return next(
@@ -195,11 +196,11 @@ class CheckpointedMigration:
     Resumable batch migration for large agricultural datasets.
     Handles interruptions (network failures, API rate limits) gracefully.
     """
-    
+
     def __init__(self, state_manager: MigrationStateManager, checkpoint_every: int = 100):
         self.state_manager = state_manager
         self.checkpoint_every = checkpoint_every
-    
+
     def migrate_batches(
         self,
         migration_id: str,
@@ -216,48 +217,48 @@ class CheckpointedMigration:
             source="legacy",
             target="new_system"
         )
-        
+
         batch = []
         processed = 0
         failed = []
-        
+
         try:
             for item in items:
                 try:
                     result = process_fn(item)
                     batch.append(result)
                     processed += 1
-                    
+
                     # Checkpoint every N items
                     if len(batch) >= self.checkpoint_every:
                         save_fn(batch)
                         record.files_processed = processed
                         self.state_manager._save()
                         batch = []
-                        
+
                 except Exception as e:
                     failed.append({'item': item, 'error': str(e)})
                     record.files_failed = failed
-            
+
             # Final batch
             if batch:
                 save_fn(batch)
-            
+
             # Compute checksum of results for verification
             checksum = self._compute_result_checksum(migration_id)
             self.state_manager.complete_migration(migration_id, checksum)
-            
+
             return {
                 'processed': processed,
                 'failed': len(failed),
                 'checksum': checksum
             }
-            
+
         except Exception as e:
             record.status = MigrationStatus.FAILED
             self.state_manager._save()
             raise
-    
+
     def _compute_result_checksum(self, migration_id: str) -> str:
         """Compute checksum of migration results for verification."""
         # Implementation depends on target system
@@ -277,17 +278,17 @@ Blue-green deployments create parallel environments, enabling instant rollback:
 flowchart LR
     accTitle: Blue-Green Deployment Pattern
     accDescr: Parallel environments for safe agricultural data migration with instant rollback capability
-    
+
     Users --> LB[Load Balancer]
     LB -->|Production| Blue[Blue Environment<br/>Current Data]
     LB -->|Staging| Green[Green Environment<br/>Migrated Data]
-    
+
     Green -.->|Validation| Validator[Data Validator]
     Validator -.->|Pass| Switch{Switch Traffic}
     Validator -.->|Fail| Rollback[Rollback to Blue]
-    
+
     Switch -->|Cutover| LB
-    
+
     style Blue fill:#dbeafe,stroke:#2563eb
     style Green fill:#d1fae5,stroke:#059669
     style Rollback fill:#fee2e2,stroke:#dc2626
@@ -305,12 +306,12 @@ class SafeMigrationRunner:
     Executes database migrations with automatic rollback capability.
     Essential for agricultural data where downtime affects operations.
     """
-    
+
     def __init__(self, dsn: str, dry_run: bool = True):
         self.dsn = dsn
         self.dry_run = dry_run
         self._savepoints: List[str] = []
-    
+
     @contextmanager
     def migration_context(self, migration_name: str):
         """
@@ -319,16 +320,16 @@ class SafeMigrationRunner:
         """
         conn = psycopg2.connect(self.dsn)
         conn.autocommit = False
-        
+
         savepoint_name = f"sp_{migration_name}_{int(time.time())}"
-        
+
         try:
             cursor = conn.cursor()
             cursor.execute(f"SAVEPOINT {savepoint_name}")
             self._savepoints.append(savepoint_name)
-            
+
             yield cursor
-            
+
             if self.dry_run:
                 cursor.execute(f"ROLLBACK TO SAVEPOINT {savepoint_name}")
                 print(f"[DRY RUN] Migration {migration_name} would succeed")
@@ -336,14 +337,14 @@ class SafeMigrationRunner:
                 cursor.execute(f"RELEASE SAVEPOINT {savepoint_name}")
                 conn.commit()
                 print(f"Migration {migration_name} committed")
-                
+
         except Exception as e:
             conn.rollback()
             print(f"Migration {migration_name} rolled back: {e}")
             raise
         finally:
             conn.close()
-    
+
     def execute_migration(self, migration_sql: str, migration_name: str):
         """Execute a single migration with safety."""
         with self.migration_context(migration_name) as cursor:
@@ -364,40 +365,40 @@ class FileSystemRollback:
     Manages file system changes with snapshot-based rollback.
     Critical for geospatial data migrations.
     """
-    
+
     def __init__(self, base_path: Path, backup_dir: Path):
         self.base_path = Path(base_path)
         self.backup_dir = Path(backup_dir)
         self.backup_dir.mkdir(parents=True, exist_ok=True)
         self._snapshot: Optional[Path] = None
-    
+
     def create_snapshot(self, operation_id: str) -> Path:
         """Create a snapshot before migration."""
         snapshot_path = self.backup_dir / f"snapshot_{operation_id}_{datetime.now():%Y%m%d_%H%M%S}"
-        
+
         # Use hard links for efficiency (copy-on-write)
         shutil.copytree(
             self.base_path,
             snapshot_path,
             copy_function=lambda src, dst: os.link(src, dst) if os.path.isfile(src) else shutil.copy2(src, dst)
         )
-        
+
         self._snapshot = snapshot_path
         return snapshot_path
-    
+
     def rollback(self):
         """Restore from snapshot."""
         if not self._snapshot or not self._snapshot.exists():
             raise ValueError("No snapshot available for rollback")
-        
+
         # Remove current state
         shutil.rmtree(self.base_path)
-        
+
         # Restore from snapshot
         shutil.copytree(self._snapshot, self.base_path)
-        
+
         print(f"Rolled back to snapshot: {self._snapshot}")
-    
+
     def commit(self):
         """Remove snapshot after successful migration."""
         if self._snapshot and self._snapshot.exists():
@@ -426,17 +427,17 @@ class FeatureFlagManager:
     Controls migration rollout by field/region.
     Enables safe gradual migration of agricultural data.
     """
-    
+
     def __init__(self):
         self._phase = MigrationPhase.DISABLED
         self._canary_fields: Set[str] = set()
-    
+
     def set_phase(self, phase: MigrationPhase, canary_fields: Optional[Set[str]] = None):
         """Advance to next migration phase."""
         self._phase = phase
         if canary_fields:
             self._canary_fields = canary_fields
-    
+
     def should_use_new_system(self, field_id: str, region: str) -> bool:
         """
         Determine if field should use migrated data.
@@ -444,18 +445,18 @@ class FeatureFlagManager:
         """
         if self._phase == MigrationPhase.DISABLED:
             return False
-        
+
         if self._phase == MigrationPhase.CANARY_FIELDS:
             return field_id in self._canary_fields
-        
+
         if self._phase == MigrationPhase.CORN_BELT:
             return region in ['IA', 'IL', 'IN', 'OH']
-        
+
         if self._phase == MigrationPhase.MIDWEST:
             return region in ['IA', 'IL', 'IN', 'OH', 'MN', 'WI', 'MI']
-        
+
         return self._phase == MigrationPhase.FULL
-    
+
     def get_migration_status(self) -> dict:
         """Report current migration status."""
         return {
@@ -463,7 +464,7 @@ class FeatureFlagManager:
             'canary_count': len(self._canary_fields),
             'progress': self._calculate_progress()
         }
-    
+
     def _calculate_progress(self) -> float:
         """Calculate migration progress percentage."""
         progress_map = {
@@ -488,17 +489,17 @@ Data integrity validation works in layers—each catches different problems[^2]:
 flowchart TD
     accTitle: Layered Data Validation Framework
     accDescr: Four-layer validation approach for agricultural data migration
-    
+
     A[Data Integrity Validation] --> B[Layer 1: Volume Checks]
     A --> C[Layer 2: Structural Checks]
     A --> D[Layer 3: Content Checks]
     A --> E[Layer 4: Application Checks]
-    
+
     B --> B1[Row counts<br/>File counts<br/>Storage sizes]
     C --> C1[Schema comparison<br/>Index verification<br/>Constraint checks]
     D --> D1[Checksums<br/>Sample queries<br/>Boundary records]
     E --> E1[Business logic<br/>Report comparison<br/>End-to-end workflows]
-    
+
     style A fill:#fef3c7,stroke:#d97706
     style B fill:#dbeafe,stroke:#2563eb
     style C fill:#d1fae5,stroke:#059669
@@ -517,12 +518,12 @@ class VolumeValidator:
     Validates data volume metrics between source and target.
     First line of defense for agricultural data migrations.
     """
-    
+
     def validate_row_counts(self, source_query: str, target_query: str, conn) -> dict:
         """Compare row counts between source and target databases."""
         source_count = pd.read_sql(f"SELECT COUNT(*) as cnt FROM ({source_query}) t", conn)['cnt'][0]
         target_count = pd.read_sql(f"SELECT COUNT(*) as cnt FROM ({target_query}) t", conn)['cnt'][0]
-        
+
         return {
             'check': 'row_count',
             'source': source_count,
@@ -530,35 +531,35 @@ class VolumeValidator:
             'match': source_count == target_count,
             'difference': target_count - source_count
         }
-    
+
     def validate_file_counts(self, source_dir: Path, target_dir: Path) -> dict:
         """Compare file counts for raster/shapefile migrations."""
         source_files = list(source_dir.rglob('*'))
         target_files = list(target_dir.rglob('*'))
-        
+
         source_count = len([f for f in source_files if f.is_file()])
         target_count = len([f for f in target_files if f.is_file()])
-        
+
         return {
             'check': 'file_count',
             'source': source_count,
             'target': target_count,
             'match': source_count == target_count
         }
-    
+
     def validate_storage_size(self, source_path: Path, target_path: Path) -> dict:
         """Compare total storage sizes."""
         def get_size(path: Path) -> int:
             if path.is_file():
                 return path.stat().st_size
             return sum(f.stat().st_size for f in path.rglob('*') if f.is_file())
-        
+
         source_size = get_size(source_path)
         target_size = get_size(target_path)
-        
+
         # Allow 5% variance for compression/encoding differences
         variance = abs(target_size - source_size) / source_size if source_size > 0 else 0
-        
+
         return {
             'check': 'storage_size',
             'source_bytes': source_size,
@@ -578,11 +579,11 @@ class StructuralValidator:
     Validates database schema, indexes, and constraints.
     Prevents silent structural issues in agricultural databases.
     """
-    
+
     def compare_schemas(self, source_conn, target_conn, schema: str = 'public') -> dict:
         """Compare table structures between source and target."""
         query = """
-        SELECT 
+        SELECT
             table_name,
             column_name,
             data_type,
@@ -593,10 +594,10 @@ class StructuralValidator:
         WHERE table_schema = %s
         ORDER BY table_name, ordinal_position
         """
-        
+
         source_schema = pd.read_sql(query, source_conn, params=(schema,))
         target_schema = pd.read_sql(query, target_conn, params=(schema,))
-        
+
         # Compare using merge
         comparison = source_schema.merge(
             target_schema,
@@ -605,9 +606,9 @@ class StructuralValidator:
             indicator=True,
             suffixes=('_source', '_target')
         )
-        
+
         mismatches = comparison[comparison['_merge'] != 'both']
-        
+
         return {
             'check': 'schema_comparison',
             'source_tables': source_schema['table_name'].nunique(),
@@ -616,7 +617,7 @@ class StructuralValidator:
             'match': len(mismatches) == 0,
             'details': mismatches.to_dict('records') if len(mismatches) > 0 else []
         }
-    
+
     def validate_indexes(self, source_conn, target_conn) -> dict:
         """Verify indexes were migrated."""
         query = """
@@ -625,10 +626,10 @@ class StructuralValidator:
         WHERE schemaname = 'public'
         ORDER BY tablename, indexname
         """
-        
+
         source_indexes = pd.read_sql(query, source_conn)
         target_indexes = pd.read_sql(query, target_conn)
-        
+
         return {
             'check': 'indexes',
             'source_count': len(source_indexes),
@@ -648,7 +649,7 @@ class ContentValidator:
     Validates actual data content using checksums and sampling.
     Critical for agricultural data where values matter.
     """
-    
+
     def compute_table_checksum(self, conn, table: str, id_column: str, sample_size: int = 10000) -> str:
         """
         Compute deterministic checksum from table sample.
@@ -662,27 +663,27 @@ class ContentValidator:
             TABLESAMPLE SYSTEM (({sample_size} * 100.0 / NULLIF((SELECT COUNT(*) FROM {table}), 0)))
         ) sample
         """
-        
+
         result = pd.read_sql(query, conn)
         return result['checksum'][0] if not result.empty else None
-    
+
     def validate_checksums(self, tables: List[str], source_conn, target_conn) -> List[dict]:
         """Validate checksums across multiple tables."""
         results = []
-        
+
         for table in tables:
             source_hash = self.compute_table_checksum(source_conn, table, 'id')
             target_hash = self.compute_table_checksum(target_conn, table, 'id')
-            
+
             results.append({
                 'table': table,
                 'source_hash': source_hash[:16] if source_hash else None,
                 'target_hash': target_hash[:16] if target_hash else None,
                 'match': source_hash == target_hash
             })
-        
+
         return results
-    
+
     def validate_boundary_records(self, conn, table: str, id_column: str) -> dict:
         """
         Validate first, last, and boundary records.
@@ -693,12 +694,12 @@ class ContentValidator:
             'last': f"SELECT * FROM {table} ORDER BY {id_column} DESC LIMIT 1",
             'middle': f"SELECT * FROM {table} OFFSET (SELECT COUNT(*) / 2 FROM {table}) LIMIT 1"
         }
-        
+
         results = {}
         for name, query in queries.items():
             df = pd.read_sql(query, conn)
             results[name] = df.to_dict('records')[0] if not df.empty else None
-        
+
         return {
             'check': 'boundary_records',
             'table': table,
@@ -714,7 +715,7 @@ class ApplicationValidator:
     Validates business logic and report outputs.
     Final validation layer for agricultural data.
     """
-    
+
     def compare_reports(self, source_conn, target_conn, queries: dict) -> dict:
         """
         Compare critical business reports between source and target.
@@ -722,34 +723,34 @@ class ApplicationValidator:
         """
         results = {}
         all_match = True
-        
+
         for report_name, query in queries.items():
             source_df = pd.read_sql(query, source_conn)
             target_df = pd.read_sql(query, target_conn)
-            
+
             # Compare with tolerance for floating point
             match = self._dataframes_equal_with_tolerance(source_df, target_df)
-            
+
             results[report_name] = {
                 'match': match,
                 'source_rows': len(source_df),
                 'target_rows': len(target_df)
             }
-            
+
             if not match:
                 all_match = False
-        
+
         return {
             'check': 'business_reports',
             'all_match': all_match,
             'reports': results
         }
-    
+
     def _dataframes_equal_with_tolerance(self, df1: pd.DataFrame, df2: pd.DataFrame, tolerance: float = 0.001) -> bool:
         """Compare DataFrames with floating point tolerance."""
         if df1.shape != df2.shape:
             return False
-        
+
         for col in df1.columns:
             if df1[col].dtype in ['float64', 'float32']:
                 if not np.allclose(df1[col], df2[col], rtol=tolerance):
@@ -757,16 +758,16 @@ class ApplicationValidator:
             else:
                 if not df1[col].equals(df2[col]):
                     return False
-        
+
         return True
-    
+
     def validate_yield_calculations(self, source_conn, target_conn, season: str) -> dict:
         """
         Validate yield calculations for specific season.
         Critical for agricultural data migration.
         """
         query = f"""
-        SELECT 
+        SELECT
             field_id,
             AVG(yield_per_acre) as avg_yield,
             SUM(total_yield) as total_yield,
@@ -775,7 +776,7 @@ class ApplicationValidator:
         WHERE season = '{season}'
         GROUP BY field_id
         """
-        
+
         return self.compare_reports(source_conn, target_conn, {'yield_report': query})
 ```
 
@@ -787,18 +788,18 @@ class MigrationValidator:
     Orchestrates all validation layers for agricultural data migration.
     Produces comprehensive validation report.
     """
-    
+
     def __init__(self):
         self.volume_validator = VolumeValidator()
         self.structural_validator = StructuralValidator()
         self.content_validator = ContentValidator()
         self.application_validator = ApplicationValidator()
         self.results = []
-    
+
     def run_full_validation(self, config: dict) -> dict:
         """
         Execute complete validation suite.
-        
+
         config = {
             'source_conn': source_connection,
             'target_conn': target_connection,
@@ -814,14 +815,14 @@ class MigrationValidator:
                 config['source_conn']
             )
             self.results.append(result)
-        
+
         # Layer 2: Structure
         schema_result = self.structural_validator.compare_schemas(
             config['source_conn'],
             config['target_conn']
         )
         self.results.append(schema_result)
-        
+
         # Layer 3: Content
         checksum_results = self.content_validator.validate_checksums(
             config['tables'],
@@ -829,7 +830,7 @@ class MigrationValidator:
             config['target_conn']
         )
         self.results.extend(checksum_results)
-        
+
         # Layer 4: Application
         app_result = self.application_validator.compare_reports(
             config['source_conn'],
@@ -837,14 +838,14 @@ class MigrationValidator:
             config['critical_reports']
         )
         self.results.append(app_result)
-        
+
         return self._generate_report()
-    
+
     def _generate_report(self) -> dict:
         """Generate comprehensive validation report."""
         passed = sum(1 for r in self.results if r.get('match', False))
         total = len(self.results)
-        
+
         return {
             'summary': {
                 'total_checks': total,
@@ -870,25 +871,25 @@ Database governance requires two types of controls[^3]:
 flowchart LR
     accTitle: CI/CD Guardrail Architecture
     accDescr: Path markers guide workflow; problem stoppers block unsafe changes
-    
+
     subgraph PathMarkers["Path Markers (Guidance)"]
         PM1[Branch naming conventions]
         PM2[Artifact locations]
         PM3[Standard workflows]
     end
-    
+
     subgraph ProblemStoppers["Problem Stoppers (Enforcement)"]
         PS1[Migration safety checks]
         PS2[Schema validation]
         PS3[Checksum verification]
     end
-    
+
     Dev[Developer] -->|Push| CI[CI Pipeline]
     CI --> PathMarkers
     CI --> ProblemStoppers
     ProblemStoppers -->|Block| Fix[Require Fix]
     ProblemStoppers -->|Pass| CD[CD Pipeline]
-    
+
     style ProblemStoppers fill:#fee2e2,stroke:#dc2626
     style PathMarkers fill:#dbeafe,stroke:#2563eb
 ```
@@ -912,7 +913,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Check for dangerous patterns
         run: |
           # Check for CREATE INDEX without CONCURRENTLY
@@ -921,24 +922,24 @@ jobs:
             echo "This blocks writes on large tables. Use CREATE INDEX CONCURRENTLY."
             exit 1
           fi
-          
+
           # Check for DROP TABLE/COLUMN
           if grep -rE "DROP (TABLE|COLUMN)" migrations/; then
             echo "WARNING: Destructive operation detected"
             echo "Ensure this is intentional and has rollback plan"
           fi
-          
+
           # Check for missing transaction blocks
           for file in migrations/*.sql; do
             if ! grep -q "BEGIN" "$file"; then
               echo "WARNING: $file missing explicit transaction block"
             fi
           done
-      
+
       - name: Validate migration checksums
         run: |
           python scripts/validate_migration_checksums.py
-      
+
       - name: Test migration on ephemeral database
         run: |
           docker-compose -f docker-compose.test.yml up -d
@@ -964,10 +965,10 @@ class MigrationCheck:
     Automated safety checks for SQL migrations.
     Prevents dangerous patterns in agricultural data migrations.
     """
-    
+
     DANGEROUS_PATTERNS = [
         # Pattern, Risk Level, Message
-        (r'DROP\s+(TABLE|COLUMN)', MigrationRisk.CRITICAL, 
+        (r'DROP\s+(TABLE|COLUMN)', MigrationRisk.CRITICAL,
          "Destructive operation - ensure rollback plan exists"),
         (r'CREATE\s+INDEX\s+(?!.*CONCURRENTLY)', MigrationRisk.CRITICAL,
          "CREATE INDEX without CONCURRENTLY blocks writes"),
@@ -978,18 +979,18 @@ class MigrationCheck:
         (r'ADD\s+COLUMN.*DEFAULT.*\([^)]+\)', MigrationRisk.WARNING,
          "Volatile DEFAULT values cause table rewrites"),
     ]
-    
+
     def check_migration(self, migration_path: Path) -> List[dict]:
         """Check a migration file for dangerous patterns."""
         violations = []
         content = migration_path.read_text()
-        
+
         for pattern, risk, message in self.DANGEROUS_PATTERNS:
             matches = re.finditer(pattern, content, re.IGNORECASE)
             for match in matches:
                 # Find line number
                 line_num = content[:match.start()].count('\n') + 1
-                
+
                 violations.append({
                     'file': str(migration_path),
                     'line': line_num,
@@ -997,20 +998,20 @@ class MigrationCheck:
                     'message': message,
                     'context': content.split('\n')[line_num-1].strip()[:80]
                 })
-        
+
         return violations
-    
+
     def check_all_migrations(self, migrations_dir: Path) -> dict:
         """Check all migrations and generate report."""
         all_violations = []
-        
+
         for migration_file in migrations_dir.glob('*.sql'):
             violations = self.check_migration(migration_file)
             all_violations.extend(violations)
-        
+
         critical = [v for v in all_violations if v['risk'] == 'critical']
         warnings = [v for v in all_violations if v['risk'] == 'warning']
-        
+
         return {
             'total_files': len(list(migrations_dir.glob('*.sql'))),
             'violations': len(all_violations),
@@ -1046,29 +1047,29 @@ def get_staged_files():
 
 def main():
     staged = get_staged_files()
-    
+
     if not staged:
         sys.exit(0)
-    
+
     from migration_validator import MigrationCheck
-    
+
     checker = MigrationCheck()
     has_critical = False
-    
+
     for file in staged:
         violations = checker.check_migration(Path(file))
         critical = [v for v in violations if v['risk'] == 'critical']
-        
+
         if critical:
             has_critical = True
             print(f"\n❌ CRITICAL violations in {file}:")
             for v in critical:
                 print(f"  Line {v['line']}: {v['message']}")
-    
+
     if has_critical:
         print("\nCommit blocked. Fix critical violations or use --no-verify (not recommended).")
         sys.exit(1)
-    
+
     print("✅ Migration safety checks passed")
     sys.exit(0)
 
@@ -1091,14 +1092,14 @@ class PromotionGate:
     Enforces promotion criteria between environments.
     Ensures agricultural data migrations are validated before production.
     """
-    
+
     GATES = {
         Environment.DEV: ['syntax_check', 'unit_tests'],
         Environment.STAGING: ['syntax_check', 'unit_tests', 'integration_tests', 'data_validation'],
-        Environment.PROD: ['syntax_check', 'unit_tests', 'integration_tests', 'data_validation', 
+        Environment.PROD: ['syntax_check', 'unit_tests', 'integration_tests', 'data_validation',
                           'performance_test', 'security_scan', 'approval']
     }
-    
+
     def __init__(self):
         self.checks = {
             'syntax_check': self._check_syntax,
@@ -1109,51 +1110,51 @@ class PromotionGate:
             'security_scan': self._run_security_scan,
             'approval': self._check_approval
         }
-    
+
     def can_promote(self, from_env: Environment, to_env: Environment) -> Tuple[bool, List[str]]:
         """Check if promotion is allowed between environments."""
         required = self.GATES.get(to_env, [])
         passed = []
         failed = []
-        
+
         for check in required:
             if self.checks[check]():
                 passed.append(check)
             else:
                 failed.append(check)
-        
+
         return len(failed) == 0, failed
-    
+
     def _check_syntax(self) -> bool:
         """Validate SQL syntax."""
         # Implementation
         return True
-    
+
     def _run_unit_tests(self) -> bool:
         """Run unit tests."""
         # Implementation
         return True
-    
+
     def _run_integration_tests(self) -> bool:
         """Run integration tests."""
         # Implementation
         return True
-    
+
     def _validate_data(self) -> bool:
         """Validate migrated data."""
         # Implementation
         return True
-    
+
     def _run_performance_test(self) -> bool:
         """Check migration performance."""
         # Implementation
         return True
-    
+
     def _run_security_scan(self) -> bool:
         """Security scan."""
         # Implementation
         return True
-    
+
     def _check_approval(self) -> bool:
         """Check for manual approval."""
         # Implementation
@@ -1177,7 +1178,7 @@ class MigrationPlanner:
     """
     Enforces thorough planning before migration execution.
     """
-    
+
     REQUIRED_PLANNING_ARTIFACTS = [
         'data_dictionary',
         'source_profiling_report',
@@ -1186,64 +1187,64 @@ class MigrationPlanner:
         'rollback_plan',
         'communication_plan'
     ]
-    
+
     def validate_readiness(self, migration_id: str) -> dict:
         """
         Check that all planning artifacts exist before allowing migration.
         """
         artifacts_dir = Path(f"migrations/{migration_id}/planning")
-        
+
         missing = []
         present = []
-        
+
         for artifact in self.REQUIRED_PLANNING_ARTIFACTS:
             artifact_file = artifacts_dir / f"{artifact}.md"
             if artifact_file.exists():
                 present.append(artifact)
             else:
                 missing.append(artifact)
-        
+
         return {
             'ready': len(missing) == 0,
             'present': present,
             'missing': missing,
             'completeness': f"{len(present)}/{len(self.REQUIRED_PLANNING_ARTIFACTS)}"
         }
-    
+
     def profile_source_data(self, conn, tables: List[str]) -> dict:
         """
         Generate comprehensive source data profile.
         Must be completed before migration planning.
         """
         profile = {}
-        
+
         for table in tables:
             # Row counts
             count = pd.read_sql(f"SELECT COUNT(*) as cnt FROM {table}", conn)['cnt'][0]
-            
+
             # Null percentages
             null_query = f"""
-            SELECT 
-                {', '.join([f"SUM(CASE WHEN {col} IS NULL THEN 1 ELSE 0 END) * 100.0 / COUNT(*) as {col}_null_pct" 
+            SELECT
+                {', '.join([f"SUM(CASE WHEN {col} IS NULL THEN 1 ELSE 0 END) * 100.0 / COUNT(*) as {col}_null_pct"
                           for col in self._get_columns(conn, table)])}
             FROM {table}
             """
             nulls = pd.read_sql(null_query, conn)
-            
+
             # Data types
             dtypes = pd.read_sql(f"""
-                SELECT column_name, data_type 
-                FROM information_schema.columns 
+                SELECT column_name, data_type
+                FROM information_schema.columns
                 WHERE table_name = '{table}'
             """, conn)
-            
+
             profile[table] = {
                 'row_count': count,
                 'null_percentages': nulls.to_dict(),
                 'data_types': dtypes.to_dict('records'),
                 'estimated_size_mb': self._estimate_size(conn, table)
             }
-        
+
         return profile
 ```
 
@@ -1260,10 +1261,10 @@ class DataQualityFramework:
     """
     Measures and tracks data quality through migration.
     """
-    
+
     def __init__(self):
         self.metrics = {}
-    
+
     def measure_completeness(self, df: pd.DataFrame, required_columns: List[str]) -> dict:
         """Measure field completeness."""
         results = {}
@@ -1276,46 +1277,46 @@ class DataQualityFramework:
                 'completeness_pct': (non_null / total) * 100 if total > 0 else 0
             }
         return results
-    
+
     def measure_uniqueness(self, df: pd.DataFrame, key_columns: List[str]) -> dict:
         """Measure record uniqueness."""
         total = len(df)
         unique = len(df.drop_duplicates(subset=key_columns))
         duplicates = total - unique
-        
+
         return {
             'total_records': total,
             'unique_records': unique,
             'duplicates': duplicates,
             'uniqueness_pct': (unique / total) * 100 if total > 0 else 0
         }
-    
+
     def measure_validity(self, df: pd.DataFrame, rules: dict) -> dict:
         """
         Measure data validity against business rules.
-        
+
         rules = {
             'yield_per_acre': {'min': 0, 'max': 300},
             'planting_date': {'not_future': True}
         }
         """
         results = {}
-        
+
         for column, constraints in rules.items():
             valid_count = len(df)
-            
+
             if 'min' in constraints:
                 valid_count = (df[column] >= constraints['min']).sum()
-            
+
             if 'max' in constraints:
                 valid_count = (df[column] <= constraints['max']).sum()
-            
+
             results[column] = {
                 'valid': int(valid_count),
                 'total': len(df),
                 'validity_pct': (valid_count / len(df)) * 100 if len(df) > 0 else 0
             }
-        
+
         return results
 ```
 
@@ -1330,53 +1331,53 @@ class ProductionLikeTesting:
     """
     Ensures testing uses production-scale data.
     """
-    
+
     def __init__(self, test_data_ratio: float = 1.0):
         """
         test_data_ratio: 1.0 = full production volume
                         0.1 = 10% sample
         """
         self.test_data_ratio = test_data_ratio
-    
+
     def create_test_dataset(self, source_conn, tables: List[str]) -> dict:
         """
         Create test dataset matching production scale.
         """
         test_stats = {}
-        
+
         for table in tables:
             # Get production count
             prod_count = pd.read_sql(f"SELECT COUNT(*) FROM {table}", source_conn).iloc[0, 0]
-            
+
             # Calculate test size
             test_size = int(prod_count * self.test_data_ratio)
-            
+
             # Sample with stratification if needed
             sample_query = f"""
             CREATE TABLE test_{table} AS
             SELECT * FROM {table}
             TABLESAMPLE SYSTEM ({self.test_data_ratio * 100})
             """
-            
+
             test_stats[table] = {
                 'production_rows': prod_count,
                 'test_rows': test_size,
                 'ratio': self.test_data_ratio
             }
-        
+
         return test_stats
-    
+
     def validate_performance(self, migration_fn, test_data: dict, max_duration_seconds: int = 300) -> dict:
         """
         Validate migration completes within acceptable time.
         """
         import time
-        
+
         start = time.time()
         try:
             migration_fn(test_data)
             duration = time.time() - start
-            
+
             return {
                 'success': True,
                 'duration_seconds': duration,
@@ -1402,15 +1403,15 @@ class StakeholderManager:
     """
     Manages stakeholder communication throughout migration.
     """
-    
+
     def __init__(self):
         self.data_owners = {}
         self.communication_log = []
-    
+
     def register_data_owner(self, domain: str, owner: dict):
         """
         Register business owner for data domain.
-        
+
         owner = {
             'name': 'Jane Smith',
             'role': 'Agronomy Manager',
@@ -1419,7 +1420,7 @@ class StakeholderManager:
         }
         """
         self.data_owners[domain] = owner
-    
+
     def require_signoff(self, domain: str, migration_phase: str) -> bool:
         """
         Check if data owner has signed off on migration phase.
@@ -1427,7 +1428,7 @@ class StakeholderManager:
         """
         signoff_file = Path(f"migrations/signoffs/{domain}_{migration_phase}.json")
         return signoff_file.exists()
-    
+
     def log_communication(self, domain: str, message: str, channel: str):
         """Log all stakeholder communications."""
         from datetime import datetime
@@ -1450,19 +1451,19 @@ class HyperCareProtocol:
     """
     Manages post-migration support period.
     """
-    
+
     def __init__(self, duration_days: int = 14):
         self.duration_days = duration_days
         self.start_date = None
         self.issues = []
         self.swat_team = []
-    
+
     def activate(self, swat_team_members: List[dict]):
         """Activate hyper-care period."""
         from datetime import datetime, timedelta
         self.start_date = datetime.now()
         self.swat_team = swat_team_members
-        
+
         return {
             'status': 'ACTIVE',
             'start_date': self.start_date.isoformat(),
@@ -1474,11 +1475,11 @@ class HyperCareProtocol:
                 'p3_normal': 'support@farm.com'
             }
         }
-    
+
     def categorize_issue(self, description: str, impact: str) -> str:
         """
         Categorize issue by severity.
-        
+
         P1: System down
         P2: Critical business process blocked
         P3: Data discrepancy
@@ -1491,33 +1492,33 @@ class HyperCareProtocol:
         elif 'discrepancy' in description.lower():
             return 'P3'
         return 'P4'
-    
+
     def log_issue(self, issue: dict) -> dict:
         """Log and categorize issue."""
         severity = self.categorize_issue(issue['description'], issue['impact'])
-        
+
         logged = {
             **issue,
             'severity': severity,
             'logged_at': datetime.now().isoformat(),
             'status': 'open'
         }
-        
+
         self.issues.append(logged)
-        
+
         # Alert SWAT team for P1/P2
         if severity in ['P1', 'P2']:
             self._alert_swat_team(logged)
-        
+
         return logged
-    
+
     def generate_hypercare_report(self) -> dict:
         """Generate end-of-hypercare report."""
         open_issues = [i for i in self.issues if i['status'] == 'open']
         by_severity = {}
         for i in self.issues:
             by_severity[i['severity']] = by_severity.get(i['severity'], 0) + 1
-        
+
         return {
             'period': f"{self.start_date} to {datetime.now()}",
             'total_issues': len(self.issues),
@@ -1532,6 +1533,7 @@ class HyperCareProtocol:
 ## Summary: Agricultural Data Migration Checklist
 
 ### Pre-Migration
+
 - [ ] Complete data profiling of source systems
 - [ ] Define measurable success criteria (not just "data migrated")
 - [ ] Establish data quality baselines
@@ -1542,6 +1544,7 @@ class HyperCareProtocol:
 - [ ] Create rollback procedures
 
 ### During Migration
+
 - [ ] Run migrations with dry-run mode first
 - [ ] Process in batches with checkpoints
 - [ ] Validate at all four layers (volume, structure, content, application)
@@ -1550,6 +1553,7 @@ class HyperCareProtocol:
 - [ ] Log all operations with checksums
 
 ### Post-Migration
+
 - [ ] Execute full validation suite
 - [ ] Activate hyper-care period (2-4 weeks)
 - [ ] Compare business reports between systems
@@ -1558,6 +1562,7 @@ class HyperCareProtocol:
 - [ ] Plan legacy system decommissioning
 
 ### CI/CD Integration
+
 - [ ] Implement migration safety checks in CI
 - [ ] Require checksum verification before deployment
 - [ ] Set up environment promotion gates
@@ -1575,11 +1580,3 @@ class HyperCareProtocol:
 [^3]: [Guardrails for CI/CD: Database governance for consistency, quality, and security](https://www.liquibase.com/blog/guardrails-ci-cd), Liquibase, April 2024
 
 [^4]: [How to Add Database Migration Checks to Your CI/CD Pipeline](https://dev.to/mickelsamuel/how-to-add-database-migration-checks-to-your-cicd-pipeline-lm9), DEV Community, March 2026
-
-[^5]: [Data Migration Best Practices: Your Ultimate Guide for 2026](https://medium.com/@kanerika/data-migration-best-practices-your-ultimate-guide-for-2026-7cbd5594d92e), Kanerika Inc, December 2025
-
-[^6]: [Zero-Downtime Migration (ZDM): Guide to Migrating Critical Systems](https://insights.daffodilsw.com/blog/zero-downtime-migration-zdm-guide-to-migrating-critical-systems), Daffodil Software, February 2026
-
-[^7]: [How to Implement Idempotent Data Pipelines in GCP](https://oneuptime.com/blog/post/2026-02-17-how-to-implement-idempotent-data-pipelines-in-gcp-to-handle-retry-safe-processing/view), OneUptime, February 2026
-
-[^8]: [Data Migration Trends and Best Practices for 2026](https://www.techment.com/blogs/data-migration-trends-best-practices-2026/), Techment, January 2026

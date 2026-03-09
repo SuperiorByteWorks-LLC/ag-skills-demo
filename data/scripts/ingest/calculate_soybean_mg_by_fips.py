@@ -33,6 +33,7 @@ def main() -> int:
         shared_corn_gdd_table_path,
         shared_geoadmin_counties_dir,
         shared_soybean_maturity_metadata_dir,
+        shared_soybean_mg_csv_path,
         shared_soybean_mg_table_path,
     )
     from reporting_bootstrap import ensure_canonical_data_tree, ensure_skill_path
@@ -59,10 +60,13 @@ def main() -> int:
     )
 
     mg_path = shared_soybean_mg_table_path(args.year)
+    mg_csv_path = shared_soybean_mg_csv_path(args.year)
     metadata_path = shared_soybean_maturity_metadata_dir() / f"mg_by_fips_{args.year}.json"
     mg_path.parent.mkdir(parents=True, exist_ok=True)
+    mg_csv_path.parent.mkdir(parents=True, exist_ok=True)
     metadata_path.parent.mkdir(parents=True, exist_ok=True)
     county_mg.to_parquet(mg_path, index=False)
+    county_mg.to_csv(mg_csv_path, index=False)
     metadata_path.write_text(json.dumps(metadata, indent=2) + "\n", encoding="utf-8")
 
     print(
@@ -74,6 +78,7 @@ def main() -> int:
                 "county_count": int(len(county_mg)),
                 "latitude_intercept": float(args.latitude_intercept),
                 "latitude_slope": float(args.latitude_slope),
+                "mg_csv_path": _repo_relative(mg_csv_path),
             },
             indent=2,
             sort_keys=True,

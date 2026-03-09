@@ -80,10 +80,10 @@ def main() -> int:
         }
     )
 
-    steps: list[tuple[str, Path | None, list[str]]] = [
+    steps: list[tuple[str, list[Path], list[str]]] = [
         (
             "geoadmin",
-            geoadmin_output,
+            [geoadmin_output],
             [
                 sys.executable,
                 "data/scripts/ingest/download_geoadmin.py",
@@ -95,12 +95,15 @@ def main() -> int:
         ),
         (
             "field-fips",
-            field_fips_output,
+            [field_fips_output],
             [sys.executable, "data/scripts/ingest/assign_field_fips.py"],
         ),
         (
             "county-weather",
-            Path(output_index["county_weather"]),
+            [
+                Path(output_index["county_weather"]),
+                Path(output_index["county_weather_summary"]),
+            ],
             [
                 sys.executable,
                 "data/scripts/ingest/aggregate_weather_by_fips.py",
@@ -112,7 +115,10 @@ def main() -> int:
         ),
         (
             "county-gdd",
-            Path(output_index["corn_gdd"]),
+            [
+                Path(output_index["corn_gdd"]),
+                _REPO_ROOT / f"data/shared/corn_maturity/metadata/gdd_by_fips_{args.year}.json",
+            ],
             [
                 sys.executable,
                 "data/scripts/ingest/calculate_gdd_by_fips.py",
@@ -124,7 +130,11 @@ def main() -> int:
         ),
         (
             "corn-rm",
-            Path(output_index["corn_rm"]),
+            [
+                Path(output_index["corn_rm"]),
+                Path(output_index["corn_rm_csv"]),
+                _REPO_ROOT / f"data/shared/corn_maturity/metadata/rm_by_fips_{args.year}.json",
+            ],
             [
                 sys.executable,
                 "data/scripts/ingest/calculate_corn_rm_by_fips.py",
@@ -134,7 +144,11 @@ def main() -> int:
         ),
         (
             "soybean-mg",
-            Path(output_index["soybean_mg"]),
+            [
+                Path(output_index["soybean_mg"]),
+                Path(output_index["soybean_mg_csv"]),
+                _REPO_ROOT / f"data/shared/soybean_maturity/metadata/mg_by_fips_{args.year}.json",
+            ],
             [
                 sys.executable,
                 "data/scripts/ingest/calculate_soybean_mg_by_fips.py",
@@ -144,7 +158,10 @@ def main() -> int:
         ),
         (
             "maps",
-            Path(output_index["soybean_map"]),
+            [
+                Path(output_index["corn_map"]),
+                Path(output_index["soybean_map"]),
+            ],
             [
                 sys.executable,
                 "data/scripts/reporting/generate_maturity_maps.py",
@@ -154,14 +171,19 @@ def main() -> int:
         ),
     ]
 
-    for step_name, output_path, command in steps:
+    for step_name, output_paths, command in steps:
         step_record = dict(manifest["steps"].get(step_name, {}))
-        if output_path is not None and output_path.exists() and not args.force:
-            print(f"skip {step_name}: {output_path}")
+        primary_output = output_paths[0] if output_paths else None
+        outputs_exist = bool(output_paths) and all(path.exists() for path in output_paths)
+        if outputs_exist and not args.force:
+            print(f"skip {step_name}: {primary_output}")
             step_record.update(
                 {
                     "status": "skipped",
-                    "output_path": _repo_relative(output_path),
+                    "output_path": _repo_relative(primary_output)
+                    if primary_output is not None
+                    else None,
+                    "output_paths": [_repo_relative(path) for path in output_paths],
                     "updated_at": _iso_now(),
                 }
             )
@@ -172,7 +194,10 @@ def main() -> int:
         step_record.update(
             {
                 "status": "complete",
-                "output_path": _repo_relative(output_path) if output_path is not None else None,
+                "output_path": _repo_relative(primary_output)
+                if primary_output is not None
+                else None,
+                "output_paths": [_repo_relative(path) for path in output_paths],
                 "updated_at": _iso_now(),
             }
         )

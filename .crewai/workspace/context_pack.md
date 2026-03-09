@@ -7,16 +7,16 @@
 - Merge base: HEAD
 
 ## Recent commits
-- 6b27a8a feat(ssurgo-features): export per-field choropleth feature maps
-- efe6e02 fix(ssurgo-reporting): restore real soil variation and improve map presentation
-- 85af4b8 feat(ssurgo-maps): switch to clipped natural-breaks choropleth styling
-- cd69fbd fix(reporting): include soil maps and farm summary assets in canonical outputs
-- 268c7f9 feat(farm-data-rebuild): add single orchestrator skill for deterministic rebuild
+- e255ad6 docs(maturity): record county weather checkpoint
+- f5fd7b4 chore(weather): record county weather outputs
+- 1d97d4f feat(weather): add county fips transform script
+- 6440bed feat(maturity): add county weather aggregation helpers
+- bbae2aa docs(maturity): sync bridge checkpoint records
 
 ## Local CI summary markdown
 # Local CI Summary
 
-Generated: 2026-03-08T19:31:24Z
+Generated: 2026-03-09T03:24:49Z
 
 ## ✅ Validate Environment
 
@@ -39,15 +39,15 @@ Generated: 2026-03-08T19:31:24Z
 
 | Step | Status | Duration |
 | --- | --- | --- |
-| Prettier Format | pass | 2s |
-| ESLint | pass | 2s |
-| Markdownlint | fail | 1s |
+| Prettier Format | pass | 3s |
+| ESLint | pass | 1s |
+| Markdownlint | fail | 2s |
 | Stylelint | pass | 1s |
 | Ruff Lint | pass | 0s |
 | Ruff Format | pass | 0s |
-| Commitlint | warn | 1s |
+| Commitlint | warn | 0s |
 | TypeScript | skip | 0s |
-| Link Check | fail | 5s |
+| Link Check | fail | 4s |
 | CrewAI Tests | pass | 3s |
 | Website Build | pass | 0s |
 | Preview Deploy | skip | 0s |
@@ -57,7 +57,7 @@ Generated: 2026-03-08T19:31:24Z
 ## Docs link-check summary markdown
 # Docs Link Check Summary
 
-Generated: 2026-03-08T19:31:21Z
+Generated: 2026-03-09T03:24:46Z
 
 ⚠️ Link check reported issues.
 
@@ -70,7 +70,7 @@ Generated: 2026-03-08T19:31:21Z
 ## Docs link-check report markdown
 # Documentation Link Check Report
 
-Generated: 2026-03-08T19:31:21Z
+Generated: 2026-03-09T03:24:46Z
 
 - Internal markdown checker: fail
 - Lychee checker: fail
@@ -79,9 +79,9 @@ Generated: 2026-03-08T19:31:21Z
 
 # Internal Markdown Link Check
 
-Files scanned: 121
-Links checked: 753
-Broken links: 113
+Files scanned: 131
+Links checked: 854
+Broken links: 118
 
 | Source file | Link target | Error |
 | --- | --- | --- |
@@ -91,46 +91,6 @@ Broken links: 113
 | `apps/README.md` | `../data/sql/` | missing file |
 | `src/README.md` | `../data/sql/` | missing file |
 | `.opencode/skills/nasa-power-weather/SKILL.md` | `../.skills/field-boundaries/` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./field_cards/iowa_field_poster_01.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1428284928/derived/features/ndvi_corn.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1428284928/derived/features/ndvi_soybean.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1428284928/derived/features/ndvi_current_season_cumulative.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./field_cards/iowa_field_poster_02.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1434730614/derived/features/ndvi_corn.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1434730614/derived/features/ndvi_soybean.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1434730614/derived/features/ndvi_current_season_cumulative.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./field_cards/iowa_field_poster_03.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1434730620/derived/features/ndvi_corn.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1434730620/derived/features/ndvi_soybean.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1434730620/derived/features/ndvi_current_season_cumulative.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./field_cards/iowa_field_poster_04.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998701371/derived/features/ndvi_corn.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998701371/derived/features/ndvi_soybean.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998701371/derived/features/ndvi_current_season_cumulative.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./field_cards/iowa_field_poster_05.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998706547/derived/features/ndvi_corn.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998706547/derived/features/ndvi_soybean.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998706547/derived/features/ndvi_current_season_cumulative.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./field_cards/iowa_field_poster_06.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998706549/derived/features/ndvi_corn.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998706549/derived/features/ndvi_soybean.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998706549/derived/features/ndvi_current_season_cumulative.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./field_cards/iowa_field_poster_07.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998706550/derived/features/ndvi_corn.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998706550/derived/features/ndvi_soybean.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998706550/derived/features/ndvi_current_season_cumulative.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./field_cards/iowa_field_poster_08.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998713335/derived/features/ndvi_corn.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998713335/derived/features/ndvi_soybean.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998713335/derived/features/ndvi_current_season_cumulative.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./field_cards/iowa_field_poster_09.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998713337/derived/features/ndvi_corn.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998713337/derived/features/ndvi_soybean.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998713337/derived/features/ndvi_current_season_cumulative.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./field_cards/iowa_field_poster_10.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998713346/derived/features/ndvi_corn.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998713346/derived/features/ndvi_soybean.png` | missing file |
-| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998713346/derived/features/ndvi_current_season_cumulative.png` | missing file |
 | `data/growers/iowa-demo-grower/farms/iowa-demo-farm/derived/summaries/iowa_farm_report.md` | `./field_cards/iowa_field_poster_01.png` | missing file |
 | `data/growers/iowa-demo-grower/farms/iowa-demo-farm/derived/summaries/iowa_farm_report.md` | `./soil_cards/field_01_texture.png` | missing file |
 | `data/growers/iowa-demo-grower/farms/iowa-demo-farm/derived/summaries/iowa_farm_report.md` | `./soil_cards/field_01_properties.png` | missing file |
@@ -192,6 +152,51 @@ Broken links: 113
 | `data/growers/iowa-demo-grower/farms/iowa-demo-farm/derived/summaries/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998713346/derived/features/ndvi_soybean.png` | missing file |
 | `data/growers/iowa-demo-grower/farms/iowa-demo-farm/derived/summaries/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998713346/derived/features/ndvi_current_season_cumulative.png` | missing file |
 | `data/growers/iowa-demo-grower/farms/iowa-demo-farm/derived/summaries/iowa_farm_report.md` | `./field_cards/` | missing file |
+| `data/growers/iowa-demo-grower/farms/iowa-demo-farm/derived/reports/iowa_farm_report.md` | `./field_cards/` | missing file |
+| `data/growers/iowa-demo-grower/farms/iowa-demo-farm/derived/reports/iowa_farm_report.md` | `./soil_cards/` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./field_cards/iowa_field_poster_01.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1428284928/derived/features/ndvi_corn.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1428284928/derived/features/ndvi_soybean.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1428284928/derived/features/ndvi_current_season_cumulative.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./field_cards/iowa_field_poster_02.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1434730614/derived/features/ndvi_corn.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1434730614/derived/features/ndvi_soybean.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1434730614/derived/features/ndvi_current_season_cumulative.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./field_cards/iowa_field_poster_03.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1434730620/derived/features/ndvi_corn.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1434730620/derived/features/ndvi_soybean.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1434730620/derived/features/ndvi_current_season_cumulative.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./field_cards/iowa_field_poster_04.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998701371/derived/features/ndvi_corn.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998701371/derived/features/ndvi_soybean.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998701371/derived/features/ndvi_current_season_cumulative.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./field_cards/iowa_field_poster_05.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998706547/derived/features/ndvi_corn.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998706547/derived/features/ndvi_soybean.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998706547/derived/features/ndvi_current_season_cumulative.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./field_cards/iowa_field_poster_06.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998706549/derived/features/ndvi_corn.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998706549/derived/features/ndvi_soybean.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998706549/derived/features/ndvi_current_season_cumulative.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./field_cards/iowa_field_poster_07.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998706550/derived/features/ndvi_corn.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998706550/derived/features/ndvi_soybean.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998706550/derived/features/ndvi_current_season_cumulative.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./field_cards/iowa_field_poster_08.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998713335/derived/features/ndvi_corn.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998713335/derived/features/ndvi_soybean.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998713335/derived/features/ndvi_current_season_cumulative.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./field_cards/iowa_field_poster_09.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998713337/derived/features/ndvi_corn.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998713337/derived/features/ndvi_soybean.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998713337/derived/features/ndvi_current_season_cumulative.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./field_cards/iowa_field_poster_10.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998713346/derived/features/ndvi_corn.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998713346/derived/features/ndvi_soybean.png` | missing file |
+| `data/reporting/legacy-backfill/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998713346/derived/features/ndvi_current_season_cumulative.png` | missing file |
+| `docs/project/issues/issue-00000007-build-maturity-by-fips-pipeline.md` | `../../.sisyphus/plans/grm-by-fips-geoadmin.md` | missing file |
+| `docs/project/pr/pr-00000004-build-maturity-by-fips-pipeline.md` | `../../.sisyphus/plans/grm-by-fips-geoadmin.md` | missing file |
+| `docs/project/kanban/project-maturity-by-fips.md` | `../../.sisyphus/plans/grm-by-fips-geoadmin.md` | missing file |
 | `docs/project/kanban/project-cloudflare-pages-deploy.md` | `../../docs/project/pr/pr-00000001-agentic-docs-and-monorepo-modernization.md` | missing file |
 | `docs/project/kanban/project-cloudflare-pages-deploy.md` | `../../docs/project/pr/pr-00000001-agentic-docs-and-monorepo-modernization.md` | missing file |
 | `docs/project/kanban/project-cloudflare-pages-deploy.md` | `../../docs/project/pr/pr-00000001-agentic-docs-and-monorepo-modernization.md` | missing file |
@@ -205,11 +210,11 @@ Broken links: 113
 
 | Status         | Count |
 |----------------|-------|
-| 🔍 Total       | 737   |
-| ✅ Successful  | 83    |
+| 🔍 Total       | 837   |
+| ✅ Successful  | 91    |
 | ⏳ Timeouts    | 0     |
 | 🔀 Redirected  | 21    |
-| 👻 Excluded    | 621   |
+| 👻 Excluded    | 713   |
 | ❓ Unknown     | 0     |
 | 🚫 Errors      | 12    |
 | ⛔ Unsupported | 0     |
@@ -252,275 +257,286 @@ Broken links: 113
 
 ## Diff excerpt
 [DIFF BEGIN]
-diff --git a/.ci-local.lock b/.ci-local.lock
-index 1ce2524..c6ec760 100644
---- a/.ci-local.lock
-+++ b/.ci-local.lock
-@@ -1 +1 @@
--pid=4652 started=2026-03-08T00:39:18Z cwd=/workspaces/ag-skills-demo
-+pid=4031240 started=2026-03-08T19:31:07Z cwd=/home/clay/dev/ag-skills-demo
-diff --git a/.crewai/workspace/ci_results/core-ci/summary.md b/.crewai/workspace/ci_results/core-ci/summary.md
-index c0e5f73..34153d4 100644
---- a/.crewai/workspace/ci_results/core-ci/summary.md
-+++ b/.crewai/workspace/ci_results/core-ci/summary.md
-@@ -1,6 +1,6 @@
- # Local CI Summary
- 
--Generated: 2026-03-08T00:40:12Z
-+Generated: 2026-03-08T19:31:24Z
- 
- ## ✅ Validate Environment
- 
-@@ -23,15 +23,16 @@ Generated: 2026-03-08T00:40:12Z
- 
- | Step | Status | Duration |
- | --- | --- | --- |
--| Prettier Format | pass | 13s |
--| ESLint | pass | 5s |
--| Markdownlint | pass | 3s |
--| Stylelint | pass | 2s |
--| Ruff | skip | 0s |
--| Commitlint | warn | 4s |
-+| Prettier Format | pass | 2s |
-+| ESLint | pass | 2s |
-+| Markdownlint | fail | 1s |
-+| Stylelint | pass | 1s |
-+| Ruff Lint | pass | 0s |
-+| Ruff Format | pass | 0s |
-+| Commitlint | warn | 1s |
- | TypeScript | skip | 0s |
--| Link Check | fail | 9s |
--| CrewAI Tests | fail | 10s |
--| Website Build | pass | 3s |
-+| Link Check | fail | 5s |
-+| CrewAI Tests | pass | 3s |
-+| Website Build | pass | 0s |
- | Preview Deploy | skip | 0s |
- | Production Deploy | skip | 0s |
-diff --git a/.crewai/workspace/ci_results/test-crewai/summary.md b/.crewai/workspace/ci_results/test-crewai/summary.md
-index bd60110..68ff9e3 100644
---- a/.crewai/workspace/ci_results/test-crewai/summary.md
-+++ b/.crewai/workspace/ci_results/test-crewai/summary.md
-@@ -1,4 +1,4 @@
- # CrewAI tests summary
- 
--- status: fail
--- duration: 10s
-+- status: pass
-+- duration: 3s
-diff --git a/.crewai/workspace/ci_results/test-docs-links/summary.md b/.crewai/workspace/ci_results/test-docs-links/summary.md
-index 79906c6..4410ac2 100644
---- a/.crewai/workspace/ci_results/test-docs-links/summary.md
-+++ b/.crewai/workspace/ci_results/test-docs-links/summary.md
-@@ -1,6 +1,6 @@
- # Docs Link Check Summary
- 
--Generated: 2026-03-08T00:39:59Z
-+Generated: 2026-03-08T19:31:21Z
- 
- ⚠️ Link check reported issues.
- 
-diff --git a/.crewai/workspace/ci_results/test-website/summary.md b/.crewai/workspace/ci_results/test-website/summary.md
-index 51fa6a2..b42c4fe 100644
---- a/.crewai/workspace/ci_results/test-website/summary.md
-+++ b/.crewai/workspace/ci_results/test-website/summary.md
-@@ -1,4 +1,4 @@
- # Website test/build summary
- 
- - status: pass
--- duration: 3s
-+- duration: 0s
-diff --git a/.crewai/workspace/link-check-internal.md b/.crewai/workspace/link-check-internal.md
-index 92886d5..f041cd0 100644
---- a/.crewai/workspace/link-check-internal.md
-+++ b/.crewai/workspace/link-check-internal.md
-@@ -1,16 +1,121 @@
- # Internal Markdown Link Check
- 
--Files scanned: 103
--Links checked: 616
--Broken links: 8
-+Files scanned: 121
-+Links checked: 753
-+Broken links: 113
- 
- | Source file | Link target | Error |
- | --- | --- | --- |
--| `README.md` | `CONTRIBUTING.md` | missing file |
-+| `README.md` | `../LICENSE` | missing file |
-+| `AGENTS.md` | `data/sql/README.md` | missing file |
-+| `services/README.md` | `../data/sql/` | missing file |
-+| `apps/README.md` | `../data/sql/` | missing file |
-+| `src/README.md` | `../data/sql/` | missing file |
-+| `.opencode/skills/nasa-power-weather/SKILL.md` | `../.skills/field-boundaries/` | missing file |
-+| `data/EDA/iowa_farm_report.md` | `./field_cards/iowa_field_poster_01.png` | missing file |
-+| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1428284928/derived/features/ndvi_corn.png` | missing file |
-+| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1428284928/derived/features/ndvi_soybean.png` | missing file |
-+| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1428284928/derived/features/ndvi_current_season_cumulative.png` | missing file |
-+| `data/EDA/iowa_farm_report.md` | `./field_cards/iowa_field_poster_02.png` | missing file |
-+| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1434730614/derived/features/ndvi_corn.png` | missing file |
-+| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1434730614/derived/features/ndvi_soybean.png` | missing file |
-+| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1434730614/derived/features/ndvi_current_season_cumulative.png` | missing file |
-+| `data/EDA/iowa_farm_report.md` | `./field_cards/iowa_field_poster_03.png` | missing file |
-+| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1434730620/derived/features/ndvi_corn.png` | missing file |
-+| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1434730620/derived/features/ndvi_soybean.png` | missing file |
-+| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1434730620/derived/features/ndvi_current_season_cumulative.png` | missing file |
-+| `data/EDA/iowa_farm_report.md` | `./field_cards/iowa_field_poster_04.png` | missing file |
-+| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998701371/derived/features/ndvi_corn.png` | missing file |
-+| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998701371/derived/features/ndvi_soybean.png` | missing file |
-+| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998701371/derived/features/ndvi_current_season_cumulative.png` | missing file |
-+| `data/EDA/iowa_farm_report.md` | `./field_cards/iowa_field_poster_05.png` | missing file |
-+| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998706547/derived/features/ndvi_corn.png` | missing file |
-+| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998706547/derived/features/ndvi_soybean.png` | missing file |
-+| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998706547/derived/features/ndvi_current_season_cumulative.png` | missing file |
-+| `data/EDA/iowa_farm_report.md` | `./field_cards/iowa_field_poster_06.png` | missing file |
-+| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998706549/derived/features/ndvi_corn.png` | missing file |
-+| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998706549/derived/features/ndvi_soybean.png` | missing file |
-+| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-998706549/derived/features/ndvi_current_season_cumulative.png` | missing file |
-+| `data/EDA/iowa_farm_report.md` | `./field_cards/iowa_
+diff --git a/.crewai/workspace/changed_files/001_.ci-local.lock.patch.diff b/.crewai/workspace/changed_files/001_.ci-local.lock.patch.diff
+deleted file mode 100644
+index 97041bb..0000000
+--- a/.crewai/workspace/changed_files/001_.ci-local.lock.patch.diff
++++ /dev/null
+@@ -1,7 +0,0 @@
+-diff --git a/.ci-local.lock b/.ci-local.lock
+-index 1ce2524..c6ec760 100644
+---- a/.ci-local.lock
+-+++ b/.ci-local.lock
+-@@ -1 +1 @@
+--pid=4652 started=2026-03-08T00:39:18Z cwd=/workspaces/ag-skills-demo
+-+pid=4031240 started=2026-03-08T19:31:07Z cwd=/home/clay/dev/ag-skills-demo
+diff --git a/.crewai/workspace/changed_files/002_.crewai_workspace_ci_results_core-ci_summary.md.patch.diff b/.crewai/workspace/changed_files/002_.crewai_workspace_ci_results_core-ci_summary.md.patch.diff
+deleted file mode 100644
+index 00c9ae5..0000000
+--- a/.crewai/workspace/changed_files/002_.crewai_workspace_ci_results_core-ci_summary.md.patch.diff
++++ /dev/null
+@@ -1,38 +0,0 @@
+-diff --git a/.crewai/workspace/ci_results/core-ci/summary.md b/.crewai/workspace/ci_results/core-ci/summary.md
+-index c0e5f73..34153d4 100644
+---- a/.crewai/workspace/ci_results/core-ci/summary.md
+-+++ b/.crewai/workspace/ci_results/core-ci/summary.md
+-@@ -1,6 +1,6 @@
+- # Local CI Summary
+- 
+--Generated: 2026-03-08T00:40:12Z
+-+Generated: 2026-03-08T19:31:24Z
+- 
+- ## ✅ Validate Environment
+- 
+-@@ -23,15 +23,16 @@ Generated: 2026-03-08T00:40:12Z
+- 
+- | Step | Status | Duration |
+- | --- | --- | --- |
+--| Prettier Format | pass | 13s |
+--| ESLint | pass | 5s |
+--| Markdownlint | pass | 3s |
+--| Stylelint | pass | 2s |
+--| Ruff | skip | 0s |
+--| Commitlint | warn | 4s |
+-+| Prettier Format | pass | 2s |
+-+| ESLint | pass | 2s |
+-+| Markdownlint | fail | 1s |
+-+| Stylelint | pass | 1s |
+-+| Ruff Lint | pass | 0s |
+-+| Ruff Format | pass | 0s |
+-+| Commitlint | warn | 1s |
+- | TypeScript | skip | 0s |
+--| Link Check | fail | 9s |
+--| CrewAI Tests | fail | 10s |
+--| Website Build | pass | 3s |
+-+| Link Check | fail | 5s |
+-+| CrewAI Tests | pass | 3s |
+-+| Website Build | pass | 0s |
+- | Preview Deploy | skip | 0s |
+- | Production Deploy | skip | 0s |
+diff --git a/.crewai/workspace/changed_files/003_.crewai_workspace_ci_results_test-crewai_summary.md.patch.diff b/.crewai/workspace/changed_files/003_.crewai_workspace_ci_results_test-crewai_summary.md.patch.diff
+deleted file mode 100644
+index 23ac7fb..0000000
+--- a/.crewai/workspace/changed_files/003_.crewai_workspace_ci_results_test-crewai_summary.md.patch.diff
++++ /dev/null
+@@ -1,11 +0,0 @@
+-diff --git a/.crewai/workspace/ci_results/test-crewai/summary.md b/.crewai/workspace/ci_results/test-crewai/summary.md
+-index bd60110..68ff9e3 100644
+---- a/.crewai/workspace/ci_results/test-crewai/summary.md
+-+++ b/.crewai/workspace/ci_results/test-crewai/summary.md
+-@@ -1,4 +1,4 @@
+- # CrewAI tests summary
+- 
+--- status: fail
+--- duration: 10s
+-+- status: pass
+-+- duration: 3s
+diff --git a/.crewai/workspace/changed_files/004_.crewai_workspace_ci_results_test-docs-links_summary.md.patch.diff b/.crewai/workspace/changed_files/004_.crewai_workspace_ci_results_test-docs-links_summary.md.patch.diff
+deleted file mode 100644
+index ba0353d..0000000
+--- a/.crewai/workspace/changed_files/004_.crewai_workspace_ci_results_test-docs-links_summary.md.patch.diff
++++ /dev/null
+@@ -1,12 +0,0 @@
+-diff --git a/.crewai/workspace/ci_results/test-docs-links/summary.md b/.crewai/workspace/ci_results/test-docs-links/summary.md
+-index 79906c6..4410ac2 100644
+---- a/.crewai/workspace/ci_results/test-docs-links/summary.md
+-+++ b/.crewai/workspace/ci_results/test-docs-links/summary.md
+-@@ -1,6 +1,6 @@
+- # Docs Link Check Summary
+- 
+--Generated: 2026-03-08T00:39:59Z
+-+Generated: 2026-03-08T19:31:21Z
+- 
+- ⚠️ Link check reported issues.
+- 
+diff --git a/.crewai/workspace/changed_files/005_.crewai_workspace_ci_results_test-website_summary.md.patch.diff b/.crewai/workspace/changed_files/005_.crewai_workspace_ci_results_test-website_summary.md.patch.diff
+deleted file mode 100644
+index 28513e7..0000000
+--- a/.crewai/workspace/changed_files/005_.crewai_workspace_ci_results_test-website_summary.md.patch.diff
++++ /dev/null
+@@ -1,10 +0,0 @@
+-diff --git a/.crewai/workspace/ci_results/test-website/summary.md b/.crewai/workspace/ci_results/test-website/summary.md
+-index 51fa6a2..b42c4fe 100644
+---- a/.crewai/workspace/ci_results/test-website/summary.md
+-+++ b/.crewai/workspace/ci_results/test-website/summary.md
+-@@ -1,4 +1,4 @@
+- # Website test/build summary
+- 
+- - status: pass
+--- duration: 3s
+-+- duration: 0s
+diff --git a/.crewai/workspace/changed_files/006_.crewai_workspace_link-check-internal.md.patch.diff b/.crewai/workspace/changed_files/006_.crewai_workspace_link-check-internal.md.patch.diff
+deleted file mode 100644
+index e0e0a93..0000000
+--- a/.crewai/workspace/changed_files/006_.crewai_workspace_link-check-internal.md.patch.diff
++++ /dev/null
+@@ -1,125 +0,0 @@
+-diff --git a/.crewai/workspace/link-check-internal.md b/.crewai/workspace/link-check-internal.md
+-index 92886d5..f041cd0 100644
+---- a/.crewai/workspace/link-check-internal.md
+-+++ b/.crewai/workspace/link-check-internal.md
+-@@ -1,16 +1,121 @@
+- # Internal Markdown Link Check
+- 
+--Files scanned: 103
+--Links checked: 616
+--Broken links: 8
+-+Files scanned: 121
+-+Links checked: 753
+-+Broken links: 113
+- 
+- | Source file | Link target | Error |
+- | --- | --- | --- |
+--| `README.md` | `CONTRIBUTING.md` | missing file |
+-+| `README.md` | `../LICENSE` | missing file |
+-+| `AGENTS.md` | `data/sql/README.md` | missing file |
+-+| `services/README.md` | `../data/sql/` | missing file |
+-+| `apps/README.md` | `../data/sql/` | missing file |
+-+| `src/README.md` | `../data/sql/` | missing file |
+-+| `.opencode/skills/nasa-power-weather/SKILL.md` | `../.skills/field-boundaries/` | missing file |
+-+| `data/EDA/iowa_farm_report.md` | `./field_cards/iowa_field_poster_01.png` | missing file |
+-+| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1428284928/derived/features/ndvi_corn.png` | missing file |
+-+| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1428284928/derived/features/ndvi_soybean.png` | missing file |
+-+| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1428284928/derived/features/ndvi_current_season_cumulative.png` | missing file |
+-+| `data/EDA/iowa_farm_report.md` | `./field_cards/iowa_field_poster_02.png` | missing file |
+-+| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1434730614/derived/features/ndvi_corn.png` | missing file |
+-+| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1434730614/derived/features/ndvi_soybean.png` | missing file |
+-+| `data/EDA/iowa_farm_report.md` | `./growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1434730614/derived/features/ndvi_current_season_cumulative.png` | missing file |
+-+| `data/EDA/iowa_farm_report.md` | `./f
 ...
-"] == 2020
-+    assert row["history_end_year"] == 2024
-+    assert row["history_years"] == 5
-+    assert row["rotation_sequence"] == "Soybeans -> Corn -> Soybeans -> Corn -> Soybeans"
+ablish data quality baselines
+@@ -1542,6 +1544,7 @@ class HyperCareProtocol:
+ - [ ] Create rollback procedures
+ 
+ ### During Migration
 +
+ - [ ] Run migrations with dry-run mode first
+ - [ ] Process in batches with checkpoints
+ - [ ] Validate at all four layers (volume, structure, content, application)
+@@ -1550,6 +1553,7 @@ class HyperCareProtocol:
+ - [ ] Log all operations with checksums
+ 
+ ### Post-Migration
 +
-+def test_summarize_crop_history_adds_rotation_outlook():
+ - [ ] Execute full validation suite
+ - [ ] Activate hyper-care period (2-4 weeks)
+ - [ ] Compare business reports between systems
+@@ -1558,6 +1562,7 @@ class HyperCareProtocol:
+ - [ ] Plan legacy system decommissioning
+ 
+ ### CI/CD Integration
++
+ - [ ] Implement migration safety checks in CI
+ - [ ] Require checksum verification before deployment
+ - [ ] Set up environment promotion gates
+@@ -1575,11 +1580,3 @@ class HyperCareProtocol:
+ [^3]: [Guardrails for CI/CD: Database governance for consistency, quality, and security](https://www.liquibase.com/blog/guardrails-ci-cd), Liquibase, April 2024
+ 
+ [^4]: [How to Add Database Migration Checks to Your CI/CD Pipeline](https://dev.to/mickelsamuel/how-to-add-database-migration-checks-to-your-cicd-pipeline-lm9), DEV Community, March 2026
+-
+-[^5]: [Data Migration Best Practices: Your Ultimate Guide for 2026](https://medium.com/@kanerika/data-migration-best-practices-your-ultimate-guide-for-2026-7cbd5594d92e), Kanerika Inc, December 2025
+-
+-[^6]: [Zero-Downtime Migration (ZDM): Guide to Migrating Critical Systems](https://insights.daffodilsw.com/blog/zero-downtime-migration-zdm-guide-to-migrating-critical-systems), Daffodil Software, February 2026
+-
+-[^7]: [How to Implement Idempotent Data Pipelines in GCP](https://oneuptime.com/blog/post/2026-02-17-how-to-implement-idempotent-data-pipelines-in-gcp-to-handle-retry-safe-processing/view), OneUptime, February 2026
+-
+-[^8]: [Data Migration Trends and Best Practices for 2026](https://www.techment.com/blogs/data-migration-trends-best-practices-2026/), Techment, January 2026
+diff --git a/tests/farm_intelligence/test_pipeline.py b/tests/farm_intelligence/test_pipeline.py
+index 1f433ad..82651bd 100644
+--- a/tests/farm_intelligence/test_pipeline.py
++++ b/tests/farm_intelligence/test_pipeline.py
+@@ -452,6 +452,91 @@ def test_aggregate_weather_to_counties_groups_by_fips_and_date():
+     assert result.loc[0, "source_field_slugs"] == ["field-1", "field-2"]
+ 
+ 
++def test_compute_county_gdd_applies_base_and_ceiling():
 +    import pandas as pd
 +
-+    crop_mix = pd.DataFrame(
-+        {
-+            "field_id": ["F1"] * 5,
-+            "year": [2020, 2021, 2022, 2023, 2024],
-+            "crop_name": ["Corn", "Soybeans", "Corn", "Soybeans", "Corn"],
-+            "pct": [95.0, 95.0, 95.0, 95.0, 95.0],
-+        }
++    county_weather = pd.DataFrame(
++        [
++            {
++                "date": "2025-06-01",
++                "year": 2025,
++                "fips": "19015",
++                "state_fips": "19",
++                "county_fips": "015",
++                "county_name": "Boone",
++                "county_name_full": "Boone County",
++                "field_count": 2,
++                "T2M_MAX": 35.0,
++                "T2M_MIN": 8.0,
++            },
++            {
++                "date": "2025-06-02",
++                "year": 2025,
++                "fips": "19015",
++                "state_fips": "19",
++                "county_fips": "015",
++                "county_name": "Boone",
++                "county_name_full": "Boone County",
++                "field_count": 2,
++                "T2M_MAX": 20.0,
++                "T2M_MIN": 12.0,
++            },
++        ]
 +    )
 +
-+    result = cdl.summarize_crop_history(crop_mix)
-+    row = result.iloc[0]
-+    assert row["predicted_next_crop"] == "Soybeans"
-+    assert row["predicted_following_crop"] == "Corn"
-+    assert row["rotation_confidence"] in {"medium", "high"}
-+    assert "Heuristic outlook" in row["rotation_outlook"]
++    result = mbf.compute_county_gdd(county_weather)
++    assert list(result["fips"]) == ["19015"]
++    assert result.loc[0, "observation_days"] == 2
++    assert result.loc[0, "field_count_max"] == 2
++    assert result.loc[0, "gdd_total_c"] == 16.0
 +
 +
-+def test_growing_season_range_uses_expected_window():
-+    assert si.growing_season_range(2024) == "2024-03-01T00:00:00Z/2024-11-30T23:59:59Z"
-+
-+
-+def test_feature_datetime_and_cloud_cover_helpers():
-+    feature = {
-+        "properties": {
-+            "datetime": "2025-07-10T16:15:00Z",
-+            "eo:cloud_cover": 12.5,
-+        }
-+    }
-+    assert si.feature_datetime(feature).date().isoformat() == "2025-07-10"
-+    assert si.feature_cloud_cover(feature) == 12.5
-+
-+
-+def test_sentinel_asset_keys_accept_named_and_band_assets():
-+    named = {"assets": {"red": {}, "nir": {}, "scl": {}}}
-+    fallback = {"assets": {"B04": {}, "B08": {}, "SCL": {}}}
-+    assert si.sentinel_asset_keys(named) == {"red": "red", "nir": "nir", "scl": "scl"}
-+    assert si.sentinel_asset_keys(fallback) == {"red": "B04", "nir": "B08", "scl": "SCL"}
-+
-+
-+def test_landsat_asset_keys_match_planetary_computer_assets():
-+    feature = {"assets": {"red": {}, "nir08": {}, "qa_pixel": {}}}
-+    assert si.landsat_asset_keys(feature) == {"red": "red", "nir": "nir08", "qa": "qa_pixel"}
-+
-+
-+def test_normalize_year_entry_migrates_legacy_single_scene_shape():
-+    legacy = {
-+        "year": 2024,
-+        "scene_id": "scene-1",
-+        "scene_date": "2024-07-10",
-+        "cloud_cover": 4.2,
-+        "status": "complete",
-+        "raw_tiffs": {"red": "red.tif"},
-+        "ndvi_tif": "ndvi.tif",
-+    }
-+    normalized = dsi._normalize_year_entry(legacy)
-+    assert normalized["scene_count"] == 1
-+    assert len(normalized["scenes"]) == 1
-+    assert normalized["scenes"][0]["scene_id"] == "scene-1"
-+
-+
-+def test_select_scene_inventory_prefers_best_scene_per_month():
-+    features = [
-+        {"id": "a", "properties": {"datetime": "2024-06-10T00:00:00Z", "eo:cloud_cover": 10.0}},
-+        {"id": "b", "properties": {"datetime": "2024-06-20T00:00:00Z", "eo:cloud_cover": 5.0}},
-+        {"id": "c", "properties": {"datetime": "2024-07-05T00:00:00Z", "eo:cloud_cover": 7.0}},
-+    ]
-+    selected = dsi._select_scene_inventory(features, max_scenes_per_year=9)
-+    assert [feature["id"] for feature in selected] == ["b", "c"]
-+
-+
-+def test_preferred_cdl_full_composition_path_uses_available_canonical_file():
-+    preferred = paths.shared_cdl_preferred_full_composition_path()
-+    assert preferred.parent == paths.shared_cdl_tables_dir()
-+
-+
-+def test_dominant_crop_lookup_uses_highest_pct_by_year(tmp_path):
-+    crop_csv = tmp_path / "crop.csv"
-+    crop_csv.write_text(
-+        "field_id,year,crop_name,pct\nF1,2024,Corn,40\nF1,2024,Soybeans,60\nF1,2023,Corn,70\n",
-+        encoding="utf-8",
-+    )
-+    result = dnc._dominant_crop_lookup(crop_csv)
-+    assert result[("F1", 2024)] == "Soybeans"
-+    assert result[("F1", 2023)] == "Corn"
-+
-+
-+def test_crop_years_returns_sorted_matches():
++def test_compute_corn_rm_adds_banding():
 +    import pandas as pd
 +
-+    join_df = pd.DataFrame(
-+        {
-+            "crop_name": ["Soybeans", "Corn", "Corn", "Unknown"],
-+            "year": [2023, 2024, 2022, 2025],
-+        }
++    county_gdd = pd.DataFrame(
++        [
++            {
++                "year": 2025,
++                "fips": "19015",
++                "state_fips": "19",
++                "county_fips": "015",
++                "county_name": "Boone",
++                "county_name_full": "Boone County",
++                "gdd_total_c": 2200.0,
++            }
++        ]
 +    )
-+    assert gnc._crop_years(join_df, "Corn") == [2022, 2024]
-+    assert gnc._crop_years(join_df, "Soybeans") == [2023]
++
++    result = mbf.compute_corn_rm(county_gdd)
++    assert result.loc[0, "rm_relative_maturity"] == 110.0
++    assert result.loc[0, "rm_band"] == 110
 +
 +
-+def test_select_current_season_scenes_prefers_sentinel_then_lower_cloud():
++def test_compute_soybean_mg_uses_centroid_latitude():
 +    import pandas as pd
 +
-+    rows = [
-+        {
-+            "sensor": "landsat",
-+            "scene_date": pd.Timestamp("2025-06-12"),
-+            "cloud_cover": 1.0,
-+            "month": 6,
-+        },
-+        {
-+            "sensor": "sentinel",
-+            "scene_date": pd.Timestamp("2025-06-08"),
-+            "cloud_cover": 12.0,
-+            "month": 6,
-+        },
-+        {
-+            "sensor": "sentinel",
-+            "scene_date": pd.Timestamp("2025-07-03"),
-+            "cloud_cover": 8.0,
-+            "month": 7,
-+        },
-+        {
-+            "sensor": "sentinel",
-+            "scene_date": pd.Timestamp("2025-07-20"),
-+            "cloud_cover": 2.0,
-+            "month": 7,
-+        },
-+    ]
-+    selected = gnc._select_current_season_scenes(rows)
-+    assert [(row["sensor"], row["month"], row["cloud_cover"]) for row in selected] == [
-+        ("sentinel", 6, 12.0),
-+        ("sentinel", 7, 2.0),
-+    ]
++    county_lookup = pd.DataFrame([{"fips": "19015", "centroid_lat": 41.7}])
++    county_gdd = pd.DataFrame(
++        [
++            {
++                "year": 2025,
++                "fips": "19015",
++                "state_fips": "19",
++                "county_fips": "015",
++                "county_name": "Boone",
++                "county_name_full": "Boone County",
++                "gdd_total_c": 2200.0,
++            }
++        ]
++    )
++
++    result = mbf.compute_soybean_mg(county_lookup, county_gdd)
++    assert result.loc[0, "mg_optimal"] == 2.9
++    assert result.loc[0, "mg_early"] == 2.5
++    assert result.loc[0, "mg_late"] == 3.3
++
++
+ def test_crop_years_returns_sorted_matches():
+     import pandas as pd
+ 
 
 [DIFF END]
 

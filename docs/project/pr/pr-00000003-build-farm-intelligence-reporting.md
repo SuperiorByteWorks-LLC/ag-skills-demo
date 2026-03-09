@@ -283,7 +283,7 @@ git revert [commit-sha]
 
 - Implement `ag-source-monitor` as the scheduling and freshness orchestration skill in Phase 2
 - Scope delivery/notification as a separate future skill after monitoring is in place
-- Complete the active NDVI card refresh so field, HTML, and Markdown outputs consume canonical `corn`, `soybean`, and `current-season cumulative` assets instead of the legacy `multi_year`, `recent`, and `accumulated` set
+- Finish the active field-poster readability pass so the first card wraps cleanly, the poster/chart typography is larger, and the cumulative NDVI chart uses crop-masked mean plus 5th/95th percentile summaries across years
 
 ### Cache contract and asset manifest
 
@@ -412,4 +412,8 @@ Verification for this step passed with `python -m pytest tests/farm_intelligence
 
 The latest refresh also adds grower-level manifest state at `data/growers/{grower}/manifests/pipeline_schedule.json`, preserves field/farm manifests for step-level cache invalidation, and surfaces the new corn/soy peak NDVI plus crop-by-year cumulative charts in both the farm poster and top-level farm HTML.
 
-`./scripts/ci-local.sh` still reports two unrelated repo-wide failures outside this NDVI change set: markdownlint flags a duplicate `Data Source` heading in `.opencode/skills/csb-field-sampling/SKILL.md`, and the link checker hits external TLS `UnknownIssuer` failures. No ADR required for this refresh-phase step because it is an implementation continuation inside the existing reporting architecture rather than a new durable repo-wide decision.
+The finishing pass for this thread now also fixes a crop-mask bug in `data/scripts/reporting/generate_ndvi_cards.py` so cumulative scene metrics are computed inside the field boundary rather than outside it, standardizes the cumulative chart axes across crop subplots, wraps the merged first-card text in `data/scripts/reporting/generate_field_posters.py`, enlarges poster and panel typography, and removes the geographic-centroid runtime warning in `data/scripts/reporting/generate_farm_html.py` by projecting farm-map centroids before annotation.
+
+Verification for the finishing pass passed with `python -m compileall data/scripts/reporting/generate_ndvi_cards.py data/scripts/reporting/generate_field_posters.py data/scripts/reporting/generate_farm_html.py`, `AG_FORCE=1 python data/scripts/reporting/generate_ndvi_cards.py`, `AG_FORCE=1 python data/scripts/reporting/generate_field_posters.py`, `AG_FORCE=1 python data/scripts/reporting/generate_farm_html.py`, `python -m pytest tests/farm_intelligence/test_pipeline.py --override-ini=addopts=` (28 passed), and visual spot checks on `data/growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1428284928/derived/features/ndvi_current_season_cumulative.png` plus `data/growers/iowa-demo-grower/farms/iowa-demo-farm/fields/osm-1428284928/derived/reports/field_report.png` confirming the wrapped first card, larger titles, and crop/year cumulative layout.
+
+`./scripts/ci-local.sh` still reports two unrelated repo-wide failures outside this NDVI change set: markdownlint flags multiple blank lines in `docs/research/data-migration-best-practices-2026.md`, and the link checker hits external TLS `UnknownIssuer` failures. No ADR required for this refresh-phase step because it is an implementation continuation inside the existing reporting architecture rather than a new durable repo-wide decision.

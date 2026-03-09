@@ -77,6 +77,12 @@ PROP_MAPS = [
     ("claytotal_r", "Clay (%)"),
 ]
 
+_POSTER_TITLE_SIZE = 20
+_CARD_TITLE_SIZE = 13
+_PANEL_TITLE_SIZE = 11.5
+_PANEL_LABEL_SIZE = 9.5
+_BODY_TEXT_SIZE = 9.5
+
 
 def _utm(field_row) -> str:
     return _UTM_WEST if field_row.geometry.centroid.x < -90 else _UTM_EAST
@@ -165,7 +171,7 @@ def _cached_soil_map_assets(field_slug: str | None) -> dict[str, Path | None]:
 
 
 def _ndvi_panel(ax, image_path: Path | None, title: str) -> None:
-    ax.set_title(title, fontsize=10, fontweight="bold", loc="left")
+    ax.set_title(title, fontsize=_PANEL_TITLE_SIZE, fontweight="bold", loc="left", pad=8)
     if image_path is not None and image_path.exists():
         ax.imshow(mpimg.imread(image_path))
         ax.axis("off")
@@ -177,7 +183,7 @@ def _ndvi_panel(ax, image_path: Path | None, title: str) -> None:
         "Cached NDVI card unavailable",
         ha="center",
         va="center",
-        fontsize=9,
+        fontsize=_PANEL_LABEL_SIZE,
         fontweight="bold",
         color="#475569",
         transform=ax.transAxes,
@@ -191,7 +197,7 @@ def _ndvi_panel(ax, image_path: Path | None, title: str) -> None:
         ),
         ha="center",
         va="center",
-        fontsize=8,
+        fontsize=_BODY_TEXT_SIZE,
         color="#64748b",
         transform=ax.transAxes,
     )
@@ -218,41 +224,75 @@ def _field_identity_card(ax, field_row, hl_summary, crop_summary, wx_row, manage
     hp = float(hl_summary.get("headlands_pct", 0))
     ha = float(hl_summary.get("headlands_area_acres", 0))
     lines = [
-        f"Field:    {fid}",
-        f"Area:     {acres:.1f} acres",
-        f"Location: {cy:.4f} N  {abs(cx):.4f} W",
-        f"Headlands:{ha:.2f} ac  ({hp:.1f}% of field)",
+        f"Field: {fid}",
+        f"Area: {acres:.1f} acres",
+        f"Location: {cy:.4f} N, {abs(cx):.4f} W",
+        f"Headlands: {ha:.2f} ac ({hp:.1f}% of field)",
     ]
     if crop_summary is not None and not crop_summary.empty:
         r = crop_summary.iloc[0]
         lines += [
             f"Rotation: {r.get('rotation_sequence', 'N/A')}",
-            f"Diversity:{r.get('crop_diversity', '?')} type(s)  "
-            f"Corn {r.get('corn_years', 0)} yr  Soy {r.get('soybean_years', 0)} yr",
-            f"Outlook:  {r.get('predicted_next_crop', 'Unknown')} next  ->  {r.get('predicted_following_crop', 'Unknown')}",
-            f"Confidence:{str(r.get('rotation_confidence', 'unknown')).title()}  Window {r.get('history_start_year', '?')}-{r.get('history_end_year', '?')}",
+            (
+                f"Diversity: {r.get('crop_diversity', '?')} crop type(s); "
+                f"corn {r.get('corn_years', 0)} yr; soy {r.get('soybean_years', 0)} yr"
+            ),
+            (
+                f"Outlook: {r.get('predicted_next_crop', 'Unknown')} next -> "
+                f"{r.get('predicted_following_crop', 'Unknown')} after"
+            ),
+            (
+                f"Confidence: {str(r.get('rotation_confidence', 'unknown')).title()}; "
+                f"window {r.get('history_start_year', '?')}-{r.get('history_end_year', '?')}"
+            ),
         ]
     if wx_row:
         lines += [
             f"Avg temp: {wx_row.get('avg_temp_c', float('nan')):.1f} C",
-            f"Avg precip:{wx_row.get('annual_precip_mm', float('nan')):.0f} mm/yr",
+            f"Avg precip: {wx_row.get('annual_precip_mm', float('nan')):.0f} mm/yr",
         ]
     if management_bullets:
         lines += ["", "Management implications:"]
         lines += [f"- {bullet}" for bullet in management_bullets[:4]]
+
+    wrapped_lines: list[str] = []
+    for line in lines:
+        if not line:
+            wrapped_lines.append("")
+            continue
+        is_bullet = line.startswith("- ")
+        wrap_source = line[2:] if is_bullet else line
+        initial_indent = "- " if is_bullet else ""
+        subsequent_indent = "  " if is_bullet else ""
+        wrapped_lines.extend(
+            textwrap.wrap(
+                wrap_source,
+                width=40,
+                initial_indent=initial_indent,
+                subsequent_indent=subsequent_indent,
+                break_long_words=False,
+                break_on_hyphens=False,
+            )
+            or [line]
+        )
     ax.text(
         0.05,
         0.95,
-        "\n".join(lines),
+        "\n".join(wrapped_lines),
         va="top",
-        fontsize=8.6,
+        fontsize=_BODY_TEXT_SIZE,
         transform=ax.transAxes,
-        fontfamily="monospace",
         bbox=dict(
             boxstyle="round,pad=0.5", facecolor="#f0f9ff", edgecolor="#2563eb", linewidth=1.2
         ),
     )
-    ax.set_title("Field identity and operations", fontsize=11, fontweight="bold", loc="left")
+    ax.set_title(
+        "Field identity and operations",
+        fontsize=_CARD_TITLE_SIZE,
+        fontweight="bold",
+        loc="left",
+        pad=8,
+    )
 
 
 def _ranking_card(ax, field_reporting_df, field_id):
@@ -275,16 +315,17 @@ def _ranking_card(ax, field_reporting_df, field_id):
     ax_real = ax.inset_axes([0.05, 0.05, 0.90, 0.85])
     ax_real.barh(y_pos, values, color=colors, edgecolor="white", height=0.6)
     ax_real.set_yticks(y_pos)
-    ax_real.set_yticklabels(labels, fontsize=8)
+    ax_real.set_yticklabels(labels, fontsize=_PANEL_LABEL_SIZE)
     ax_real.set_xlim(0, 100)
-    ax_real.set_xlabel("Farm percentile", fontsize=8)
+    ax_real.set_xlabel("Farm percentile", fontsize=_PANEL_LABEL_SIZE)
+    ax_real.tick_params(axis="x", labelsize=_PANEL_LABEL_SIZE)
     ax_real.axvline(50, color="gray", linestyle="--", linewidth=0.8, alpha=0.5)
     ax_real.grid(True, axis="x", alpha=0.25)
-    ax.set_title("Farm-relative standing", fontsize=11, fontweight="bold", loc="left")
+    ax.set_title("Farm-relative standing", fontsize=_CARD_TITLE_SIZE, fontweight="bold", loc="left")
 
 
 def _soil_map_panel(ax, image_path: Path | None, title: str, fallback_render) -> None:
-    ax.set_title(title, fontsize=10, fontweight="bold", loc="left")
+    ax.set_title(title, fontsize=_PANEL_TITLE_SIZE, fontweight="bold", loc="left", pad=8)
     if image_path is not None and image_path.exists():
         ax.imshow(mpimg.imread(image_path))
         ax.axis("off")
@@ -331,7 +372,7 @@ def _render_field_poster(
     fig.patch.set_facecolor("#fafaf9")
     fig.suptitle(
         f"Field Intelligence Report — {field_id[-8:]}  ·  {float(field_row.get('area_acres', 0)):.1f} ac  ·  Iowa Corn Belt",
-        fontsize=16,
+        fontsize=_POSTER_TITLE_SIZE,
         fontweight="bold",
         y=0.993,
         color="#1e293b",
@@ -400,6 +441,15 @@ def _render_field_poster(
         fig.add_subplot(gs[5, 1]), ndvi_assets["soybean_peak_95"], "Soybean 95th %ile peak NDVI"
     )
     _ranking_card(fig.add_subplot(gs[5, 2:]), field_reporting_df, field_id)
+
+    for ax in fig.axes:
+        ax.title.set_fontsize(max(ax.title.get_fontsize(), _PANEL_TITLE_SIZE))
+        ax.title.set_fontweight("bold")
+        if hasattr(ax, "xaxis"):
+            ax.xaxis.label.set_size(max(ax.xaxis.label.get_size(), _PANEL_LABEL_SIZE))
+        if hasattr(ax, "yaxis"):
+            ax.yaxis.label.set_size(max(ax.yaxis.label.get_size(), _PANEL_LABEL_SIZE))
+        ax.tick_params(axis="both", labelsize=_PANEL_LABEL_SIZE)
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     plt.savefig(output_path, dpi=180, bbox_inches="tight", facecolor=fig.get_facecolor())

@@ -14,8 +14,11 @@ sys.path.insert(0, str(_SCRIPTS_DIR))
 sys.path.insert(0, str(_SCRIPTS_DIR / "lib"))
 
 from paths import farm_boundary_path, farm_table_path, field_soil_full_path, field_soil_summary_path
-from reporting_bootstrap import ensure_skill_path
-from reporting_bootstrap import ensure_canonical_data_tree, field_slug_map_from_inventory
+from reporting_bootstrap import (
+    ensure_canonical_data_tree,
+    ensure_skill_path,
+    field_slug_map_from_inventory,
+)
 
 ensure_skill_path("ssurgo-soil")
 

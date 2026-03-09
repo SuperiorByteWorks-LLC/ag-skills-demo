@@ -11,14 +11,15 @@
     "[crewai:data-engineering] recommended: Data engineering artifacts detected",
     "[crewai:docs] recommended: Documentation files detected",
     "[crewai:marketing] recommended: Marketing/user-facing copy detected",
+    "[crewai:science] recommended: Scientific/research files detected",
     "[crewai:full-review] recommended: high diff complexity detected; broaden specialist depth"
   ],
   "metadata": {
     "source": "local-short-circuit",
     "labels": [],
     "mode": "default",
-    "files_changed": 599,
-    "lines_added": 5973,
-    "lines_removed": 2367
+    "files_changed": 178,
+    "lines_added": 1207,
+    "lines_removed": 7808
   }
 }

@@ -1,0 +1,15 @@
+diff --git a/.crewai/workspace/changed_files/048_data_EDA_soil_cards_field_02_texture.png.patch.diff b/.crewai/workspace/changed_files/048_data_EDA_soil_cards_field_02_texture.png.patch.diff
+deleted file mode 100644
+index 6117292..0000000
+--- a/.crewai/workspace/changed_files/048_data_EDA_soil_cards_field_02_texture.png.patch.diff
++++ /dev/null
+@@ -1,9 +0,0 @@
+-diff --git a/data/EDA/soil_cards/field_02_texture.png b/data/EDA/soil_cards/field_02_texture.png
+-new file mode 100644
+-index 0000000..776e74c
+---- /dev/null
+-+++ b/data/EDA/soil_cards/field_02_texture.png
+-@@ -0,0 +1,3 @@
+-+version https://git-lfs.github.com/spec/v1
+-+oid sha256:441d50056354f2516147eb7d9170f49bd4eb4791450f359dd3409a31bffcf27d
+-+size 81455

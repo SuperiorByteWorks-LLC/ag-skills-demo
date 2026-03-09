@@ -2,7 +2,6 @@
 """Download and summarize CDL crop composition for Iowa fields."""
 
 import os
-
 import sys
 from pathlib import Path
 
@@ -16,8 +15,8 @@ sys.path.insert(0, str(_SCRIPTS_DIR))
 sys.path.insert(0, str(_SCRIPTS_DIR / "lib"))
 
 from paths import (
-    farm_boundary_path,
     ensure_parent,
+    farm_boundary_path,
     shared_cdl_full_composition_path,
     shared_cdl_raster_dir,
     shared_cdl_rotation_path,

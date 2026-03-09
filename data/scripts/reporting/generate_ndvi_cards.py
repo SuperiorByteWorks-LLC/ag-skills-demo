@@ -17,6 +17,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import rasterio
+from rasterio.features import geometry_mask
 from rasterio.mask import mask
 from rasterio.warp import Resampling, reproject
 
@@ -385,6 +386,9 @@ def _collect_all_season_scene_rows(field_slug: str, boundary_path: Path) -> list
             if year is None:
                 continue
             year_int = int(year)
+            cdl_raster = _shared_cdl_raster_path(year_int)
+            if not cdl_raster.exists():
+                continue
             for scene in year_entry.get("scenes", []):
                 ndvi_tif = scene.get("ndvi_tif")
                 scene_date_raw = scene.get("scene_date")
@@ -393,24 +397,48 @@ def _collect_all_season_scene_rows(field_slug: str, boundary_path: Path) -> list
                 ndvi_path = _REPO / str(ndvi_tif)
                 if not ndvi_path.exists() or not boundary_path.exists():
                     continue
-                try:
-                    _, mean_ndvi, _ = _field_array_stats(ndvi_path, boundary_path)
-                except Exception:
-                    continue
-                if mean_ndvi is None:
-                    continue
                 all_rows.append(
                     {
                         "sensor": sensor,
                         "scene_date": pd.Timestamp(scene_date_raw),
                         "cloud_cover": float(scene.get("cloud_cover") or 999.0),
-                        "mean_ndvi": mean_ndvi,
                         "ndvi_path": ndvi_path,
+                        "cdl_raster": cdl_raster,
                         "month": pd.Timestamp(scene_date_raw).month,
                         "year": year_int,
                     }
                 )
     return all_rows
+
+
+def _scene_metric_summary(
+    ndvi_path: Path, cdl_raster: Path, boundary_path: Path, crop_code: int
+) -> dict[str, float] | None:
+    boundary = gpd.read_file(boundary_path)
+    with rasterio.open(ndvi_path) as src:
+        boundary_proj = boundary.to_crs(src.crs)
+        ndvi_array = src.read(1).astype("float32")
+        field_mask = geometry_mask(
+            boundary_proj.geometry,
+            transform=src.transform,
+            invert=True,
+            out_shape=(src.height, src.width),
+        )
+    cdl_array = _read_resampled_like(cdl_raster, ndvi_path, resampling=Resampling.nearest)
+    valid_mask = (
+        field_mask
+        & np.isfinite(ndvi_array)
+        & np.isfinite(cdl_array)
+        & (np.rint(cdl_array).astype("int32") == crop_code)
+    )
+    values = ndvi_array[valid_mask]
+    if values.size == 0:
+        return None
+    return {
+        "mean_ndvi": float(np.nanmean(values)),
+        "p95_ndvi": float(np.nanpercentile(values, 95)),
+        "p05_ndvi": float(np.nanpercentile(values, 5)),
+    }
 
 
 def _select_monthly_scene_rows(scene_rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -427,6 +455,7 @@ def _render_current_cumulative_card(
     output_path: Path,
     scene_rows: list[dict[str, Any]],
     join_df: pd.DataFrame,
+    boundary_path: Path,
 ) -> tuple[bool, str | None, dict[str, list[int]]]:
     if not scene_rows:
         _placeholder_card(
@@ -457,7 +486,39 @@ def _render_current_cumulative_card(
         )
         return False, "no corn/soybean crop-year joins", {}
 
-    frame = frame.sort_values(by=["scene_date"]).copy()
+    crop_code_lookup = {"Corn": 1, "Soybeans": 5}
+    metric_rows: list[dict[str, Any]] = []
+    for _, row in frame.iterrows():
+        crop_name = str(row["crop_name"])
+        crop_code = crop_code_lookup.get(crop_name)
+        if crop_code is None:
+            continue
+        metrics = _scene_metric_summary(
+            Path(cast(Any, row["ndvi_path"])),
+            Path(cast(Any, row["cdl_raster"])),
+            boundary_path=boundary_path,
+            crop_code=crop_code,
+        )
+        if metrics is None:
+            continue
+        metric_rows.append(
+            {
+                **row.to_dict(),
+                **metrics,
+            }
+        )
+
+    frame = pd.DataFrame(metric_rows)
+    if frame.empty:
+        _placeholder_card(
+            output_path,
+            "Cumulative NDVI by crop and year",
+            "No crop-masked NDVI pixels were available for cumulative chart metrics.",
+            detail="The chart will populate after crop-conditioned NDVI scenes and CDL rasters overlap.",
+        )
+        return False, "no crop-masked NDVI pixels", {}
+
+    frame = frame.sort_values(by=["crop_name", "year", "scene_date"]).copy()
     frame["day_of_year"] = frame["scene_date"].dt.dayofyear
     year_groups: list[pd.DataFrame] = []
     crop_years: dict[str, list[int]] = {"Corn": [], "Soybeans": []}
@@ -465,13 +526,15 @@ def _render_current_cumulative_card(
         crop_name = str(cast(tuple[object, object], key)[0])
         year = int(cast(tuple[object, object], key)[1])
         ordered = group.sort_values("scene_date").copy()
-        ordered["ndvi_cumulative"] = ordered["mean_ndvi"].cumsum()
+        ordered["mean_cumulative"] = ordered["mean_ndvi"].cumsum()
+        ordered["p95_cumulative"] = ordered["p95_ndvi"].cumsum()
+        ordered["p05_cumulative"] = ordered["p05_ndvi"].cumsum()
         year_groups.append(ordered)
         crop_years.setdefault(crop_name, []).append(year)
 
-    fig = plt.figure(figsize=(12, 5.5))
+    fig = plt.figure(figsize=(12, 5.9))
     fig.patch.set_facecolor("#fafaf9")
-    gs = fig.add_gridspec(2, 2, height_ratios=[0.28, 1.0], wspace=0.18)
+    gs = fig.add_gridspec(2, 2, height_ratios=[0.34, 1.0], hspace=0.06, wspace=0.18)
     title_ax = fig.add_subplot(gs[0, :])
     crop_axes = {
         "Corn": fig.add_subplot(gs[1, 0]),
@@ -483,7 +546,7 @@ def _render_current_cumulative_card(
         0.0,
         0.82,
         "Cumulative NDVI by crop and year",
-        fontsize=14,
+        fontsize=16,
         fontweight="bold",
         color="#0f172a",
     )
@@ -492,23 +555,34 @@ def _render_current_cumulative_card(
         0.10,
         (
             "Each subplot shows monthly best-available seasonal scenes grouped by dominant crop year, "
-            "with a legend for each observed year."
+            "with solid mean lines and shaded 5th-95th percentile envelopes for each observed year."
         ),
-        fontsize=9.5,
+        fontsize=10.5,
         color="#475569",
         va="bottom",
+        wrap=True,
     )
 
     palette = ["#0f766e", "#2563eb", "#ea580c", "#7c3aed", "#ca8a04"]
+    populated_groups = [group for group in year_groups if not group.empty]
+    if populated_groups:
+        x_min = min(int(group["day_of_year"].min()) for group in populated_groups)
+        x_max = max(int(group["day_of_year"].max()) for group in populated_groups)
+        y_max = max(float(group["p95_cumulative"].max()) for group in populated_groups)
+    else:
+        x_min, x_max, y_max = 1, 366, 1.0
     for crop_name, ax in crop_axes.items():
         crop_groups = [
             group for group in year_groups if str(group["crop_name"].iloc[0]) == crop_name
         ]
         ax.set_facecolor("#ffffff")
         ax.grid(True, alpha=0.25)
-        ax.set_xlabel("Day of year")
-        ax.set_ylabel("Cumulative mean NDVI")
-        ax.set_title(crop_name, fontsize=11, fontweight="bold", loc="left")
+        ax.set_xlabel("Day of year", fontsize=10)
+        ax.set_ylabel("Cumulative NDVI", fontsize=10)
+        ax.set_title(crop_name, fontsize=12.5, fontweight="bold", loc="left")
+        ax.tick_params(axis="both", labelsize=9)
+        ax.set_xlim(x_min, x_max)
+        ax.set_ylim(0.0, max(y_max * 1.05, 1.0))
         if not crop_groups:
             ax.text(
                 0.5,
@@ -518,6 +592,7 @@ def _render_current_cumulative_card(
                 va="center",
                 transform=ax.transAxes,
                 color="#64748b",
+                fontsize=10,
             )
             continue
         for idx, group in enumerate(crop_groups):
@@ -525,14 +600,21 @@ def _render_current_cumulative_card(
             color = palette[idx % len(palette)]
             ax.plot(
                 group["day_of_year"],
-                group["ndvi_cumulative"],
+                group["mean_cumulative"],
                 linewidth=2.1,
                 marker="o",
                 markersize=4.5,
                 color=color,
                 label=str(year),
             )
-        ax.legend(title="Year", fontsize=8, title_fontsize=8, loc="upper left")
+            ax.fill_between(
+                group["day_of_year"],
+                group["p05_cumulative"],
+                group["p95_cumulative"],
+                color=color,
+                alpha=0.18,
+            )
+        ax.legend(title="Year", fontsize=9, title_fontsize=9, loc="upper left")
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(output_path, dpi=170, bbox_inches="tight", facecolor=fig.get_facecolor())
@@ -772,7 +854,7 @@ def main() -> None:
             }
 
         rendered_current, current_reason, crop_years = _render_current_cumulative_card(
-            outputs["current_season_cumulative"], selected_scene_rows, join_df
+            outputs["current_season_cumulative"], selected_scene_rows, join_df, boundary_path
         )
         summary_payload["cards"]["current_season_cumulative"] = {
             "status": "available" if rendered_current else "unavailable",

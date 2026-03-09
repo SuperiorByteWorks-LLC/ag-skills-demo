@@ -59,12 +59,16 @@ def main() -> int:
         shared_soybean_maturity_reports_dir,
         shared_soybean_mg_table_path,
     )
-    from reporting_bootstrap import ensure_canonical_data_tree
+    from reporting_bootstrap import ensure_canonical_data_tree, ensure_skill_path
 
     args = parse_args()
     ensure_canonical_data_tree()
+    ensure_skill_path("maturity-by-fips")
+
+    from maturity_by_fips import contiguous_us_counties
 
     counties = gpd.read_file(shared_geoadmin_counties_dir() / "counties_usa.geojson")
+    counties = contiguous_us_counties(counties)
     counties["fips"] = counties["fips"].astype(str)
 
     corn = pd.read_parquet(shared_corn_rm_table_path(args.year))
@@ -78,7 +82,7 @@ def main() -> int:
     _render_map(
         corn_map,
         value_column="rm_relative_maturity",
-        title=f"Heuristic Corn RM by FIPS ({args.year})",
+        title=f"Heuristic Corn RM by FIPS - Contiguous U.S. ({args.year})",
         subtitle="Planning layer only - derived from county GDD, not recommendation-grade guidance",
         output_path=shared_corn_maturity_reports_dir() / f"rm_by_fips_{args.year}.png",
         cmap="YlGn",
@@ -86,7 +90,7 @@ def main() -> int:
     _render_map(
         soy_map,
         value_column="mg_optimal",
-        title=f"Heuristic Soybean MG by FIPS ({args.year})",
+        title=f"Heuristic Soybean MG by FIPS - Contiguous U.S. ({args.year})",
         subtitle="Planning layer only - latitude-based maturity heuristic, not a planting prescription",
         output_path=shared_soybean_maturity_reports_dir() / f"mg_by_fips_{args.year}.png",
         cmap="YlOrBr",

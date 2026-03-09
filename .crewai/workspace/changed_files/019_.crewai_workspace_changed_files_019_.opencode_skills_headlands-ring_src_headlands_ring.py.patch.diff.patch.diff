@@ -1,0 +1,21 @@
+diff --git a/.crewai/workspace/changed_files/019_.opencode_skills_headlands-ring_src_headlands_ring.py.patch.diff b/.crewai/workspace/changed_files/019_.opencode_skills_headlands-ring_src_headlands_ring.py.patch.diff
+deleted file mode 100644
+index 578d62b..0000000
+--- a/.crewai/workspace/changed_files/019_.opencode_skills_headlands-ring_src_headlands_ring.py.patch.diff
++++ /dev/null
+@@ -1,15 +0,0 @@
+-diff --git a/.opencode/skills/headlands-ring/src/headlands_ring.py b/.opencode/skills/headlands-ring/src/headlands_ring.py
+-index a91aa27..5b1486e 100644
+---- a/.opencode/skills/headlands-ring/src/headlands_ring.py
+-+++ b/.opencode/skills/headlands-ring/src/headlands_ring.py
+-@@ -62,7 +62,9 @@ def summarize_headlands(field_gdf: gpd.GeoDataFrame, ring_gdf: gpd.GeoDataFrame)
+-     )
+- 
+- 
+--def flag_points_in_headlands(points_gdf: gpd.GeoDataFrame, ring_gdf: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
+-+def flag_points_in_headlands(
+-+    points_gdf: gpd.GeoDataFrame, ring_gdf: gpd.GeoDataFrame
+-+) -> gpd.GeoDataFrame:
+-     if points_gdf.crs != ring_gdf.crs:
+-         points_gdf = points_gdf.to_crs(ring_gdf.crs)
+-     result = points_gdf.copy()
