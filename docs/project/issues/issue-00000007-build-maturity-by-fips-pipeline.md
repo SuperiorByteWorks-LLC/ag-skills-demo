@@ -42,6 +42,8 @@ Current Wave 1 progress:
 - [x] Repo-native `geoadmin-admin` and `maturity-by-fips` skill scaffolds created
 - [x] Initial `data/scripts/run_maturity_by_fips.py` entrypoint added for annual target discovery
 - [x] Initial `data/scripts/ingest/download_geoadmin.py` downloader writes canonical Natural Earth country outputs
+- [x] Canonical TIGER/Line state and county/FIPS outputs built under `data/shared/geoadmin/`
+- [x] Demo farm field-to-FIPS mapping and ambiguity outputs generated from canonical county geometry
 
 ---
 
@@ -94,6 +96,8 @@ flowchart LR
 | 2026-03-09 | Agent | Existing manifest orchestration in `.opencode/skills/farm-intelligence-reporting/src/pipeline.py` can carry annual maturity step naming             |
 | 2026-03-09 | Agent | Wave 1 verification passed: compileall clean, annual target listing works, and targeted pipeline tests remain green                                 |
 | 2026-03-09 | Agent | `download_geoadmin.py --levels l0_countries` built canonical GeoJSON and Parquet outputs under `data/shared/geoadmin/l0_countries/`                 |
+| 2026-03-09 | Agent | `download_geoadmin.py --levels l1_states l2_counties` built canonical US state, county, and FIPS lookup outputs                                     |
+| 2026-03-09 | Agent | `assign_field_fips.py` mapped all 10 demo farm fields to county FIPS with 0 ambiguity cases                                                         |
 
 ---
 
