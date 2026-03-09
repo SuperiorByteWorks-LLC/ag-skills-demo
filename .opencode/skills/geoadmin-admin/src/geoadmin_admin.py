@@ -30,6 +30,10 @@ def _geoadmin_level_root(level_slug: str) -> Path:
     return _geoadmin_root() / level_slug
 
 
+def _repo_relative(path: Path) -> str:
+    return str(path.resolve().relative_to(REPO_ROOT))
+
+
 @dataclass(frozen=True, slots=True)
 class GeoadminSource:
     level_slug: str
@@ -168,6 +172,80 @@ def _county_lookup(frame: gpd.GeoDataFrame) -> pd.DataFrame:
     )
 
 
+def assign_fields_to_counties(
+    fields: gpd.GeoDataFrame,
+    counties: gpd.GeoDataFrame,
+    *,
+    field_slug_map: dict[str, str] | None = None,
+) -> tuple[pd.DataFrame, pd.DataFrame]:
+    field_slug_map = field_slug_map or {}
+    fields_proj = fields.to_crs("EPSG:5070")
+    counties_proj = counties.to_crs("EPSG:5070")
+    mapping_rows: list[dict[str, object]] = []
+    ambiguity_rows: list[dict[str, object]] = []
+
+    for _, field_row in fields_proj.iterrows():
+        field_id = str(field_row.get("field_id", ""))
+        field_slug = field_slug_map.get(field_id, "")
+        geometry = field_row.geometry
+        centroid = geometry.centroid
+
+        containing = counties_proj[counties_proj.contains(centroid)].copy()
+        intersecting = counties_proj[counties_proj.intersects(geometry)].copy()
+        assigned = containing.iloc[0] if len(containing) == 1 else None
+        assignment_method = "centroid"
+        ambiguity_reason = ""
+
+        if assigned is None and not intersecting.empty:
+            intersecting["overlap_area_m2"] = intersecting.geometry.intersection(geometry).area
+            overlap_areas = pd.Series(intersecting["overlap_area_m2"], dtype="float64")
+            overlap_index = overlap_areas.index[int(overlap_areas.to_numpy().argmax())]
+            assigned = intersecting.loc[overlap_index]
+            assignment_method = "largest_overlap"
+        elif assigned is None:
+            ambiguity_reason = "no_county_match"
+
+        overlap_count = int(len(intersecting))
+        ambiguity_flag = overlap_count > 1 or assigned is None
+        if overlap_count > 1 and not ambiguity_reason:
+            ambiguity_reason = "multi_county_intersection"
+
+        mapping_row = {
+            "field_id": field_id,
+            "field_slug": field_slug,
+            "assignment_method": assignment_method,
+            "ambiguity_flag": ambiguity_flag,
+            "ambiguity_reason": ambiguity_reason,
+            "county_overlap_count": overlap_count,
+        }
+        if assigned is not None:
+            mapping_row.update(
+                {
+                    "fips": str(assigned.get("fips", "")),
+                    "state_fips": str(assigned.get("state_fips", "")),
+                    "county_fips": str(assigned.get("county_fips", "")),
+                    "county_name": str(assigned.get("county_name", "")),
+                    "county_name_full": str(assigned.get("county_name_full", "")),
+                }
+            )
+        else:
+            mapping_row.update(
+                {
+                    "fips": "",
+                    "state_fips": "",
+                    "county_fips": "",
+                    "county_name": "",
+                    "county_name_full": "",
+                }
+            )
+        mapping_rows.append(mapping_row)
+
+        if ambiguity_flag:
+            ambiguity_rows.append(mapping_row.copy())
+
+    return pd.DataFrame(mapping_rows), pd.DataFrame(ambiguity_rows)
+
+
 def write_standardized_outputs(
     source: GeoadminSource,
     frame: gpd.GeoDataFrame,
@@ -187,8 +265,8 @@ def write_standardized_outputs(
                 **asdict(source),
                 "feature_count": int(len(frame)),
                 "columns": [column for column in frame.columns if column != "geometry"],
-                "output_geojson": str(geojson_path),
-                "output_parquet": str(parquet_path),
+                "output_geojson": _repo_relative(geojson_path),
+                "output_parquet": _repo_relative(parquet_path),
             },
             indent=2,
         )
@@ -200,4 +278,7 @@ def write_standardized_outputs(
         lookup_path = level_root / "fips_lookup.parquet"
         _county_lookup(frame).to_parquet(lookup_path, index=False)
         outputs["lookup"] = lookup_path
+        metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
+        metadata["lookup_parquet"] = _repo_relative(lookup_path)
+        metadata_path.write_text(json.dumps(metadata, indent=2) + "\n", encoding="utf-8")
     return outputs
