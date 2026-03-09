@@ -56,9 +56,9 @@ kanban
 
 ## 🔄 In progress
 
-| Item                                   | Assignee | Started    | Expected | Days in column | Aging | Status                                                                                                   |
-| -------------------------------------- | -------- | ---------- | -------- | -------------- | ----- | -------------------------------------------------------------------------------------------------------- |
-| Wave 1 repo-native maturity foundation | Agent    | 2026-03-09 | 0 days   | 0              | 🟢    | Canonical paths, shared scaffolding, manifest constants, skill scaffolds, and annual entrypoint verified |
+| Item                                   | Assignee | Started    | Expected | Days in column | Aging | Status                                                                                                                         |
+| -------------------------------------- | -------- | ---------- | -------- | -------------- | ----- | ------------------------------------------------------------------------------------------------------------------------------ |
+| Wave 1 repo-native maturity foundation | Agent    | 2026-03-09 | 0 days   | 0              | 🟢    | Canonical paths, shared scaffolding, manifest constants, skill scaffolds, annual entrypoint, and first geoadmin build verified |
 
 > ⚠️ **WIP limit:** 1 / 1. Finish the current item before pulling another one.
 
@@ -106,6 +106,7 @@ kanban
 - **2026-03-09:** Corn RM and soybean MG are heuristic planning products, not recommendation-grade outputs
 - **2026-03-09:** Annual invocation is in scope; scheduler infrastructure is not
 - **2026-03-09:** Wave 1 lands canonical roots and repo-native scaffolding before county logic or crop heuristics are implemented
+- **2026-03-09:** The first shared geoadmin ingest path is working and writes canonical Level 0 country outputs from Natural Earth
 
 ### Upcoming dependencies
 
@@ -113,6 +114,7 @@ kanban
 - Field-to-FIPS mapping artifacts
 - County weather and GDD transforms
 - First commit/push checkpoint for Wave 1 foundation files
+- Extend geoadmin build coverage to US states and counties/FIPS
 
 ---
 

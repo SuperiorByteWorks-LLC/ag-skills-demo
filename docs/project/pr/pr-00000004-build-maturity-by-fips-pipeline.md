@@ -48,6 +48,8 @@ This work starts a new repo-native agricultural maturity pipeline that will prod
 | `.opencode/skills/geoadmin-admin/`                                      | Added       | Repo-native geoadmin skill scaffold with shared-level root discovery                       |
 | `.opencode/skills/maturity-by-fips/`                                    | Added       | Repo-native maturity skill scaffold with annual output indexing                            |
 | `data/scripts/run_maturity_by_fips.py`                                  | Added       | Initial annual entrypoint that bootstraps canonical roots and prints maturity targets      |
+| `data/scripts/ingest/download_geoadmin.py`                              | Added       | Repo-native geoadmin downloader and standardizer for canonical shared admin layers         |
+| `data/shared/geoadmin/l0_countries/`                                    | Added       | First standardized shared country outputs built from Natural Earth                         |
 
 ### Before and after
 
@@ -67,6 +69,7 @@ The repo has dedicated maturity tracking records.
 Wave 1 establishes canonical shared roots, manifest step naming, and repo-native integration points.
 Future maturity implementation is constrained to `.opencode/skills/...` and `data/scripts/...`.
 An annual entrypoint already resolves the canonical output targets for a requested year.
+A geoadmin ingest script now builds the first canonical shared admin layer into GeoJSON and Parquet outputs.
 ```
 
 ---
@@ -82,17 +85,19 @@ python -m pytest tests/farm_intelligence/test_pipeline.py --override-ini=addopts
 
 ### Test coverage
 
-| Test type         | Status      | Notes                                                                                                |
-| ----------------- | ----------- | ---------------------------------------------------------------------------------------------------- |
-| Unit tests        | ✅ Passing  | Existing targeted pipeline tests still pass (`28 passed`)                                            |
-| Integration tests | ✅ Passing  | `run_maturity_by_fips.py --year 2025 --list-steps` resolves canonical output targets                 |
-| Manual testing    | ✅ Verified | Shared maturity/geoadmin roots scaffold correctly and the new entrypoint reports canonical locations |
-| Performance       | ⬜ N/A      | Full annual flow not implemented yet                                                                 |
+| Test type         | Status      | Notes                                                                                                                            |
+| ----------------- | ----------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| Unit tests        | ✅ Passing  | Existing targeted pipeline tests still pass (`28 passed`)                                                                        |
+| Integration tests | ✅ Passing  | `run_maturity_by_fips.py --year 2025 --list-steps` resolves canonical output targets                                             |
+| Manual testing    | ✅ Verified | Shared maturity/geoadmin roots scaffold correctly, annual targets resolve, and the first geoadmin build writes canonical outputs |
+| Performance       | ⬜ N/A      | Full annual flow not implemented yet                                                                                             |
 
 Current verification evidence:
 
 - `python -m compileall .opencode/skills/geoadmin-admin/src .opencode/skills/maturity-by-fips/src data/scripts/lib/paths.py data/scripts/reporting_bootstrap.py data/scripts/run_maturity_by_fips.py .opencode/skills/farm-intelligence-reporting/src/pipeline.py`
 - `python data/scripts/run_maturity_by_fips.py --year 2025 --list-steps`
+- `python -m compileall data/scripts/ingest/download_geoadmin.py .opencode/skills/geoadmin-admin/src`
+- `python data/scripts/ingest/download_geoadmin.py --levels l0_countries`
 - `python -m pytest tests/farm_intelligence/test_pipeline.py --override-ini=addopts=` -> `28 passed`
 
 ### Edge cases considered
@@ -126,10 +131,11 @@ git revert [commit-sha]
 - **Repo integration:** The generic handoff `src/skills/maturity_calc/...` layout is explicitly rejected in favor of `.opencode/skills/...` and `data/scripts/...`
 - **Product framing:** Corn RM and soybean MG remain heuristic planning outputs rather than recommendation-grade agronomy
 - **Wave 1 checkpoint:** Canonical shared roots and repo-native scaffolding land before county logic so later implementation cannot drift off the planned integration surface
+- **Geoadmin ingestion:** Shared admin layers are downloaded and standardized through a repo-native ingest script rather than ad hoc manual placement
 
 ### Follow-up items
 
-- [ ] Implement shared geoadmin download/standardization and shared maturity roots
+- [ ] Extend geoadmin ingestion from countries to US states and counties with FIPS lookup output
 - [ ] Add annual field-to-FIPS mapping and county weather/GDD transforms
 
 ---
