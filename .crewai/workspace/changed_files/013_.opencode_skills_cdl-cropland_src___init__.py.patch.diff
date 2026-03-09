@@ -1,0 +1,15 @@
+diff --git a/.opencode/skills/cdl-cropland/src/__init__.py b/.opencode/skills/cdl-cropland/src/__init__.py
+index 4d59463..46408c3 100644
+--- a/.opencode/skills/cdl-cropland/src/__init__.py
++++ b/.opencode/skills/cdl-cropland/src/__init__.py
+@@ -4,9 +4,9 @@ High-level skill for accessing USDA Cropland Data Layer (CDL).
+ Provides annual crop type classifications for agricultural fields.
+ """
+ 
++import re
+ from pathlib import Path
+ from typing import Any
+-import re
+ 
+ import geopandas as gpd
+ import matplotlib.pyplot as plt

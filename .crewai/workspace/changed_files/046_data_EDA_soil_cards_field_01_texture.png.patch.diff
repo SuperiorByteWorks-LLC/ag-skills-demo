@@ -1,0 +1,9 @@
+diff --git a/data/EDA/soil_cards/field_01_texture.png b/data/EDA/soil_cards/field_01_texture.png
+new file mode 100644
+index 0000000..3737bef
+--- /dev/null
++++ b/data/EDA/soil_cards/field_01_texture.png
+@@ -0,0 +1,3 @@
++version https://git-lfs.github.com/spec/v1
++oid sha256:01b535a313d106432942b095439cd90d16808399b138b6a87ffc7da09ea64350
++size 81038

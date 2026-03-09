@@ -122,8 +122,8 @@ flowchart TB
 
 ---
 
-[^1]: Copernicus. "Sentinel-2 Mission." https://sentinels.copernicus.eu/web/sentinel/missions/sentinel-2
+[^1]: Copernicus. "Sentinel-2 Mission." <https://sentinels.copernicus.eu/web/sentinel/missions/sentinel-2>
 
-[^2]: USGS. "Landsat Missions." https://www.usgs.gov/landsat-missions
+[^2]: USGS. "Landsat Missions." <https://www.usgs.gov/landsat-missions>
 
-[^3]: USDA NASS. "Cropland Data Layer." https://www.nass.usda.gov/Research_and_Science/Cropland/SARS1a.php
+[^3]: USDA NASS. "Cropland Data Layer." <https://www.nass.usda.gov/Research_and_Science/Cropland/SARS1a.php>

@@ -1,0 +1,208 @@
+# Changed file snapshots
+
+- Mode: working-tree
+- Compare ref: HEAD
+- Captured files: 50/599
+
+Read `changed_files_index.json` first, then load only needed per-file artifacts.
+
+- `.ci-local.lock`
+  - before: `changed_files/001_.ci-local.lock.before.txt`
+  - after: `changed_files/001_.ci-local.lock.after.txt`
+  - patch: `changed_files/001_.ci-local.lock.patch.diff`
+- `.crewai/workspace/ci_results/core-ci/summary.md`
+  - before: `changed_files/002_.crewai_workspace_ci_results_core-ci_summary.md.before.txt`
+  - after: `changed_files/002_.crewai_workspace_ci_results_core-ci_summary.md.after.txt`
+  - patch: `changed_files/002_.crewai_workspace_ci_results_core-ci_summary.md.patch.diff`
+- `.crewai/workspace/ci_results/test-crewai/summary.md`
+  - before: `changed_files/003_.crewai_workspace_ci_results_test-crewai_summary.md.before.txt`
+  - after: `changed_files/003_.crewai_workspace_ci_results_test-crewai_summary.md.after.txt`
+  - patch: `changed_files/003_.crewai_workspace_ci_results_test-crewai_summary.md.patch.diff`
+- `.crewai/workspace/ci_results/test-docs-links/summary.md`
+  - before: `changed_files/004_.crewai_workspace_ci_results_test-docs-links_summary.md.before.txt`
+  - after: `changed_files/004_.crewai_workspace_ci_results_test-docs-links_summary.md.after.txt`
+  - patch: `changed_files/004_.crewai_workspace_ci_results_test-docs-links_summary.md.patch.diff`
+- `.crewai/workspace/ci_results/test-website/summary.md`
+  - before: `changed_files/005_.crewai_workspace_ci_results_test-website_summary.md.before.txt`
+  - after: `changed_files/005_.crewai_workspace_ci_results_test-website_summary.md.after.txt`
+  - patch: `changed_files/005_.crewai_workspace_ci_results_test-website_summary.md.patch.diff`
+- `.crewai/workspace/link-check-internal.md`
+  - before: `changed_files/006_.crewai_workspace_link-check-internal.md.before.txt`
+  - after: `changed_files/006_.crewai_workspace_link-check-internal.md.after.txt`
+  - patch: `changed_files/006_.crewai_workspace_link-check-internal.md.patch.diff`
+- `.crewai/workspace/link-check-lychee.md`
+  - before: `changed_files/007_.crewai_workspace_link-check-lychee.md.before.txt`
+  - after: `changed_files/007_.crewai_workspace_link-check-lychee.md.after.txt`
+  - patch: `changed_files/007_.crewai_workspace_link-check-lychee.md.patch.diff`
+- `.crewai/workspace/link-check-report.md`
+  - before: `changed_files/008_.crewai_workspace_link-check-report.md.before.txt`
+  - after: `changed_files/008_.crewai_workspace_link-check-report.md.after.txt`
+  - patch: `changed_files/008_.crewai_workspace_link-check-report.md.patch.diff`
+- `.crewai/workspace/link-check-summary.md`
+  - before: `changed_files/009_.crewai_workspace_link-check-summary.md.before.txt`
+  - after: `changed_files/009_.crewai_workspace_link-check-summary.md.after.txt`
+  - patch: `changed_files/009_.crewai_workspace_link-check-summary.md.patch.diff`
+- `.crewai/workspace/local_ci_summary.md`
+  - before: `changed_files/010_.crewai_workspace_local_ci_summary.md.before.txt`
+  - after: `changed_files/010_.crewai_workspace_local_ci_summary.md.after.txt`
+  - patch: `changed_files/010_.crewai_workspace_local_ci_summary.md.patch.diff`
+- `.gitattributes`
+  - before: `changed_files/011_.gitattributes.before.txt`
+  - after: `changed_files/011_.gitattributes.after.txt`
+  - patch: `changed_files/011_.gitattributes.patch.diff`
+- `.gitignore`
+  - before: `changed_files/012_.gitignore.before.txt`
+  - after: `changed_files/012_.gitignore.after.txt`
+  - patch: `changed_files/012_.gitignore.patch.diff`
+- `.opencode/skills/cdl-cropland/src/__init__.py`
+  - before: `changed_files/013_.opencode_skills_cdl-cropland_src___init__.py.before.txt`
+  - after: `changed_files/013_.opencode_skills_cdl-cropland_src___init__.py.after.txt`
+  - patch: `changed_files/013_.opencode_skills_cdl-cropland_src___init__.py.patch.diff`
+- `.opencode/skills/cdl-cropland/src/cdl_reporting.py`
+  - before: `changed_files/014_.opencode_skills_cdl-cropland_src_cdl_reporting.py.before.txt`
+  - after: `changed_files/014_.opencode_skills_cdl-cropland_src_cdl_reporting.py.after.txt`
+  - patch: `changed_files/014_.opencode_skills_cdl-cropland_src_cdl_reporting.py.patch.diff`
+- `.opencode/skills/farm-intelligence-reporting/src/pipeline.py`
+  - before: `changed_files/015_.opencode_skills_farm-intelligence-reporting_src_pipeline.py.before.txt`
+  - after: `changed_files/015_.opencode_skills_farm-intelligence-reporting_src_pipeline.py.after.txt`
+  - patch: `changed_files/015_.opencode_skills_farm-intelligence-reporting_src_pipeline.py.patch.diff`
+- `.opencode/skills/farm-intelligence-reporting/src/reporting.py`
+  - before: `changed_files/016_.opencode_skills_farm-intelligence-reporting_src_reporting.py.before.txt`
+  - after: `changed_files/016_.opencode_skills_farm-intelligence-reporting_src_reporting.py.after.txt`
+  - patch: `changed_files/016_.opencode_skills_farm-intelligence-reporting_src_reporting.py.patch.diff`
+- `.opencode/skills/field-boundaries/examples/README.md`
+  - before: `changed_files/017_.opencode_skills_field-boundaries_examples_README.md.before.txt`
+  - after: `changed_files/017_.opencode_skills_field-boundaries_examples_README.md.after.txt`
+  - patch: `changed_files/017_.opencode_skills_field-boundaries_examples_README.md.patch.diff`
+- `.opencode/skills/field-boundaries/src/field_boundaries.py`
+  - before: `changed_files/018_.opencode_skills_field-boundaries_src_field_boundaries.py.before.txt`
+  - after: `changed_files/018_.opencode_skills_field-boundaries_src_field_boundaries.py.after.txt`
+  - patch: `changed_files/018_.opencode_skills_field-boundaries_src_field_boundaries.py.patch.diff`
+- `.opencode/skills/headlands-ring/src/headlands_ring.py`
+  - before: `changed_files/019_.opencode_skills_headlands-ring_src_headlands_ring.py.before.txt`
+  - after: `changed_files/019_.opencode_skills_headlands-ring_src_headlands_ring.py.after.txt`
+  - patch: `changed_files/019_.opencode_skills_headlands-ring_src_headlands_ring.py.patch.diff`
+- `.opencode/skills/landsat-imagery/examples/sample_scene_metadata.json`
+  - before: `changed_files/020_.opencode_skills_landsat-imagery_examples_sample_scene_metadata.json.before.txt`
+  - after: `changed_files/020_.opencode_skills_landsat-imagery_examples_sample_scene_metadata.json.after.txt`
+  - patch: `changed_files/020_.opencode_skills_landsat-imagery_examples_sample_scene_metadata.json.patch.diff`
+- `.opencode/skills/landsat-imagery/src/landsat_reporting.py`
+  - before: `changed_files/021_.opencode_skills_landsat-imagery_src_landsat_reporting.py.before.txt`
+  - after: `changed_files/021_.opencode_skills_landsat-imagery_src_landsat_reporting.py.after.txt`
+  - patch: `changed_files/021_.opencode_skills_landsat-imagery_src_landsat_reporting.py.patch.diff`
+- `.opencode/skills/nasa-power-weather/src/weather_reporting.py`
+  - before: `changed_files/022_.opencode_skills_nasa-power-weather_src_weather_reporting.py.before.txt`
+  - after: `changed_files/022_.opencode_skills_nasa-power-weather_src_weather_reporting.py.after.txt`
+  - patch: `changed_files/022_.opencode_skills_nasa-power-weather_src_weather_reporting.py.patch.diff`
+- `.opencode/skills/sentinel2-imagery/examples/sample_ndvi_metadata.json`
+  - before: `changed_files/023_.opencode_skills_sentinel2-imagery_examples_sample_ndvi_metadata.json.before.txt`
+  - after: `changed_files/023_.opencode_skills_sentinel2-imagery_examples_sample_ndvi_metadata.json.after.txt`
+  - patch: `changed_files/023_.opencode_skills_sentinel2-imagery_examples_sample_ndvi_metadata.json.patch.diff`
+- `.opencode/skills/sentinel2-imagery/src/sentinel_reporting.py`
+  - before: `changed_files/024_.opencode_skills_sentinel2-imagery_src_sentinel_reporting.py.before.txt`
+  - after: `changed_files/024_.opencode_skills_sentinel2-imagery_src_sentinel_reporting.py.after.txt`
+  - patch: `changed_files/024_.opencode_skills_sentinel2-imagery_src_sentinel_reporting.py.patch.diff`
+- `.opencode/skills/ssurgo-soil/SKILL.md`
+  - before: `changed_files/025_.opencode_skills_ssurgo-soil_SKILL.md.before.txt`
+  - after: `changed_files/025_.opencode_skills_ssurgo-soil_SKILL.md.after.txt`
+  - patch: `changed_files/025_.opencode_skills_ssurgo-soil_SKILL.md.patch.diff`
+- `.opencode/skills/ssurgo-soil/examples/README.md`
+  - before: `changed_files/026_.opencode_skills_ssurgo-soil_examples_README.md.before.txt`
+  - after: `changed_files/026_.opencode_skills_ssurgo-soil_examples_README.md.after.txt`
+  - patch: `changed_files/026_.opencode_skills_ssurgo-soil_examples_README.md.patch.diff`
+- `.sisyphus/drafts/data-tree-reorganization.md`
+  - before: `changed_files/027_.sisyphus_drafts_data-tree-reorganization.md.before.txt`
+  - after: `changed_files/027_.sisyphus_drafts_data-tree-reorganization.md.after.txt`
+  - patch: `changed_files/027_.sisyphus_drafts_data-tree-reorganization.md.patch.diff`
+- `.sisyphus/drafts/ssurgo-poster-cards-specs.md`
+  - before: `changed_files/028_.sisyphus_drafts_ssurgo-poster-cards-specs.md.before.txt`
+  - after: `changed_files/028_.sisyphus_drafts_ssurgo-poster-cards-specs.md.after.txt`
+  - patch: `changed_files/028_.sisyphus_drafts_ssurgo-poster-cards-specs.md.patch.diff`
+- `.sisyphus/plans/data-tree-reorganization.md`
+  - before: `changed_files/029_.sisyphus_plans_data-tree-reorganization.md.before.txt`
+  - after: `changed_files/029_.sisyphus_plans_data-tree-reorganization.md.after.txt`
+  - patch: `changed_files/029_.sisyphus_plans_data-tree-reorganization.md.patch.diff`
+- `.sisyphus/plans/ssurgo-poster-cards-merge.md`
+  - before: `changed_files/030_.sisyphus_plans_ssurgo-poster-cards-merge.md.before.txt`
+  - after: `changed_files/030_.sisyphus_plans_ssurgo-poster-cards-merge.md.after.txt`
+  - patch: `changed_files/030_.sisyphus_plans_ssurgo-poster-cards-merge.md.patch.diff`
+- `apps/web/node_modules/.bin/serve`
+  - before: `changed_files/031_apps_web_node_modules_.bin_serve.before.txt`
+  - after: `changed_files/031_apps_web_node_modules_.bin_serve.after.txt`
+  - patch: `changed_files/031_apps_web_node_modules_.bin_serve.patch.diff`
+- `data/EDA/field_cards/iowa_field_report_01.png`
+  - before: `changed_files/032_data_EDA_field_cards_iowa_field_report_01.png.before.txt`
+  - after: `changed_files/032_data_EDA_field_cards_iowa_field_report_01.png.after.txt`
+  - patch: `changed_files/032_data_EDA_field_cards_iowa_field_report_01.png.patch.diff`
+- `data/EDA/field_cards/iowa_field_report_02.png`
+  - before: `changed_files/033_data_EDA_field_cards_iowa_field_report_02.png.before.txt`
+  - after: `changed_files/033_data_EDA_field_cards_iowa_field_report_02.png.after.txt`
+  - patch: `changed_files/033_data_EDA_field_cards_iowa_field_report_02.png.patch.diff`
+- `data/EDA/field_cards/iowa_field_report_03.png`
+  - before: `changed_files/034_data_EDA_field_cards_iowa_field_report_03.png.before.txt`
+  - after: `changed_files/034_data_EDA_field_cards_iowa_field_report_03.png.after.txt`
+  - patch: `changed_files/034_data_EDA_field_cards_iowa_field_report_03.png.patch.diff`
+- `data/EDA/field_cards/iowa_field_report_04.png`
+  - before: `changed_files/035_data_EDA_field_cards_iowa_field_report_04.png.before.txt`
+  - after: `changed_files/035_data_EDA_field_cards_iowa_field_report_04.png.after.txt`
+  - patch: `changed_files/035_data_EDA_field_cards_iowa_field_report_04.png.patch.diff`
+- `data/EDA/field_cards/iowa_field_report_05.png`
+  - before: `changed_files/036_data_EDA_field_cards_iowa_field_report_05.png.before.txt`
+  - after: `changed_files/036_data_EDA_field_cards_iowa_field_report_05.png.after.txt`
+  - patch: `changed_files/036_data_EDA_field_cards_iowa_field_report_05.png.patch.diff`
+- `data/EDA/field_cards/iowa_field_report_06.png`
+  - before: `changed_files/037_data_EDA_field_cards_iowa_field_report_06.png.before.txt`
+  - after: `changed_files/037_data_EDA_field_cards_iowa_field_report_06.png.after.txt`
+  - patch: `changed_files/037_data_EDA_field_cards_iowa_field_report_06.png.patch.diff`
+- `data/EDA/field_cards/iowa_field_report_07.png`
+  - before: `changed_files/038_data_EDA_field_cards_iowa_field_report_07.png.before.txt`
+  - after: `changed_files/038_data_EDA_field_cards_iowa_field_report_07.png.after.txt`
+  - patch: `changed_files/038_data_EDA_field_cards_iowa_field_report_07.png.patch.diff`
+- `data/EDA/field_cards/iowa_field_report_08.png`
+  - before: `changed_files/039_data_EDA_field_cards_iowa_field_report_08.png.before.txt`
+  - after: `changed_files/039_data_EDA_field_cards_iowa_field_report_08.png.after.txt`
+  - patch: `changed_files/039_data_EDA_field_cards_iowa_field_report_08.png.patch.diff`
+- `data/EDA/field_cards/iowa_field_report_09.png`
+  - before: `changed_files/040_data_EDA_field_cards_iowa_field_report_09.png.before.txt`
+  - after: `changed_files/040_data_EDA_field_cards_iowa_field_report_09.png.after.txt`
+  - patch: `changed_files/040_data_EDA_field_cards_iowa_field_report_09.png.patch.diff`
+- `data/EDA/field_cards/iowa_field_report_10.png`
+  - before: `changed_files/041_data_EDA_field_cards_iowa_field_report_10.png.before.txt`
+  - after: `changed_files/041_data_EDA_field_cards_iowa_field_report_10.png.after.txt`
+  - patch: `changed_files/041_data_EDA_field_cards_iowa_field_report_10.png.patch.diff`
+- `data/EDA/iowa_farm_report.md`
+  - before: `changed_files/042_data_EDA_iowa_farm_report.md.before.txt`
+  - after: `changed_files/042_data_EDA_iowa_farm_report.md.after.txt`
+  - patch: `changed_files/042_data_EDA_iowa_farm_report.md.patch.diff`
+- `data/EDA/iowa_farm_report.png`
+  - before: `changed_files/043_data_EDA_iowa_farm_report.png.before.txt`
+  - after: `changed_files/043_data_EDA_iowa_farm_report.png.after.txt`
+  - patch: `changed_files/043_data_EDA_iowa_farm_report.png.patch.diff`
+- `data/EDA/soil_cards/farm_comparison.png`
+  - before: `changed_files/044_data_EDA_soil_cards_farm_comparison.png.before.txt`
+  - after: `changed_files/044_data_EDA_soil_cards_farm_comparison.png.after.txt`
+  - patch: `changed_files/044_data_EDA_soil_cards_farm_comparison.png.patch.diff`
+- `data/EDA/soil_cards/field_01_properties.png`
+  - before: `changed_files/045_data_EDA_soil_cards_field_01_properties.png.before.txt`
+  - after: `changed_files/045_data_EDA_soil_cards_field_01_properties.png.after.txt`
+  - patch: `changed_files/045_data_EDA_soil_cards_field_01_properties.png.patch.diff`
+- `data/EDA/soil_cards/field_01_texture.png`
+  - before: `changed_files/046_data_EDA_soil_cards_field_01_texture.png.before.txt`
+  - after: `changed_files/046_data_EDA_soil_cards_field_01_texture.png.after.txt`
+  - patch: `changed_files/046_data_EDA_soil_cards_field_01_texture.png.patch.diff`
+- `data/EDA/soil_cards/field_02_properties.png`
+  - before: `changed_files/047_data_EDA_soil_cards_field_02_properties.png.before.txt`
+  - after: `changed_files/047_data_EDA_soil_cards_field_02_properties.png.after.txt`
+  - patch: `changed_files/047_data_EDA_soil_cards_field_02_properties.png.patch.diff`
+- `data/EDA/soil_cards/field_02_texture.png`
+  - before: `changed_files/048_data_EDA_soil_cards_field_02_texture.png.before.txt`
+  - after: `changed_files/048_data_EDA_soil_cards_field_02_texture.png.after.txt`
+  - patch: `changed_files/048_data_EDA_soil_cards_field_02_texture.png.patch.diff`
+- `data/EDA/soil_cards/field_03_properties.png`
+  - before: `changed_files/049_data_EDA_soil_cards_field_03_properties.png.before.txt`
+  - after: `changed_files/049_data_EDA_soil_cards_field_03_properties.png.after.txt`
+  - patch: `changed_files/049_data_EDA_soil_cards_field_03_properties.png.patch.diff`
+- `data/EDA/soil_cards/field_03_texture.png`
+  - before: `changed_files/050_data_EDA_soil_cards_field_03_texture.png.before.txt`
+  - after: `changed_files/050_data_EDA_soil_cards_field_03_texture.png.after.txt`
+  - patch: `changed_files/050_data_EDA_soil_cards_field_03_texture.png.patch.diff`

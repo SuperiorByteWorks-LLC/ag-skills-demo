@@ -1,0 +1,29 @@
+{
+  "timestamp": "2026-03-08T15:31:55.535632",
+  "files_copied": 0,
+  "workspace_files": [
+    "link-check-internal.md",
+    "commits.json",
+    "quick_review.json",
+    "ci_summary.json",
+    "executive_synthesis.json",
+    "context_pack.md",
+    "commit_messages.txt",
+    "link-check-lychee.md",
+    "router_decision.json",
+    "diff.txt",
+    "link-check-report.md",
+    "scope.json",
+    "post_specialist_synthesis.json",
+    "data_engineering_review.json",
+    "changed_files_index.json",
+    "validation_report.json",
+    "changed_files_manifest.md",
+    "local_ci_summary.md",
+    "diff.json",
+    "memory_context.md",
+    "link-check-summary.md",
+    "context_pack.json",
+    "final_summary.md"
+  ]
+}

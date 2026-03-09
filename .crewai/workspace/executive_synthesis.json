@@ -1,0 +1,34 @@
+{
+  "generated_at": "2026-03-08 15:31:53 UTC",
+  "provider": "openrouter",
+  "executive_summary": [],
+  "priority_actions": [
+    {
+      "severity": "critical",
+      "source": "Quick Review",
+      "title": "Commitlint step is now a warning, which previously might have been enforced, potentially allowing for less strict",
+      "file": "",
+      "why": "Commitlint step is now a warning, which previously might have been enforced, potentially allowing for less strict commit formatting. This could impact automated changelog generation or commit history analysis.",
+      "action": "Consider this improvement in the next change set."
+    },
+    {
+      "severity": "critical",
+      "source": "Quick Review",
+      "title": "Markdownlint step failed, indicating potential issues with the formatting or content of Markdown files",
+      "file": "",
+      "why": "Markdownlint step failed, indicating potential issues with the formatting or content of Markdown files. This could lead to inconsistencies or broken documentation.",
+      "action": "Consider this improvement in the next change set."
+    }
+  ],
+  "summary_guidance": {
+    "first_section": "The review process has completed, identifying critical issues related to docume\u2026",
+    "must_read_artifacts": [
+      "router_decision.json",
+      "ci_summary.json",
+      "quick_review.json",
+      "post_specialist_synthesis.json",
+      "data_engineering_review.json"
+    ],
+    "release_recommendation": "Address the critical Markdownlint and Commitlint failures before proceeding with release to ensure documentation quality and maintain proper commit history."
+  }
+}

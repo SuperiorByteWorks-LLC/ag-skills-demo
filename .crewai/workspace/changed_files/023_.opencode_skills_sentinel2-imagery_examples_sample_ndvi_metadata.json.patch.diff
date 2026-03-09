@@ -1,0 +1,11 @@
+diff --git a/.opencode/skills/sentinel2-imagery/examples/sample_ndvi_metadata.json b/.opencode/skills/sentinel2-imagery/examples/sample_ndvi_metadata.json
+index 20f837a..2f8a21f 100644
+--- a/.opencode/skills/sentinel2-imagery/examples/sample_ndvi_metadata.json
++++ b/.opencode/skills/sentinel2-imagery/examples/sample_ndvi_metadata.json
+@@ -45,4 +45,4 @@
+     }
+   ],
+   "note": "Sample metadata for Iowa corn belt fields. Requires Copernicus Data Space credentials for actual download."
+-}
+\ No newline at end of file
++}

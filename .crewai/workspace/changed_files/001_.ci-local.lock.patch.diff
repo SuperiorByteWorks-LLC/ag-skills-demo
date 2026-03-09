@@ -1,0 +1,7 @@
+diff --git a/.ci-local.lock b/.ci-local.lock
+index 1ce2524..c6ec760 100644
+--- a/.ci-local.lock
++++ b/.ci-local.lock
+@@ -1 +1 @@
+-pid=4652 started=2026-03-08T00:39:18Z cwd=/workspaces/ag-skills-demo
++pid=4031240 started=2026-03-08T19:31:07Z cwd=/home/clay/dev/ag-skills-demo

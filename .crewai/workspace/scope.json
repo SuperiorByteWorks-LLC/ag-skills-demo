@@ -1,0 +1,9 @@
+{
+  "contract_version": "2026-02-14",
+  "tier": "quick",
+  "diff_strategy": "working-tree-vs-head",
+  "base_ref": "HEAD",
+  "head_ref": "HEAD",
+  "head_sha": "6b27a8ac84161740f60edce5cf7b28425c74e8bc",
+  "merge_base": "HEAD"
+}

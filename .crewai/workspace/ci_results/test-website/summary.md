@@ -1,4 +1,4 @@
 # Website test/build summary
 
 - status: pass
-- duration: 3s
+- duration: 0s

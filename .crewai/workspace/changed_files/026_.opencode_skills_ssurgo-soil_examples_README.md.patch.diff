@@ -1,0 +1,13 @@
+diff --git a/.opencode/skills/ssurgo-soil/examples/README.md b/.opencode/skills/ssurgo-soil/examples/README.md
+index dfdaa74..8724a99 100644
+--- a/.opencode/skills/ssurgo-soil/examples/README.md
++++ b/.opencode/skills/ssurgo-soil/examples/README.md
+@@ -11,7 +11,7 @@ This directory contains real SSURGO soil data downloaded from the NRCS Soil Data
+ 
+ - **Provider**: USDA Natural Resources Conservation Service (NRCS)
+ - **Database**: SSURGO (Soil Survey Geographic Database)
+-- **API**: Soil Data Access REST API (https://sdmdataaccess.sc.egov.usda.gov/)
++- **API**: Soil Data Access REST API (<https://sdmdataaccess.sc.egov.usda.gov/>)
+ - **Format**: CSV / JSON
+ - **CRS**: WGS84 (point queries from EPSG:4326 field boundaries)
+ 

@@ -7,6 +7,7 @@ from __future__ import annotations
 import base64
 import io
 import json
+import os
 import sys
 import textwrap
 from pathlib import Path
@@ -421,10 +422,16 @@ def main() -> None:
     output_path = farm_report_path(_DEFAULT_GROWER, _DEFAULT_FARM, "iowa_farm_report.html")
     field_slug_lookup = _field_slug_lookup()
     ndvi_input_paths = []
+    field_poster_input_paths = []
     for field_slug in field_slug_lookup.values():
         field_root = _canonical_field_root(field_slug)
         if field_root is None:
             continue
+        poster_path = field_report_path(
+            _DEFAULT_GROWER, _DEFAULT_FARM, field_slug, "field_report.png"
+        )
+        if poster_path.exists():
+            field_poster_input_paths.append(str(poster_path.relative_to(_REPO)))
         for filename in (
             "ndvi_corn.png",
             "ndvi_corn_peak_95.png",
@@ -448,13 +455,15 @@ def main() -> None:
             str(
                 farm_summary_path(_DEFAULT_GROWER, _DEFAULT_FARM, "soil_cards/farm_comparison.png")
             ),
+            *field_poster_input_paths,
             *ndvi_input_paths,
         ],
         output_paths=[output_path],
         code_paths=[_SCRIPT],
         config=config,
     )
-    if not step_is_stale(manifest, prior):
+    force = os.environ.get("AG_FORCE") == "1"
+    if not force and not step_is_stale(manifest, prior):
         print("skip  HTML (current)")
         return
 

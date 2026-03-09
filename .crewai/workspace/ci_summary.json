@@ -1,0 +1,18 @@
+{
+  "status": "success",
+  "passed": true,
+  "summary": "Local run: core-ci marked success; diff stats 599 files (+5973/-2367); mode=standard-review",
+  "critical_errors": [],
+  "warnings": [],
+  "checks_performed": [
+    "local-short-circuit",
+    "diff-metadata-loaded",
+    "label-routing-ready"
+  ],
+  "metadata": {
+    "files_changed": 599,
+    "additions": 5973,
+    "deletions": 2367,
+    "labels": []
+  }
+}

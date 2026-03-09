@@ -1,0 +1,372 @@
+diff --git a/.sisyphus/plans/ssurgo-poster-cards-merge.md b/.sisyphus/plans/ssurgo-poster-cards-merge.md
+index 8ec5b41..8a35b02 100644
+--- a/.sisyphus/plans/ssurgo-poster-cards-merge.md
++++ b/.sisyphus/plans/ssurgo-poster-cards-merge.md
+@@ -1,291 +1,593 @@
+-# Work Plan: Merge ssurgo-poster-cards Skill
++# Work Plan: Cached field cards and NDVI reporting refresh
+ 
+-## TL;DR
+-
+-Merge the `ssurgo-poster-cards` skill into `ag-skills-demo` as a new discoverable skill package plus standalone script. This skill generates poster-ready soil profile cards from SSURGO SQLite databases.
+-
+-**Deliverables:**
+-
+-- `.opencode/skills/ssurgo-poster-cards/` - skill package with SKILL.md, README.md, requirements.txt
+-- `.opencode/skills/ssurgo-poster-cards/examples/` - example invocations
+-- `.opencode/skills/ssurgo-poster-cards/templates/` - reusable templates
+-- `scripts/build_ssurgo_poster_cards.py` - standalone executable script
++_Planning record for upgrading field reporting so expensive SSURGO and NDVI assets are cached and cheap poster/HTML/Markdown assembly can rerun independently._
+ 
+ ---
+ 
+-## Context
+-
+-This merge adds a reusable repo skill for generating poster-ready soil profile cards from SSURGO data stored in a local SQLite database. The workflow is packaged as both a discoverable skill for agent use and a normal Python script for direct CLI execution.
+-
+-**Source:** Handoff summary from external contribution with complete specifications.
++## 📋 TL;DR
++
++> **Quick summary**: Repair the reporting pipeline so canonical `data/growers/...` outputs become the only active source of truth, raw seasonal satellite TIFFs are preserved first, and NDVI reporting shifts from single best-scene yearly snapshots to crop-conditioned seasonal rollups.
++>
++> **Deliverables**:
++>
++> - Canonical-only grower/farm/field report outputs and logs with no active `data/EDA` dependency
++> - Raw clipped Sentinel-2 and Landsat TIFF inventories across each growing season
++> - Yearly NDVI composites grouped into reusable `corn`, `soybean`, and current-season cumulative cards
++> - SSURGO, CDL, poster, HTML, and Markdown steps aligned to the same cache/rebuild contract
++> - Incremental dependency-based rebuilds plus explicit full refresh
++>
++> **Estimated effort**: Large
++> **Parallel execution**: YES - 4 implementation waves plus final verification
++> **Critical path**: canonical path contract -> seasonal scene inventory -> yearly crop-conditioned NDVI composites -> canonical report assembly -> refresh orchestration -> final verification
+ 
+ ---
+ 
+-## Work Objectives
+-
+-### Core Objective
+-
+-Create a complete skill package and standalone script for SSURGO poster card generation.
+-
+-### Concrete Deliverables
+-
+-1. Skill definition (SKILL.md) with YAML frontmatter
+-2. User-facing README with setup and usage
+-3. Python dependencies list (requirements.txt)
+-4. Example invocation documentation
+-5. Reusable handoff summary template
+-6. Standalone Python script at `scripts/build_ssurgo_poster_cards.py`
+-
+-### Definition of Done
+-
+-- [ ] All files created in correct locations
+-- [ ] Script runs from repo root with `python scripts/build_ssurgo_poster_cards.py --help`
+-- [ ] Skill documentation is complete and accurate
+-- [ ] Output naming convention matches documentation
++## 📚 Context
++
++### Original request
++
++The user wants field reporting to stop recomputing expensive products on every run. SSURGO cards and satellite NDVI cards should be reusable assets. Final poster, HTML, and Markdown assembly should be cheap. The field report should replace the current CDL composition slot with stronger NDVI content and a text-based crop rotation forecast.
++
++### Interview summary
++
++**Confirmed requirements**:
++
++- Add Sentinel-2 and Landsat NDVI imagery/products into field reporting
++- Download and retain raw clipped TIFFs first, across each growing season for each target year
++- Remove the CDL crop composition by year card from field cards
++- Keep crop rotation information in the first card and add heuristic predictions for next year and the following year
++- Replace best-scene-only NDVI with growing-season/yearly rollups and crop-conditioned output cards
++- Place NDVI under the GDD card where the cropland card currently sits, using the right-side image slots
++- Use reusable card-sized PNG assets for expensive outputs
++- Rebuild expensive cards only when source manifests or card specs change, unless a user explicitly requests a full refresh
++- Target 5 years of cropland, weather, and NDVI history where imagery/data are available
++- Fix structure drift so canonical `data/growers/...` is the active reporting root
++- Move manifests/logs closer to canonical grower/farm/field outputs instead of `data/reporting/manifests/`
++- Treat `shared/cdl/rasters/` as canonical for moved CDL TIFFs and align the remaining CDL/reporting steps around that tree
++- Fix remaining path drift so active reporting no longer depends on legacy `data/EDA/` or old `data/cdl/` paths
++
++**Defaults applied**:
++
++- Use a rolling 5-year window by default
++- Prefer Sentinel-2 over Landsat when both qualify for the same seasonal slot, while still allowing Landsat to fill gaps in the 5-year history
++- Use a simple rotation heuristic for the two-year crop forecast rather than a formal predictive model
++- Store reusable card assets inside canonical per-field derived outputs so assembly can consume them directly
++- Use three final NDVI field slots by default: `corn average NDVI`, `soybean average NDVI`, and `current-season cumulative NDVI`; if a crop class is absent, render a clear unavailable-state asset instead of reviving the old best-scene layout
++- Treat `data/EDA/` as legacy only and remove it from active orchestration rather than maintaining an ongoing mirror
++
++### Research findings
++
++- Existing manifest/stale-check logic already lives in `.opencode/skills/farm-intelligence-reporting/src/pipeline.py`, but active reporting scripts still point to `data/reporting/manifests/`
++- Existing canonical path helpers already live in `data/scripts/lib/paths.py`, but reporting scripts do not use them consistently
++- `data/scripts/run_farm_pipeline.py` currently syncs from legacy `data/EDA/...` outputs back into `data/growers/...`, which preserves structure drift instead of eliminating it
++- `data/scripts/ingest/download_satellite_imagery.py` currently downloads one best scene per year via `search_best_feature(...)`; this must expand to dense within-season scene inventories
++- `data/scripts/reporting/generate_ndvi_cards.py` currently builds `ndvi_multi_year`, `ndvi_recent`, and `ndvi_accumulated` assets from available NDVI TIFFs, but it does not build yearly seasonal composites or crop-conditioned rollups
++- `data/scripts/ingest/download_cdl.py` and current report builders still depend on old `data/cdl/...` paths even though the CDL TIFFs were manually moved to `shared/cdl/rasters/`
++- Existing reporting/panel patterns live in `.opencode/skills/farm-intelligence-reporting/src/reporting.py`
++- Existing Sentinel-2 NDVI helper/reporting code lives in `.opencode/skills/sentinel2-imagery/src/sentinel_reporting.py`
++- Existing Landsat NDVI helper/reporting code lives in `.opencode/skills/landsat-imagery/src/landsat_reporting.py`
++- Existing SSURGO card skill exists in `.opencode/skills/ssurgo-poster-cards/`
++- User-provided visual/process references live outside this repo:
++  - `/home/clay/dev/agri-data-toolkit-worktrees/class-7/docs/classes/examples/class7-satellite-and-drone-intelligence/07-complete-workflow/scripts/07_class7_pipeline.py`
++  - `/home/clay/dev/agri-data-toolkit-worktrees/class-7/docs/classes/examples/class7-satellite-and-drone-intelligence/07-complete-workflow/scripts/07_complete_pipeline.py`
++  - `/home/clay/dev/agri-data-toolkit-worktrees/class-7/docs/classes/examples/class7-satellite-and-drone-intelligence/07-complete-workflow/scripts/08_make_visualization_grid.py`
++
++### Planning review
++
++**Gaps addressed in this plan**:
++
++- Explicitly define cache/regeneration behavior instead of leaving it implicit
++- Lock NDVI scope to NDVI only, not extra vegetation indices
++- Lock crop prediction to a heuristic based on recent crop history
++- Add negative acceptance criteria for CDL composition card removal
++- Add handling for partial imagery history, no-scene years, and full-refresh behavior
++- Add explicit repair work for path/manifest drift and legacy `data/EDA` removal
++- Add explicit yearly crop join and crop-conditioned NDVI rollup requirements
+ 
+ ---
+ 
+-## Execution Strategy
++## 🎯 Work objectives
+ 
+-### File Structure
++### Core objective
+ 
+-```
+-ag-skills-demo/
+-  .opencode/skills/
+-    ssurgo-poster-cards/
+-      SKILL.md                    # Agent-facing skill definition
+-      README.md                   # Human-facing usage guide
+-      requirements.txt            # Python dependencies
+-      examples/
+-        example_invocation.md     # Usage examples
+-      templates/
+-        handoff_summary.md        # Reusable template
+-  scripts/
+-    build_ssurgo_poster_cards.py  # Standalone executable
+-```
++Create a canonical reporting workflow where expensive field-level analytical cards are cached as reusable assets under `data/growers/...`, raw growing-season satellite TIFFs are preserved for reuse, and downstream report assembly can rerun quickly without reviving legacy path drift.
+ 
+-### Parallel Execution
++### Concrete deliverables
+ 
+-All file creation tasks are independent and can run in parallel:
++- Per-field cached SSURGO card assets inside canonical derived outputs
++- Per-field raw seasonal satellite TIFF inventories plus yearly NDVI composite rasters
++- Per-field cached NDVI card assets for `corn average`, `soybean average`, and `current-season cumulative` views
++- Updated field poster/HTML/Markdown assembly that consumes canonical cached card assets directly
++- Updated crop-rotation summary with heuristic next-year and following-year text
++- Removal of the old CDL composition card from field cards
++- Canonical manifest/log relocation under grower/farm/field outputs
++- Shared CDL path cleanup around `shared/cdl/rasters/` and aligned derived outputs
++- Incremental dependency-aware rebuild behavior plus explicit full refresh
+ 
+-**Wave 1 - Skill Package Files (parallel):**
++### Definition of done
+ 
+-- Create SKILL.md
+-- Create README.md
+-- Create requirements.txt
+-- Create examples/example_invocation.md
+-- Create templates/handoff_summary.md
++- [ ] Expensive SSURGO and NDVI cards are independently cacheable and reusable
++- [ ] Poster/HTML/Markdown assembly can rerun without recomputing unchanged expensive cards
++- [ ] The field report layout replaces the CDL composition panel with NDVI content
++- [ ] Crop rotation card includes two-year heuristic forecast text
++- [ ] The field report layout uses crop-conditioned NDVI cards instead of best-scene yearly panels
++- [ ] Active report generation no longer depends on `data/EDA/` or `data/reporting/manifests/`
++- [ ] Incremental run skips unchanged card assets and full refresh forces regeneration
+ 
+-**Wave 2 - Script (sequential after Wave 1):**
++### Must have
+ 
+-- Create scripts/build_ssurgo_poster_cards.py
++- 5-year target window for cropland, weather, and NDVI inputs
++- Clear dependency tracking for each expensive card asset
++- Canonical outputs remain under `data/growers/...`
++- Canonical manifests/logs live under grower/farm/field outputs
++- Raw clipped TIFFs are retained for each accepted in-season scene
++- Active shared CDL inputs live in canonical shared paths instead of old ad hoc roots
++- Agent-executable verification only
+ 
+-**Wave 3 - Verification (parallel):**
++### Must not have
+ 
+-- Verify script runs
+-- Verify file structure
+-- Verify documentation completeness
++- No new ML prediction model
++- No additional vegetation indices beyond NDVI in this scope
++- No mandatory recomputation of all expensive cards during cheap assembly runs
++- No human-only visual verification criteria
++- No active `data/EDA/` output root for the reporting pipeline
++- No active `data/reporting/manifests/` dependency for reporting steps
+ 
+ ---
+ 
+-## TODOs
+-
+-- [ ] 1. Create SKILL.md with YAML frontmatter
+-
+-  **What to do:**
+-  Create `.opencode/skills/ssurgo-poster-cards/SKILL.md` with the following exact content:
+-
+-  ```yaml
+-  ---
+-  name: ssurgo-poster-cards
+-  description: Generate poster-ready SSURGO soil profile cards from a local SQLite database, including single-profile, comparison, texture-color, and clustered layouts.
+-  version: 1.0.0
+-  author: Boreal Bytes
+-  tags: [agriculture, soil, ssurgo, visualization, poster]
+-  ---
+-  ```
+-
+-  Followed by the full skill definition from the handoff summary (Use this skill when, Inputs, Expected tables, Required fields, Optional fields, Outputs, Behavior, Notes, Script entrypoint).
+-
+-  **Must NOT do:**
+-  - Change the YAML frontmatter structure
+-  - Omit any required fields from the skill definition
++## 📊 Verification strategy
+ 
+-  **Acceptance Criteria:**
+-  - [ ] File exists at `.opencode/skills/ssurgo-poster-cards/SKILL.md`
+-  - [ ] YAML frontmatter is valid
+-  - [ ] All skill sections from handoff are included
++> **Zero human intervention** — all verification must be executable by the implementation agent.
+ 
+-  **Commit:** NO (group with final verification)
++### Test decision
+ 
+-- [ ] 2. Create README.md
++- **Infrastructure exists**: YES
++- **Automated tests**: Tests-after
++- **Framework**: existing project test/build commands plus targeted script execution
+ 
+-  **What to do:**
+-  Create `.opencode/skills/ssurgo-poster-cards/README.md` with the exact content from the handoff summary.
++### QA policy
+ 
+-  **Content:**
+-  - Title: # ssurgo-poster-cards
+-  - Brief description
+-  - Generates list (4 card types)
+-  - Run section with bash command example
+-  - Typical use description
+-  - Dependencies section
+-  - Data expectations section
++Every task below includes executable QA scenarios. Evidence should be saved under `.sisyphus/evidence/` during execution.
+ 
+-  **Acceptance Criteria:**
+-  - [ ] File exists at `.opencode/skills/ssurgo-poster-cards/README.md`
+-  - [ ] Contains all sections from specification
+-  - [ ] Command example is copy-paste ready
++- **Frontend/report visuals**: Use generated PNG/HTML artifacts plus script-level assertions
++- **Pipeline/CLI**: Use Bash commands with concrete expected files and manifest states
++- **Library/module behavior**: Use Python entrypoints/import checks where appropriate
+ 
+-  **Commit:** NO (group with final verification)
++---
+ 
+-- [ ] 3. Create requirements.txt
++## ⚙️ Execution strategy
+ 
+-  **What to do:**
+-  Create `.opencode/skills/ssurgo-poster-cards/requirements.txt` with:
++### Parallel execution waves
+ 
+-  ```
+-  pandas>=2.0.0
+-  matplotlib>=3.7.0
+-  numpy>=1.24.0
+-  scikit-learn>=1.3.0
+-  ```
++```text
++Wave 1 (foundations)
++1. Lock canonical path, manifest, and log contract
++2. Align CDL ingestion and crop-history inputs to the canonical shared tree
+ 
+-  **Acceptance Criteria:**
+-  - [ ] File exists at `.opencode/skills/ssurgo-poster-cards/requirements.txt`
+-  - [ ] All 4 dependencies listed with version constraints
++Wave 2 (imagery + rollup production)
++3. Expand satellite ingest to dense growing-season inventories
++4. Build yearly NDVI composites and year-to-crop joins
++5. Render canonical NDVI cards for corn, soybean, and current-season cumulative views
+ 
+-  **Commit:** NO (group with final verification)
++Wave 3 (other cached assets + layout)
++6. Align SSURGO and crop-summary assets to the same canonical cache contract
++7. Refactor poster, farm poster, HTML, and Markdown assembly to canonical-only inputs
+ 
+-- [ ] 4. Create examples/example_invocation.md
++Wave 4 (orchestration + cleanup)
++8. Finish orchestration, cleanup, and verification for incremental vs full refresh
+ 
+-  **What to do:**
+-  Create `.opencode/skills/ssurgo-poster-cards/examples/example_invocation.md` showing:
+-  - Agent-facing usage example
+-  - CLI-facing usage example
+-  - Expected outputs list
+-
+-  **Acceptance Criteria:**
+-  - [ ] File exists at correct path
+-  - [ ] Contains both agent and CLI examples
+-  - [ ] Lists all 4 output card types
++Wave FINAL (verification)
++F1. Plan compliance audit
++F2. Code quality + test/build review
++F3. Report artifact QA
++F4. Scope fidelity audit
++```
+ 
+-  **Commit:** NO (group with final verification)
++### Dependency matrix
+ 
+-- [ ] 5. Create templates/handoff_summary.md
++- **1**: none -> 3, 5, 6, 7, 8
++- **2**: none -> 4, 6, 7, 8
++- **3**: 1 -> 4, 5, 8
++- **4**: 2, 3 -> 5, 8
++- **5**: 1, 3, 4 -> 7, 8
++- **6**: 1, 2 -> 7, 8
++- **7**: 1, 2, 5, 6 -> 8, F1-F4
++- **8**: 1, 2, 3, 4, 5, 6, 7 -> F1-F4
+ 
+-  **What to do:**
+-  Create `.opencode/skills/ssurgo-poster-cards/templates/handoff_summary.md` as a reusable template for future soil-data skills.
++### Agent dispatch summary
+ 
+-  Template should include:
+-  - Merge target placeholder
+-  - Layout structure
+-  - Handoff summary sections (PR title, Purpose, What is being added)
+-  - Skill definition template
+-  - Script merge notes
+-  - README text template
+-  - Merge criteria checklist
++- **Wave 1**: T1 `deep`, T2 `deep`
++- **Wave 2**: T3 `deep`, T4 `deep`, T5 `visual-engineering`
++- **Wave 3**: T6 `unspecified-high`, T7 `writing`
++- **Wave 4**: T8 `deep`
++- **Final**: F1 `oracle`, F2 `unspecified-high`, F3 `unspecified-high`, F4 `deep`
+ 
+-  **Acceptance Criteria:**
+-  - [ ] File exists at correct path
+-  - [ ] Contains all template sections
+-  - [ ] Uses placeholder syntax for customization
++---
+ 
+-  **Commit:** NO (group with final verification)
++## ✍️ TODOs
++
++- [x] 1. Lock the canonical path, manifest, and log contract
++
++  **What to do**:
++  - Make `data/growers/...` the only active report/output root
++  - Move active manifests/logs out of `data/reporting/manifests/` into canonical grower/farm/field locations
++  - Define the can
+...
+[truncated per-file patch]

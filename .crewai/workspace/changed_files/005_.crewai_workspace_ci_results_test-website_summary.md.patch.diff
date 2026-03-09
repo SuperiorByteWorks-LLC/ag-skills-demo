@@ -1,0 +1,10 @@
+diff --git a/.crewai/workspace/ci_results/test-website/summary.md b/.crewai/workspace/ci_results/test-website/summary.md
+index 51fa6a2..b42c4fe 100644
+--- a/.crewai/workspace/ci_results/test-website/summary.md
++++ b/.crewai/workspace/ci_results/test-website/summary.md
+@@ -1,4 +1,4 @@
+ # Website test/build summary
+ 
+ - status: pass
+-- duration: 3s
++- duration: 0s

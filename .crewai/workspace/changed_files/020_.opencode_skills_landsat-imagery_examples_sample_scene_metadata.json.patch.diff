@@ -1,0 +1,11 @@
+diff --git a/.opencode/skills/landsat-imagery/examples/sample_scene_metadata.json b/.opencode/skills/landsat-imagery/examples/sample_scene_metadata.json
+index 3d2ed32..b0aa321 100644
+--- a/.opencode/skills/landsat-imagery/examples/sample_scene_metadata.json
++++ b/.opencode/skills/landsat-imagery/examples/sample_scene_metadata.json
+@@ -47,4 +47,4 @@
+     }
+   ],
+   "note": "Sample metadata for Iowa corn belt fields. Requires USGS EarthExplorer credentials for actual download."
+-}
+\ No newline at end of file
++}

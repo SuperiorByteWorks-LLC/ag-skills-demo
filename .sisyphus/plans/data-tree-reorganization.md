@@ -1,42 +1,46 @@
-# Work Plan: Reorganize data tree into scripts/shared/growers
+# Work Plan: Data Tree Reorganization Hard Cutover
 
 ## TL;DR
 
-Reorganize `data/` into a deterministic, scalable hierarchy built around `data/scripts/`, `data/shared/`, and `data/growers/`, then hard-cut all pipeline and script path usage to the new structure using canonical demo slugs `iowa-demo-grower` and `iowa-demo-farm`.
-
-**Deliverables:**
-
-- `data/scripts/` reorganized into `ingest/`, `eda/`, `reporting/`, and `lib/`
-- `data/shared/` created for canonical reusable assets such as CDL, reference data, and shared manifests
-- `data/growers/iowa-demo-grower/farms/iowa-demo-farm/` created as the canonical farm tree
-- Current field, soil, weather, cache, report, and manifest assets relocated into canonical field/farm/shared locations
-- `data/scripts/lib/paths.py`, `data/scripts/lib/manifest.py`, and `data/scripts/lib/naming.py`
-- `farm.json`, `field.json`, and dataset `metadata.json` / `manifest.json` files added where required
-- `data/scripts/run_farm_pipeline.py` updated to operate entirely against the new structure
-- `data/README.md` rewritten to match the actual post-migration tree
+> Reorganize `data/` into the canonical `scripts/` + `shared/` + `growers/` hierarchy with an immediate hard cutover, preserving the current reporting pipeline and SSURGO per-field polygon cache behavior.
+>
+> Deliverables:
+>
+> - Canonical tree and metadata records under `data/growers/iowa-demo-grower/farms/iowa-demo-farm/`
+> - Script reorganization and centralized helper modules under `data/scripts/lib/`
+> - Updated pipeline and reporting scripts with zero active legacy path dependencies
+>
+> Estimated Effort: Large
+> Parallel Execution: YES - 4 implementation waves + final verification wave
+> Critical Path: T1 -> T2 -> T8 -> T10 -> T12 -> F1-F4
 
 ---
 
 ## Context
 
-The current `data/` area has grown beyond the original minimal `sql/` layout and now contains a mixed flat structure with raw inputs, cached API downloads, derived EDA outputs, reporting artifacts, manifests, and executable scripts. The user wants a production-shaped structure that supports one grower / one farm / many fields now, and many growers / many farms / many fields later.
+### Original Request
 
-The current repo state that must be migrated includes:
+User asked to review existing draft and plan for the data tree reorganization and proceed now.
 
-- `data/EDA/` with `field_cards/`, `soil_cards/`, `soil_maps/`, and `iowa_farm_report.*`
-- `data/cdl/` with canonical CDL rasters and derived CSV summaries
-- `data/field-boundaries/` with the Iowa field boundary source
-- `data/reporting/manifests/` with per-step manifests
-- `data/soil/` with `iowa_full_ssurgo.csv`, `iowa_ssurgo_summary.csv`, and `cache/*.geojson`
-- `data/weather/` with field weather exports
-- `data/scripts/` with flat numbered ingest/EDA/reporting scripts plus bootstrap and pipeline entrypoints
+### Interview Summary
 
-The user explicitly selected:
+- Existing artifacts reviewed: `.sisyphus/drafts/data-tree-reorganization.md` and prior `.sisyphus/plans/data-tree-reorganization.md`.
+- User selected plan regeneration (not as-is reuse).
+- Fixed decisions retained: grower slug `iowa-demo-grower`, farm slug `iowa-demo-farm`, immediate hard cutover.
 
-- Demo slugs: `iowa-demo-grower` / `iowa-demo-farm`
-- Migration style: **hard cutover immediately**
+### Research Findings
 
-The plan must preserve the working SSURGO integrations that already exist, including cached USDA SDA polygon downloads and field poster rendering that now uses multiple soil polygons.
+- Current draft has strong target-tree and migration mapping details.
+- Existing plan lacked strict execution details required for agent-driven implementation (detailed QA scenarios, explicit dependency and wave dispatch).
+
+### Metis Review
+
+Addressed during regeneration:
+
+- Tightened scope for scaffold-first migration plus path cutover.
+- Added pre-migration operational guardrails (baseline pipeline, field inventory, rollback, concurrency lockout).
+- Added executable acceptance criteria and failure-path QA scenarios for every task.
+- Added explicit scope-control rules to prevent logic refactor creep.
 
 ---
 
@@ -44,370 +48,646 @@ The plan must preserve the working SSURGO integrations that already exist, inclu
 
 ### Core Objective
 
-Replace the ad hoc flat `data/` tree with a canonical hierarchy that cleanly separates executable code, shared datasets, and grower/farm/field-scoped data while keeping the pipeline reproducible and deterministic.
+Convert the current `data/` layout to a deterministic, scalable grower/farm/field-oriented structure and hard-cut all active script usage to canonical helper-driven paths.
 
 ### Concrete Deliverables
 
-1. New top-level `data/` structure with only `scripts/`, `shared/`, and `growers/` as active data concerns
-2. Canonical grower/farm/field tree under `data/growers/iowa-demo-grower/farms/iowa-demo-farm/fields/`
-3. Canonical shared asset tree under `data/shared/` for CDL, reference data, and shared manifests
-4. Centralized path helpers and naming helpers under `data/scripts/lib/`
-5. Script reorganization from flat numbered files into `ingest/`, `eda/`, and `reporting/`
-6. Metadata and manifest coverage for farm, field, and dataset folders
-7. Updated pipeline and reporting scripts that no longer depend on legacy top-level paths
-8. Updated `data/README.md` that accurately documents the final structure
+- Canonical directory tree rooted at `data/scripts/`, `data/shared/`, and `data/growers/`
+- `data/scripts/lib/paths.py`, `data/scripts/lib/naming.py`, `data/scripts/lib/manifest.py`
+- `farm.json` plus one `field.json` per field slug
+- Dataset metadata/manifest files in canonical locations
+- Reorganized ingest/EDA/reporting scripts with updated imports and path usage
+- `data/scripts/run_farm_pipeline.py` operating entirely on the new tree
+- `data/README.md` rewritten to match final reality
 
 ### Definition of Done
 
-- [ ] `data/` uses the new top-level structure with `scripts/`, `shared/`, and `growers/`
-- [ ] Current field, soil, weather, CDL, cache, manifest, and derived report assets are relocated into canonical locations
-- [ ] Every field has a `field.json`
-- [ ] The farm has a `farm.json`
-- [ ] Dataset folders have `metadata.json` or `manifest.json` where appropriate
-- [ ] `data/scripts/lib/paths.py` exists and is used by moved scripts
-- [ ] `data/scripts/run_farm_pipeline.py` works against the new structure without fallback to old paths
-- [ ] No active script still depends on the old top-level data folders
-- [ ] `data/README.md` matches the final structure exactly
+- [ ] Canonical tree exists and is the only active data model
+- [ ] No active script depends on legacy data roots (`data/EDA`, `data/soil`, `data/weather`, `data/cdl`, `data/field-boundaries`, `data/reporting/manifests`)
+- [ ] Pipeline executes against canonical paths and writes outputs to canonical destinations
+- [ ] SSURGO cache behavior remains one-time-per-field and still powers downstream visual outputs
+- [ ] README and filesystem structure are aligned
+
+### Must Have
+
+- Hard cutover with no fallback wrappers
+- Helper-module-only canonical path construction
+- Metadata coverage for farm, field, and data folders that hold real artifacts
+
+### Must NOT Have (Guardrails)
+
+- No business-logic rewrites beyond path/import/data-location migration
+- No new features, CLI options, performance optimization, or architecture expansion
+- No active dual-write, compatibility shims, or legacy-path fallbacks
+
+---
+
+## Verification Strategy
+
+> ZERO HUMAN INTERVENTION. All verification must be executable by agents via commands and tools.
+
+### Test Decision
+
+- Infrastructure exists: YES (Python scripts and command-based verification flow)
+- Automated tests: Tests-after (verification-focused; no broad new test framework scope)
+- Framework: Command-driven verification (`python`, `grep`, `find`, `ls`, pipeline run)
+
+### QA Policy
+
+- Every task includes mandatory QA scenarios:
+  - one happy path
+  - one failure/edge path
+- Evidence path for each scenario under `.sisyphus/evidence/`
+- Task completion is invalid without evidence artifacts.
+
+### Pre-Migration Gate
+
+- Baseline pipeline run captured before cutover
+- Field inventory and slug map captured
+- Disk free-space and write-permission checks captured
+- No concurrent data-writer process running
+- Manual rollback procedure documented and validated
 
 ---
 
 ## Execution Strategy
 
-### Target architecture
+### Parallel Execution Waves
 
-```text
-data/
-├── README.md
-├── scripts/
-│   ├── ingest/
-│   ├── eda/
-│   ├── reporting/
-│   ├── lib/
-│   ├── reporting_bootstrap.py
-│   └── run_farm_pipeline.py
-├── shared/
-│   ├── cdl/
-│   ├── reference/
-│   └── manifests/
-└── growers/
-    └── iowa-demo-grower/
-        └── farms/
-            └── iowa-demo-farm/
-                ├── farm.json
-                └── fields/
-                    └── <field_slug>/
-                        ├── field.json
-                        ├── boundary/
-                        ├── soil/
-                        ├── weather/
-                        ├── satellite/
-                        ├── derived/
-                        └── logs/
-```
+Wave 1 (foundation, parallel start): T1, T2, T3, T4, T5
+Wave 2 (data model migration, parallel): T6, T7, T8
+Wave 3 (script cutover, parallel): T9, T10
+Wave 4 (verification + docs): T11, T12
+Wave FINAL (independent review): F1, F2, F3, F4
 
-### Non-negotiable design rules
+Critical Path: T1 -> T2 -> T7 -> T9 -> T10 -> T11 -> F1-F4
 
-- Shared reusable assets live once under `data/shared/`
-- Field-specific raw assets live under each field directory
-- Raw and derived outputs stay separated
-- Stable slug-based paths only; no display-name directory names
-- Dataset folders must carry machine-readable metadata or manifests
-- Hard cutover means no compatibility wrappers and no dual-write behavior after migration
-- Canonical path construction must come from shared helper modules, not per-script relative path logic
+### Dependency Matrix
 
-### Migration waves
+- T1: none -> T6, T7, T9
+- T2: none -> T7, T8, T9, T10
+- T3: none -> T6
+- T4: none -> T11
+- T5: none -> T11
+- T6: T1, T3 -> T8, T10
+- T7: T1, T2 -> T9, T10
+- T8: T2, T6 -> T10, T11
+- T9: T1, T2, T7 -> T10, T11
+- T10: T2, T6, T7, T8, T9 -> T11
+- T11: T4, T5, T8, T9, T10 -> T12, F1-F4
+- T12: T11 -> F1-F4
 
-**Wave 1 — Scaffold and helpers**
+### Agent Dispatch Summary
 
-- Create new directory tree
-- Create helper modules in `data/scripts/lib/`
-- Create farm/field identity JSON files and metadata skeletons
-
-**Wave 2 — Data migration**
-
-- Move shared datasets and manifests into `data/shared/`
-- Move field-scoped boundary, soil, weather, cache, and derived assets into grower/farm/field directories
-
-**Wave 3 — Script migration**
-
-- Move scripts into `ingest/`, `eda/`, and `reporting/`
-- Refactor imports and path usage to central helpers
-
-**Wave 4 — Pipeline cutover**
-
-- Update `run_farm_pipeline.py`
-- Update all reporting scripts and ingest scripts
-- Remove remaining old-path assumptions
-
-**Wave 5 — Documentation and verification**
-
-- Rewrite `data/README.md`
-- Run migration verification and pipeline verification
+- Wave 1: T1 `quick`, T2 `quick`, T3 `quick`, T4 `quick`, T5 `quick`
+- Wave 2: T6 `quick`, T7 `unspecified-high`, T8 `unspecified-high`
+- Wave 3: T9 `quick`, T10 `deep`
+- Wave 4: T11 `unspecified-high`, T12 `writing`
+- Final: F1 `oracle`, F2 `unspecified-high`, F3 `unspecified-high`, F4 `deep`
 
 ---
 
 ## TODOs
 
-- [ ] 1. Create canonical `data/` scaffold
-
-  **What to do:**
-  Create the new directory structure under `data/` using the agreed hierarchy:
-  - `data/scripts/ingest/`
-  - `data/scripts/eda/`
-  - `data/scripts/reporting/`
-  - `data/scripts/lib/`
-  - `data/shared/cdl/metadata/`
-  - `data/shared/cdl/rasters/`
-  - `data/shared/cdl/manifests/`
-  - `data/shared/reference/schemas/`
-  - `data/shared/reference/crop_codes/`
-  - `data/shared/reference/units/`
-  - `data/shared/manifests/`
-  - `data/growers/iowa-demo-grower/farms/iowa-demo-farm/`
-  - `data/growers/iowa-demo-grower/farms/iowa-demo-farm/fields/<field_slug>/...`
-
-  **Must NOT do:**
-  - Leave old top-level dataset folders as active homes after migration
-  - Introduce new top-level dataset categories outside `scripts/`, `shared/`, and `growers/`
-
-  **Acceptance Criteria:**
-  - [ ] New scaffold exists
-  - [ ] Farm-level and field-level folders exist for the demo hierarchy
-  - [ ] Directory naming is lowercase kebab-case
-
-  **Commit:** NO (group with full migration verification)
-
-- [ ] 2. Create path, naming, and manifest helper modules
-
-  **What to do:**
-  Create:
-  - `data/scripts/lib/paths.py`
-  - `data/scripts/lib/manifest.py`
-  - `data/scripts/lib/naming.py`
-
-  `paths.py` must provide canonical functions for grower, farm, field, boundary, soil, weather, satellite, derived, logs, and shared dataset paths. `naming.py` must centralize slug and filename conventions. `manifest.py` must centralize metadata/manifest loading and writing patterns.
-
-  **Must NOT do:**
-  - Leave scripts building canonical paths via repeated string concatenation
-  - Duplicate path logic across multiple scripts
-
-  **Acceptance Criteria:**
-  - [ ] Helper modules exist
-  - [ ] Helper API covers all dataset locations needed by current pipeline scripts
-  - [ ] New scripts can import canonical path builders without `../../` traversal logic
-
-  **Commit:** NO
-
-- [ ] 3. Add farm and field identity records
-
-  **What to do:**
-  Create `farm.json` and one `field.json` per migrated field under the new grower/farm tree. Use:
-  - `grower_slug = iowa-demo-grower`
-  - `farm_slug = iowa-demo-farm`
-
-  Each field record must include canonical references to its boundary, soil, weather, satellite, and derived/report locations.
-
-  **Must NOT do:**
-  - Use display names as folder names
-  - Omit canonical file references from field metadata
-
-  **Acceptance Criteria:**
-  - [ ] One `farm.json` exists at farm level
-  - [ ] Every field directory contains a `field.json`
-  - [ ] Metadata values use stable slugs and relative file references
-
-  **Commit:** NO
-
-- [ ] 4. Migrate shared datasets into `data/shared/`
-
-  **What to do:**
-  Move reusable assets into canonical shared locations, including:
-  - CDL rasters from `data/cdl/*.tif` → `data/shared/cdl/rasters/`
-  - CDL manifests/metadata and reusable CDL summaries into `data/shared/cdl/` and `data/shared/manifests/`
-  - Reference mappings / schemas as applicable into `data/shared/reference/`
-
-  Decide what current CSV products are canonical shared sources versus field- or farm-derived outputs, and place them accordingly.
-
-  **Must NOT do:**
-  - Duplicate canonical CDL sources into each field folder
-  - Misclassify derived CSV outputs as raw shared source data
-
-  **Acceptance Criteria:**
-  - [ ] Canonical shared CDL assets live under `data/shared/cdl/`
-  - [ ] Shared metadata/manifests exist
-  - [ ] No script still treats old `data/cdl/` as canonical
-
-  **Commit:** NO
-
-- [ ] 5. Migrate field-scoped raw datasets into grower/farm/field directories
-
-  **What to do:**
-  For each current field, move or rewrite canonical locations for:
-  - boundary GeoJSON
-  - SSURGO soil summary/full exports and raw polygon GeoJSON cache
-  - weather CSVs
-  - future satellite placeholders / manifests
-
-  Store raw source-of-truth field assets under:
-  - `boundary/field_boundary.geojson`
-  - `soil/ssurgo_soil_types.geojson` and related metadata/raw tables
-  - `weather/daily_weather.csv`
-  - `satellite/...`
-
-  Preserve the one-time-per-field SSURGO polygon cache behavior, but relocate it into field `soil/` rather than the old shared cache folder.
-
-  **Must NOT do:**
-  - Mix derived report outputs into raw source folders
-  - Keep active field source data in legacy `data/field-boundaries/`, `data/soil/`, or `data/weather/`
-
-  **Acceptance Criteria:**
-  - [ ] Every field has boundary, soil, and weather directories
-  - [ ] Cached SSURGO polygon GeoJSON is field-scoped
-  - [ ] Metadata exists for dataset folders that hold real data
-
-  **Commit:** NO
-
-- [ ] 6. Migrate derived outputs and logs into canonical farm/field derived areas
-
-  **What to do:**
-  Re-home current derived/report outputs from `data/EDA/` and run records from `data/reporting/manifests/` into the new farm/field tree.
-
-  At minimum, map:
-  - field posters
-  - soil cards
-  - soil maps
-  - farm HTML / markdown / poster outputs
-  - pipeline manifests and run logs
-
-  into `derived/`, `reports/`, `summaries/`, `tables/`, `features/`, and `logs/` as appropriate.
-
-  **Must NOT do:**
-  - Leave `data/EDA/` as the canonical home after cutover
-  - Keep manifests detached from the migrated data model
-
-  **Acceptance Criteria:**
-  - [ ] Field-level derived outputs live with their field or farm scope
-  - [ ] Farm-level outputs have a canonical home
-  - [ ] Run logs or manifests are stored in deterministic locations
-
-  **Commit:** NO
-
-- [ ] 7. Reorganize script files by function
-
-  **What to do:**
-  Move scripts according to the approved mapping:
-  - `01_download_fields.py` → `data/scripts/ingest/download_fields.py`
-  - `02_download_soil.py` → `data/scripts/ingest/download_soil.py`
-  - `03_download_weather.py` → `data/scripts/ingest/download_weather.py`
-  - `04_download_cdl.py` → `data/scripts/ingest/download_cdl.py`
-  - `05_eda_overview.py` → `data/scripts/eda/eda_overview.py`
-  - `06_eda_time_series.py` → `data/scripts/eda/eda_time_series.py`
-  - `07_eda_distributions.py` → `data/scripts/eda/eda_distributions.py`
-  - `08_eda_correlations.py` → `data/scripts/eda/eda_correlations.py`
-  - `09_eda_field_cards.py` → `data/scripts/eda/eda_field_cards.py`
-  - `10_eda_summary_dashboard.py` → `data/scripts/eda/eda_summary_dashboard.py`
-  - `11_generate_field_posters.py` → `data/scripts/reporting/generate_field_posters.py`
-  - `12_generate_aggregate_poster.py` → `data/scripts/reporting/generate_aggregate_poster.py`
-  - `13_generate_farm_html.py` → `data/scripts/reporting/generate_farm_html.py`
-  - `14_generate_farm_markdown.py` → `data/scripts/reporting/generate_farm_markdown.py`
-  - `15_generate_ssurgo_cards.py` → `data/scripts/reporting/generate_ssurgo_cards.py`
-  - `16_generate_ssurgo_maps.py` → `data/scripts/reporting/generate_ssurgo_maps.py`
-
-  Keep `data/scripts/run_farm_pipeline.py` at top level.
-
-  **Must NOT do:**
-  - Leave the old numbered filenames in active use
-  - Scatter helper logic back into reporting scripts once moved
-
-  **Acceptance Criteria:**
-  - [ ] Scripts exist in the new subfolders
-  - [ ] Imports are updated to the new locations
-  - [ ] No active script path points to the old flat filenames
-
-  **Commit:** NO
-
-- [ ] 8. Refactor all scripts to use canonical helpers and new data locations
-
-  **What to do:**
-  Update all ingest, EDA, reporting, and pipeline scripts to:
-  - import path helpers from `data/scripts/lib/paths.py`
-  - use new grower/farm/field/shared locations
-  - stop referencing old legacy top-level locations such as `data/soil/`, `data/weather/`, `data/cdl/`, `data/EDA/`, and `data/reporting/manifests/`
-
-  This includes current working SSURGO integrations, cache handling, field posters, farm poster, HTML, markdown, soil cards, and soil maps.
-
-  **Must NOT do:**
-  - Leave any hard-coded legacy `data/...` paths in active scripts after cutover
-  - Break the existing one-time SSURGO polygon cache/download workflow
-
-  **Acceptance Criteria:**
-  - [ ] Path helper usage is adopted across the moved scripts
-  - [ ] Legacy path grep for active scripts is clean or only present in migration notes/tests
-  - [ ] Scripts still implement their existing responsibilities
-
-  **Commit:** NO
-
-- [ ] 9. Update pipeline entrypoint and manifests for hard cutover
-
-  **What to do:**
-  Refactor `data/scripts/run_farm_pipeline.py` to operate on the new structure and canonical helpers. Ensure it locates field/farm assets via metadata and helper functions rather than fixed Iowa one-off paths. Update manifest handling to use new canonical manifest locations.
-
-  **Must NOT do:**
-  - Leave `run_farm_pipeline.py` coupled to legacy folder names
-  - Break idempotent skip/stale detection behavior
-
-  **Acceptance Criteria:**
-  - [ ] Pipeline runs from the new structure
-  - [ ] Per-step manifests/logs are written in canonical locations
-  - [ ] Hard cutover means no fallback to legacy input paths
-
-  **Commit:** NO
-
-- [ ] 10. Rewrite `data/README.md` to match the new structure
-
-  **What to do:**
-  Replace the current minimal `data/README.md` with a full repo-specific guide that documents:
-  - the three top-level concerns
-  - shared vs field-scoped data
-  - raw vs derived separation
-  - the canonical demo grower/farm example
-  - metadata requirements
-  - script organization
-  - a Mermaid diagram showing the new hierarchy or flow of shared/farm/field assets
-
-  Follow the repository markdown and Mermaid style guides exactly.
-
-  **Must NOT do:**
-  - Leave README describing only `sql/`
-  - Add uncited external claims
-  - Use Mermaid inline styles or omit `accTitle` / `accDescr`
-
-  **Acceptance Criteria:**
-  - [ ] `data/README.md` matches the migrated tree
-  - [ ] Includes at least one valid Mermaid diagram with accessibility metadata
-  - [ ] Explains naming rules and metadata expectations
-
-  **Commit:** NO
-
-- [ ] 11. Verify hard cutover migration end to end
-
-  **What to do:**
-  Run verification for:
-  - file presence in canonical locations
-  - metadata coverage
-  - absence of active hard-coded legacy paths
-  - pipeline execution from the new structure
-  - existence of migrated outputs in the new farm/field derived locations
-
-  **Acceptance Criteria:**
-  - [ ] Canonical tree exists and old top-level data homes are no longer active dependencies
-  - [ ] Pipeline succeeds using the new structure
-  - [ ] README and code agree on actual paths
-  - [ ] SSURGO cards, maps, field posters, and farm reports still generate in their new locations
-
-  **Evidence:** command output and directory listings from the new structure
-
-  **Commit:** YES — group as final migration commit after verification
+- [ ] 1. Capture pre-migration baseline and rollback notes
+
+  **What to do**:
+  - Record baseline state: current script tree, current path references, and current pipeline behavior.
+  - Document manual rollback steps (git restore targets + verification commands) in migration notes.
+
+  **Must NOT do**:
+  - Do not modify implementation files in this task.
+
+  **Recommended Agent Profile**:
+  - Category: `quick` (inventory and evidence capture)
+  - Skills: `git-master` (clean baseline diff tracking)
+
+  **Parallelization**:
+  - Can Run In Parallel: YES
+  - Parallel Group: Wave 1 (with T2, T3, T4, T5)
+  - Blocks: T6, T7, T9
+  - Blocked By: None
+
+  **References**:
+  - `.sisyphus/drafts/data-tree-reorganization.md` - canonical migration decisions and mapping.
+  - `data/scripts/run_farm_pipeline.py` - baseline execution target.
+
+  **Acceptance Criteria**:
+  - [ ] Baseline command outputs saved to `.sisyphus/evidence/task-1-baseline.txt`.
+  - [ ] Rollback note saved to `.sisyphus/evidence/task-1-rollback.md`.
+
+  **QA Scenarios**:
+
+  ```text
+  Scenario: Baseline capture succeeds
+    Tool: Bash
+    Steps: run baseline listing and grep commands for legacy paths; save output
+    Expected Result: evidence file created with non-empty output
+    Evidence: .sisyphus/evidence/task-1-baseline.txt
+
+  Scenario: Missing evidence is detected
+    Tool: Bash
+    Steps: run existence check for evidence file path before creation in dry run
+    Expected Result: check fails before capture and passes after capture
+    Evidence: .sisyphus/evidence/task-1-baseline-error.txt
+  ```
+
+- [ ] 2. Create canonical scaffold roots and helper package folders
+
+  **What to do**:
+  - Create canonical root layout under `data/scripts`, `data/shared`, and `data/growers/.../fields`.
+  - Ensure `data/scripts/lib` is importable (package markers where required).
+
+  **Must NOT do**:
+  - Do not leave new active directories outside canonical top-level roots.
+
+  **Recommended Agent Profile**:
+  - Category: `quick` (deterministic filesystem scaffolding)
+  - Skills: `ssurgo-soil` (domain alignment for soil folder conventions)
+
+  **Parallelization**:
+  - Can Run In Parallel: YES
+  - Parallel Group: Wave 1 (with T1, T3, T4, T5)
+  - Blocks: T7, T8, T9, T10
+  - Blocked By: None
+
+  **References**:
+  - `.sisyphus/drafts/data-tree-reorganization.md` - target tree and slug choices.
+
+  **Acceptance Criteria**:
+  - [ ] Canonical directories exist and are listable.
+  - [ ] No unexpected new top-level dataset roots introduced.
+
+  **QA Scenarios**:
+
+  ```text
+  Scenario: Canonical scaffold exists
+    Tool: Bash
+    Steps: list required directories and assert each exists
+    Expected Result: all required paths resolve
+    Evidence: .sisyphus/evidence/task-2-scaffold.txt
+
+  Scenario: Non-canonical top-level folder attempt fails policy
+    Tool: Bash
+    Steps: run top-level directory check and compare against allowed set
+    Expected Result: only scripts/shared/growers are active
+    Evidence: .sisyphus/evidence/task-2-scaffold-error.txt
+  ```
+
+- [ ] 3. Build field inventory and deterministic slug map
+
+  **What to do**:
+  - Extract field identifiers from the current source boundary dataset.
+  - Generate deterministic slug mapping (`OSM_*` -> `osm-*`) and save as migration artifact.
+
+  **Must NOT do**:
+  - Do not hardcode partial field lists.
+
+  **Recommended Agent Profile**:
+  - Category: `quick` (data inventory extraction)
+  - Skills: `field-boundaries` (field ID and geometry source conventions)
+
+  **Parallelization**:
+  - Can Run In Parallel: YES
+  - Parallel Group: Wave 1 (with T1, T2, T4, T5)
+  - Blocks: T6
+  - Blocked By: None
+
+  **References**:
+  - `data/field-boundaries/` - source field IDs if present.
+  - `.sisyphus/drafts/data-tree-reorganization.md` - slug policy.
+
+  **Acceptance Criteria**:
+  - [ ] Field inventory file exists with one row per field.
+  - [ ] Slug map has no collisions and matches naming rules.
+
+  **QA Scenarios**:
+
+  ```text
+  Scenario: Slug map generation succeeds
+    Tool: Bash
+    Steps: run slug extraction command/script and count unique slugs
+    Expected Result: unique slug count equals field count
+    Evidence: .sisyphus/evidence/task-3-slugs.txt
+
+  Scenario: Duplicate slug collision is caught
+    Tool: Bash
+    Steps: run collision check over generated slug map
+    Expected Result: command exits non-zero if duplicates exist
+    Evidence: .sisyphus/evidence/task-3-slugs-error.txt
+  ```
+
+- [ ] 4. Validate preconditions: disk, permissions, and concurrency lockout
+
+  **What to do**:
+  - Verify adequate disk space for migration artifacts.
+  - Verify write permissions across target `data/` subtrees.
+  - Verify no concurrent process is writing into `data/` during cutover.
+
+  **Must NOT do**:
+  - Do not start migration tasks before precondition checks pass.
+
+  **Recommended Agent Profile**:
+  - Category: `quick`
+  - Skills: `git-master` (clean operation guardrails)
+
+  **Parallelization**:
+  - Can Run In Parallel: YES
+  - Parallel Group: Wave 1
+  - Blocks: T11
+  - Blocked By: None
+
+  **References**:
+  - `.sisyphus/drafts/data-tree-reorganization.md` - hard cutover risk list.
+
+  **Acceptance Criteria**:
+  - [ ] Precondition report captured under evidence folder.
+
+  **QA Scenarios**:
+
+  ```text
+  Scenario: Preconditions pass
+    Tool: Bash
+    Steps: run disk/permission/process checks and save report
+    Expected Result: all checks return pass status
+    Evidence: .sisyphus/evidence/task-4-preconditions.txt
+
+  Scenario: Concurrent writer detection triggers stop
+    Tool: Bash
+    Steps: run process check with simulated conflicting process signature
+    Expected Result: migration gate reports blocked state
+    Evidence: .sisyphus/evidence/task-4-preconditions-error.txt
+  ```
+
+- [ ] 5. Capture baseline pipeline execution evidence
+
+  **What to do**:
+  - Run current pipeline entrypoint in baseline mode and capture output, return code, and key generated artifact paths.
+
+  **Must NOT do**:
+  - Do not treat migration successful without comparing post-cutover behavior to baseline.
+
+  **Recommended Agent Profile**:
+  - Category: `quick`
+  - Skills: `farm-intelligence-reporting` (pipeline output expectations)
+
+  **Parallelization**:
+  - Can Run In Parallel: YES
+  - Parallel Group: Wave 1
+  - Blocks: T11
+  - Blocked By: None
+
+  **References**:
+  - `data/scripts/run_farm_pipeline.py` - baseline command target.
+
+  **Acceptance Criteria**:
+  - [ ] Baseline pipeline evidence file saved.
+
+  **QA Scenarios**:
+
+  ```text
+  Scenario: Baseline run produces evidence
+    Tool: Bash
+    Steps: execute pipeline and capture stdout/stderr and exit code
+    Expected Result: evidence file records command status and output
+    Evidence: .sisyphus/evidence/task-5-baseline-pipeline.txt
+
+  Scenario: Baseline failure is surfaced with non-zero exit
+    Tool: Bash
+    Steps: execute with intentionally invalid input arg/environment if supported
+    Expected Result: non-zero exit and explicit error output captured
+    Evidence: .sisyphus/evidence/task-5-baseline-pipeline-error.txt
+  ```
+
+- [ ] 6. Create farm/field identity records and dataset metadata skeletons
+
+  **What to do**:
+  - Create `farm.json` and per-field `field.json` using canonical slugs.
+  - Add `metadata.json` placeholders in boundary/soil/weather (and relevant shared datasets).
+
+  **Must NOT do**:
+  - Do not use display names as directory keys.
+
+  **Recommended Agent Profile**:
+  - Category: `quick`
+  - Skills: `ssurgo-poster-cards` (field-level structure alignment)
+
+  **Parallelization**:
+  - Can Run In Parallel: NO
+  - Parallel Group: Wave 2
+  - Blocks: T8, T10
+  - Blocked By: T1, T3
+
+  **References**:
+  - `.sisyphus/drafts/data-tree-reorganization.md` - required metadata skeletons.
+
+  **Acceptance Criteria**:
+  - [ ] `farm.json` exists at canonical farm root.
+  - [ ] Every field directory has valid `field.json`.
+
+  **QA Scenarios**:
+
+  ```text
+  Scenario: Metadata files validate and cover all fields
+    Tool: Bash
+    Steps: run JSON parse checks and compare field count vs slug map
+    Expected Result: all JSON valid and counts match
+    Evidence: .sisyphus/evidence/task-6-metadata.txt
+
+  Scenario: Missing field metadata is detected
+    Tool: Bash
+    Steps: run completeness check for required json files per field
+    Expected Result: check fails if any required file missing
+    Evidence: .sisyphus/evidence/task-6-metadata-error.txt
+  ```
+
+- [ ] 7. Implement canonical helper modules (`paths.py`, `naming.py`, `manifest.py`)
+
+  **What to do**:
+  - Implement canonical path builders for grower/farm/field/shared locations.
+  - Implement naming normalization utilities and manifest read/write helpers.
+  - Replace duplicate path-building logic targets in task notes for downstream tasks.
+
+  **Must NOT do**:
+  - Do not leave active scripts constructing canonical paths via inline literals.
+
+  **Recommended Agent Profile**:
+  - Category: `unspecified-high`
+  - Skills: `git-master`, `ssurgo-soil`
+
+  **Parallelization**:
+  - Can Run In Parallel: NO
+  - Parallel Group: Wave 2
+  - Blocks: T9, T10
+  - Blocked By: T1, T2
+
+  **References**:
+  - `.sisyphus/drafts/data-tree-reorganization.md` - proposed helper API.
+  - `data/scripts/run_farm_pipeline.py` - primary consumer of helper API.
+
+  **Acceptance Criteria**:
+  - [ ] Helper modules exist and import cleanly.
+  - [ ] Required helper functions for boundary/soil/weather/shared paths are present.
+
+  **QA Scenarios**:
+
+  ```text
+  Scenario: Helper API imports and resolves canonical paths
+    Tool: Bash
+    Steps: run python import and sample path resolution calls
+    Expected Result: paths resolve under canonical roots only
+    Evidence: .sisyphus/evidence/task-7-helpers.txt
+
+  Scenario: Legacy path literal usage scan catches regressions
+    Tool: Bash
+    Steps: grep helper consumers for forbidden hard-coded legacy roots
+    Expected Result: no forbidden literals in updated modules
+    Evidence: .sisyphus/evidence/task-7-helpers-error.txt
+  ```
+
+- [ ] 8. Migrate shared datasets and shared manifests into `data/shared/`
+
+  **What to do**:
+  - Move/normalize shared CDL assets into `data/shared/cdl/{rasters,derived,metadata,manifests}`.
+  - Place shared reference artifacts in `data/shared/reference/*`.
+
+  **Must NOT do**:
+  - Do not duplicate canonical shared sources across field folders.
+
+  **Recommended Agent Profile**:
+  - Category: `unspecified-high`
+  - Skills: `cdl-cropland` (CDL source conventions)
+
+  **Parallelization**:
+  - Can Run In Parallel: YES
+  - Parallel Group: Wave 2 (with T6, T7)
+  - Blocks: T10, T11
+  - Blocked By: T2, T6
+
+  **References**:
+  - `.sisyphus/drafts/data-tree-reorganization.md` - shared CDL mapping and manifests policy.
+
+  **Acceptance Criteria**:
+  - [ ] Shared dataset files exist in canonical shared paths.
+  - [ ] Legacy shared source roots are no longer active dependencies.
+
+  **QA Scenarios**:
+
+  ```text
+  Scenario: Shared assets are present in canonical locations
+    Tool: Bash
+    Steps: enumerate shared/cdl and shared/reference paths and key files
+    Expected Result: required files found in canonical paths
+    Evidence: .sisyphus/evidence/task-8-shared.txt
+
+  Scenario: Canonical-vs-legacy collision check
+    Tool: Bash
+    Steps: verify no script references old shared roots as active source
+    Expected Result: forbidden references count is zero
+    Evidence: .sisyphus/evidence/task-8-shared-error.txt
+  ```
+
+- [ ] 9. Reorganize script files into ingest/eda/reporting structure
+
+  **What to do**:
+  - Move flat numbered scripts into target folders with canonical names.
+  - Update import paths to reflect new module locations.
+
+  **Must NOT do**:
+  - Do not keep old numbered script locations in active invocation paths.
+
+  **Recommended Agent Profile**:
+  - Category: `quick`
+  - Skills: `git-master` (safe move tracking)
+
+  **Parallelization**:
+  - Can Run In Parallel: NO
+  - Parallel Group: Wave 3
+  - Blocks: T10, T11
+  - Blocked By: T1, T2, T7
+
+  **References**:
+  - `.sisyphus/drafts/data-tree-reorganization.md` - script migration map.
+
+  **Acceptance Criteria**:
+  - [ ] Scripts exist in new subdirectories.
+  - [ ] Imports resolve from new locations.
+
+  **QA Scenarios**:
+
+  ```text
+  Scenario: New script tree is complete
+    Tool: Bash
+    Steps: list scripts and match against expected canonical names
+    Expected Result: expected files exist and old active names removed
+    Evidence: .sisyphus/evidence/task-9-script-move.txt
+
+  Scenario: Import resolution check catches stale module paths
+    Tool: Bash
+    Steps: run python compile/import check over moved scripts
+    Expected Result: stale import errors are absent
+    Evidence: .sisyphus/evidence/task-9-script-move-error.txt
+  ```
+
+- [ ] 10. Hard-cut script path usage to canonical helpers and migrated data locations
+
+  **What to do**:
+  - Refactor ingest, EDA, reporting, and pipeline scripts to use helper APIs.
+  - Remove active path dependencies on legacy roots (`data/EDA`, `data/soil`, `data/weather`, `data/cdl`, `data/field-boundaries`, `data/reporting/manifests`).
+  - Preserve SSURGO per-field cache semantics and multi-polygon downstream rendering behavior.
+
+  **Must NOT do**:
+  - Do not change business behavior unrelated to path/import/data-location migration.
+
+  **Recommended Agent Profile**:
+  - Category: `deep`
+  - Skills: `ssurgo-soil`, `farm-intelligence-reporting`
+
+  **Parallelization**:
+  - Can Run In Parallel: NO
+  - Parallel Group: Wave 3
+  - Blocks: T11
+  - Blocked By: T2, T6, T7, T8, T9
+
+  **References**:
+  - `data/scripts/run_farm_pipeline.py` - end-to-end orchestration path usage.
+  - `.sisyphus/drafts/data-tree-reorganization.md` - hard-coded path clusters to eliminate.
+
+  **Acceptance Criteria**:
+  - [ ] Helper-driven path usage across active scripts.
+  - [ ] Grep scan for legacy roots in active scripts returns zero allowed violations.
+
+  **QA Scenarios**:
+
+  ```text
+  Scenario: Legacy path grep is clean after cutover
+    Tool: Bash
+    Steps: run canonical forbidden-path grep against active scripts
+    Expected Result: zero matches except explicitly archived migration notes
+    Evidence: .sisyphus/evidence/task-10-cutover-grep.txt
+
+  Scenario: Regression check catches reintroduced legacy path
+    Tool: Bash
+    Steps: run same scan in strict mode and fail on any match
+    Expected Result: non-zero exit if forbidden path appears
+    Evidence: .sisyphus/evidence/task-10-cutover-grep-error.txt
+  ```
+
+- [ ] 11. Execute post-cutover pipeline verification and artifact checks
+
+  **What to do**:
+  - Run pipeline from canonical tree.
+  - Verify expected outputs for field posters, farm poster, farm HTML/Markdown, SSURGO cards/maps in migrated paths.
+  - Validate canonical metadata/manifests presence and consistency.
+
+  **Must NOT do**:
+  - Do not mark migration complete without successful pipeline evidence.
+
+  **Recommended Agent Profile**:
+  - Category: `unspecified-high`
+  - Skills: `farm-intelligence-reporting`, `ssurgo-poster-cards`
+
+  **Parallelization**:
+  - Can Run In Parallel: NO
+  - Parallel Group: Wave 4
+  - Blocks: T12, F1-F4
+  - Blocked By: T4, T5, T8, T9, T10
+
+  **References**:
+  - `data/scripts/run_farm_pipeline.py` - primary verification command.
+  - `.sisyphus/drafts/data-tree-reorganization.md` - required output preservation list.
+
+  **Acceptance Criteria**:
+  - [ ] Pipeline exits successfully on canonical paths.
+  - [ ] Required report artifacts exist in canonical migrated locations.
+  - [ ] Evidence bundle captured for command output and artifact inventory.
+
+  **QA Scenarios**:
+
+  ```text
+  Scenario: End-to-end pipeline succeeds after cutover
+    Tool: Bash
+    Steps: run pipeline, then verify required output files and manifests
+    Expected Result: success exit and all required artifacts present
+    Evidence: .sisyphus/evidence/task-11-post-cutover.txt
+
+  Scenario: Missing required output is detected
+    Tool: Bash
+    Steps: run artifact completeness checker over required output manifest
+    Expected Result: checker fails if any required output absent
+    Evidence: .sisyphus/evidence/task-11-post-cutover-error.txt
+  ```
+
+- [ ] 12. Rewrite `data/README.md` to match final canonical model
+
+  **What to do**:
+  - Update `data/README.md` to describe canonical tree, naming rules, shared-vs-field scope, and run flow.
+  - Include Mermaid diagram with required accessibility metadata (`accTitle`, `accDescr`).
+
+  **Must NOT do**:
+  - Do not describe legacy tree as active.
+
+  **Recommended Agent Profile**:
+  - Category: `writing`
+  - Skills: `wrighter` (structured technical docs)
+
+  **Parallelization**:
+  - Can Run In Parallel: NO
+  - Parallel Group: Wave 4
+  - Blocks: F1-F4
+  - Blocked By: T11
+
+  **References**:
+  - `agentic/markdown_style_guide.md` - markdown requirements.
+  - `agentic/mermaid_style_guide.md` - diagram constraints.
+
+  **Acceptance Criteria**:
+  - [ ] README aligns with actual post-cutover filesystem.
+  - [ ] Mermaid diagram passes style/accessibility requirements.
+
+  **QA Scenarios**:
+
+  ```text
+  Scenario: README path references match filesystem
+    Tool: Bash
+    Steps: parse referenced paths and verify existence in migrated tree
+    Expected Result: all documented canonical paths exist
+    Evidence: .sisyphus/evidence/task-12-readme.txt
+
+  Scenario: Diagram accessibility fields missing check
+    Tool: Bash
+    Steps: validate Mermaid blocks include accTitle and accDescr
+    Expected Result: validation fails if either field is absent
+    Evidence: .sisyphus/evidence/task-12-readme-error.txt
+  ```
+
+---
+
+## Final Verification Wave
+
+- [ ] F1. Plan Compliance Audit (`oracle`)
+  - Validate all Must Have and Must NOT Have items against actual outputs and evidence files.
+  - Output: `Must Have [N/N] | Must NOT Have [N/N] | VERDICT`.
+
+- [ ] F2. Code and Script Quality Review (`unspecified-high`)
+  - Run lint/static checks available for Python scripts and scan for path anti-patterns.
+  - Output: `Checks [PASS/FAIL] | Anti-pattern scan [PASS/FAIL] | VERDICT`.
+
+- [ ] F3. Full QA Scenario Replay (`unspecified-high`)
+  - Execute all task QA scenarios and verify evidence artifacts exist.
+  - Output: `Scenarios [N/N pass] | Evidence [N/N] | VERDICT`.
+
+- [ ] F4. Scope Fidelity and Contamination Review (`deep`)
+  - Confirm no out-of-scope refactors and no cross-task contamination.
+  - Output: `Scope [CLEAN/ISSUES] | Contamination [CLEAN/ISSUES] | VERDICT`.
+
+---
+
+## Commit Strategy
+
+- Single final migration commit after T11 verification and T12 documentation sync.
+- Message format: `refactor(data): hard-cutover data tree to scripts-shared-growers model`
+- Include verification evidence references in commit body.
 
 ---
 
@@ -416,31 +696,13 @@ data/
 ### Verification Commands
 
 ```bash
-# Verify new top-level structure
-ls -la data/
-
-# Verify script organization
-find data/scripts -maxdepth 2 -type f | sort
-
-# Verify metadata coverage
-find data/growers/iowa-demo-grower -name "farm.json" -o -name "field.json" -o -name "metadata.json" -o -name "manifest.json" | sort
-
-# Verify no active legacy path assumptions remain
-grep -R "data/field-boundaries\|data/soil\|data/weather\|data/cdl\|data/EDA\|data/reporting/manifests" data/scripts --include="*.py"
-
-# Verify pipeline works after cutover
 python data/scripts/run_farm_pipeline.py
+grep -R "data/field-boundaries\|data/soil\|data/weather\|data/cdl\|data/EDA\|data/reporting/manifests" data/scripts --include="*.py"
+find data/growers/iowa-demo-grower -name "farm.json" -o -name "field.json" -o -name "metadata.json" -o -name "manifest.json"
 ```
 
 ### Final Checklist
 
-- [ ] `data/` uses the new three-part top-level structure
-- [ ] Shared datasets live under `data/shared/`
-- [ ] Field-scoped raw data lives under `data/growers/iowa-demo-grower/farms/iowa-demo-farm/fields/<field_slug>/`
-- [ ] Raw and derived outputs are separated
-- [ ] Farm and field identity JSON files exist
-- [ ] Dataset metadata/manifests exist where required
-- [ ] Scripts are reorganized by function
-- [ ] Canonical helper modules exist and are used
-- [ ] Pipeline works from the new structure
-- [ ] `data/README.md` matches reality
+- [ ] All implementation tasks and QA scenarios completed with evidence
+- [ ] Final verification wave returns APPROVE across F1-F4
+- [ ] Canonical structure and docs are consistent and complete

@@ -1,0 +1,17 @@
+{
+  "generated_at": "2026-03-08 15:31:51 UTC",
+  "artifacts": [
+    {
+      "artifact": "data_engineering_review.json",
+      "valid": true,
+      "source": "local-structured-review",
+      "errors": [],
+      "metadata": {
+        "crew_key": "data_engineering",
+        "provider": "openrouter",
+        "findings": 1
+      },
+      "updated_at": "2026-03-08 15:31:51 UTC"
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "workflows": [
+    "ci-log-analysis",
+    "quick-review"
+  ],
+  "specialist_crews": [
+    "data_engineering"
+  ],
+  "suggestions": [
+    "[crewai:agentic] recommended: Agentic configuration files detected",
+    "[crewai:data-engineering] recommended: Data engineering artifacts detected",
+    "[crewai:docs] recommended: Documentation files detected",
+    "[crewai:marketing] recommended: Marketing/user-facing copy detected",
+    "[crewai:full-review] recommended: high diff complexity detected; broaden specialist depth"
+  ],
+  "metadata": {
+    "source": "local-short-circuit",
+    "labels": [],
+    "mode": "default",
+    "files_changed": 599,
+    "lines_added": 5973,
+    "lines_removed": 2367
+  }
+}

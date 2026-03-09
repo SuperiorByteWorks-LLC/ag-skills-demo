@@ -258,12 +258,12 @@ flowchart TB
 
 ---
 
-[^1]: USDA NRCS. "Soil Survey Geographic Database (SSURGO)." https://www.nrcs.usda.gov/resources/data-and-reports/soil-survey-geographic-database-ssurgo
+[^1]: USDA NRCS. "Soil Survey Geographic Database (SSURGO)." <https://www.nrcs.usda.gov/resources/data-and-reports/soil-survey-geographic-database-ssurgo>
 
-[^2]: NASA POWER Project. "API Services Documentation." https://power.larc.nasa.gov/docs/services/api/
+[^2]: NASA POWER Project. "API Services Documentation." <https://power.larc.nasa.gov/docs/services/api/>
 
-[^3]: USDA NASS. "Cropland Data Layer." https://www.nass.usda.gov/Research_and_Science/Cropland/SARS1a.php
+[^3]: USDA NASS. "Cropland Data Layer." <https://www.nass.usda.gov/Research_and_Science/Cropland/SARS1a.php>
 
-[^4]: Copernicus. "Sentinel-2 Mission." https://sentinels.copernicus.eu/web/sentinel/missions/sentinel-2
+[^4]: Copernicus. "Sentinel-2 Mission." <https://sentinels.copernicus.eu/web/sentinel/missions/sentinel-2>
 
-[^5]: USGS. "Landsat Missions." https://www.usgs.gov/landsat-missions
+[^5]: USGS. "Landsat Missions." <https://www.usgs.gov/landsat-missions>

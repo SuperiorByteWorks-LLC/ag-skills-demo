@@ -1,0 +1,11 @@
+diff --git a/.crewai/workspace/ci_results/test-crewai/summary.md b/.crewai/workspace/ci_results/test-crewai/summary.md
+index bd60110..68ff9e3 100644
+--- a/.crewai/workspace/ci_results/test-crewai/summary.md
++++ b/.crewai/workspace/ci_results/test-crewai/summary.md
+@@ -1,4 +1,4 @@
+ # CrewAI tests summary
+ 
+-- status: fail
+-- duration: 10s
++- status: pass
++- duration: 3s

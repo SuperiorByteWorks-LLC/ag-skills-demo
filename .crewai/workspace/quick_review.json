@@ -1,0 +1,532 @@
+{
+  "status": "completed",
+  "summary": "Local quick review completed with 3 reviewer pass(es).",
+  "critical": [
+    {
+      "description": "Markdownlint step failed, indicating potential issues with the formatting or content of Markdown files. This could lead to inconsistencies or broken documentation.",
+      "title": "Markdownlint step failed, indicating potential issues with the formatting or content of Markdown files",
+      "fix_suggestion": "Consider this improvement in the next change set.",
+      "file": "",
+      "source_reviewer": "Risk Reviewer",
+      "kind": "critical",
+      "line": ""
+    },
+    {
+      "description": "Commitlint step is now a warning, which previously might have been enforced, potentially allowing for less strict commit formatting. This could impact automated changelog generation or commit history analysis.",
+      "title": "Commitlint step is now a warning, which previously might have been enforced, potentially allowing for less strict",
+      "fix_suggestion": "Consider this improvement in the next change set.",
+      "file": "",
+      "source_reviewer": "Risk Reviewer",
+      "kind": "critical",
+      "line": ""
+    }
+  ],
+  "warnings": [
+    {
+      "description": "The `Markdownlint` step in the CI summary has changed from 'pass' to 'fail'.",
+      "title": "The `Markdownlint` step in the CI summary has changed from 'pass' to 'fail'",
+      "fix_suggestion": "Review the related diff section and apply targeted remediation.",
+      "file": "",
+      "source_reviewer": "Diff Reviewer",
+      "kind": "warning",
+      "line": ""
+    },
+    {
+      "description": "Prettier Format, ESLint, Stylelint, Ruff Lint, and Ruff Format have all seen significant reductions in execution time, which is a positive outcome. However, specific changes in linting rules or configurations could be the reason.",
+      "title": "Prettier Format, ESLint, Stylelint, Ruff Lint, and Ruff Format have all seen significant reductions in execution time,",
+      "fix_suggestion": "Review the related diff section and apply targeted remediation.",
+      "file": "",
+      "source_reviewer": "Risk Reviewer",
+      "kind": "warning",
+      "line": ""
+    },
+    {
+      "description": "Markdownlint failed during local CI checks, indicating a potential issue with Markdown file formatting or structure that needs to be addressed to ensure consistent documentation quality.",
+      "title": "Markdownlint failed during local CI checks, indicating a potential issue with Markdown file formatting or structure",
+      "fix_suggestion": "Review the related diff section and apply targeted remediation.",
+      "file": "",
+      "source_reviewer": "Actionability Reviewer",
+      "kind": "warning",
+      "line": ""
+    }
+  ],
+  "info": [
+    {
+      "description": "The `.ci-local.lock` file has been updated with a new `pid` and `started` timestamp, and the `cwd` has changed.",
+      "title": "The `",
+      "fix_suggestion": "Consider this improvement in the next change set.",
+      "file": "",
+      "source_reviewer": "Diff Reviewer",
+      "kind": "suggestion",
+      "line": ""
+    },
+    {
+      "description": "The `Generated` timestamp in the CI summary has been updated.",
+      "title": "The `Generated` timestamp in the CI summary has been updated",
+      "fix_suggestion": "Consider this improvement in the next change set.",
+      "file": "",
+      "source_reviewer": "Diff Reviewer",
+      "kind": "suggestion",
+      "line": ""
+    },
+    {
+      "description": "The durations for `Prettier Format`, `ESLint`, `Markdownlint`, `Stylelint`, `Ruff`, and `Commitlint` steps have changed, with most becoming shorter.",
+      "title": "The durations for `Prettier Format`, `ESLint`, `Markdownlint`, `Stylelint`, `Ruff`, and `Commitlint` steps have",
+      "fix_suggestion": "Consider this improvement in the next change set.",
+      "file": "",
+      "source_reviewer": "Diff Reviewer",
+      "kind": "suggestion",
+      "line": ""
+    },
+    {
+      "description": "The `Ruff` step has been split into `Ruff Lint` and `Ruff Format`, both passing.",
+      "title": "The `Ruff` step has been split into `Ruff Lint` and `Ruff Format`, both passing",
+      "fix_suggestion": "Consider this improvement in the next change set.",
+      "file": "",
+      "source_reviewer": "Diff Reviewer",
+      "kind": "suggestion",
+      "line": ""
+    },
+    {
+      "description": "A new test case has been added for the `_select_current_season_scenes` function, which appears to be working correctly based on the `assert` statement.",
+      "title": "A new test case has been added for the `_select_current_season_scenes` function, which appears to be working correctly",
+      "fix_suggestion": "Consider this improvement in the next change set.",
+      "file": "",
+      "source_reviewer": "Diff Reviewer",
+      "kind": "suggestion",
+      "line": ""
+    },
+    {
+      "description": "The local CI run was marked as successful.",
+      "title": "The local CI run was marked as successful",
+      "fix_suggestion": "Consider this improvement in the next change set.",
+      "file": "",
+      "source_reviewer": "Risk Reviewer",
+      "kind": "suggestion",
+      "line": ""
+    },
+    {
+      "description": "Significant number of files were modified (599 files, +5973/-2367).",
+      "title": "Significant number of files were modified (599 files, +5973/-2367)",
+      "fix_suggestion": "Consider this improvement in the next change set.",
+      "file": "",
+      "source_reviewer": "Risk Reviewer",
+      "kind": "suggestion",
+      "line": ""
+    },
+    {
+      "description": "Execution time for several linting steps (Prettier, ESLint, Stylelint, Ruff) has drastically reduced.",
+      "title": "Execution time for several linting steps (Prettier, ESLint, Stylelint, Ruff) has drastically reduced",
+      "fix_suggestion": "Consider this improvement in the next change set.",
+      "file": "",
+      "source_reviewer": "Risk Reviewer",
+      "kind": "suggestion",
+      "line": ""
+    },
+    {
+      "description": "The CI generation timestamp has been updated, reflecting the new run.",
+      "title": "The CI generation timestamp has been updated, reflecting the new run",
+      "fix_suggestion": "Consider this improvement in the next change set.",
+      "file": "",
+      "source_reviewer": "Risk Reviewer",
+      "kind": "suggestion",
+      "line": ""
+    },
+    {
+      "description": "A test case related to `_select_current_season_scenes` was added and passed, ensuring correct selection of scene data based on month and cloud cover.",
+      "title": "A test case related to `_select_current_season_scenes` was added and passed, ensuring correct selection of scene data",
+      "fix_suggestion": "Consider this improvement in the next change set.",
+      "file": "",
+      "source_reviewer": "Risk Reviewer",
+      "kind": "suggestion",
+      "line": ""
+    },
+    {
+      "description": "The `feat(ssurgo-maps)` and `feat(ssurgo-features)` commits suggest advancements in how soil data is presented and processed, potentially improving user understanding of soil characteristics through richer map exports and styling.",
+      "title": "The `feat(ssurgo-maps)` and `feat(ssurgo-features)` commits suggest advancements in how soil data is presented and",
+      "fix_suggestion": "Consider this improvement in the next change set.",
+      "file": "",
+      "source_reviewer": "Actionability Reviewer",
+      "kind": "suggestion",
+      "line": ""
+    },
+    {
+      "description": "The `feat(farm-data-rebuild)` commit introduces a dedicated orchestrator skill, which is a positive step towards ensuring deterministic and reliable farm data rebuilding processes.",
+      "title": "The `feat(farm-data-rebuild)` commit introduces a dedicated orchestrator skill, which is a positive step towards",
+      "fix_suggestion": "Consider this improvement in the next change set.",
+      "file": "",
+      "source_reviewer": "Actionability Reviewer",
+      "kind": "suggestion",
+      "line": ""
+    },
+    {
+      "description": "The `fix(ssurgo-reporting)` commit aims to improve the accuracy and presentation of soil variation in reports, which is crucial for data integrity.",
+      "title": "The `fix(ssurgo-reporting)` commit aims to improve the accuracy and presentation of soil variation in reports, which is",
+      "fix_suggestion": "Consider this improvement in the next change set.",
+      "file": "",
+      "source_reviewer": "Actionability Reviewer",
+      "kind": "suggestion",
+      "line": ""
+    },
+    {
+      "description": "The `fix(reporting)` commit ensures that essential soil maps and farm summary assets are included in canonical outputs, an important step for comprehensive reporting.",
+      "title": "The `fix(reporting)` commit ensures that essential soil maps and farm summary assets are included in canonical outputs,",
+      "fix_suggestion": "Consider this improvement in the next change set.",
+      "file": "",
+      "source_reviewer": "Actionability Reviewer",
+      "kind": "suggestion",
+      "line": ""
+    }
+  ],
+  "positives": [
+    {
+      "description": "The `Ruff Lint` and `Ruff Format` steps are now explicitly reported and both pass, indicating a successful linting and formatting process for Ruff.",
+      "title": "The `Ruff Lint` and `Ruff Format` steps are now explicitly reported and both pass, indicating a successful linting and",
+      "fix_suggestion": "No action required; preserve this behavior.",
+      "file": "",
+      "source_reviewer": "Diff Reviewer",
+      "kind": "positive",
+      "line": ""
+    },
+    {
+      "description": "The new test case added for `_select_current_season_scenes` demonstrates the expected behavior of selecting scenes for the current season and appears to be correctly implemented.",
+      "title": "The new test case added for `_select_current_season_scenes` demonstrates the expected behavior of selecting scenes for",
+      "fix_suggestion": "No action required; preserve this behavior.",
+      "file": "",
+      "source_reviewer": "Diff Reviewer",
+      "kind": "positive",
+      "line": ""
+    },
+    {
+      "description": "The overall CI status is 'success', indicating no show-stopping errors in the core CI pipeline.",
+      "title": "The overall CI status is 'success', indicating no show-stopping errors in the core CI pipeline",
+      "fix_suggestion": "No action required; preserve this behavior.",
+      "file": "",
+      "source_reviewer": "Risk Reviewer",
+      "kind": "positive",
+      "line": ""
+    },
+    {
+      "description": "The execution time for multiple formatting and linting checks has been significantly reduced, improving CI performance.",
+      "title": "The execution time for multiple formatting and linting checks has been significantly reduced, improving CI performance",
+      "fix_suggestion": "No action required; preserve this behavior.",
+      "file": "",
+      "source_reviewer": "Risk Reviewer",
+      "kind": "positive",
+      "line": ""
+    },
+    {
+      "description": "New test cases were added to the codebase, improving test coverage and reliability.",
+      "title": "New test cases were added to the codebase, improving test coverage and reliability",
+      "fix_suggestion": "No action required; preserve this behavior.",
+      "file": "",
+      "source_reviewer": "Risk Reviewer",
+      "kind": "positive",
+      "line": ""
+    },
+    {
+      "description": "The specific test added for scene selection logic is a positive sign for data processing reliability.",
+      "title": "The specific test added for scene selection logic is a positive sign for data processing reliability",
+      "fix_suggestion": "No action required; preserve this behavior.",
+      "file": "",
+      "source_reviewer": "Risk Reviewer",
+      "kind": "positive",
+      "line": ""
+    },
+    {
+      "description": "The introduction of deterministic farm data rebuilds and improved soil reporting visualizations are significant positive advancements for the system's data integrity and user experience.",
+      "title": "The introduction of deterministic farm data rebuilds and improved soil reporting visualizations are significant",
+      "fix_suggestion": "No action required; preserve this behavior.",
+      "file": "",
+      "source_reviewer": "Actionability Reviewer",
+      "kind": "positive",
+      "line": ""
+    }
+  ],
+  "reviewer_summaries": [
+    {
+      "reviewer": "Diff Reviewer",
+      "summary": "The diff shows updates to a lock file and a CI summary report. The CI summary indicates a failure in Markdownlint, a warning in Commitlint, and changes in the execution times for several steps. Additionally, there are code changes related to selecting scenes based on seasons, with a new test case added."
+    },
+    {
+      "reviewer": "Risk Reviewer",
+      "summary": "Local CI run completed with success. There were 599 files changed, with more additions than deletions. The CI execution time has significantly decreased, but several linting steps have changed from passing to failing or warnings."
+    },
+    {
+      "reviewer": "Actionability Reviewer",
+      "summary": "Recent commits focus on enhancing soil data visualization and reporting features, including choropleth maps and deterministic farm data rebuilds, with a detected failure in Markdownlint during local CI checks."
+    }
+  ],
+  "reviewer_pass_details": [
+    {
+      "reviewer": "Diff Reviewer",
+      "summary": "The diff shows updates to a lock file and a CI summary report. The CI summary indicates a failure in Markdownlint, a warning in Commitlint, and changes in the execution times for several steps. Additionally, there are code changes related to selecting scenes based on seasons, with a new test case added.",
+      "critical": [],
+      "warnings": [
+        {
+          "description": "The `Markdownlint` step in the CI summary has changed from 'pass' to 'fail'.",
+          "title": "The `Markdownlint` step in the CI summary has changed from 'pass' to 'fail'",
+          "fix_suggestion": "Review the related diff section and apply targeted remediation.",
+          "file": "",
+          "source_reviewer": "Diff Reviewer",
+          "kind": "warning",
+          "line": ""
+        }
+      ],
+      "suggestions": [
+        {
+          "description": "The `.ci-local.lock` file has been updated with a new `pid` and `started` timestamp, and the `cwd` has changed.",
+          "title": "The `",
+          "fix_suggestion": "Consider this improvement in the next change set.",
+          "file": "",
+          "source_reviewer": "Diff Reviewer",
+          "kind": "suggestion",
+          "line": ""
+        },
+        {
+          "description": "The `Generated` timestamp in the CI summary has been updated.",
+          "title": "The `Generated` timestamp in the CI summary has been updated",
+          "fix_suggestion": "Consider this improvement in the next change set.",
+          "file": "",
+          "source_reviewer": "Diff Reviewer",
+          "kind": "suggestion",
+          "line": ""
+        },
+        {
+          "description": "The durations for `Prettier Format`, `ESLint`, `Markdownlint`, `Stylelint`, `Ruff`, and `Commitlint` steps have changed, with most becoming shorter.",
+          "title": "The durations for `Prettier Format`, `ESLint`, `Markdownlint`, `Stylelint`, `Ruff`, and `Commitlint` steps have",
+          "fix_suggestion": "Consider this improvement in the next change set.",
+          "file": "",
+          "source_reviewer": "Diff Reviewer",
+          "kind": "suggestion",
+          "line": ""
+        },
+        {
+          "description": "The `Ruff` step has been split into `Ruff Lint` and `Ruff Format`, both passing.",
+          "title": "The `Ruff` step has been split into `Ruff Lint` and `Ruff Format`, both passing",
+          "fix_suggestion": "Consider this improvement in the next change set.",
+          "file": "",
+          "source_reviewer": "Diff Reviewer",
+          "kind": "suggestion",
+          "line": ""
+        },
+        {
+          "description": "A new test case has been added for the `_select_current_season_scenes` function, which appears to be working correctly based on the `assert` statement.",
+          "title": "A new test case has been added for the `_select_current_season_scenes` function, which appears to be working correctly",
+          "fix_suggestion": "Consider this improvement in the next change set.",
+          "file": "",
+          "source_reviewer": "Diff Reviewer",
+          "kind": "suggestion",
+          "line": ""
+        }
+      ],
+      "positives": [
+        {
+          "description": "The `Ruff Lint` and `Ruff Format` steps are now explicitly reported and both pass, indicating a successful linting and formatting process for Ruff.",
+          "title": "The `Ruff Lint` and `Ruff Format` steps are now explicitly reported and both pass, indicating a successful linting and",
+          "fix_suggestion": "No action required; preserve this behavior.",
+          "file": "",
+          "source_reviewer": "Diff Reviewer",
+          "kind": "positive",
+          "line": ""
+        },
+        {
+          "description": "The new test case added for `_select_current_season_scenes` demonstrates the expected behavior of selecting scenes for the current season and appears to be correctly implemented.",
+          "title": "The new test case added for `_select_current_season_scenes` demonstrates the expected behavior of selecting scenes for",
+          "fix_suggestion": "No action required; preserve this behavior.",
+          "file": "",
+          "source_reviewer": "Diff Reviewer",
+          "kind": "positive",
+          "line": ""
+        }
+      ]
+    },
+    {
+      "reviewer": "Risk Reviewer",
+      "summary": "Local CI run completed with success. There were 599 files changed, with more additions than deletions. The CI execution time has significantly decreased, but several linting steps have changed from passing to failing or warnings.",
+      "critical": [
+        {
+          "description": "Markdownlint step failed, indicating potential issues with the formatting or content of Markdown files. This could lead to inconsistencies or broken documentation.",
+          "title": "Markdownlint step failed, indicating potential issues with the formatting or content of Markdown files",
+          "fix_suggestion": "Consider this improvement in the next change set.",
+          "file": "",
+          "source_reviewer": "Risk Reviewer",
+          "kind": "critical",
+          "line": ""
+        },
+        {
+          "description": "Commitlint step is now a warning, which previously might have been enforced, potentially allowing for less strict commit formatting. This could impact automated changelog generation or commit history analysis.",
+          "title": "Commitlint step is now a warning, which previously might have been enforced, potentially allowing for less strict",
+          "fix_suggestion": "Consider this improvement in the next change set.",
+          "file": "",
+          "source_reviewer": "Risk Reviewer",
+          "kind": "critical",
+          "line": ""
+        }
+      ],
+      "warnings": [
+        {
+          "description": "Prettier Format, ESLint, Stylelint, Ruff Lint, and Ruff Format have all seen significant reductions in execution time, which is a positive outcome. However, specific changes in linting rules or configurations could be the reason.",
+          "title": "Prettier Format, ESLint, Stylelint, Ruff Lint, and Ruff Format have all seen significant reductions in execution time,",
+          "fix_suggestion": "Review the related diff section and apply targeted remediation.",
+          "file": "",
+          "source_reviewer": "Risk Reviewer",
+          "kind": "warning",
+          "line": ""
+        }
+      ],
+      "suggestions": [
+        {
+          "description": "The local CI run was marked as successful.",
+          "title": "The local CI run was marked as successful",
+          "fix_suggestion": "Consider this improvement in the next change set.",
+          "file": "",
+          "source_reviewer": "Risk Reviewer",
+          "kind": "suggestion",
+          "line": ""
+        },
+        {
+          "description": "Significant number of files were modified (599 files, +5973/-2367).",
+          "title": "Significant number of files were modified (599 files, +5973/-2367)",
+          "fix_suggestion": "Consider this improvement in the next change set.",
+          "file": "",
+          "source_reviewer": "Risk Reviewer",
+          "kind": "suggestion",
+          "line": ""
+        },
+        {
+          "description": "Execution time for several linting steps (Prettier, ESLint, Stylelint, Ruff) has drastically reduced.",
+          "title": "Execution time for several linting steps (Prettier, ESLint, Stylelint, Ruff) has drastically reduced",
+          "fix_suggestion": "Consider this improvement in the next change set.",
+          "file": "",
+          "source_reviewer": "Risk Reviewer",
+          "kind": "suggestion",
+          "line": ""
+        },
+        {
+          "description": "The CI generation timestamp has been updated, reflecting the new run.",
+          "title": "The CI generation timestamp has been updated, reflecting the new run",
+          "fix_suggestion": "Consider this improvement in the next change set.",
+          "file": "",
+          "source_reviewer": "Risk Reviewer",
+          "kind": "suggestion",
+          "line": ""
+        },
+        {
+          "description": "A test case related to `_select_current_season_scenes` was added and passed, ensuring correct selection of scene data based on month and cloud cover.",
+          "title": "A test case related to `_select_current_season_scenes` was added and passed, ensuring correct selection of scene data",
+          "fix_suggestion": "Consider this improvement in the next change set.",
+          "file": "",
+          "source_reviewer": "Risk Reviewer",
+          "kind": "suggestion",
+          "line": ""
+        }
+      ],
+      "positives": [
+        {
+          "description": "The overall CI status is 'success', indicating no show-stopping errors in the core CI pipeline.",
+          "title": "The overall CI status is 'success', indicating no show-stopping errors in the core CI pipeline",
+          "fix_suggestion": "No action required; preserve this behavior.",
+          "file": "",
+          "source_reviewer": "Risk Reviewer",
+          "kind": "positive",
+          "line": ""
+        },
+        {
+          "description": "The execution time for multiple formatting and linting checks has been significantly reduced, improving CI performance.",
+          "title": "The execution time for multiple formatting and linting checks has been significantly reduced, improving CI performance",
+          "fix_suggestion": "No action required; preserve this behavior.",
+          "file": "",
+          "source_reviewer": "Risk Reviewer",
+          "kind": "positive",
+          "line": ""
+        },
+        {
+          "description": "New test cases were added to the codebase, improving test coverage and reliability.",
+          "title": "New test cases were added to the codebase, improving test coverage and reliability",
+          "fix_suggestion": "No action required; preserve this behavior.",
+          "file": "",
+          "source_reviewer": "Risk Reviewer",
+          "kind": "positive",
+          "line": ""
+        },
+        {
+          "description": "The specific test added for scene selection logic is a positive sign for data processing reliability.",
+          "title": "The specific test added for scene selection logic is a positive sign for data processing reliability",
+          "fix_suggestion": "No action required; preserve this behavior.",
+          "file": "",
+          "source_reviewer": "Risk Reviewer",
+          "kind": "positive",
+          "line": ""
+        }
+      ]
+    },
+    {
+      "reviewer": "Actionability Reviewer",
+      "summary": "Recent commits focus on enhancing soil data visualization and reporting features, including choropleth maps and deterministic farm data rebuilds, with a detected failure in Markdownlint during local CI checks.",
+      "critical": [],
+      "warnings": [
+        {
+          "description": "Markdownlint failed during local CI checks, indicating a potential issue with Markdown file formatting or structure that needs to be addressed to ensure consistent documentation quality.",
+          "title": "Markdownlint failed during local CI checks, indicating a potential issue with Markdown file formatting or structure",
+          "fix_suggestion": "Review the related diff section and apply targeted remediation.",
+          "file": "",
+          "source_reviewer": "Actionability Reviewer",
+          "kind": "warning",
+          "line": ""
+        }
+      ],
+      "suggestions": [
+        {
+          "description": "The `feat(ssurgo-maps)` and `feat(ssurgo-features)` commits suggest advancements in how soil data is presented and processed, potentially improving user understanding of soil characteristics through richer map exports and styling.",
+          "title": "The `feat(ssurgo-maps)` and `feat(ssurgo-features)` commits suggest advancements in how soil data is presented and",
+          "fix_suggestion": "Consider this improvement in the next change set.",
+          "file": "",
+          "source_reviewer": "Actionability Reviewer",
+          "kind": "suggestion",
+          "line": ""
+        },
+        {
+          "description": "The `feat(farm-data-rebuild)` commit introduces a dedicated orchestrator skill, which is a positive step towards ensuring deterministic and reliable farm data rebuilding processes.",
+          "title": "The `feat(farm-data-rebuild)` commit introduces a dedicated orchestrator skill, which is a positive step towards",
+          "fix_suggestion": "Consider this improvement in the next change set.",
+          "file": "",
+          "source_reviewer": "Actionability Reviewer",
+          "kind": "suggestion",
+          "line": ""
+        },
+        {
+          "description": "The `fix(ssurgo-reporting)` commit aims to improve the accuracy and presentation of soil variation in reports, which is crucial for data integrity.",
+          "title": "The `fix(ssurgo-reporting)` commit aims to improve the accuracy and presentation of soil variation in reports, which is",
+          "fix_suggestion": "Consider this improvement in the next change set.",
+          "file": "",
+          "source_reviewer": "Actionability Reviewer",
+          "kind": "suggestion",
+          "line": ""
+        },
+        {
+          "description": "The `fix(reporting)` commit ensures that essential soil maps and farm summary assets are included in canonical outputs, an important step for comprehensive reporting.",
+          "title": "The `fix(reporting)` commit ensures that essential soil maps and farm summary assets are included in canonical outputs,",
+          "fix_suggestion": "Consider this improvement in the next change set.",
+          "file": "",
+          "source_reviewer": "Actionability Reviewer",
+          "kind": "suggestion",
+          "line": ""
+        }
+      ],
+      "positives": [
+        {
+          "description": "The introduction of deterministic farm data rebuilds and improved soil reporting visualizations are significant positive advancements for the system's data integrity and user experience.",
+          "title": "The introduction of deterministic farm data rebuilds and improved soil reporting visualizations are significant",
+          "fix_suggestion": "No action required; preserve this behavior.",
+          "file": "",
+          "source_reviewer": "Actionability Reviewer",
+          "kind": "positive",
+          "line": ""
+        }
+      ]
+    }
+  ],
+  "provider_used": "openrouter",
+  "calls_executed": 3
+}

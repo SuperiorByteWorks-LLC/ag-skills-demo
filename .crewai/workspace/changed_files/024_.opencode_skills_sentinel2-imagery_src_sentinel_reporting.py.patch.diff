@@ -1,0 +1,35 @@
+diff --git a/.opencode/skills/sentinel2-imagery/src/sentinel_reporting.py b/.opencode/skills/sentinel2-imagery/src/sentinel_reporting.py
+index 1af4bc3..d82f0b2 100644
+--- a/.opencode/skills/sentinel2-imagery/src/sentinel_reporting.py
++++ b/.opencode/skills/sentinel2-imagery/src/sentinel_reporting.py
+@@ -1,6 +1,5 @@
+ from __future__ import annotations
+ 
+-import matplotlib.pyplot as plt
+ import numpy as np
+ import pandas as pd
+ 
+@@ -16,7 +15,11 @@ def choose_best_scene(products: pd.DataFrame, target_date: str | None = None) ->
+         df["target_distance_days"] = (df["beginposition"] - target).abs().dt.days
+     else:
+         df["target_distance_days"] = 0
+-    sort_cols = [c for c in ["cloudcoverpercentage", "target_distance_days", "beginposition"] if c in df.columns]
++    sort_cols = [
++        c
++        for c in ["cloudcoverpercentage", "target_distance_days", "beginposition"]
++        if c in df.columns
++    ]
+     return df.sort_values(sort_cols).iloc[0]
+ 
+ 
+@@ -55,7 +58,9 @@ def plot_ndvi_timeseries(ax, stats: pd.DataFrame, title: str = "NDVI over time")
+     df = stats.copy()
+     df["date"] = pd.to_datetime(df["date"])
+     for field_id, group in df.groupby("field_id"):
+-        ax.plot(group["date"], group["mean_ndvi"], marker="o", linewidth=1.5, label=str(field_id)[-6:])
++        ax.plot(
++            group["date"], group["mean_ndvi"], marker="o", linewidth=1.5, label=str(field_id)[-6:]
++        )
+     ax.set_title(title, fontsize=12, fontweight="bold")
+     ax.set_ylabel("Mean NDVI")
+     ax.grid(True, alpha=0.3)

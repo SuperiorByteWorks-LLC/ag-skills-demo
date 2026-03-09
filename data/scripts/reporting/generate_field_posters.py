@@ -209,7 +209,7 @@ def _ndvi_panel(ax, image_path: Path | None, title: str) -> None:
     )
 
 
-def _field_identity_card(ax, field_row, hl_summary, crop_summary, wx_row):
+def _field_identity_card(ax, field_row, hl_summary, crop_summary, wx_row, management_bullets):
     ax.axis("off")
     fid = str(field_row["field_id"])
     acres = float(field_row.get("area_acres", 0))
@@ -237,12 +237,15 @@ def _field_identity_card(ax, field_row, hl_summary, crop_summary, wx_row):
             f"Avg temp: {wx_row.get('avg_temp_c', float('nan')):.1f} C",
             f"Avg precip:{wx_row.get('annual_precip_mm', float('nan')):.0f} mm/yr",
         ]
+    if management_bullets:
+        lines += ["", "Management implications:"]
+        lines += [f"- {bullet}" for bullet in management_bullets[:4]]
     ax.text(
         0.05,
         0.95,
         "\n".join(lines),
         va="top",
-        fontsize=9.5,
+        fontsize=8.6,
         transform=ax.transAxes,
         fontfamily="monospace",
         bbox=dict(
@@ -250,30 +253,6 @@ def _field_identity_card(ax, field_row, hl_summary, crop_summary, wx_row):
         ),
     )
     ax.set_title("Field identity and operations", fontsize=11, fontweight="bold", loc="left")
-
-
-def _management_card(ax, row_dict, field_reporting_df, field_id):
-    ax.axis("off")
-    merged = dict(row_dict)
-    if field_reporting_df is not None and not field_reporting_df.empty:
-        match = field_reporting_df[field_reporting_df["field_id"] == field_id]
-        if not match.empty:
-            merged.update({k: v for k, v in match.iloc[0].to_dict().items() if v is not None})
-    bullets = reporting_mod.compute_management_implications(merged)
-    text = "\n".join(f"• {b}" for b in bullets)
-    ax.text(
-        0.03,
-        0.96,
-        text,
-        va="top",
-        ha="left",
-        fontsize=8.5,
-        transform=ax.transAxes,
-        bbox=dict(
-            boxstyle="round,pad=0.5", facecolor="#fefce8", edgecolor="#ca8a04", linewidth=1.0
-        ),
-    )
-    ax.set_title("Management implications", fontsize=11, fontweight="bold", loc="left")
 
 
 def _ranking_card(ax, field_reporting_df, field_id):
@@ -346,6 +325,7 @@ def _render_field_poster(
         match = field_reporting_df[field_reporting_df["field_id"] == field_id]
         if not match.empty:
             merged_row.update(match.iloc[0].to_dict())
+    management_bullets = reporting_mod.compute_management_implications(merged_row)
 
     fig = plt.figure(figsize=(28, 36))
     fig.patch.set_facecolor("#fafaf9")
@@ -364,7 +344,9 @@ def _render_field_poster(
     ndvi_assets = _cached_ndvi_assets(field_slug)
     soil_map_assets = _cached_soil_map_assets(field_slug)
 
-    _field_identity_card(fig.add_subplot(gs[0, 0]), field_row, hl, crop_sum, wx_row)
+    _field_identity_card(
+        fig.add_subplot(gs[0, 0]), field_row, hl, crop_sum, wx_row, management_bullets
+    )
     _soil_map_panel(
         fig.add_subplot(gs[0, 1]),
         soil_map_assets["component"],
@@ -406,13 +388,17 @@ def _render_field_poster(
     )
 
     _ndvi_panel(fig.add_subplot(gs[4, 0]), ndvi_assets["corn"], "Corn average NDVI")
-    _ndvi_panel(fig.add_subplot(gs[4, 1]), ndvi_assets["corn_peak_95"], "Corn 95th %ile peak NDVI")
-    _ndvi_panel(fig.add_subplot(gs[4, 2]), ndvi_assets["soybean"], "Soybean average NDVI")
+    _ndvi_panel(fig.add_subplot(gs[4, 1]), ndvi_assets["soybean"], "Soybean average NDVI")
     _ndvi_panel(
-        fig.add_subplot(gs[4, 3]), ndvi_assets["soybean_peak_95"], "Soybean 95th %ile peak NDVI"
+        fig.add_subplot(gs[4, 2:]),
+        ndvi_assets["current_season_cumulative"],
+        "Cumulative NDVI by crop and year",
     )
 
-    _management_card(fig.add_subplot(gs[5, 0:2]), merged_row, field_reporting_df, field_id)
+    _ndvi_panel(fig.add_subplot(gs[5, 0]), ndvi_assets["corn_peak_95"], "Corn 95th %ile peak NDVI")
+    _ndvi_panel(
+        fig.add_subplot(gs[5, 1]), ndvi_assets["soybean_peak_95"], "Soybean 95th %ile peak NDVI"
+    )
     _ranking_card(fig.add_subplot(gs[5, 2:]), field_reporting_df, field_id)
 
     output_path.parent.mkdir(parents=True, exist_ok=True)

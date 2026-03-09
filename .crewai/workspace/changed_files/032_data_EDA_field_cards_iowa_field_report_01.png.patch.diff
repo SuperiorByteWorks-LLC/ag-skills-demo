@@ -1,0 +1,9 @@
+diff --git a/data/EDA/field_cards/iowa_field_report_01.png b/data/EDA/field_cards/iowa_field_report_01.png
+new file mode 100644
+index 0000000..925c04d
+--- /dev/null
++++ b/data/EDA/field_cards/iowa_field_report_01.png
+@@ -0,0 +1,3 @@
++version https://git-lfs.github.com/spec/v1
++oid sha256:74113fa92507b6bd65b36cec43914e017d5fbb250fa0ee5a14a57b1c6f42656a
++size 4538138
