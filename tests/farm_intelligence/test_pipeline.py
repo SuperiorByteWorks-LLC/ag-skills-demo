@@ -452,6 +452,91 @@ def test_aggregate_weather_to_counties_groups_by_fips_and_date():
     assert result.loc[0, "source_field_slugs"] == ["field-1", "field-2"]
 
 
+def test_compute_county_gdd_applies_base_and_ceiling():
+    import pandas as pd
+
+    county_weather = pd.DataFrame(
+        [
+            {
+                "date": "2025-06-01",
+                "year": 2025,
+                "fips": "19015",
+                "state_fips": "19",
+                "county_fips": "015",
+                "county_name": "Boone",
+                "county_name_full": "Boone County",
+                "field_count": 2,
+                "T2M_MAX": 35.0,
+                "T2M_MIN": 8.0,
+            },
+            {
+                "date": "2025-06-02",
+                "year": 2025,
+                "fips": "19015",
+                "state_fips": "19",
+                "county_fips": "015",
+                "county_name": "Boone",
+                "county_name_full": "Boone County",
+                "field_count": 2,
+                "T2M_MAX": 20.0,
+                "T2M_MIN": 12.0,
+            },
+        ]
+    )
+
+    result = mbf.compute_county_gdd(county_weather)
+    assert list(result["fips"]) == ["19015"]
+    assert result.loc[0, "observation_days"] == 2
+    assert result.loc[0, "field_count_max"] == 2
+    assert result.loc[0, "gdd_total_c"] == 16.0
+
+
+def test_compute_corn_rm_adds_banding():
+    import pandas as pd
+
+    county_gdd = pd.DataFrame(
+        [
+            {
+                "year": 2025,
+                "fips": "19015",
+                "state_fips": "19",
+                "county_fips": "015",
+                "county_name": "Boone",
+                "county_name_full": "Boone County",
+                "gdd_total_c": 2200.0,
+            }
+        ]
+    )
+
+    result = mbf.compute_corn_rm(county_gdd)
+    assert result.loc[0, "rm_relative_maturity"] == 110.0
+    assert result.loc[0, "rm_band"] == 110
+
+
+def test_compute_soybean_mg_uses_centroid_latitude():
+    import pandas as pd
+
+    county_lookup = pd.DataFrame([{"fips": "19015", "centroid_lat": 41.7}])
+    county_gdd = pd.DataFrame(
+        [
+            {
+                "year": 2025,
+                "fips": "19015",
+                "state_fips": "19",
+                "county_fips": "015",
+                "county_name": "Boone",
+                "county_name_full": "Boone County",
+                "gdd_total_c": 2200.0,
+            }
+        ]
+    )
+
+    result = mbf.compute_soybean_mg(county_lookup, county_gdd)
+    assert result.loc[0, "mg_optimal"] == 2.9
+    assert result.loc[0, "mg_early"] == 2.5
+    assert result.loc[0, "mg_late"] == 3.3
+
+
 def test_crop_years_returns_sorted_matches():
     import pandas as pd
 
