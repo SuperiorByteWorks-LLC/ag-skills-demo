@@ -10,6 +10,7 @@ CDL_SRC = REPO_ROOT / ".opencode" / "skills" / "cdl-cropland" / "src"
 SCRIPT_LIB = REPO_ROOT / "data" / "scripts" / "lib"
 INGEST_SRC = REPO_ROOT / "data" / "scripts" / "ingest"
 REPORTING_SRC = REPO_ROOT / "data" / "scripts" / "reporting"
+MATURITY_SRC = REPO_ROOT / ".opencode" / "skills" / "maturity-by-fips" / "src"
 if str(SKILL_SRC) not in sys.path:
     sys.path.insert(0, str(SKILL_SRC))
 if str(CDL_SRC) not in sys.path:
@@ -20,6 +21,8 @@ if str(INGEST_SRC) not in sys.path:
     sys.path.insert(0, str(INGEST_SRC))
 if str(REPORTING_SRC) not in sys.path:
     sys.path.insert(0, str(REPORTING_SRC))
+if str(MATURITY_SRC) not in sys.path:
+    sys.path.insert(0, str(MATURITY_SRC))
 
 cdl = importlib.import_module("cdl_reporting")
 pl = importlib.import_module("pipeline")
@@ -29,6 +32,7 @@ paths = importlib.import_module("paths")
 dsi = importlib.import_module("download_satellite_imagery")
 dnc = importlib.import_module("generate_ndvi_composites")
 gnc = importlib.import_module("generate_ndvi_cards")
+mbf = importlib.import_module("maturity_by_fips")
 
 
 def test_step_is_stale_when_no_previous(tmp_path):
@@ -356,6 +360,96 @@ def test_dominant_crop_lookup_uses_highest_pct_by_year(tmp_path):
     result = dnc._dominant_crop_lookup(crop_csv)
     assert result[("F1", 2024)] == "Soybeans"
     assert result[("F1", 2023)] == "Corn"
+
+
+def test_maturity_output_index_includes_county_weather_paths():
+    config = mbf.AnnualMaturityConfig(year=2025, weather_source="nasa-power")
+    outputs = mbf.build_year_output_index(config)
+    assert outputs["county_weather"].endswith(
+        "data/shared/weather/nasa-power/2025/daily_weather_by_fips.parquet"
+    )
+    assert outputs["county_weather_summary"].endswith(
+        "data/shared/weather/nasa-power/2025/county_weather_coverage_summary.json"
+    )
+
+
+def test_aggregate_weather_to_counties_groups_by_fips_and_date():
+    import pandas as pd
+
+    weather = pd.DataFrame(
+        [
+            {
+                "field_id": "F1",
+                "date": "2025-06-01",
+                "T2M": 20.0,
+                "T2M_MAX": 26.0,
+                "T2M_MIN": 14.0,
+                "PRECTOTCORR": 5.0,
+                "ALLSKY_SFC_SW_DWN": 22.0,
+                "RH2M": 70.0,
+                "WS10M": 3.0,
+            },
+            {
+                "field_id": "F2",
+                "date": "2025-06-01",
+                "T2M": 22.0,
+                "T2M_MAX": 28.0,
+                "T2M_MIN": 16.0,
+                "PRECTOTCORR": 7.0,
+                "ALLSKY_SFC_SW_DWN": 24.0,
+                "RH2M": 74.0,
+                "WS10M": 5.0,
+            },
+            {
+                "field_id": "F3",
+                "date": "2025-06-01",
+                "T2M": 19.0,
+                "T2M_MAX": 25.0,
+                "T2M_MIN": 13.0,
+                "PRECTOTCORR": 4.0,
+                "ALLSKY_SFC_SW_DWN": 21.0,
+                "RH2M": 68.0,
+                "WS10M": 2.0,
+            },
+        ]
+    )
+    mapping = pd.DataFrame(
+        [
+            {
+                "field_id": "F1",
+                "field_slug": "field-1",
+                "fips": "19015",
+                "state_fips": "19",
+                "county_fips": "015",
+                "county_name": "Boone",
+                "county_name_full": "Boone County",
+            },
+            {
+                "field_id": "F2",
+                "field_slug": "field-2",
+                "fips": "19015",
+                "state_fips": "19",
+                "county_fips": "015",
+                "county_name": "Boone",
+                "county_name_full": "Boone County",
+            },
+            {
+                "field_id": "F3",
+                "field_slug": "field-3",
+                "fips": "19169",
+                "state_fips": "19",
+                "county_fips": "169",
+                "county_name": "Story",
+                "county_name_full": "Story County",
+            },
+        ]
+    )
+
+    result = mbf.aggregate_weather_to_counties(weather, mapping)
+    assert list(result["fips"]) == ["19015", "19169"]
+    assert list(result["field_count"]) == [2, 1]
+    assert result.loc[0, "T2M"] == 21.0
+    assert result.loc[0, "source_field_slugs"] == ["field-1", "field-2"]
 
 
 def test_crop_years_returns_sorted_matches():
