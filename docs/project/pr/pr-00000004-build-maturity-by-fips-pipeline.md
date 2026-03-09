@@ -51,9 +51,11 @@ This work starts a new repo-native agricultural maturity pipeline that will prod
 | `data/scripts/ingest/download_geoadmin.py`                              | Added       | Repo-native geoadmin downloader and standardizer for canonical shared admin layers         |
 | `data/shared/geoadmin/l0_countries/`                                    | Added       | First standardized shared country outputs built from Natural Earth                         |
 | `data/scripts/ingest/assign_field_fips.py`                              | Added       | Repo-native field-to-county FIPS mapper with ambiguity reporting                           |
+| `data/shared/geoadmin/l1_states/metadata.json`                          | Modified    | Rebuilt state metadata with repo-relative artifact paths for portable reruns               |
+| `data/shared/geoadmin/l2_counties/metadata.json`                        | Modified    | Rebuilt county metadata with repo-relative artifact paths and explicit FIPS lookup output  |
 | `data/shared/geoadmin/l1_states/`                                       | Added       | Canonical US state outputs built from TIGER/Line                                           |
 | `data/shared/geoadmin/l2_counties/`                                     | Added       | Canonical US county/FIPS outputs and lookup built from TIGER/Line                          |
-| `data/growers/iowa-demo-grower/farms/iowa-demo-farm/derived/`           | Added       | Demo farm field-to-FIPS summary and ambiguity artifacts                                    |
+| `data/growers/iowa-demo-grower/farms/iowa-demo-farm/derived/`           | Added       | Demo farm field-to-FIPS summary and ambiguity artifacts with portable summary paths        |
 
 ### Before and after
 
@@ -106,6 +108,7 @@ Current verification evidence:
 - `python data/scripts/ingest/download_geoadmin.py --levels l1_states l2_counties`
 - `python -m compileall data/scripts/ingest/assign_field_fips.py .opencode/skills/geoadmin-admin/src`
 - `python data/scripts/ingest/assign_field_fips.py`
+- `python data/scripts/ingest/download_geoadmin.py --levels l1_states l2_counties` (rerun after metadata portability update)
 - `python -m pytest tests/farm_intelligence/test_pipeline.py --override-ini=addopts=` -> `28 passed`
 
 ### Edge cases considered
@@ -141,11 +144,13 @@ git revert [commit-sha]
 - **Wave 1 checkpoint:** Canonical shared roots and repo-native scaffolding land before county logic so later implementation cannot drift off the planned integration surface
 - **Geoadmin ingestion:** Shared admin layers are downloaded and standardized through a repo-native ingest script rather than ad hoc manual placement
 - **Field bridge:** Field-to-FIPS mapping is persisted as canonical farm-level summary and table output before county weather or maturity transforms consume it
+- **Metadata portability:** Shared geoadmin metadata now stores repo-relative artifact paths so annual runs stay portable across machines and worktrees
 
 ### Follow-up items
 
-- [ ] Extend geoadmin ingestion from countries to US states and counties with FIPS lookup output
+- [x] Extend geoadmin ingestion from countries to US states and counties with FIPS lookup output
 - [ ] Add annual county weather and GDD transforms downstream of canonical field-to-FIPS mapping
+- [ ] No ADR required
 
 ---
 

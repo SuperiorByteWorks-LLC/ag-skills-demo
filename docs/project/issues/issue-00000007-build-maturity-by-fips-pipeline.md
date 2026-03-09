@@ -44,6 +44,8 @@ Current Wave 1 progress:
 - [x] Initial `data/scripts/ingest/download_geoadmin.py` downloader writes canonical Natural Earth country outputs
 - [x] Canonical TIGER/Line state and county/FIPS outputs built under `data/shared/geoadmin/`
 - [x] Demo farm field-to-FIPS mapping and ambiguity outputs generated from canonical county geometry
+- [x] Shared geoadmin and field-FIPS summary metadata rewritten to use repo-relative artifact paths
+- [ ] County/FIPS weather transform artifacts generated under canonical shared weather roots
 
 ---
 
@@ -98,6 +100,7 @@ flowchart LR
 | 2026-03-09 | Agent | `download_geoadmin.py --levels l0_countries` built canonical GeoJSON and Parquet outputs under `data/shared/geoadmin/l0_countries/`                 |
 | 2026-03-09 | Agent | `download_geoadmin.py --levels l1_states l2_counties` built canonical US state, county, and FIPS lookup outputs                                     |
 | 2026-03-09 | Agent | `assign_field_fips.py` mapped all 10 demo farm fields to county FIPS with 0 ambiguity cases                                                         |
+| 2026-03-09 | Agent | Geoadmin metadata and field-FIPS summary outputs now store repo-relative paths for more portable annual reruns                                      |
 
 ---
 
